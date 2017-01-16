@@ -1,0 +1,44 @@
+
+struct PackedVertex
+{
+	float	positionX;
+	float	positionY;
+	float	positionZ;
+	float	normalX;
+	float	normalY;
+	float	normalZ;
+	float	texcoordX;
+	float	texcoordY;
+};
+
+
+struct Vertex
+{
+	float3	position;
+	float3	normal;
+	float2	texcoord;
+};
+
+
+Vertex UnpackVertex (in PackedVertex v)
+{
+	Vertex result;
+	result.position	= float3( v.positionX, v.positionY, v.positionZ );
+	result.normal	= float3( v.normalX, v.normalY, v.normalZ );
+	result.texcoord	= float2( v.texcoordX, v.texcoordY );
+	return result;
+}
+
+PackedVertex PackVertex (in Vertex v)
+{
+	PackedVertex	result;
+	result.positionX	= v.position.x;
+	result.positionY	= v.position.y;
+	result.positionZ	= v.position.z;
+	result.normalX		= v.normal.x;
+	result.normalY		= v.normal.y;
+	result.normalZ		= v.normal.z;
+	result.texcoordX	= v.texcoord.x;
+	result.texcoordY	= v.texcoord.y;
+	return result;
+}

@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="..\..\..\Engine\Compute\Engine.Compute.h" />
+    <ClInclude Include="..\..\..\Engine\Compute\CL2\cl2.h">
+      <Filter>CL2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Compute\CL2\CL2ComputeEngine.h">
+      <Filter>CL2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Compute\CL2\CL2ComputeFunction.h">
+      <Filter>CL2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Compute\CL2\CL2ComputeProgram.h">
+      <Filter>CL2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Compute\CL2\CL2ComputeSyncEvent.h">
+      <Filter>CL2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Compute\CL2\CL2Enums.h">
+      <Filter>CL2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Compute\Types\Enums.h">
+      <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Compute\Engine\ComputeEngine.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Compute\CL2\CL2ComputeBuffer.h">
+      <Filter>CL2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Compute\CL2\CL2ComputeImage.h">
+      <Filter>CL2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Compute\CL2\CL2Emulator.h">
+      <Filter>CL2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Compute\CL2\CL2ComputeUtils.h">
+      <Filter>CL2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Compute\GL4\GL4ComputeEngine.h">
+      <Filter>GL4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Compute\GL4\GL4Enums.h">
+      <Filter>GL4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Compute\GL4\GL4ComputeImage.h">
+      <Filter>GL4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Compute\GL4\GL4ComputeBuffer.h">
+      <Filter>GL4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Compute\GL4\GL4ComputeProgram.h">
+      <Filter>GL4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Compute\GL4\GL4ComputeFunction.h">
+      <Filter>GL4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Compute\GL4\GL4ComputeSyncEvent.h">
+      <Filter>GL4</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CL2">
+      <UniqueIdentifier>{ba49e654-b5f9-4af3-965f-d03bafc42760}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Types">
+      <UniqueIdentifier>{ab4ae5f4-6794-485e-8ac4-16939efe9170}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{a8589dce-3e4e-4b9a-987b-3e4a38123462}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GL4">
+      <UniqueIdentifier>{648f35ff-042f-4a2a-a0fc-a45295e2f215}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\Engine\Compute\CL2\cl2.cpp">
+      <Filter>CL2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Compute\CL2\CL2ComputeEngine.cpp">
+      <Filter>CL2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Compute\CL2\CL2ComputeFunction.cpp">
+      <Filter>CL2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Compute\CL2\CL2ComputeProgram.cpp">
+      <Filter>CL2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Compute\CL2\CL2ComputeSyncEvent.cpp">
+      <Filter>CL2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Compute\Engine\ComputeEngine.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Compute\CL2\CL2ComputeBuffer.cpp">
+      <Filter>CL2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Compute\CL2\CL2ComputeImage.cpp">
+      <Filter>CL2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Compute\CL2\CL2Emulator.cpp">
+      <Filter>CL2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Compute\CL2\CL2ComputeUtils.cpp">
+      <Filter>CL2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Compute\GL4\GL4ComputeEngine.cpp">
+      <Filter>GL4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Compute\GL4\GL4ComputeImage.cpp">
+      <Filter>GL4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Compute\GL4\GL4ComputeBuffer.cpp">
+      <Filter>GL4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Compute\GL4\GL4ComputeProgram.cpp">
+      <Filter>GL4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Compute\GL4\GL4ComputeFunction.cpp">
+      <Filter>GL4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Compute\GL4\GL4ComputeSyncEvent.cpp">
+      <Filter>GL4</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

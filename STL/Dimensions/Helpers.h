@@ -1,0 +1,159 @@
+// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+
+#pragma once
+
+#include "../BaseTypes/Types.h"
+
+namespace GX_STL
+{
+namespace GXMath
+{
+
+
+#	define _GX_DIM_OPERATORS_SELF( _op_, _value_ ) \
+		\
+		Self& operator _op_##= (const Self &right)			{ _value_ _op_##= right._value_;  return *this; } \
+		Self  operator _op_    (const Self &right) const	{ return Self( _value_ _op_ right._value_ ); }
+		
+
+#	define _GX_DIM_OPERATORS_TYPE( _op_, _value_, _type_, _memberOption_ ) \
+		\
+		Self& operator _op_##= (const _type_ &right)						{ _value_ _op_##= (value_t) right _memberOption_;  return *this; } \
+		Self  operator _op_    (const _type_ &right) const					{ return Self( _value_ _op_ (value_t) right _memberOption_ ); } \
+		\
+		friend Self operator _op_ (const _type_ &left, const Self &right)	{ return Self( (value_t) left _memberOption_ _op_ right._value_ ); }
+
+
+#	define _GX_DIM_OPERATORS_TEMPLATE( _op_, _value_, _memberOption_ ) \
+		\
+		template <typename _A_> Self& operator _op_##= (const _A_ &right)		{ _value_ _op_##= (value_t) right _memberOption_;  return *this; } \
+		template <typename _A_> Self  operator _op_    (const _A_ &right) const	{ return Self( _value_ _op_ (value_t) right _memberOption_ ); } \
+		\
+		friend template <typename _A_> \
+		Self operator _op_ (const _A_ &left, const Self &right)	{ return Self( (value_t) left _memberOption_ _op_ right._value_ ); }
+
+
+#	define _GX_DIM_CMP_OPERATORS_SELF( _value_ ) \
+		\
+		bool operator == (const Self &right)	const		{ return this->_value_ == right._value_; } \
+		bool operator != (const Self &right)	const		{ return this->_value_ != right._value_; } \
+		bool operator >  (const Self &right)	const		{ return this->_value_ >  right._value_; } \
+		bool operator <  (const Self &right)	const		{ return this->_value_ <  right._value_; } \
+		bool operator >= (const Self &right)	const		{ return this->_value_ >= right._value_; } \
+		bool operator <= (const Self &right)	const		{ return this->_value_ <= right._value_; }
+	
+
+#	define _GX_DIM_CMP_OPERATORS_TYPE( _value_, _type_, _memberOption_ ) \
+		\
+		bool operator == (const _type_ &right)	const		{ return this->_value_ == (value_t)( right _memberOption_ ); } \
+		bool operator != (const _type_ &right)	const		{ return this->_value_ != (value_t)( right _memberOption_ ); } \
+		bool operator >  (const _type_ &right)	const		{ return this->_value_ >  (value_t)( right _memberOption_ ); } \
+		bool operator <  (const _type_ &right)	const		{ return this->_value_ <  (value_t)( right _memberOption_ ); } \
+		bool operator >= (const _type_ &right)	const		{ return this->_value_ >= (value_t)( right _memberOption_ ); } \
+		bool operator <= (const _type_ &right)	const		{ return this->_value_ <= (value_t)( right _memberOption_ ); } \
+		\
+		friend bool operator == (const _type_ &left, const Self &right)	{ return (value_t)( left _memberOption_ ) == right._value_; } \
+		friend bool operator != (const _type_ &left, const Self &right)	{ return (value_t)( left _memberOption_ ) != right._value_; } \
+		friend bool operator >  (const _type_ &left, const Self &right)	{ return (value_t)( left _memberOption_ ) >  right._value_; } \
+		friend bool operator <  (const _type_ &left, const Self &right)	{ return (value_t)( left _memberOption_ ) <  right._value_; } \
+		friend bool operator >= (const _type_ &left, const Self &right)	{ return (value_t)( left _memberOption_ ) >= right._value_; } \
+		friend bool operator <= (const _type_ &left, const Self &right)	{ return (value_t)( left _memberOption_ ) <= right._value_; }
+	
+
+#	define _GX_DIM_CMP_OPERATORS_TEMPLATE( _value_, _memberOption_ ) \
+		\
+		template <typename _A_> bool operator == (const _A_ &right) const	{ return this->_value_ == (value_t)( right _memberOption_ ); } \
+		template <typename _A_> bool operator != (const _A_ &right) const	{ return this->_value_ != (value_t)( right _memberOption_ ); } \
+		template <typename _A_> bool operator >  (const _A_ &right) const	{ return this->_value_ >  (value_t)( right _memberOption_ ); } \
+		template <typename _A_> bool operator <  (const _A_ &right) const	{ return this->_value_ <  (value_t)( right _memberOption_ ); } \
+		template <typename _A_> bool operator >= (const _A_ &right) const	{ return this->_value_ >= (value_t)( right _memberOption_ ); } \
+		template <typename _A_> bool operator <= (const _A_ &right) const	{ return this->_value_ <= (value_t)( right _memberOption_ ); } \
+		\
+		template <typename _A_> friend bool operator == (const _A_ &left, const Self &right)	{ return (value_t)( left _memberOption_ ) == right._value_; } \
+		template <typename _A_> friend bool operator != (const _A_ &left, const Self &right)	{ return (value_t)( left _memberOption_ ) != right._value_; } \
+		template <typename _A_> friend bool operator >  (const _A_ &left, const Self &right)	{ return (value_t)( left _memberOption_ ) >  right._value_; } \
+		template <typename _A_> friend bool operator <  (const _A_ &left, const Self &right)	{ return (value_t)( left _memberOption_ ) <  right._value_; } \
+		template <typename _A_> friend bool operator >= (const _A_ &left, const Self &right)	{ return (value_t)( left _memberOption_ ) >= right._value_; } \
+		template <typename _A_> friend bool operator <= (const _A_ &left, const Self &right)	{ return (value_t)( left _memberOption_ ) <= right._value_; }
+		
+
+#	define _GX_DIM_ALL_INTEGER_OPERATORS_SELF( _value_ ) \
+		_GX_DIM_OPERATORS_SELF( +,	_value_ ) \
+		_GX_DIM_OPERATORS_SELF( -,	_value_ ) \
+		_GX_DIM_OPERATORS_SELF( *,	_value_ ) \
+		_GX_DIM_OPERATORS_SELF( /,	_value_ ) \
+		_GX_DIM_OPERATORS_SELF( %,	_value_ ) \
+		_GX_DIM_OPERATORS_SELF( >>,	_value_ ) \
+		_GX_DIM_OPERATORS_SELF( <<,	_value_ ) \
+		_GX_DIM_OPERATORS_SELF( |,	_value_ ) \
+		_GX_DIM_OPERATORS_SELF( &,	_value_ ) \
+		_GX_DIM_OPERATORS_SELF( ^,	_value_ ) \
+		_GX_DIM_CMP_OPERATORS_SELF( _value_ ) \
+		Self	operator ! () const		{ return Self( not _value_ ); } \
+		Self	operator ~ () const		{ return Self( ~_value_ ); } \
+		/*Self	operator - () const		{ return Self( -_value_ ); }  /* not available for unsigned types */ \
+		Self &		operator ++ ()		{ ++_value_;  return *this; } \
+		Self &		operator -- ()		{ --_value_;  return *this; } \
+		const Self	operator ++ (int)	{ Self	ret(*this);  ++(*this);  return ret; } \
+		const Self	operator -- (int)	{ Self	ret(*this);  --(*this);  return ret; }
+	
+
+#	define _GX_DIM_ALL_INTEGER_OPERATORS_TYPE( _value_, _type_, _memberOption_ ) \
+		_GX_DIM_OPERATORS_TYPE( +,	_value_, _type_, _memberOption_ ) \
+		_GX_DIM_OPERATORS_TYPE( -,	_value_, _type_, _memberOption_ ) \
+		_GX_DIM_OPERATORS_TYPE( *,	_value_, _type_, _memberOption_ ) \
+		_GX_DIM_OPERATORS_TYPE( /,	_value_, _type_, _memberOption_ ) \
+		_GX_DIM_OPERATORS_TYPE( %,	_value_, _type_, _memberOption_ ) \
+		_GX_DIM_OPERATORS_TYPE( >>,	_value_, _type_, _memberOption_ ) \
+		_GX_DIM_OPERATORS_TYPE( <<,	_value_, _type_, _memberOption_ ) \
+		_GX_DIM_OPERATORS_TYPE( |,	_value_, _type_, _memberOption_ ) \
+		_GX_DIM_OPERATORS_TYPE( &,	_value_, _type_, _memberOption_ ) \
+		_GX_DIM_OPERATORS_TYPE( ^,	_value_, _type_, _memberOption_ ) \
+		_GX_DIM_CMP_OPERATORS_TYPE(	_value_, _type_, _memberOption_ ) 
+
+
+#	define _GX_DIM_ALL_INTEGER_OPERATORS_TEMPLATE( _value_, _memberOption_ ) \
+		_GX_DIM_OPERATORS_TEMPLATE( +,	_value_, _memberOption_ ) \
+		_GX_DIM_OPERATORS_TEMPLATE( -,	_value_, _memberOption_ ) \
+		_GX_DIM_OPERATORS_TEMPLATE( *,	_value_, _memberOption_ ) \
+		_GX_DIM_OPERATORS_TEMPLATE( /,	_value_, _memberOption_ ) \
+		_GX_DIM_OPERATORS_TEMPLATE( %,	_value_, _memberOption_ ) \
+		_GX_DIM_OPERATORS_TEMPLATE( >>,	_value_, _memberOption_ ) \
+		_GX_DIM_OPERATORS_TEMPLATE( <<,	_value_, _memberOption_ ) \
+		_GX_DIM_OPERATORS_TEMPLATE( |,	_value_, _memberOption_ ) \
+		_GX_DIM_OPERATORS_TEMPLATE( &,	_value_, _memberOption_ ) \
+		_GX_DIM_OPERATORS_TEMPLATE( ^,	_value_, _memberOption_ ) \
+		_GX_DIM_CMP_OPERATORS_TEMPLATE(	_value_, _memberOption_ ) 
+
+
+#	define _GX_DIM_ALL_FLOAT_OPERATORS_SELF( _value_ ) \
+		_GX_DIM_OPERATORS_SELF( +,	_value_ ) \
+		_GX_DIM_OPERATORS_SELF( -,	_value_ ) \
+		_GX_DIM_OPERATORS_SELF( *,	_value_ ) \
+		_GX_DIM_OPERATORS_SELF( /,	_value_ ) \
+		_GX_DIM_CMP_OPERATORS_SELF( _value_ ) \
+		Self	operator - () const		{ return Self( -_value_ ); } \
+		Self &		operator ++ ()		{ ++_value_;  return *this; } \
+		Self &		operator -- ()		{ --_value_;  return *this; } \
+		const Self	operator ++ (int)	{ Self	ret(*this);  ++(*this);  return ret; } \
+		const Self	operator -- (int)	{ Self	ret(*this);  --(*this);  return ret; }
+	
+
+#	define _GX_DIM_ALL_FLOAT_OPERATORS_TYPE( _value_, _type_, _memberOption_ ) \
+		_GX_DIM_OPERATORS_TYPE( +,	_value_, _type_, _memberOption_ ) \
+		_GX_DIM_OPERATORS_TYPE( -,	_value_, _type_, _memberOption_ ) \
+		_GX_DIM_OPERATORS_TYPE( *,	_value_, _type_, _memberOption_ ) \
+		_GX_DIM_OPERATORS_TYPE( /,	_value_, _type_, _memberOption_ ) \
+		_GX_DIM_CMP_OPERATORS_TYPE(	_value_, _type_, _memberOption_ ) 
+
+
+#	define _GX_DIM_ALL_FLOAT_OPERATORS_TEMPLATE( _value_, _type_, _memberOption_ ) \
+		_GX_DIM_OPERATORS_TEMPLATE( +,	_value_, _type_, _memberOption_ ) \
+		_GX_DIM_OPERATORS_TEMPLATE( -,	_value_, _type_, _memberOption_ ) \
+		_GX_DIM_OPERATORS_TEMPLATE( *,	_value_, _type_, _memberOption_ ) \
+		_GX_DIM_OPERATORS_TEMPLATE( /,	_value_, _type_, _memberOption_ ) \
+		_GX_DIM_CMP_OPERATORS_TEMPLATE(	_value_, _type_, _memberOption_ ) 
+
+
+}	// GXMath
+}	// GX_STL

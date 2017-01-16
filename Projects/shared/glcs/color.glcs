@@ -1,0 +1,40 @@
+
+float3  RGBtoHSV (in float3 rgb)
+{
+	float	k = 0.0;
+	float	r = rgb.x;
+	float	g = rgb.y;
+	float	b = rgb.z;
+	float	t = 0.0;
+
+	if ( g < b )
+	{
+		t = g;	g = b;	b = t;
+		k = -1.0;
+	}
+
+	if ( r < g )
+	{
+		t = r;	r = g;	g = t;
+		k = -2.0 / 6.0 - k;
+	}
+
+	float	chroma = r - min( g, b );
+
+	return float3( abs( k + (g - b) / 6.0 * chroma + 1e-20 ),
+				   chroma / ( r + 1e-20 ),
+				   r );
+}
+
+
+float3 HSVtoRGB (in float3 hsv)
+{
+	float3 col = float3( abs( hsv.x * 6.0 - 3.0 ) - 1.0,
+						 2.0 - abs( hsv.x * 6.0 - 2.0 ),
+						 2.0 - abs( hsv.x * 6.0 - 4.0 ) );
+
+	return (( clamp( col, float3(0.0), float3(1.0) ) - 1.0 ) * hsv.y + 1.0 ) * hsv.z;
+}
+
+// Rainbow example :
+// float4( HSVtoRGB( float3( value, 1.0, 1.0 ) ), 1.0 );

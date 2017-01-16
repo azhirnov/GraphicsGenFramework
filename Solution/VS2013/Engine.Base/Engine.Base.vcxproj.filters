@@ -1,0 +1,274 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="..\..\..\Engine\Base\Engine.Base.h" />
+    <ClInclude Include="..\..\..\Engine\Base\Config\Version.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Config\Config.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Common\Common.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Common\BaseObject.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Common\EngineSubSystems.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Parallel\AsyncTask.h">
+      <Filter>Parallel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Parallel\ParallelThread.h">
+      <Filter>Parallel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Parallel\Runnable.h">
+      <Filter>Parallel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Parallel\ParallelOp.h">
+      <Filter>Parallel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Parallel\ThreadMessageQueue.h">
+      <Filter>Parallel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Parallel\IParallelThread.h">
+      <Filter>Parallel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Parallel\ThreadManager.h">
+      <Filter>Parallel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Parallel\MainThread.h">
+      <Filter>Parallel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\OS\Windows\WApplication.h">
+      <Filter>OS\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\OS\Windows\WFileManager.h">
+      <Filter>OS\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\OS\Windows\WKeyCodes.h">
+      <Filter>OS\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\OS\Windows\WOpenGL.h">
+      <Filter>OS\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Parallel\VirtualThread.h">
+      <Filter>Parallel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\OS\Windows\WPlatform.h">
+      <Filter>OS\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\OS\OS.h">
+      <Filter>OS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Resources\Resource.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Resources\ResourceManager.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Resources\ResourceMemStat.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Locale\LocaleManager.h">
+      <Filter>Locale</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Locale\LocaleStringID.h">
+      <Filter>Locale</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Locale\IsoLocale.h">
+      <Filter>Locale</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Time\TimerManager.h">
+      <Filter>Time</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Locale\LocaleCharacters.h">
+      <Filter>Locale</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Serializing\Deserializer.h">
+      <Filter>Serializing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Serializing\Serializer.h">
+      <Filter>Serializing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Pack\PackFileWritter.h">
+      <Filter>Pack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Pack\PackManager.h">
+      <Filter>Pack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Pack\PackFileID.h">
+      <Filter>Pack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Events\EventSystem.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Input\Input.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\OS\Shared\Application.h">
+      <Filter>OS\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\OS\Shared\Display.h">
+      <Filter>OS\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\OS\Shared\Enums.h">
+      <Filter>OS\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\OS\Shared\FileManager.h">
+      <Filter>OS\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\OS\Shared\Platform.h">
+      <Filter>OS\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\OS\Shared\ScreenCoordTypes.h">
+      <Filter>OS\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\OS\Shared\SystemEvents.h">
+      <Filter>OS\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\OS\Shared\VideoSettings.h">
+      <Filter>OS\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Pack\PackFileIDManager.h">
+      <Filter>Pack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Resources\IResourceLoader.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\OS\SDL\SDLApplication.h">
+      <Filter>OS\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\OS\SDL\SDLFileManager.h">
+      <Filter>OS\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\OS\SDL\SDLKeyCodes.h">
+      <Filter>OS\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\OS\SDL\SDLPlatform.h">
+      <Filter>OS\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\OS\SDL\SDLOpenGL.h">
+      <Filter>OS\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Utils\Game\GameApplication.h">
+      <Filter>Utils\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Utils\Game\KeyBindingsEvents.h">
+      <Filter>Utils\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Utils\Game\KeyBindings.h">
+      <Filter>Utils\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Serializing\SerializableObject.h">
+      <Filter>Serializing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Serializing\SerializableObjectFactory.h">
+      <Filter>Serializing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Serializing\SerializableObjectID.h">
+      <Filter>Serializing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Serializing\SerializableValue.h">
+      <Filter>Serializing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Base\Utils\Profiling\FunctionCpuProfiler.h">
+      <Filter>Utils\Profiling</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Config">
+      <UniqueIdentifier>{6e4f7646-6761-4dac-a933-bc05e332b4e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{0d5bf31c-12cd-41be-aa7f-1f244288a393}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parallel">
+      <UniqueIdentifier>{64700e97-c599-4a14-86a9-6bdfcfc476ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OS">
+      <UniqueIdentifier>{b709bee3-56ca-4bd4-80d2-5cd98e49cad5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OS\Android">
+      <UniqueIdentifier>{3bb6f814-d9fc-4aa5-8400-6ef3e88002a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OS\SDL">
+      <UniqueIdentifier>{f35fa01c-c0c0-404c-af38-367752adf372}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OS\Windows">
+      <UniqueIdentifier>{e3d476ee-0e16-4c9d-96af-65669e364cce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{584f5fc0-2720-4a2a-83e6-cee2847fb54d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Locale">
+      <UniqueIdentifier>{546f3161-1cd6-44d2-962f-60c3a99e444e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Time">
+      <UniqueIdentifier>{52ffc5b1-01c3-4d2c-9c82-7b39ee09610c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Serializing">
+      <UniqueIdentifier>{e8530ccb-1671-4f6f-890f-b5f3543d0b9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pack">
+      <UniqueIdentifier>{062cd9a2-5e3d-4ad1-8469-e28a9a6e20cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Events">
+      <UniqueIdentifier>{2a2c3721-60a1-48af-be16-2ec1ec65502d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{1573eb5a-d3e5-47ca-8ee1-feefbc65a480}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{df488909-1d95-4201-b0a0-10d24aa3c034}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OS\Shared">
+      <UniqueIdentifier>{1034a134-adf0-479c-ac79-01c9ebbef45e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils\Game">
+      <UniqueIdentifier>{8fdb0296-9d29-44bd-a8fe-89707f1daf3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils\Profiling">
+      <UniqueIdentifier>{8c2e0246-a8e5-4c4a-a516-65c039c58fca}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\Engine\Base\OS\Windows\WOpenGL.cpp">
+      <Filter>OS\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Base\OS\Windows\WPlatform.cpp">
+      <Filter>OS\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Base\Resources\ResourceManager.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Base\Locale\IsoLocale.cpp">
+      <Filter>Locale</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Base\Locale\LocaleManager.cpp">
+      <Filter>Locale</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Base\Pack\PackFileWritter.cpp">
+      <Filter>Pack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Base\Parallel\ThreadManager.cpp">
+      <Filter>Parallel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Base\Input\Input.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Base\OS\Shared\FileManager.cpp">
+      <Filter>OS\Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Base\OS\SDL\SDLPlatform.cpp">
+      <Filter>OS\SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Base\OS\SDL\SDLOpenGL.cpp">
+      <Filter>OS\SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Base\Serializing\SerializableObjectFactory.cpp">
+      <Filter>Serializing</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

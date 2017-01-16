@@ -1,0 +1,33 @@
+
+#include "Common.glcs"
+
+DECL_IMAGE( image2D, r32f, readonly, inHeightImage );
+DECL_IMAGE( image2D, rgba16f, writeonly, outNormalsImage );
+
+uniform float2	unScale;
+
+
+float3 ImageOffset (in int2 center, in int2 offset, in float2 scale)
+{
+	return float3( float2(offset) * scale, imageLoad( inHeightImage, center + offset ).x );
+}
+
+void main ()
+{
+	int2	img_coord	= GetGlobalCoord().xy;
+	int3	offset		= int3(-1, 0, 1);
+
+	float2	scale		= unScale;
+	float3	center		= float3( 0.0, 0.0, imageLoad( inHeightImage, img_coord ).x );
+	float3	normal		= float3(0.0);
+	
+	//	0 1 2
+	//	3 4 5
+	//	6 7 8
+	normal += Cross( ImageOffset( img_coord, offset.yz, scale ) - center, ImageOffset( img_coord, offset.zz, scale ) - center );	// 1-4, 2-4
+	normal += Cross( ImageOffset( img_coord, offset.zy, scale ) - center, ImageOffset( img_coord, offset.zx, scale ) - center );	// 5-4, 8-4
+	normal += Cross( ImageOffset( img_coord, offset.yx, scale ) - center, ImageOffset( img_coord, offset.xx, scale ) - center );	// 7-4, 6-4
+	normal += Cross( ImageOffset( img_coord, offset.xy, scale ) - center, ImageOffset( img_coord, offset.xz, scale ) - center );	// 3-4, 0-4
+
+	imageStore( outNormalsImage, img_coord, float4( Normalize( normal ), 0.0 ) );
+}

@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\..\Tests\STL\Main.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_CompileTime_TypeInfo.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_CompileTime_TypeList.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_CompileTime_TypeTraits.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_Containers_Queue.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_Math_Color.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_Math_ColorFormat.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_Math_ImageUtils.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_Types_ExtString.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_Types_FileAddress.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_Types_Function.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_Types_StringParser.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_Dimensions_PhysicsValue.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_Temp.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_Containers_String.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_CompileTime_TemplateMath.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_Math_Transform.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_Math_Factorial.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_Math_Clamp_Wrap.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_OS_Date.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_SimpleScript.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_CompileTime_MainType.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_Math_Matrix.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_Math_FloorCeilTruncRoundFract.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_CompileTime_StaticFloat.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_Containers_List.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_CompileTime_TypeQualifier.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_Containers_Array.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_Containers_CircularQueue.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_Containers_Set.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_Containers_Map.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_Containers_HashSet.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_Types_Union.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_Math_Bit.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\Tests\STL\Debug.h" />
+  </ItemGroup>
+</Project>

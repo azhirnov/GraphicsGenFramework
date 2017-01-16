@@ -1,0 +1,254 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\Projects\ShaderEditor\Core\Common.h" />
+    <ClInclude Include="..\..\..\Projects\ShaderEditor\Core\ISample.h" />
+    <ClInclude Include="..\..\..\Projects\ShaderEditor\Core\Renderer.h" />
+    <ClInclude Include="..\..\..\Projects\ShaderEditor\Core\ShaderEditor.h" />
+    <ClInclude Include="..\..\..\Projects\ShaderEditor\Generators\IGenerator.h" />
+    <ClInclude Include="..\..\..\Projects\ShaderEditor\Particles\ParticleRenderer.h" />
+    <ClInclude Include="..\..\..\Projects\ShaderEditor\Samples\Shadertoy\ShadertoySamples.h" />
+    <ClInclude Include="..\..\..\Projects\ShaderEditor\Samples\TileLandscape\TileLandscapeSample.h" />
+    <ClInclude Include="..\..\..\Projects\ShaderEditor\Shaders\IShader.h" />
+    <ClInclude Include="..\..\..\Projects\ShaderEditor\Shaders\LandscapeShader.h" />
+    <ClInclude Include="..\..\..\Projects\ShaderEditor\Shaders\Simple3DShader.h" />
+    <ClInclude Include="..\..\..\Projects\ShaderEditor\Tiles\Tile.h" />
+    <ClInclude Include="..\..\..\Projects\ShaderEditor\Tiles\TilesManager.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\Projects\ShaderEditor\Core\ISample.cpp" />
+    <ClCompile Include="..\..\..\Projects\ShaderEditor\Core\Renderer.cpp" />
+    <ClCompile Include="..\..\..\Projects\ShaderEditor\Core\ShaderEditor.cpp" />
+    <ClCompile Include="..\..\..\Projects\ShaderEditor\Generators\Microscheme\MicroschemeShader.cpp" />
+    <ClCompile Include="..\..\..\Projects\ShaderEditor\Generators\TileLandscape\TileLandscapeGenerator.cpp" />
+    <ClCompile Include="..\..\..\Projects\ShaderEditor\Main.cpp" />
+    <ClCompile Include="..\..\..\Projects\ShaderEditor\Particles\ParticleRenderer.cpp" />
+    <ClCompile Include="..\..\..\Projects\ShaderEditor\Samples\Shadertoy\ShadertoySamples.cpp" />
+    <ClCompile Include="..\..\..\Projects\ShaderEditor\Samples\TileLandscape\TileLandscapeSample.cpp" />
+    <ClCompile Include="..\..\..\Projects\ShaderEditor\Tiles\Tile.cpp" />
+    <ClCompile Include="..\..\..\Projects\ShaderEditor\Tiles\TilesManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Engine.Compute\Engine.Compute.vcxproj">
+      <Project>{ecd36223-bb98-44f0-8943-06ec54c2a29a}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\Projects\ShaderEditor\Generators\Microscheme\create_grid.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\Generators\Microscheme\main.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\Generators\TileLandscape\gen_diffuse.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\Generators\TileLandscape\gen_height.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\Generators\TileLandscape\gen_landscape.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\Generators\TileLandscape\gen_normals.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\Generators\TileLandscape\vertex.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Common.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Noise\Cellular.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Noise\FBM.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Noise\Gabor.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Noise\Perlin.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Noise\Simplex.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Noise\ValueNoise.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Noise\Voronoi.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Noise\VoronoiNoise.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Shaders\landscape.glsl" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Shaders\simple3d.glsl" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Shaders\textureView.glsl" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Shaders\textureViewI.glsl" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Shaders\textureViewU.glsl" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\STL\Defines\Defines.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\STL\GlobalIndex.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\STL\Math\Color.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\STL\Math\Math.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\_Shadertoy\Terrain\MysteryMountains.glcs" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{6D76E902-36EA-40DF-A266-CEA6A2C13C59}</ProjectGuid>
+    <RootNamespace>GGE</RootNamespace>
+    <ProjectName>Projects.ShaderEditor</ProjectName>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <TargetName>$(ProjectName)_d</TargetName>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <TargetName>$(ProjectName)_d</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAsManaged>false</CompileAsManaged>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PreprocessorDefinitions>__GX_DEBUG__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\..\..\External\SDL2\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAsManaged>false</CompileAsManaged>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PreprocessorDefinitions>__GX_DEBUG__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\..\..\External\SDL2\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <CompileAsManaged>false</CompileAsManaged>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <StringPooling>true</StringPooling>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+      <CreateHotpatchableImage>true</CreateHotpatchableImage>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>No</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>..\..\..\External\SDL2\lib</AdditionalLibraryDirectories>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <CompileAsManaged>false</CompileAsManaged>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <StringPooling>true</StringPooling>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+      <CreateHotpatchableImage>true</CreateHotpatchableImage>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>No</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>..\..\..\External\SDL2\lib</AdditionalLibraryDirectories>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,220 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="GL4">
+      <UniqueIdentifier>{98a2b18e-343e-40eb-9560-53f7e56a8c14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GLES3">
+      <UniqueIdentifier>{0d665505-67ce-49f5-b0c7-d6dde37ead00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GLES2">
+      <UniqueIdentifier>{4343a608-16dd-4684-849d-cb81c3150212}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DX11">
+      <UniqueIdentifier>{e9e1992e-a249-4c98-8bb7-b877d153a5a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{9561bf5d-a597-4260-b249-43215f67c2d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RenderTarget">
+      <UniqueIdentifier>{9b169589-f86e-4255-bc1d-ccf32f2804c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Texture">
+      <UniqueIdentifier>{7cb5eefe-0dd9-4f56-a59a-865d5ba31926}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Types">
+      <UniqueIdentifier>{9948a6b0-ceea-4e6d-a21a-69fa07aa2f6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VertexAttribs">
+      <UniqueIdentifier>{22fe55b8-694b-45e5-a208-e4aaa33c5bf3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{8782c29b-d536-4895-82bd-4fa03b5e4820}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Font">
+      <UniqueIdentifier>{b87e03e9-1e1a-4019-a3d8-d9b8c9cfeabe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Profiling">
+      <UniqueIdentifier>{c5205500-3341-4a45-ac12-73f585c8ebdc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Query">
+      <UniqueIdentifier>{bfcc8e9e-01ee-4600-b0ee-c7ddf90120bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Buffer">
+      <UniqueIdentifier>{b3143d1e-f1fc-47a7-be18-7695acb16887}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\Engine\Graphics\GL4\gl4.h">
+      <Filter>GL4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\GL4\GL4StateManager.h">
+      <Filter>GL4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\GL4\GL4Enums.h">
+      <Filter>GL4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\Engine.Graphics.h" />
+    <ClInclude Include="..\..\..\Engine\Graphics\GL4\GL4ObjectIDs.h">
+      <Filter>GL4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\GL4\GL4Context.h">
+      <Filter>GL4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\Engine\GraphicsEngine.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\RenderTarget\FragmentOutputState.h">
+      <Filter>RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\RenderTarget\RenderTarget.h">
+      <Filter>RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\RenderTarget\RenderTargetManager.h">
+      <Filter>RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\Texture\Sampler.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\Texture\SamplerState.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\Texture\Texture.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\Texture\TextureLoader.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\Types\Common.h">
+      <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\Types\DetailLevel.h">
+      <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\Types\Enums.h">
+      <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\Types\Enums.inl.h">
+      <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\Types\IStateActuator.h">
+      <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\Types\MultiSamples.h">
+      <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\VertexAttribs\VertexAttribs.h">
+      <Filter>VertexAttribs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\VertexAttribs\VertexAttribsDesc.h">
+      <Filter>VertexAttribs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\VertexAttribs\VertexDesc.h">
+      <Filter>VertexAttribs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\Types\RenderState.h">
+      <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\Shader\ShaderProgram.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\Shader\UniformBlock.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\Shader\TextureUniform.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\Mesh\MeshGenerator.h">
+      <Filter>Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\GL4\GL4Emulator.h">
+      <Filter>GL4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\Shader\ImageUniform.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\Mesh\MemoryBuffer.h">
+      <Filter>Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\Shader\ShaderManager.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\Types\MipmapLevel.h">
+      <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\Types\TexArrLayer.h">
+      <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\Profiling\FunctionGpuProfiler.h">
+      <Filter>Profiling</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\Query\GraphicsQuery.h">
+      <Filter>Query</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\Types\MemoryBarrierObj.h">
+      <Filter>Types</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\Engine\Graphics\GL4\gl4.cpp">
+      <Filter>GL4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Graphics\GL4\GL4Texture.cpp">
+      <Filter>GL4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Graphics\GL4\GL4StateManager.cpp">
+      <Filter>GL4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Graphics\GL4\GL4Context.cpp">
+      <Filter>GL4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Graphics\GL4\GL4RenderTarget.cpp">
+      <Filter>GL4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Graphics\Engine\GraphicsEngine.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Graphics\RenderTarget\RenderTarget.cpp">
+      <Filter>RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Graphics\RenderTarget\RenderTargetManager.cpp">
+      <Filter>RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Graphics\Texture\Texture.cpp">
+      <Filter>Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Graphics\Texture\TextureLoader.cpp">
+      <Filter>Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Graphics\GL4\GL4ShaderProgram.cpp">
+      <Filter>GL4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Graphics\Shader\ShaderProgram.cpp">
+      <Filter>Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Graphics\Mesh\MeshGenerator.cpp">
+      <Filter>Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Graphics\Types\RenderState.cpp">
+      <Filter>Types</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Graphics\Mesh\MemoryBuffer.cpp">
+      <Filter>Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Graphics\GL4\GL4MemoryBuffer.cpp">
+      <Filter>GL4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Graphics\Shader\ShaderManager.cpp">
+      <Filter>Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Graphics\GL4\GL4ShaderManager.cpp">
+      <Filter>GL4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Graphics\Query\GraphicsQuery.cpp">
+      <Filter>Query</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Graphics\GL4\GL4GraphicsQuery.cpp">
+      <Filter>GL4</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

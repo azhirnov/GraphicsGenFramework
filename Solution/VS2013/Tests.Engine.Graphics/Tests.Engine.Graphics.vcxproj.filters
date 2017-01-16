@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\..\Tests\Engine\Graphics\Main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\Tests\Engine\Graphics\prog.glsl" />
+    <None Include="..\..\..\Tests\Engine\Graphics\prog1.glsl" />
+    <None Include="..\..\..\Tests\Engine\Graphics\prog2.glsl" />
+    <None Include="..\..\..\Tests\Engine\Graphics\prog3.glsl" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,17 @@
+
+#include "Common.glcs"
+
+DECL_IMAGE( image2D, r32f, writeonly, outHeightImage );
+
+uniform float2	unPosition;
+uniform float2	unScale;
+
+
+void main ()
+{
+	int2	img_coord	= GetGlobalCoord().xy;
+	float2	coord		= GetGlobalCoordUNorm().xy * unScale + unPosition;
+	float	height		= PerlinNoise2D( coord, 0.1, 2.0, 0.5, 6, 0 );
+
+	imageStore( outHeightImage, img_coord, float4( height ) );
+}

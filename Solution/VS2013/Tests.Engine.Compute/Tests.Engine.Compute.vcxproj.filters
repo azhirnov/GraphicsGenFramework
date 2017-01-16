@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\..\Tests\Engine\Compute\Main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\Tests\Engine\Compute\prog.cl" />
+    <None Include="..\..\..\Tests\Engine\Compute\prog.cu" />
+    <None Include="..\..\..\Tests\Engine\Compute\prog.glcs" />
+  </ItemGroup>
+</Project>

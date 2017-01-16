@@ -1,0 +1,135 @@
+#include "math.glcs"
+
+#define Gen_BoolTemplates( _gen_ ) \
+	_gen_( bool ) \
+	_gen_( bool2 ) \
+	_gen_( bool3 ) \
+	_gen_( bool4 )
+
+#define Gen_IntVecTemplates( _gen_ ) \
+	_gen_( int2 ) \
+	_gen_( int3 ) \
+	_gen_( int4 )
+
+#define Gen_IntTemplates( _gen_ ) \
+	_gen_( int ) \
+	Gen_IntVecTemplates( _gen_ )
+
+
+#define Gen_UintVecTemplates( _gen_ ) \
+	_gen_( uint2 ) \
+	_gen_( uint3 ) \
+	_gen_( uint4 )
+
+#define Gen_UintTemplates( _gen_ ) \
+	_gen_( uint ) \
+	Gen_UintVecTemplates( _gen_ )
+
+
+#define Gen_FloatVecTemplates( _gen_ ) \
+	_gen_( float2 ) \
+	_gen_( float3 ) \
+	_gen_( float4 )
+
+#define Gen_FloatTemplates( _gen_ ) \
+	_gen_( float ) \
+	Gen_FloatVecTemplates( _gen_ )
+
+
+#define Gen_DoubleVecTemplates( _gen_ ) \
+	_gen_( double2 ) \
+	_gen_( double3 ) \
+	_gen_( double4 )
+
+#define Gen_DoubleTemplates( _gen_ ) \
+	_gen_( double ) \
+	Gen_DoubleVecTemplates( _gen_ )
+
+
+#define Gen_AllTemplates( _gen_ ) \
+	Gen_IntTemplates( _gen_ ) \
+	Gen_UintTemplates( _gen_ ) \
+	Gen_FloatTemplates( _gen_ ) \
+	Gen_DoubleTemplates( _gen_ )
+
+
+#define Gen_ScalarTemplates( _gen_ ) \
+	_gen_( int ) \
+	_gen_( uint ) \
+	_gen_( float ) \
+	_gen_( double )
+
+#define Gen_VectorTemplates( _gen_ ) \
+	Gen_IntVecTemplates( _gen_ ) \
+	Gen_UintVecTemplates( _gen_ ) \
+	Gen_FloatVecTemplates( _gen_ ) \
+	Gen_DoubleVecTemplates( _gen_ )
+
+
+// Square
+#define GenTemplate_Square( _type_ )	_type_ Square (in _type_ x) { return x * x; }
+	Gen_AllTemplates( GenTemplate_Square )
+#undef GenTemplate_Square
+
+
+// Wrap
+#define GenTemplate_WrapS( _type_ ) \
+	_type_ Wrap (in _type_ x, in _type_ minVal, in _type_ maxVal) { \
+		_type_ result = minVal + _type_( mod( x - minVal, maxVal - minVal ) ); \
+		if ( result < minVal )  result += (maxVal - minVal); \
+		return result; \
+	}
+#define GenTemplate_WrapV( _type_ ) \
+	_type_ Wrap (in _type_ x, in _type_ minVal, in _type_ maxVal) { \
+		_type_ res; \
+		for (int i = 0; i < x.length(); ++i) { \
+			res[i] = Wrap( x[i], minVal[i], maxVal[i] ); \
+		} \
+		return res; \
+	}
+	Gen_ScalarTemplates( GenTemplate_WrapS )
+	Gen_VectorTemplates( GenTemplate_WrapV )
+#undef GenTemplate_WrapS
+#undef GenTemplate_WrapV
+
+
+// SnormToUnorm
+#define GenTemplate_SnormToUnorm( _type_ ) \
+	_type_ SnormToUnorm (in _type_ x) { \
+		return x * 0.5 + 0.5; \
+	}
+	Gen_FloatTemplates( GenTemplate_SnormToUnorm )
+	Gen_DoubleTemplates( GenTemplate_SnormToUnorm )
+#undef GenTemplate_SnormToUnorm
+		
+
+// UnormToSnorm
+#define GenTemplate_UnormToSnorm( _type_ ) \
+	_type_ UnormToSnorm (in _type_ x) { \
+		return x * 2.0 - 1.0; \
+	}
+	Gen_FloatTemplates( GenTemplate_UnormToSnorm )
+	Gen_DoubleTemplates( GenTemplate_UnormToSnorm )
+#undef GenTemplate_UnormToSnorm
+
+
+
+// undef all
+#undef Gen_BoolTemplates
+
+#undef Gen_IntVecTemplates
+#undef Gen_IntTemplates
+
+#undef Gen_UintVecTemplates
+#undef Gen_UintTemplates
+
+#undef Gen_FloatVecTemplates
+#undef Gen_FloatTemplates
+
+#undef Gen_DoubleVecTemplates
+#undef Gen_DoubleTemplates
+
+#undef Gen_AllTemplates
+
+#undef Gen_ScalarTemplates
+#undef Gen_VectorTemplates

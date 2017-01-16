@@ -1,0 +1,108 @@
+
+#include "Common.glcs"
+
+DECL_IMAGE( uimage2D, rgba8ui, writeonly, outGridDataImage );
+
+uniform uint2	unMaxSubCellSize;
+uniform uint2	unCellSize;
+
+
+float2 Hash22 (in float2 p)
+{
+	float2 q = float2( Dot( p, float2(127.1, 311.7) ), 
+						Dot( p, float2(269.5, 183.3) ) );
+    
+	return Fract( Sin(q) * 43758.5453 );
+}
+
+
+bool InRect (in uint4 rect, in uint2 pos)
+{
+	return AllGreaterEqual( pos, rect.xy ) and AllLess( pos, rect.zw );
+}
+
+
+uint2 SubCellSize (uint2 global, uint2 local)
+{
+	//float2	h = float2( ValueNoise_Uniform( float2(global), 1.7234 ), ValueNoise_Uniform( float2(global.yx), 5.9342 ) );
+	float2	h = Hash22( float2(global) );
+	uint2	s = uint2( Round( float2(unMaxSubCellSize) * h ) );
+
+	/*s = Clamp( s, uint2(1), unCellSize - local );
+
+	s = (s + 1) & ~1;
+
+	uint2	s2 = s * 2;
+
+	if ( s.x > s2.y )
+		s.x = s2.y;
+	else
+	if ( s.y > s2.x )
+		s.y = s.x;*/
+
+	return Clamp( s, uint2(1), unCellSize - local );
+}
+
+
+void main ()
+	{
+	const uint maxRows = 16;
+
+	uint4	rowCache[ maxRows * 2 ];
+
+	uint2	size		= Min( unCellSize, uint2(maxRows) );
+	uint2	global		= GetGlobalCoord().xy * size;
+	uint2	local		= uint2(0);
+	uint	cache_write	= 0;	// current row
+	uint	cache_read	= 1;	// y-1 row
+
+	for (local.y = 0; local.y < size.y; ++local.y)
+	{
+		cache_read	= cache_write;
+		cache_write	= (cache_write+1) & 1;
+
+		for (local.x = 0; local.x < size.x; ++local.x)
+		{
+			uint4	rect;
+			
+			if ( local.y > 0 )
+			{
+				rect = rowCache[ local.x + cache_read * maxRows ];
+
+				if ( InRect( rect, local ) )
+				{
+					rowCache[ local.x + cache_write * maxRows ] = rect;
+					imageStore( outGridDataImage, int2(global + local), rect );
+					continue;
+				}
+			}
+
+			if ( local.x > 0 )
+			{
+				rect = rowCache[ local.x-1 + cache_write * maxRows ];
+
+				if ( InRect( rect, local ) )
+				{
+					rowCache[ local.x + cache_write * maxRows ] = rect;
+					imageStore( outGridDataImage, int2(global + local), rect );
+					continue;
+				}
+			}
+			
+			rect.xy = local;
+			rect.zw = local + SubCellSize( global + local, local );
+
+			for (uint i = rect.x+1; i < rect.z; ++i)
+			{
+				if ( InRect( rowCache[ i + cache_read * maxRows ], uint2(i, local.y) ) )
+				{
+					rect.z = i;
+					break;
+				}
+			}
+
+			rowCache[ local.x + cache_write * maxRows ] = rect;
+			imageStore( outGridDataImage, int2(global + local), rect );
+		}
+	}
+}

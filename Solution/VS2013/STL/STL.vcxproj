@@ -1,0 +1,446 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\STL\BaseTypes\AllFunc.h" />
+    <ClInclude Include="..\..\..\STL\BaseTypes\Bitfield.h" />
+    <ClInclude Include="..\..\..\STL\BaseTypes\Fixed.h" />
+    <ClInclude Include="..\..\..\STL\BaseTypes\Float.h" />
+    <ClInclude Include="..\..\..\STL\BaseTypes\Half.h" />
+    <ClInclude Include="..\..\..\STL\BaseTypes\UFloat.h" />
+    <ClInclude Include="..\..\..\STL\BaseTypes\TypeCast.h" />
+    <ClInclude Include="..\..\..\STL\BaseTypes\Types.h" />
+    <ClInclude Include="..\..\..\STL\CompileTime\AlignedType.h" />
+    <ClInclude Include="..\..\..\STL\CompileTime\CompileTimeChecks.h" />
+    <ClInclude Include="..\..\..\STL\CompileTime\CompileTimeDebug.h" />
+    <ClInclude Include="..\..\..\STL\CompileTime\Constants.h" />
+    <ClInclude Include="..\..\..\STL\CompileTime\NearType.h" />
+    <ClInclude Include="..\..\..\STL\CompileTime\NewTypeInfo.h" />
+    <ClInclude Include="..\..\..\STL\CompileTime\PlainOldDataType.h" />
+    <ClInclude Include="..\..\..\STL\CompileTime\Signature.h" />
+    <ClInclude Include="..\..\..\STL\CompileTime\TemplateMath.h" />
+    <ClInclude Include="..\..\..\STL\CompileTime\TemplateUtils.h" />
+    <ClInclude Include="..\..\..\STL\CompileTime\Fractional.h" />
+    <ClInclude Include="..\..\..\STL\CompileTime\StaticFloat.h" />
+    <ClInclude Include="..\..\..\STL\CompileTime\StaticInteger.h" />
+    <ClInclude Include="..\..\..\STL\CompileTime\TTypeInfo.h" />
+    <ClInclude Include="..\..\..\STL\CompileTime\TypeList.h" />
+    <ClInclude Include="..\..\..\STL\CompileTime\TypeListHelpers.h" />
+    <ClInclude Include="..\..\..\STL\CompileTime\TypeListUtils.h" />
+    <ClInclude Include="..\..\..\STL\CompileTime\TypeQualifier.h" />
+    <ClInclude Include="..\..\..\STL\CompileTime\TypeTraits.h" />
+    <ClInclude Include="..\..\..\STL\Containers\HashMap.h" />
+    <ClInclude Include="..\..\..\STL\Containers\MapUtils.h" />
+    <ClInclude Include="..\..\..\STL\Containers\BitArray.h" />
+    <ClInclude Include="..\..\..\STL\Containers\CopyStrategy.h" />
+    <ClInclude Include="..\..\..\STL\Containers\HashSet.h" />
+    <ClInclude Include="..\..\..\STL\Containers\List.h" />
+    <ClInclude Include="..\..\..\STL\Containers\Sorts.h" />
+    <ClInclude Include="..\..\..\STL\Containers\Array.h" />
+    <ClInclude Include="..\..\..\STL\Containers\CircularQueue.h" />
+    <ClInclude Include="..\..\..\STL\Containers\Stack.h" />
+    <ClInclude Include="..\..\..\STL\Containers\Map.h" />
+    <ClInclude Include="..\..\..\STL\Containers\Pair.h" />
+    <ClInclude Include="..\..\..\STL\Containers\Queue.h" />
+    <ClInclude Include="..\..\..\STL\Containers\Set.h" />
+    <ClInclude Include="..\..\..\STL\Containers\StaticArray.h" />
+    <ClInclude Include="..\..\..\STL\Containers\StaticBitArray.h" />
+    <ClInclude Include="..\..\..\STL\Containers\String.h" />
+    <ClInclude Include="..\..\..\STL\Containers\Buffer.h" />
+    <ClInclude Include="..\..\..\STL\Containers\TStringRef.h" />
+    <ClInclude Include="..\..\..\STL\Containers\UniBuffer.h" />
+    <ClInclude Include="..\..\..\STL\DataBase\SimpleDB.h" />
+    <ClInclude Include="..\..\..\STL\Defines\DefConfig.h" />
+    <ClInclude Include="..\..\..\STL\Defines\Defines.h" />
+    <ClInclude Include="..\..\..\STL\Defines\EnumHelpers.h" />
+    <ClInclude Include="..\..\..\STL\Defines\Errors.h" />
+    <ClInclude Include="..\..\..\STL\Defines\AuxiliaryDefines.h" />
+    <ClInclude Include="..\..\..\STL\Defines\Init.h" />
+    <ClInclude Include="..\..\..\STL\Defines\PublicMacro.h" />
+    <ClInclude Include="..\..\..\STL\Dimensions\ByteAndBit.h" />
+    <ClInclude Include="..\..\..\STL\Dimensions\Helpers.h" />
+    <ClInclude Include="..\..\..\STL\Dimensions\Percentage.h" />
+    <ClInclude Include="..\..\..\STL\Dimensions\PhysicsDimension.h" />
+    <ClInclude Include="..\..\..\STL\Dimensions\PhysicsValue.h" />
+    <ClInclude Include="..\..\..\STL\Dimensions\PhysicsValueMath.h" />
+    <ClInclude Include="..\..\..\STL\Dimensions\PhysicsValueUtils.h" />
+    <ClInclude Include="..\..\..\STL\Dimensions\PhysicsValueVec.h" />
+    <ClInclude Include="..\..\..\STL\Dimensions\PhysicsValueVecI.h" />
+    <ClInclude Include="..\..\..\STL\Dimensions\RadiansAndDegrees.h" />
+    <ClInclude Include="..\..\..\STL\Files\BaseFile.h" />
+    <ClInclude Include="..\..\..\STL\Files\CryptFile.h" />
+    <ClInclude Include="..\..\..\STL\Files\HDDFile.h" />
+    <ClInclude Include="..\..\..\STL\Files\LzmaFile.h" />
+    <ClInclude Include="..\..\..\STL\Files\MemFile.h" />
+    <ClInclude Include="..\..\..\STL\Files\SubFile.h" />
+    <ClInclude Include="..\..\..\STL\Files\ZipFile.h" />
+    <ClInclude Include="..\..\..\STL\Filters\GaussianFilter.h" />
+    <ClInclude Include="..\..\..\STL\Java\JavaArray.h" />
+    <ClInclude Include="..\..\..\STL\Java\JavaClass.h" />
+    <ClInclude Include="..\..\..\STL\Java\JavaEnvironment.h" />
+    <ClInclude Include="..\..\..\STL\Java\JavaMethod.h" />
+    <ClInclude Include="..\..\..\STL\Java\JavaMethodType.h" />
+    <ClInclude Include="..\..\..\STL\Java\JavaString.h" />
+    <ClInclude Include="..\..\..\STL\Java\JavaTypeInfo.h" />
+    <ClInclude Include="..\..\..\STL\LibC\c_assert.h" />
+    <ClInclude Include="..\..\..\STL\LibC\libc.h" />
+    <ClInclude Include="..\..\..\STL\Log\ELog.h" />
+    <ClInclude Include="..\..\..\STL\Log\Logger.h" />
+    <ClInclude Include="..\..\..\STL\Math\2D\CoordTransform2.h" />
+    <ClInclude Include="..\..\..\STL\Math\2D\MathTypes2D.h" />
+    <ClInclude Include="..\..\..\STL\Math\2D\Circle.h" />
+    <ClInclude Include="..\..\..\STL\Math\2D\Line2.h" />
+    <ClInclude Include="..\..\..\STL\Math\2D\OrientedRectangle.h" />
+    <ClInclude Include="..\..\..\STL\Math\2D\Rectangle.h" />
+    <ClInclude Include="..\..\..\STL\Math\3D\CoordTransform3.h" />
+    <ClInclude Include="..\..\..\STL\Math\3D\Line3.h" />
+    <ClInclude Include="..\..\..\STL\Math\3D\MathTypes3D.h" />
+    <ClInclude Include="..\..\..\STL\Math\3D\OrientedBox.h" />
+    <ClInclude Include="..\..\..\STL\Math\3D\AxisAlignedBox.h" />
+    <ClInclude Include="..\..\..\STL\Math\3D\PerspectiveCamera.h" />
+    <ClInclude Include="..\..\..\STL\Math\3D\Frustum.h" />
+    <ClInclude Include="..\..\..\STL\Math\3D\Plane.h" />
+    <ClInclude Include="..\..\..\STL\Math\3D\Sphere.h" />
+    <ClInclude Include="..\..\..\STL\Math\3D\Transform.h" />
+    <ClInclude Include="..\..\..\STL\Math\3D\Triangle.h" />
+    <ClInclude Include="..\..\..\STL\Math\Algebra.h" />
+    <ClInclude Include="..\..\..\STL\Math\Color\Color.h" />
+    <ClInclude Include="..\..\..\STL\Math\Color\ColorFormatCompressed.h" />
+    <ClInclude Include="..\..\..\STL\Math\Color\ColorFormats.h" />
+    <ClInclude Include="..\..\..\STL\Math\FastMath.h" />
+    <ClInclude Include="..\..\..\STL\Math\Image\ImageUtils.h" />
+    <ClInclude Include="..\..\..\STL\Math\Mathematics.h" />
+    <ClInclude Include="..\..\..\STL\Math\MathFunc.h" />
+    <ClInclude Include="..\..\..\STL\Math\MathTypeCast.h" />
+    <ClInclude Include="..\..\..\STL\Math\MathTypes.h" />
+    <ClInclude Include="..\..\..\STL\Math\Matrix.h" />
+    <ClInclude Include="..\..\..\STL\Math\Rand\NormalDistribution.h" />
+    <ClInclude Include="..\..\..\STL\Math\Rand\Pseudorandom.h" />
+    <ClInclude Include="..\..\..\STL\Math\Rand\RandEngine.h" />
+    <ClInclude Include="..\..\..\STL\Math\Rand\Random.h" />
+    <ClInclude Include="..\..\..\STL\Math\Rand\RandomWithChance.h" />
+    <ClInclude Include="..\..\..\STL\Math\MatrixUtils.h" />
+    <ClInclude Include="..\..\..\STL\Math\Matrix2.h" />
+    <ClInclude Include="..\..\..\STL\Math\Matrix3.h" />
+    <ClInclude Include="..\..\..\STL\Math\Matrix4.h" />
+    <ClInclude Include="..\..\..\STL\Math\MatrixCR.h" />
+    <ClInclude Include="..\..\..\STL\Math\Quaternion.h" />
+    <ClInclude Include="..\..\..\STL\Math\Spline\Spline.h" />
+    <ClInclude Include="..\..\..\STL\Math\TR11G11B10F.h" />
+    <ClInclude Include="..\..\..\STL\Math\TRGB9_E5.h" />
+    <ClInclude Include="..\..\..\STL\Math\Vec.h" />
+    <ClInclude Include="..\..\..\STL\Math\VecI.h" />
+    <ClInclude Include="..\..\..\STL\Math\Utils.h" />
+    <ClInclude Include="..\..\..\STL\Memory\Allocators.h" />
+    <ClInclude Include="..\..\..\STL\Memory\MemFunc.h" />
+    <ClInclude Include="..\..\..\STL\Memory\MemFunc2.h" />
+    <ClInclude Include="..\..\..\STL\Memory\MemoryContainer.h" />
+    <ClInclude Include="..\..\..\STL\OS\Android\OSAndroid.h" />
+    <ClInclude Include="..\..\..\STL\OS\Base\BaseFileSystem.h" />
+    <ClInclude Include="..\..\..\STL\OS\Base\Common.h" />
+    <ClInclude Include="..\..\..\STL\OS\Base\ConditionVariableEmulation.h" />
+    <ClInclude Include="..\..\..\STL\OS\Base\Date.h" />
+    <ClInclude Include="..\..\..\STL\OS\Base\ReadWriteSyncEmulation.h" />
+    <ClInclude Include="..\..\..\STL\OS\Base\SemaphoreEmulator.h" />
+    <ClInclude Include="..\..\..\STL\OS\Base\SyncEventEmulation.h" />
+    <ClInclude Include="..\..\..\STL\OS\Base\SyncPrimitives.h" />
+    <ClInclude Include="..\..\..\STL\OS\OSLowLevel.h" />
+    <ClInclude Include="..\..\..\STL\OS\Posix\AtomicOp.h" />
+    <ClInclude Include="..\..\..\STL\OS\Posix\FileSystem.h" />
+    <ClInclude Include="..\..\..\STL\OS\Posix\Library.h" />
+    <ClInclude Include="..\..\..\STL\OS\Posix\OSPosix.h" />
+    <ClInclude Include="..\..\..\STL\OS\Posix\OSUtils.h" />
+    <ClInclude Include="..\..\..\STL\OS\Posix\RandDevice.h" />
+    <ClInclude Include="..\..\..\STL\OS\Posix\SyncPrimitives.h" />
+    <ClInclude Include="..\..\..\STL\OS\Posix\Thread.h" />
+    <ClInclude Include="..\..\..\STL\OS\Posix\Timer.h" />
+    <ClInclude Include="..\..\..\STL\OS\SDL\FileSystem.h" />
+    <ClInclude Include="..\..\..\STL\OS\SDL\Library.h" />
+    <ClInclude Include="..\..\..\STL\OS\SDL\SDLUtils.h" />
+    <ClInclude Include="..\..\..\STL\OS\SDL\OS_SDL.h" />
+    <ClInclude Include="..\..\..\STL\OS\SDL\RandDevice.h" />
+    <ClInclude Include="..\..\..\STL\OS\SDL\SyncPrimitives.h" />
+    <ClInclude Include="..\..\..\STL\OS\SDL\Thread.h" />
+    <ClInclude Include="..\..\..\STL\OS\SDL\Timer.h" />
+    <ClInclude Include="..\..\..\STL\OS\Windows\AtomicOp.h" />
+    <ClInclude Include="..\..\..\STL\OS\Windows\FileSystem.h" />
+    <ClInclude Include="..\..\..\STL\OS\Windows\Library.h" />
+    <ClInclude Include="..\..\..\STL\OS\Windows\OSUtils.h" />
+    <ClInclude Include="..\..\..\STL\OS\Windows\OSWindows.h" />
+    <ClInclude Include="..\..\..\STL\OS\Windows\RandDevice.h" />
+    <ClInclude Include="..\..\..\STL\OS\Windows\SyncPrimitives.h" />
+    <ClInclude Include="..\..\..\STL\OS\Windows\Thread.h" />
+    <ClInclude Include="..\..\..\STL\OS\Windows\Timer.h" />
+    <ClInclude Include="..\..\..\STL\Platforms\CompilerGCC.h" />
+    <ClInclude Include="..\..\..\STL\Platforms\CompilerMSVC.h" />
+    <ClInclude Include="..\..\..\STL\Platforms\Platforms.h" />
+    <ClInclude Include="..\..\..\STL\ScriptBindings\DefaultBindings.h" />
+    <ClInclude Include="..\..\..\STL\ScriptBindings\ScriptBinder.h" />
+    <ClInclude Include="..\..\..\STL\ScriptBindings\ScriptEngine.h" />
+    <ClInclude Include="..\..\..\STL\ScriptBindings\ScriptEnum.h" />
+    <ClInclude Include="..\..\..\STL\ScriptBindings\ScriptTypes.h" />
+    <ClInclude Include="..\..\..\STL\ThreadSafe\AtomicPtr.h" />
+    <ClInclude Include="..\..\..\STL\ThreadSafe\MtFile.h" />
+    <ClInclude Include="..\..\..\STL\ThreadSafe\Referenced.h" />
+    <ClInclude Include="..\..\..\STL\ThreadSafe\Atomic.h" />
+    <ClInclude Include="..\..\..\STL\ThreadSafe\MultiThreadQueue.h" />
+    <ClInclude Include="..\..\..\STL\ThreadSafe\Singleton.h" />
+    <ClInclude Include="..\..\..\STL\Time\FloatTimeImpl.h" />
+    <ClInclude Include="..\..\..\STL\Time\IntTimeImpl.h" />
+    <ClInclude Include="..\..\..\STL\Time\Time.h" />
+    <ClInclude Include="..\..\..\STL\Time\TimeProfiler.h" />
+    <ClInclude Include="..\..\..\STL\Types\FileAddress.h" />
+    <ClInclude Include="..\..\..\STL\Types\Function.h" />
+    <ClInclude Include="..\..\..\STL\Types\FunctionImpl.h" />
+    <ClInclude Include="..\..\..\STL\Types\Hash.h" />
+    <ClInclude Include="..\..\..\STL\Types\Limit.h" />
+    <ClInclude Include="..\..\..\STL\Types\Noncopyable.h" />
+    <ClInclude Include="..\..\..\STL\Types\Noninstancable.h" />
+    <ClInclude Include="..\..\..\STL\Types\ScopeSetter.h" />
+    <ClInclude Include="..\..\..\STL\Types\StaticLimit.h" />
+    <ClInclude Include="..\..\..\STL\Types\StringParser.h" />
+    <ClInclude Include="..\..\..\STL\Types\StringUtils.h" />
+    <ClInclude Include="..\..\..\STL\Types\UniquePtr.h" />
+    <ClInclude Include="..\..\..\STL\Types\BufferedPtr.h" />
+    <ClInclude Include="..\..\..\STL\Types\Crypt.h" />
+    <ClInclude Include="..\..\..\STL\Types\Optional.h" />
+    <ClInclude Include="..\..\..\STL\Types\Ptr.h" />
+    <ClInclude Include="..\..\..\STL\Types\Union.h" />
+    <ClInclude Include="..\..\..\STL\Types\TVariant.h" />
+    <ClInclude Include="..\..\..\STL\Types\TypeId.h" />
+    <ClInclude Include="..\..\..\STL\Types\TypesConfig.h" />
+    <ClInclude Include="..\..\..\STL\Types\Utils.h" />
+    <ClInclude Include="..\..\..\STL\Types\VariantRef.h" />
+    <ClInclude Include="..\..\..\STL\Unicode\Utf8StringUtils.h" />
+    <ClInclude Include="..\..\..\STL\ux_stl.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\STL\Java\Java.cpp" />
+    <ClCompile Include="..\..\..\STL\Log\Logger.cpp" />
+    <ClCompile Include="..\..\..\STL\OS\Base\Date.cpp" />
+    <ClCompile Include="..\..\..\STL\OS\SDL\SDLUtils.cpp" />
+    <ClCompile Include="..\..\..\STL\OS\Windows\OSUtils.cpp" />
+    <ClCompile Include="..\..\..\STL\OS\Windows\OSWindows.cpp" />
+    <ClCompile Include="..\..\..\STL\OS\Windows\SyncPrimitives.cpp" />
+    <ClCompile Include="..\..\..\STL\ScriptBindings\DefaultBindings.cpp" />
+    <ClCompile Include="..\..\..\STL\ScriptBindings\ScriptBinder.cpp" />
+    <ClCompile Include="..\..\..\STL\ScriptBindings\ScriptEngine.cpp" />
+    <ClCompile Include="..\..\..\STL\Types\FileAddress.cpp" />
+    <ClCompile Include="..\..\..\STL\Types\StringParser.cpp" />
+    <ClCompile Include="..\..\..\STL\Types\TypesUtils.cpp" />
+    <ClCompile Include="..\..\..\STL\Unicode\Utf8StringUtils.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C8E74AF8-726B-4A6C-B58D-32BDD2CE9E82}</ProjectGuid>
+    <RootNamespace>GGE</RootNamespace>
+    <ProjectName>STL</ProjectName>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <TargetExt>.lib</TargetExt>
+    <TargetName>$(ProjectName)_d</TargetName>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <TargetExt>.lib</TargetExt>
+    <TargetName>$(ProjectName)_d</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <TargetExt>.lib</TargetExt>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAsManaged>false</CompileAsManaged>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PreprocessorDefinitions>__GX_DEBUG__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAsManaged>false</CompileAsManaged>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PreprocessorDefinitions>__GX_DEBUG__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <FloatingPointExceptions>true</FloatingPointExceptions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <CompileAsManaged>false</CompileAsManaged>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <StringPooling>true</StringPooling>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <CreateHotpatchableImage>true</CreateHotpatchableImage>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <CompileAsManaged>false</CompileAsManaged>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <StringPooling>true</StringPooling>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <CreateHotpatchableImage>true</CreateHotpatchableImage>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
