@@ -1,0 +1,28 @@
+
+#include "Common.glcs"
+#include "Compute/TessLandscape/vertex.glcs"
+
+DECL_BUFFER( std430, PackedVertex, readonly, inBuffer );
+DECL_BUFFER( std430, PackedVertex, writeonly, outBuffer );
+
+DECL_IMAGE( image2D, r32f, readonly, inHeightImage );
+DECL_IMAGE( image2D, rgba16f, readonly, inNormalsImage );
+
+uniform float4	unImageScaleBias;
+
+
+void main ()
+{
+	int		index		= GetGlobalIndex();
+	Vertex	vert		= UnpackVertex( inBuffer[index] );
+	
+	int2	img_coord	= int2(Round( vert.texcoord * unImageScaleBias.xy + unImageScaleBias.zw ));
+	
+	float	height		= imageLoad( inHeightImage, img_coord ).r;
+	float3	normal		= imageLoad( inNormalsImage, img_coord ).rgb;
+
+	vert.position.y += height;
+	vert.normal		 = normal;
+
+	outBuffer[index] = PackVertex( vert );
+}

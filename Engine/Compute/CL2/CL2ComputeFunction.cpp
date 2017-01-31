@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "CL2ComputeFunction.h"
 
@@ -109,7 +109,7 @@ namespace Compute
 
 		_Delete();
 
-		CHECK_ERR( program.IsNotNull() );
+		CHECK_ERR( program );
 		
 		cl_int	cl_err = 0;
 		CL_CHECK( ((_id = clCreateKernel( program->Id(), name.cstr(), &cl_err )), cl_err) );
@@ -195,8 +195,8 @@ namespace Compute
 		log << "Kernel \"" << name << "\" info:"
 			<< "\nKernel work group:    " << group_size.ToString()
 			<< "\nPreferred work group: " << pref_size
-			<< "\nKernel local mem:     " << StringUtils::BytesToString( Bytes<ulong>( local_mem ) )
-			<< "\nKernel private mem:   " << StringUtils::BytesToString( Bytes<ulong>( priv_mem ) );
+			<< "\nKernel local mem:     " << ToString( Bytes<ulong>( local_mem ) )
+			<< "\nKernel private mem:   " << ToString( Bytes<ulong>( priv_mem ) );
 
 		LOG( log.cstr(), ELog::Debug );
 
@@ -305,12 +305,12 @@ namespace Compute
 		return true;
 	}
 
-	void CL2ComputeFunction::_InitArgs ()
+	bool CL2ComputeFunction::_InitArgs ()
 	{
 		using namespace cl;
 		
 		if ( _id == null )
-			return;
+			return true;
 
 		cl_uint	num_args	= 0;
 		char	name[ 128 ]	= "";
@@ -349,12 +349,12 @@ namespace Compute
 
 			if ( tokens.Find( name_pos, StringCRef( name ) ) )
 			{
-				CHECK_ERR( _ParseKernelArgs( source, pos + name_pos ), void() );
-				return;
+				CHECK_ERR( _ParseKernelArgs( source, pos + name_pos ) );
+				return true;
 			}
 		}
 
-		RETURN_ERR( "kernel not found!", void() );
+		RETURN_ERR( "kernel not found!" );
 	}
 
 # endif
@@ -416,7 +416,7 @@ namespace Compute
 	{
 		FOR( i, _args )
 		{
-			if ( not _args[i].second.value.IsCreated() )
+			if ( not _args[i].second.value )
 			{
 				LOG( (String("Uninitialized function argument: ") + StringCRef( _args[i].first )).cstr(), ELog::Warning );
 			}

@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\Engine\Graphics\Buffer\MemoryBuffer.h" />
+    <ClInclude Include="..\..\..\Engine\Graphics\Buffer\MeshGenerator.h" />
     <ClInclude Include="..\..\..\Engine\Graphics\Engine.Graphics.h" />
     <ClInclude Include="..\..\..\Engine\Graphics\Engine\GraphicsEngine.h" />
     <ClInclude Include="..\..\..\Engine\Graphics\GL4\gl4.h" />
@@ -27,8 +29,6 @@
     <ClInclude Include="..\..\..\Engine\Graphics\GL4\GL4Enums.h" />
     <ClInclude Include="..\..\..\Engine\Graphics\GL4\GL4ObjectIDs.h" />
     <ClInclude Include="..\..\..\Engine\Graphics\GL4\GL4StateManager.h" />
-    <ClInclude Include="..\..\..\Engine\Graphics\Mesh\MeshGenerator.h" />
-    <ClInclude Include="..\..\..\Engine\Graphics\Mesh\MemoryBuffer.h" />
     <ClInclude Include="..\..\..\Engine\Graphics\Profiling\FunctionGpuProfiler.h" />
     <ClInclude Include="..\..\..\Engine\Graphics\Query\GraphicsQuery.h" />
     <ClInclude Include="..\..\..\Engine\Graphics\RenderTarget\FragmentOutputState.h" />
@@ -58,6 +58,8 @@
     <ClInclude Include="..\..\..\Engine\Graphics\VertexAttribs\VertexDesc.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\Engine\Graphics\Buffer\MemoryBuffer.cpp" />
+    <ClCompile Include="..\..\..\Engine\Graphics\Buffer\MeshGenerator.cpp" />
     <ClCompile Include="..\..\..\Engine\Graphics\Engine\GraphicsEngine.cpp" />
     <ClCompile Include="..\..\..\Engine\Graphics\GL4\gl4.cpp" />
     <ClCompile Include="..\..\..\Engine\Graphics\GL4\GL4Context.cpp" />
@@ -68,8 +70,6 @@
     <ClCompile Include="..\..\..\Engine\Graphics\GL4\GL4ShaderProgram.cpp" />
     <ClCompile Include="..\..\..\Engine\Graphics\GL4\GL4StateManager.cpp" />
     <ClCompile Include="..\..\..\Engine\Graphics\GL4\GL4Texture.cpp" />
-    <ClCompile Include="..\..\..\Engine\Graphics\Mesh\MemoryBuffer.cpp" />
-    <ClCompile Include="..\..\..\Engine\Graphics\Mesh\MeshGenerator.cpp" />
     <ClCompile Include="..\..\..\Engine\Graphics\Query\GraphicsQuery.cpp" />
     <ClCompile Include="..\..\..\Engine\Graphics\RenderTarget\RenderTarget.cpp" />
     <ClCompile Include="..\..\..\Engine\Graphics\RenderTarget\RenderTargetManager.cpp" />
@@ -214,13 +214,13 @@
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__GX_NO_EXCEPTIONS__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>false</TreatWarningAsError>
       <CompileAsManaged>false</CompileAsManaged>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <StringPooling>true</StringPooling>
-      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
@@ -231,6 +231,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <ControlFlowGuard>false</ControlFlowGuard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -248,13 +249,13 @@
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__GX_NO_EXCEPTIONS__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>false</TreatWarningAsError>
       <CompileAsManaged>false</CompileAsManaged>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <StringPooling>true</StringPooling>
-      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
@@ -265,6 +266,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <ControlFlowGuard>false</ControlFlowGuard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -224,7 +224,7 @@ namespace Base
 
 			PRINTSCREEN		= _ro + 255,	// PRING SCREEN (tested)
 
-			_COUNT			= right_offset * 2
+			_Count			= right_offset * 2
 		};
 	};
 
@@ -369,7 +369,7 @@ namespace Base
 			BUTTON_SELECT	= 0,
 			BUTTON_MODE		= 0,
 
-			_COUNT			= e_winkey::_COUNT
+			_Count			= e_winkey::_Count
 		};
 	};*/
 

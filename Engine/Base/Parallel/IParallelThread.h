@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -34,9 +34,7 @@ namespace Base
 
 		void EnqueueFlushCommand (const IParallelThreadPtr &forThread)
 		{
-			ParallelOp	op;
-			FunctionBuilder::Create( op.func, forThread, &IParallelThread::FlushMessages );
-			Push( RVREF( op ) );
+			Push( ParallelOp( FunctionBuilder( forThread, &IParallelThread::FlushMessages ) ) );
 		}
 
 

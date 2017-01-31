@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -43,21 +43,21 @@ namespace Base
 			_ppi(96.0f), _freq(0), _orient(EDisplayOrientation::Default)
 		{}
 
-		Display (const int2 &resolution, float ppi, uint frequency, EOrientation orient) :
-			_res(resolution), _ppi(ppi), _freq(frequency), _orient(orient)
+		Display (const uint2 &resolution, float ppi, uint frequency, EOrientation orient) :
+			_res(int2(resolution)), _ppi(ppi), _freq(frequency), _orient(orient)
 		{
 			_size	= CalcPhysicsSize();
 		}
 
-		void SetResolution (const int2 &res)					{ _res = PixelsCoord( res ); }
+		void SetResolution (const uint2 &res)					{ _res = PixelsCoord( int2(res) ); }
 		void SetPhysicsSize (const float2 &size)				{ _size = PhysicsCoord( size ); }
 		void SetPixelsPerInch (float ppi)						{ _ppi = ppi; }
 		void SetPixelsPerMilimeter (float ppmm)					{ _ppi = ppmm / Square( _MilimetersInInch() ); }
 		void SetOrientation (EOrientation orient)				{ _orient = orient; }
 		void SetFrequency (uint freq)							{ _freq = freq; }
 
-		int2 const &	Resolution ()					const	{ return _res.Get(); }
-		float2 const &	PhysicsSize ()					const	{ return _size.Get(); }
+		uint2			Resolution ()					const	{ return uint2(_res.Get()); }
+		float2			PhysicsSize ()					const	{ return _size.Get(); }
 		EOrientation	Orientation ()					const	{ return _orient; }
 		float			PixelsPerInch ()				const	{ return _ppi; }
 		float			AspectRatio ()					const	{ return _res.x / (float)_res.y; }

@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "GraphicsEngine.h"
 #include "Engine/Graphics/Texture/TextureLoader.h"
@@ -25,7 +25,7 @@ namespace Graphics
 		SubSystems()->GetSetter< GraphicsEngine >().Set( this );
 
 		SubSystems()->Get< Application >()->GetEventSystem()->
-			Subscribe( DelegateBuilder::Create( this, &GraphicsEngine::_OnResize ) );
+			Subscribe( GraphicsEnginePtr(this), &GraphicsEngine::_OnResize );
 	}
 	
 /*
@@ -36,7 +36,7 @@ namespace Graphics
 	GraphicsEngine::~GraphicsEngine ()
 	{
 		SubSystems()->Get< Application >()->GetEventSystem()->
-			Unsubscribe( DelegateBuilder::Create( this, &GraphicsEngine::_OnResize ) );
+			Unsubscribe( GraphicsEnginePtr(this), &GraphicsEngine::_OnResize );
 
 		SubSystems()->GetSetter< GraphicsEngine >().Set( null );
 	}

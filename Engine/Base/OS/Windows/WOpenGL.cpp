@@ -1,25 +1,111 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "WOpenGL.h"
 
 #if (defined( PLATFORM_WINDOWS ) and not defined( PLATFORM_SDL )) \
 	 and (defined( GRAPHICS_API_OPENGL ) or defined( GRAPHICS_API_OPENGLES ))
 
+#include <Windows.h>
+#include "External/opengl/wglext.h"
+
 namespace Engine
 {
 namespace WinPlatform
 {
+
+	typedef decltype(&wglGetProcAddress)		wglGetProcAddressProc_t;
 	
 /*
 =================================================
 	constructor
 =================================================
 */
+	WindowsLibOpenGL::WindowsLibOpenGL () :
+		_getProc( UninitializedT<wglGetProcAddressProc_t>() )
+	{}
+	
+/*
+=================================================
+	Load
+=================================================
+*/
+	bool WindowsLibOpenGL::Load (StringCRef name)
+	{
+		Unload();
+
+		if ( not name.Empty() )
+		{
+			if ( _lib.Load( name, true ) )
+				return _OnInit();
+		}
+
+		if ( _lib.Load( GetDefaultName(), true ) )
+			return _OnInit();
+
+		return false;
+	}
+	
+/*
+=================================================
+	Unload
+=================================================
+*/
+	void WindowsLibOpenGL::Unload ()
+	{
+		_getProc = null;
+		_lib.Unload();
+	}
+	
+/*
+=================================================
+	GetProc
+=================================================
+*/
+	void * WindowsLibOpenGL::GetProc (StringCRef address) const
+	{
+		void * res = null;
+
+		if ( _getProc.IsNotNull<wglGetProcAddressProc_t>() and
+			 (res = _getProc.Get<wglGetProcAddressProc_t>()( address.cstr() )) != null )
+		{
+			return res;
+		}
+			
+		if ( (res = _lib.GetProc( address )) != null )
+			return res;
+
+		return null;
+	}
+		
+/*
+=================================================
+	_OnInit
+=================================================
+*/
+	bool WindowsLibOpenGL::_OnInit ()
+	{
+		_getProc = (wglGetProcAddressProc_t) _lib.GetProc( "wglGetProcAddress" );
+		return _getProc.IsNotNull<wglGetProcAddressProc_t>();
+	}
+
+	
+//-----------------------------------------------------------------------------
+
+
+
+/*
+=================================================
+	constructor
+=================================================
+*/
 	WindowsOpenGLContext::WindowsOpenGLContext () :
-		wglSwapInterval(null),		wglGetSwapInterval(null),
-		wglChoosePixelFormat(null),	wglCreateContextAttribs(null),
+		wglSwapInterval( UninitializedT< PFNWGLSWAPINTERVALEXTPROC >() ),
+		wglGetSwapInterval( UninitializedT< PFNWGLGETSWAPINTERVALEXTPROC >() ),
+		wglChoosePixelFormat( UninitializedT< PFNWGLCHOOSEPIXELFORMATARBPROC >() ),
+		wglCreateContextAttribs( UninitializedT< PFNWGLCREATECONTEXTATTRIBSARBPROC >() ),
 		swapControlSupported(false),
-		_deviceContext(null),		_renderContext(null)
+		_deviceContext( UninitializedT< HDC >() ),
+		_renderContext( UninitializedT< HGLRC >() )
 	{
 	}
 	
@@ -28,14 +114,13 @@ namespace WinPlatform
 	Init
 =================================================
 */
-	bool WindowsOpenGLContext::Init (HDC dc, INOUT VideoSettings &vs)
+	bool WindowsOpenGLContext::Init (const Handle_t &dc, INOUT VideoSettings &vs)
 	{
 		Destroy();
 
 		_deviceContext	= dc;
 
 		CHECK_ERR( _InitOpenGL( vs ) );
-
 		return true;
 	}
 	
@@ -46,12 +131,12 @@ namespace WinPlatform
 */
 	void WindowsOpenGLContext::Destroy ()
 	{
-		if ( _deviceContext != null ) {
-			CHECK( wglMakeCurrent( _deviceContext, null ) == TRUE );
+		if ( _deviceContext.IsNotNull<HDC>() ) {
+			CHECK( wglMakeCurrent( _deviceContext.Get<HDC>(), null ) == TRUE );
 		}
 
-		if ( _renderContext != null ) {
-			CHECK( wglDeleteContext( _renderContext ) == TRUE );
+		if ( _renderContext.IsNotNull<HGLRC>() ) {
+			CHECK( wglDeleteContext( _renderContext.Get<HGLRC>() ) == TRUE );
 		}
 
 		wglSwapInterval			= null;
@@ -73,16 +158,17 @@ namespace WinPlatform
 		PIXELFORMATDESCRIPTOR pfd = { sizeof(PIXELFORMATDESCRIPTOR), 1, PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER, PFD_TYPE_RGBA,
 									  32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 0, 0, PFD_MAIN_PLANE, 0, 0, 0, 0 };
 
-		const uint	pixformat	= ChoosePixelFormat( _deviceContext, &pfd );
+		const HDC	dc			= _deviceContext.Get<HDC>();
 		HGLRC		rc			= null;
+		const uint	pixformat	= ChoosePixelFormat( dc, &pfd );
 		bool		res			= false;
 
 		if ( pixformat != 0 )
 		{
-			CHECK( SetPixelFormat( _deviceContext, pixformat, &pfd ) == TRUE );
-			rc = wglCreateContext( _deviceContext );
+			CHECK( SetPixelFormat( dc, pixformat, &pfd ) == TRUE );
+			rc = wglCreateContext( dc );
 
-			if ( rc != null and wglMakeCurrent( _deviceContext, rc ) == TRUE )
+			if ( rc != null and wglMakeCurrent( dc, rc ) == TRUE )
 			{
 				wglChoosePixelFormat	= (PFNWGLCHOOSEPIXELFORMATARBPROC) wglGetProcAddress("wglChoosePixelFormatARB");
 				wglCreateContextAttribs	= (PFNWGLCREATECONTEXTATTRIBSARBPROC) wglGetProcAddress("wglCreateContextAttribsARB");
@@ -90,11 +176,12 @@ namespace WinPlatform
 				wglSwapInterval			= (PFNWGLSWAPINTERVALEXTPROC) wglGetProcAddress("wglSwapIntervalEXT");
 				wglGetSwapInterval		= (PFNWGLGETSWAPINTERVALEXTPROC) wglGetProcAddress("wglGetSwapIntervalEXT");
 
-				swapControlSupported	= (wglSwapInterval != null) and (wglGetSwapInterval != null);
+				swapControlSupported	= wglSwapInterval.IsNotNull<PFNWGLSWAPINTERVALEXTPROC>() and
+										  wglGetSwapInterval.IsNotNull<PFNWGLGETSWAPINTERVALEXTPROC>();
 
 				res = true;
 			}
-			CHECK( wglMakeCurrent( _deviceContext, null ) == TRUE );
+			CHECK( wglMakeCurrent( dc, null ) == TRUE );
 
 			CHECK( wglDeleteContext( rc ) == TRUE );
 		}
@@ -114,13 +201,16 @@ namespace WinPlatform
 
 		CHECK_ERR( vs.IsOpenGL() or vs.IsOpenGLES() );
 
-		if ( _deviceContext == null )
+		const HDC	dc	= _deviceContext.Get<HDC>();
+		HGLRC		rc	= null;
+
+		if ( dc == null )
 			RETURN_ERR( "Window must be created before init OpenGL!" );
 
 		CHECK_ERR( _InitOpenGL2() );
 
-		CHECK_ERR( wglChoosePixelFormat != null );
-		CHECK_ERR( wglCreateContextAttribs != null );
+		CHECK_ERR( wglChoosePixelFormat.IsNotNull<PFNWGLCHOOSEPIXELFORMATARBPROC>() );
+		CHECK_ERR( wglCreateContextAttribs.IsNotNull<PFNWGLCREATECONTEXTATTRIBSARBPROC>() );
 		
 
 		// Chose Pixel Format //
@@ -155,7 +245,8 @@ namespace WinPlatform
 		{
 			int		pixelFormat	= 0;
 			uint	numFormats	= 0;
-			int		valid		= wglChoosePixelFormat( _deviceContext, ctx_int_attribs, ctx_float_attribs, 1, &pixelFormat, &numFormats );
+			int		valid		= wglChoosePixelFormat.Get<PFNWGLCHOOSEPIXELFORMATARBPROC>()
+										( dc, ctx_int_attribs, ctx_float_attribs, 1, &pixelFormat, &numFormats );
 
 			if ( valid != 0 and numFormats > 0 )
 				rv = pixelFormat;
@@ -184,7 +275,7 @@ namespace WinPlatform
 			vs.stencilBits	= (VideoSettings::EStencilFormat) ctx_int_attribs[13];
 			vs.multiSamples	= (ubyte) ctx_int_attribs[21];
 			
-			if ( not DescribePixelFormat( _deviceContext, pixformat, sizeof(pfd), &pfd ) )
+			if ( not DescribePixelFormat( dc, pixformat, sizeof(pfd), &pfd ) )
 				LOG( "Can't describe pixel format", ELog::Warning );
 		}
 
@@ -210,9 +301,9 @@ namespace WinPlatform
 		// search for valid context attribs
 		for (;;)
 		{
-			_renderContext = wglCreateContextAttribs( _deviceContext, null, context_attribs );
+			rc = wglCreateContextAttribs.Get<PFNWGLCREATECONTEXTATTRIBSARBPROC>()( dc, null, context_attribs );
 
-			if ( _renderContext != null or context_attribs[1] == 2 )
+			if ( rc != null or context_attribs[1] == 2 )
 				break;
 				
 			// for opengl 4.x
@@ -236,24 +327,82 @@ namespace WinPlatform
 		}
 
 		// create compatibility profile context
-		if ( _renderContext == null )
+		if ( rc == null )
 		{
-			_renderContext = wglCreateContext( _deviceContext );
+			rc = wglCreateContext( dc );
 		}
 
-		CHECK_ERR( _renderContext != null );
-		CHECK_ERR( wglMakeCurrent( _deviceContext, _renderContext ) == TRUE );
+		CHECK_ERR( rc != null );
+		_renderContext = rc;
+
+		CHECK_ERR( wglMakeCurrent( dc, rc ) == TRUE );
 
 		// set vertical synchronization
 		if ( swapControlSupported )
 		{
-			CHECK( wglSwapInterval( int(vs.vsync) ) == TRUE );
+			CHECK( wglSwapInterval.Get<PFNWGLSWAPINTERVALEXTPROC>()( int(vs.vsync) ) == TRUE );
 
-			vs.vsync = ( wglGetSwapInterval() != 0 );
+			vs.vsync = ( wglGetSwapInterval.Get<PFNWGLGETSWAPINTERVALEXTPROC>()() != 0 );
 		}
 		
-		wglMakeCurrent( _deviceContext, null );
+		wglMakeCurrent( dc, null );
 		return true;
+	}
+	
+/*
+=================================================
+	MakeCurrent
+=================================================
+*/
+	void WindowsOpenGLContext::MakeCurrent ()
+	{
+		ASSERT( IsCreated() );
+		CHECK( wglMakeCurrent( _deviceContext.Get<HDC>(), _renderContext.Get<HGLRC>() ) == TRUE );
+	}
+	
+/*
+=================================================
+	ResetCurrent
+=================================================
+*/
+	void WindowsOpenGLContext::ResetCurrent ()
+	{
+		ASSERT( IsCreated() );
+		CHECK( wglMakeCurrent( _deviceContext.Get<HDC>(), null ) == TRUE );
+	}
+	
+/*
+=================================================
+	IsCreated
+=================================================
+*/
+	bool WindowsOpenGLContext::IsCreated () const
+	{
+		return _deviceContext.IsNotNull<HDC>() and _renderContext.IsNotNull<HGLRC>();
+	}
+	
+/*
+=================================================
+	IsCurrent
+=================================================
+*/
+	bool WindowsOpenGLContext::IsCurrent ()
+	{
+		return IsCreated() and wglGetCurrentContext() == _renderContext.Get<HGLRC>();
+	}
+	
+/*
+=================================================
+	SwapBuffers
+=================================================
+*/
+	void WindowsOpenGLContext::SwapBuffers ()
+	{
+		ASSERT( IsCreated() );
+		if ( IsCreated() )
+		{
+			::SwapBuffers( _deviceContext.Get<HDC>() );
+		}
 	}
 
 

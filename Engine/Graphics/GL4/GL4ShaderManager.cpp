@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "Engine/Graphics/Shader/ShaderManager.h"
 #include "Engine/Graphics/Engine/GraphicsEngine.h"
@@ -95,33 +95,7 @@ namespace Graphics
 			str << "#define ATTRIB_" << state[i].index << " inAttrib" << state[i].index << "\n";
 		}
 
-		/*str << "#define VS_COPY_ATTRIBS() \\\n";
-		
-		FOR( i, state )
-		{
-			if ( not state[i].enabled )
-				continue;
-
-			str << "\toutAttribs.attrib" << state[i].index << " = inAttrib" << state[i].index << ";\\\n";
-		}
-		str << "\n";*/
-		str << "out TAttribsData outAttribs;\n";
 		str << "#endif\t// SH_VERTEX\n\n";
-
-
-		/*str << "#if SHADER == SH_FRAGMENT\n";
-		str << "in TAttribsData inAttribs;\n";
-		
-		FOR( i, state )
-		{
-			if ( not state[i].enabled )
-				continue;
-
-			str << "#define ATTRIB_" << state[i].index << " inAttribs.attrib" << state[i].index << "\n";
-		}
-		str << "#endif\t// SH_FRAGMENT\n\n";*/
-
-		// TODO: for tess and geom shaders
 	}
 	
 /*
@@ -135,7 +109,7 @@ namespace Graphics
 
 		FOR( i, frag )
 		{
-			if ( frag[i] == EFragOutput::None )
+			if ( frag[i] == EFragOutput::Unknown )
 				continue;
 
 			if ( not initialized )
@@ -157,7 +131,7 @@ namespace Graphics
 	_CompileShader
 =================================================
 */
-	bool ShaderManager::_CompileShader (INOUT LoadedShader &shaderData, Buffer<const char*> shaderSource) const
+	bool ShaderManager::_CompileShader (INOUT LoadedShader &shaderData, Buffer<SourceInfo> shaderSource) const
 	{
 		using namespace gl;
 
@@ -179,7 +153,7 @@ namespace Graphics
 			// Compute
 			""
 		};
-		STATIC_ASSERT( COUNT_OF(perShaderExtensions) == EShader::_COUNT );
+		STATIC_ASSERT( CountOf(perShaderExtensions) == EShader::_Count );
 
 		static const char	shaderTypesStr[] = 
 			"#define SH_VERTEX           0\n"
@@ -197,7 +171,7 @@ namespace Graphics
 			"#define SHADER  SH_FRAGMENT\n",		// Fragment
 			"#define SHADER  SH_COMPUTE\n"			// Compute
 		};
-		STATIC_ASSERT( COUNT_OF(perShaderSource) == EShader::_COUNT );
+		STATIC_ASSERT( CountOf(perShaderSource) == EShader::_Count );
 
 		static const char	baseTypesRedefinitionStr[] =
 			"#define and		&&\n"
@@ -247,6 +221,7 @@ namespace Graphics
 			"#define double4x4	dmat4\n";
 
 		static const char	baseTypesFp32Str[] =
+			"#define GX_FP_32	1\n"
 			"#define real		float\n"
 			"#define real2		float2\n"
 			"#define real3		float3\n"
@@ -256,6 +231,7 @@ namespace Graphics
 			"#define real4x4	float4x4\n";
 
 		static const char	baseTypesFp64Str[] =
+			"#define GX_FP_64	1\n"
 			"#define real		double\n"
 			"#define real2		double2\n"
 			"#define real3		double3\n"
@@ -302,7 +278,10 @@ namespace Graphics
 		if ( EnumEq( shaderData.flags, EShaderCompilationFlags::FP_64 ) )	sources << baseTypesFp64Str;
 
 		sources << "#line 0\n";
-		sources << shaderSource;
+		
+		FOR( i, shaderSource ) {
+			sources << shaderSource[i].source.cstr();
+		}
 		
 
 		// compile shader
@@ -403,28 +382,25 @@ namespace Graphics
 	_ParseCompilationErrors
 =================================================
 */
-	void ShaderManager::_ParseCompilationErrors (Buffer<const char*> source, EShader::type shaderType, StringCRef log, bool compiled) const
+	void ShaderManager::_ParseCompilationErrors (Buffer<SourceInfo> sources, EShader::type shaderType, StringCRef log, bool compiled) const
 	{
 		// pattern:	<number> ( <line> ) : <error/warning> <code>: <description>
 
 		Array< StringCRef >		lines;
 		Array< StringCRef >		tokens;
-		Array< usize >			source_numlines;	source_numlines.Resize( source.Count(), false );
-		String					str;				str.Reserve( log.Length() * 2 );
+		String					str;		str.Reserve( log.Length() * 2 );
 		usize					prev_line = -1;
 
-		str << EShader::ToString( shaderType ) << " shader compilation " << (compiled ? "message" : "error") << "\n---------------\n";
+		str << EShader::ToString( shaderType ) << " shader compilation "
+			<< (compiled ? "message" : "error") << "\n---------------\n";
 
 		StringParser::DivideLines( log, OUT lines );
-
-		FOR( i, source_numlines )
-		{
-			source_numlines[i] = StringParser::CalculateNumberOfLines( source[i] );
-		}
 
 		FOR( i, lines )
 		{
 			StringParser::DivideString_CPP( lines[i], OUT tokens );
+
+			bool	added = false;
 
 			if ( tokens.Count() > 8 and
 				 tokens[1] == "(" and
@@ -446,33 +422,37 @@ namespace Graphics
 
 				prev_line = line;
 				
-				FOR( j, source_numlines )
+				FOR( j, sources )
 				{
-					cur_line += source_numlines[j];
+					cur_line += sources[j].NumLines();
 
 					if ( cur_line <= line )
 						continue;
 
-					usize	local_line = line - (cur_line - source_numlines[j]);
+					usize	local_line	= line - (cur_line - sources[j].NumLines());
+					usize	file_line	= local_line + sources[j].FirstLine();
 
-					CHECK( local_line < source_numlines[j] );
+					CHECK( local_line < sources[j].NumLines() );
 
-					CHECK( StringParser::MoveToLine( source[j], INOUT pos, local_line ) );
+					CHECK( StringParser::MoveToLine( sources[j].source, INOUT pos, local_line ) );
 
-					StringParser::ReadLineToEnd( source[j], INOUT pos, OUT line_str );
+					StringParser::ReadLineToEnd( sources[j].source, INOUT pos, OUT line_str );
 
-					str << "in source" << j << " (" << local_line << "): \"" << line_str << "\"\n"
-						<< lines[i] << "\n";
+					str << "in source \"" << sources[j].filename << "\" (" << file_line << "):\n\""
+						<< line_str << "\"\n" << lines[i] << "\n";
+					
+					added = true;
 					break;
 				}
 			}
-			else
+
+			if ( not added )
 			{
 				str << "<unknown message> " << lines[i] << "\n";
 			}
 		}
 
-		LOG( str.cstr(), compiled ? (ELog::Debug | ELog::SpoilerFlag) : (ELog::Warning | ELog::OpenSpoilerFlag) );
+		LOG( str.cstr(), compiled ? (ELog::Debug | ELog::SpoilerFlag) : (ELog::Error | ELog::OpenSpoilerFlag) );
 	}
 	
 /*
@@ -486,7 +466,7 @@ namespace Graphics
 
 		str << "Program linking " << (linked ? "message" : "error") << "\n---------------\n" << log;
 
-		LOG( str.cstr(), linked ? (ELog::Debug | ELog::SpoilerFlag) : (ELog::Warning | ELog::OpenSpoilerFlag) );
+		LOG( str.cstr(), linked ? (ELog::Debug | ELog::SpoilerFlag) : (ELog::Error | ELog::OpenSpoilerFlag) );
 	}
 	
 /*
@@ -622,13 +602,13 @@ namespace Graphics
 	_DumpProgramResources
 =================================================
 */
-	void ShaderManager::_DumpProgramResources (ProgramID prog)
+	void ShaderManager::_DumpProgramResources (ProgramID prog, StringCRef filename)
 	{
-		CHECK_ERR( prog.IsValid(), void() );
+		CHECK( prog.IsValid() );
 
 		String	str;	str.Reserve( 256 );
 
-		str << "Program resources\n---------------\n";
+		str << "Program \"" << filename << "\" resources\n---------------\n";
 
 		_DumpUniformBlocksInfo( prog, INOUT str );
 		_DumpBufferBlockInfo( prog, INOUT str );
@@ -662,7 +642,7 @@ namespace Graphics
 			GL_LOCATION
 		};
 
-		CHECK_ERR( prog.IsValid(), void() );
+		CHECK( prog.IsValid() );
 
 		GLint			ub_count		= 0;
 		GLint			max_ub_length	= 0;
@@ -703,7 +683,7 @@ namespace Graphics
 											 GLsizei(var_indices.Count()), null, var_indices.ptr() ) );
 			
 			str << "UBO     " << buf << ", index: " << index << ", binding: " << ub_binding
-				<< ", size: " << StringUtils::BytesToString( Bytes<usize>( ub_size ) ) << '\n';
+				<< ", size: " << ToString( BytesU( ub_size ) ) << '\n';
 
 			FOR( j, var_indices )
 			{
@@ -755,7 +735,7 @@ namespace Graphics
 			GL_TOP_LEVEL_ARRAY_STRIDE
 		};
 
-		CHECK_ERR( prog.IsValid(), void() );
+		CHECK( prog.IsValid() );
 
 		GLint			ssb_count		= 0,
 						max_ssb_length	= 0,
@@ -796,7 +776,7 @@ namespace Graphics
 											 GLsizei(var_indices.Count()), null, var_indices.ptr() ) );
 
 			str << "SSBO    " << buf << ", index: " << index << ", binding: " << ssb_binding
-				<< ", size: " << StringUtils::BytesToString( Bytes<usize>( ssb_size ) ) << '\n';
+				<< ", size: " << ToString( BytesU( ssb_size ) ) << '\n';
 
 			FOR( j, var_indices )
 			{
@@ -840,7 +820,7 @@ namespace Graphics
 			GL_BLOCK_INDEX
 		};
 
-		CHECK_ERR( prog.IsValid(), void() );
+		CHECK( prog.IsValid() );
 		
 		GLint	count			= 0,
 				max_name_length = 0,

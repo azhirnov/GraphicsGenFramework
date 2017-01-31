@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -63,12 +63,12 @@ namespace Base
 			explicit
 			ResourceMap (const IResourceLoaderPtr &loader) : loader( loader ), type( loader->GetType() )
 			{
-				CHECK( loader.IsNotNull() );
+				CHECK( loader );
 			}
 
 			bool Load (const RFilePtr &file, PackFileID fileID, ResourcePtr &res) const
 			{
-				CHECK_ERR( loader.IsNotNull() );
+				CHECK_ERR( loader );
 				CHECK_ERR( loader->Load( res, fileID, file ) );
 				return true;
 			}
@@ -90,7 +90,7 @@ namespace Base
 
 		PackManager				_packManager;
 
-		Mutex					_lock;
+		OS::Mutex				_lock;
 
 
 	// methods
@@ -103,10 +103,10 @@ namespace Base
 		void Clear ();
 
 		bool RegisterLoader (const IResourceLoaderPtr &loader);
-		void UnregisterLoader (const IResourceLoaderPtr &loader);
+		bool UnregisterLoader (const IResourceLoaderPtr &loader);
 
-		void AddResource (const ResourcePtr &res);
-		void RemoveResource (const ResourcePtr &res);
+		bool AddResource (const ResourcePtr &res);
+		bool RemoveResource (const ResourcePtr &res);
 
 
 		template <typename T>
@@ -116,8 +116,8 @@ namespace Base
 
 		void GetResources (EResource::type resType, OUT Array< ResourcePtr > &resources);
 
-		Bytes<usize> GetUsedRamSize ();
-		Bytes<usize> GetUsedVRamSize ();
+		BytesU GetUsedRamSize ();
+		BytesU GetUsedVRamSize ();
 
 
 	private:

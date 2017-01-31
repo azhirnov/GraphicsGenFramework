@@ -23,11 +23,6 @@
     <ClCompile Include="..\..\..\Tests\Shaders\Shader_Temp.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\STL\STL.vcxproj">
-      <Project>{c8e74af8-726b-4a6c-b58d-32bdd2ce9e82}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="..\..\..\Tests\Shaders\GLSL.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

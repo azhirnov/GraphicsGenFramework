@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "gl4.h"
 #include "Engine/Base/Engine.Base.h"
@@ -165,7 +165,7 @@ namespace gl
 		log << "\nMax render buf size:   " << data[0] << " px";
 		
 		GL_CALL( glGetIntegerv( GL_MAX_TEXTURE_BUFFER_SIZE, data ) );
-		log << "\nMax texture buf size:  " << StringUtils::BytesToString( Bytes<usize>( data[0] ) );
+		log << "\nMax texture buf size:  " << ToString( BytesU( data[0] ) );
 		
 		GL_CALL( glGetIntegerv( GL_MAX_VIEWPORT_DIMS, data ) );
 		log << "\nMax viewport dim:      " << data[0] << " px";
@@ -192,13 +192,13 @@ namespace gl
 		log << "\nMax UBO bindings:      " << data[0];
 		
 		GL_CALL( glGetIntegerv( GL_MAX_UNIFORM_BLOCK_SIZE, data ) );
-		log << "\nMax UBO size:          " << StringUtils::BytesToString( Bytes<usize>( data[0] ) );
+		log << "\nMax UBO size:          " << ToString( BytesU( data[0] ) );
 		
 		GL_CALL( glGetIntegerv( GL_MAX_SHADER_STORAGE_BUFFER_BINDINGS, data ) );
 		log << "\nMax SSB bindings:      " << data[0];
 			
 		GL_CALL( glGetIntegerv( GL_MAX_SHADER_STORAGE_BLOCK_SIZE, data ) );
-		log << "\nMax SSB size:          " << StringUtils::BytesToString( Bytes<usize>( data[0] ) );
+		log << "\nMax SSB size:          " << ToString( BytesU( data[0] ) );
 		
 		GL_CALL( glGetIntegerv( GL_MAX_COMBINED_SHADER_STORAGE_BLOCKS, data ) );
 		log << "\nMax SSB blocks:        " << data[0];
@@ -209,7 +209,7 @@ namespace gl
 		GL_CALL( glGetIntegerv( GL_MAX_TESS_GEN_LEVEL, data ) );
 		log << "\nMax tess gen level:    " << data[0];
 
-		LOG( log.cstr(), ELog::Debug | ELog::OpenSpoilerFlag );
+		LOG( log.cstr(), ELog::Debug | ELog::SpoilerFlag );
 
 		// write all extensions
 		#if 1
@@ -320,7 +320,7 @@ namespace gl
 		
 		msg << ", in " << glcall << ", function " << func;
 
-		LOG_EXT( msg.cstr(), ELog::Error, file, line );
+		LOG( msg.cstr(), ELog::Error, file, line );
 		return false;
 	}
 

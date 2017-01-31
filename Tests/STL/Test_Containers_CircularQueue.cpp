@@ -1,6 +1,6 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
-#include "STL/ux_stl.h"
+#include "Engine/STL/Engine.STL.h"
 #include "Debug.h"
 
 using namespace GX_STL;
@@ -14,7 +14,7 @@ typedef CircularQueue< Elem_t >	Queue_t;
 typedef std::vector< VElem_t >	Vector_t;
 
 
-void CircularQueue_Test1 ()
+static void CircularQueue_Test1 ()
 {
 	Queue_t		q;
 
@@ -29,7 +29,8 @@ void CircularQueue_Test1 ()
 	q.PopFront();
 }
 
-void CircularQueue_Test2 ()
+
+static void CircularQueue_Test2 ()
 {
 	Queue_t		q;
 	q.Resize( 12 );
@@ -40,7 +41,8 @@ void CircularQueue_Test2 ()
 	q << RVREF( q2 );
 }
 
-void CircularQueue_Test3 ()
+
+static void CircularQueue_Test3 ()
 {
 	VElem_t::ClearStatistic();
 
@@ -60,7 +62,8 @@ void CircularQueue_Test3 ()
 	ASSERT( (q == Buffer<Elem_t>( (Elem_t *)&vec[0], vec.size() )) );
 }
 
-void CircularQueue_Test4 ()
+
+static void CircularQueue_Test4 ()
 {
 	CircularQueue<int>	q;
 	std::vector<int>	v;
@@ -68,26 +71,26 @@ void CircularQueue_Test4 ()
 
 	for (usize i = 0; i < count; ++i)
 	{
-		q.PushBack( i + 1000 );
-		v.push_back( i + 1000 );
+		q.PushBack( int(i) + 1000 );
+		v.push_back( int(i) + 1000 );
 	}
 	
 	for (usize i = 0; i < count; ++i)
 	{
-		q.PushFront( i + 2000 );
-		v.insert( v.begin(), i + 2000 );
+		q.PushFront( int(i) + 2000 );
+		v.insert( v.begin(), int(i) + 2000 );
 	}
 
 	for (usize i = 0; i < count; ++i)
 	{
-		q.PushBack( i + 3000 );
-		v.push_back( i + 3000 );
+		q.PushBack( int(i) + 3000 );
+		v.push_back( int(i) + 3000 );
 	}
 	
 	for (usize i = 0; i < count; ++i)
 	{
-		q.PushFront( i + 4000 );
-		v.insert( v.begin(), i + 4000 );
+		q.PushFront( int(i) + 4000 );
+		v.insert( v.begin(), int(i) + 4000 );
 	}
 
 	Buffer<const int> part0;

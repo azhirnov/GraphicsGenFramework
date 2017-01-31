@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -33,7 +33,7 @@ namespace Graphics
 
 		bool Create (const ShaderProgramPtr &program, StringCRef name);
 
-		void Update (const TexturePtr &tex, uint unit, MipmapLevel level = Uninitialized(), TexArrLayer layer = Uninitialized());
+		void Update (const TexturePtr &tex, uint unit, MipmapLevel level = Uninitialized, TexArrLayer layer = Uninitialized);
 	};
 	
 

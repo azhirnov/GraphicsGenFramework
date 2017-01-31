@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "gl4.h"
 
@@ -20,8 +20,6 @@ namespace Graphics
 	bool Texture::_Create (const uint4 &dimension, EPixelFormat::type format, uint2 levels, MultiSamples samples)
 	{
 		using namespace gl;
-
-		_Destroy();
 
 		CHECK_ERR( not EPixelFormat::IsCompressed( format ) );
 
@@ -187,11 +185,9 @@ namespace Graphics
 =================================================
 */
 	bool Texture::_AddImage (const uint4 &offset, uint level, const uint3 &size, EPixelFormat::type format,
-							 BinaryBuffer data, Bytes<usize> xAlign, Bytes<usize> xyAlign)
+							 BinaryBuffer data, BytesU xAlign, BytesU xyAlign)
 	{
 		using namespace gl;
-		
-		CHECK_ERR( _tex.Id() != 0 );
 		
 		SubSystems()->Get< GraphicsEngine >()->GetStateManager()->ActiveTexture( _tex );
 
@@ -204,7 +200,7 @@ namespace Graphics
 		
 		if ( not data.Empty() )
 		{
-			const usize	req_img_size = _GetImageSize( format, TextureType(), size, xAlign, xAlign );
+			const BytesU	req_img_size = _GetImageSize( format, TextureType(), size, xAlign, xAlign );
 			CHECK_ERR( req_img_size == data.Size() );
 		}
 
@@ -334,11 +330,9 @@ namespace Graphics
 =================================================
 */
 	bool Texture::_AddCompressedImage (const uint4 &offset, uint level, const uint3 &size, EPixelFormat::type format,
-										BinaryBuffer data, Bytes<usize> xAlign, Bytes<usize> xyAlign)
+										BinaryBuffer data, BytesU xAlign, BytesU xyAlign)
 	{
 		using namespace gl;
-		
-		CHECK_ERR( _tex.Id() != 0 );
 		
 		SubSystems()->Get< GraphicsEngine >()->GetStateManager()->ActiveTexture( _tex );
 		
@@ -351,7 +345,7 @@ namespace Graphics
 		
 		if ( not data.Empty() )
 		{
-			const usize	req_img_size = _GetImageSize( format, TextureType(), size, xAlign, xAlign );
+			const BytesU	req_img_size = _GetImageSize( format, TextureType(), size, xAlign, xAlign );
 			CHECK_ERR( req_img_size == data.Size() );
 		}
 
@@ -491,7 +485,6 @@ namespace Graphics
 	{
 		using namespace gl;
 
-		CHECK_ERR( _tex.Id() != 0 );
 		CHECK_ERR( not EPixelFormat::IsCompressed( _format ) );
 
 		SubSystems()->Get< GraphicsEngine >()->GetStateManager()->ActiveTexture( _tex );
@@ -559,15 +552,13 @@ namespace Graphics
 =================================================
 */
 	bool Texture::_GetImage (INOUT Buffer<ubyte> &data, uint level, EPixelFormat::type format,
-							 Bytes<usize> xAlign, Bytes<usize> xyAlign) const
+							 BytesU xAlign, BytesU xyAlign) const
 	{
 		using namespace gl;
-
-		CHECK_ERR( _tex.Id() != 0 );
 		
 		if ( not data.Empty() )
 		{
-			const usize	req_img_size = _GetImageSize( format, TextureType(), LevelDimension( MipmapLevel( level ) ), xAlign, xAlign );
+			const BytesU	req_img_size = _GetImageSize( format, TextureType(), LevelDimension( MipmapLevel( level ) ), xAlign, xAlign );
 			CHECK_ERR( req_img_size == data.Size() );
 		}
 
@@ -590,11 +581,9 @@ namespace Graphics
 =================================================
 */
 	bool Texture::_GetSubImage (INOUT Buffer<ubyte> &data, const uint4 &offset, uint level, const uint3 &size,
-								EPixelFormat::type format, Bytes<usize> xAlign, Bytes<usize> xyAlign) const
+								EPixelFormat::type format, BytesU xAlign, BytesU xyAlign) const
 	{
 		using namespace gl;
-		
-		CHECK_ERR( _tex.Id() != 0 );
 		
 		const uint4	level_size	= Utils::LevelDimension( TextureType(), Dimension(), level );
 		const uint4	img_size	= Utils::ConvertSize( TextureType(), size );
@@ -603,7 +592,7 @@ namespace Graphics
 
 		if ( not data.Empty() )
 		{
-			const usize	req_img_size = _GetImageSize( format, TextureType(), size, xAlign, xAlign );
+			const BytesU	req_img_size = _GetImageSize( format, TextureType(), size, xAlign, xAlign );
 			CHECK_ERR( req_img_size == data.Size() );
 		}
 
@@ -714,8 +703,8 @@ namespace Graphics
 	{
 		using namespace gl;
 
-		const uint	min = _levels.MinIndex();
-		const uint	max = _levels.MaxIndex();
+		const usize	min = _levels.MinIndex();
+		const usize	max = _levels.MaxIndex();
 
 		ASSERT( _levels.HasInterval( min, max ) );
 

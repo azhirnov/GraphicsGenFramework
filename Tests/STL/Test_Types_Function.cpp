@@ -1,6 +1,6 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
-#include "STL/ux_stl.h"
+#include "Engine/STL/Engine.STL.h"
 
 using namespace GX_STL;
 using namespace GX_STL::GXTypes;
@@ -20,8 +20,8 @@ struct Test1
 
 	static void Test ()
 	{
-		delegate_t	d;		DelegateBuilder::Create( d, Func );
-		function_t	f;		FunctionBuilder::Create( f, Func );
+		delegate_t	d = DelegateBuilder( Func );
+		function_t	f = FunctionBuilder( Func );
 		event_t		e;
 
 		e.Add( d );
@@ -46,8 +46,8 @@ struct Test2
 
 	static void Test ()
 	{
-		delegate_t	d;		DelegateBuilder::Create( d, Func );
-		function_t	f;		FunctionBuilder::Create( f, Func, 2 );
+		delegate_t	d = DelegateBuilder( Func );
+		function_t	f = FunctionBuilder( Func, 2 );
 		event_t		e;
 
 		e.Add( d );
@@ -75,8 +75,8 @@ struct Test3
 	static void Test ()
 	{
 		Test3 t;
-		delegate_t	d;		DelegateBuilder::Create( d, &t, &Test3::Func );
-		function_t	f;		FunctionBuilder::Create( f, &t, &Test3::Func );
+		delegate_t	d = DelegateBuilder( &t, &Test3::Func );
+		function_t	f = FunctionBuilder( &t, &Test3::Func );
 		event_t		e;
 
 		e.Add( d );
@@ -102,9 +102,9 @@ struct Test4
 	static void Test ()
 	{
 		Test4 t;
-		delegate_t	d;		DelegateBuilder::Create( d, &t, &Test4::Func );
-		function_t	f;		FunctionBuilder::Type< void (Test4:: *) (const float &) const >::Create( f, &t, &Test4::Func, 2.0f );
-		function_t	f1;		FunctionBuilder::Create( f1, &t, &Test4::Func, 4.0f );
+		delegate_t	d  = DelegateBuilder( &t, &Test4::Func );
+		function_t	f  = FunctionBuilder( &t, &Test4::Func, 2.0f );
+		function_t	f1 = FunctionBuilder( &t, &Test4::Func, 4.0f );
 		event_t		e;
 
 		e.Add( d );
@@ -143,8 +143,8 @@ public:
 		{
 			Test5Ptr t = new Test5();
 
-			DelegateBuilder::Create( d, t, &Test5::Func );
-			FunctionBuilder::Create( f, t, &Test5::Func, 1, 2 );
+			d = DelegateBuilder( t, &Test5::Func );
+			f = FunctionBuilder( t, &Test5::Func, 1, 2 );
 			
 			e.Add( d );
 			e.Add( d );

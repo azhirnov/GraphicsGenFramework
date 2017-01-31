@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 /*
 	TODO:
 	- default event that send after new listener attached
@@ -31,6 +31,7 @@ namespace Base
 		//
 		class IEventListener : public Referenced
 		{
+		// interface
 		public:
 			virtual void Subscribe (const VariantRef &callback) = 0;
 			virtual void Unsubscribe (const VariantRef &callback) = 0;
@@ -46,13 +47,16 @@ namespace Base
 		template <typename T>
 		class EventListenerImpl : public IEventListener
 		{
+		// types
 		private:
-			typedef Delegate< void (const T&) >	del_t;
-			typedef Event< del_t >				event_t;
+			typedef Delegate< void (const T&) >	Delegate_t;
+			typedef Event< Delegate_t >			Event_t;
 
+		// variables
 		private:
-			event_t		_event;
+			Event_t		_event;
 
+		// methods
 		public:
 			EventListenerImpl ()
 			{
@@ -61,12 +65,12 @@ namespace Base
 		
 			void Subscribe (const VariantRef &callback) override
 			{
-				_event.Add( callback.Get< del_t >() );
+				_event.Add( callback.Get< Delegate_t >() );
 			}
 
 			void Unsubscribe (const VariantRef &callback) override
 			{
-				_event.Remove( callback.Get< del_t >() );
+				_event.Remove( callback.Get< Delegate_t >() );
 			}
 
 			void Send (const VariantRef &data) override
@@ -75,18 +79,18 @@ namespace Base
 			}
 		};
 
-		typedef Map< TypeId_t, IEventListenerPtr >	events_map_t;
+		typedef Map< TypeId_t, IEventListenerPtr >	EventsMap_t;
 
-		typedef Set< EventSystemPtr >				event_systems_t;
+		typedef Set< EventSystemPtr >				EventSystems_t;
 
 
 	// variables
 	private:
-		events_map_t		_events;
+		EventsMap_t			_events;
 
-		event_systems_t		_systems;
+		EventSystems_t		_systems;
 
-		Mutex				_lock;
+		OS::Mutex			_lock;
 
 
 	// methods
@@ -109,7 +113,26 @@ namespace Base
 		bool Subscribe (const Delegate< void (const T &) > &cb);
 
 		template <typename T>
+		bool Subscribe (void (*fn) (const T&));
+
+		template <typename C, typename Class, typename T>
+		bool Subscribe (const C &ptr, void (Class:: *fn) (const T&));
+		
+		template <typename C, typename Class, typename T>
+		bool Subscribe (const C &ptr, void (Class:: *fn) (const T&) const);
+
+
+		template <typename T>
 		bool Unsubscribe (const Delegate< void (const T &) > &cb);
+		
+		template <typename T>
+		bool Unsubscribe (void (*fn) (const T&));
+
+		template <typename C, typename Class, typename T>
+		bool Unsubscribe (const C &ptr, void (Class:: *fn) (const T&));
+		
+		template <typename C, typename Class, typename T>
+		bool Unsubscribe (const C &ptr, void (Class:: *fn) (const T&) const);
 
 
 		static EventSystemPtr	New (const SubSystemsRef ss)
@@ -140,20 +163,17 @@ namespace Base
 	{
 		if ( not IsCurrentThread() )
 		{
-			ParallelOp	op;
-			FunctionBuilder::Create( op.func, EventSystemPtr(this), &EventSystem::Send<T>, data );
-
-			Push( RVREF( op ) );
+			Push( ParallelOp( FunctionBuilder( EventSystemPtr(this), &EventSystem::Send<T>, data ) ) );
 			return;
 		}
 
 		const TypeId_t	id	= TypeId<T>();
 
-		events_map_t::iterator	iter;
+		EventsMap_t::iterator	iter;
 
 		if ( _events.Find( id, OUT iter ) )
 		{
-			iter->second->Send( VariantRef::FromConstRef( data ) );
+			iter->second->Send( VariantRef::FromConst( data ) );
 		}	
 
 		SCOPELOCK( _lock );
@@ -213,6 +233,24 @@ namespace Base
 =================================================
 */
 	template <typename T>
+	inline bool EventSystem::Subscribe (void (*fn) (const T&))
+	{
+		return Subscribe( DelegateBuilder( fn ) );
+	}
+
+	template <typename C, typename Class, typename T>
+	inline bool EventSystem::Subscribe (const C &ptr, void (Class:: *fn) (const T&))
+	{
+		return Subscribe( DelegateBuilder( ptr, fn ) );
+	}
+
+	template <typename C, typename Class, typename T>
+	inline bool EventSystem::Subscribe (const C &ptr, void (Class:: *fn) (const T&) const)
+	{
+		return Subscribe( DelegateBuilder( ptr, fn ) );
+	}
+
+	template <typename T>
 	inline bool EventSystem::Subscribe (const Delegate< void (const T &) > &cb)
 	{
 		ASSERT( IsCurrentThread() );
@@ -225,7 +263,7 @@ namespace Base
 			index = _events.Add( id, new EventListenerImpl<T>() );
 		}
 
-		_events[ index ].second->Subscribe( VariantRef::FromConstRef( cb ) );
+		_events[ index ].second->Subscribe( VariantRef::FromConst( cb ) );
 		return true;
 	}
 	
@@ -235,17 +273,35 @@ namespace Base
 =================================================
 */
 	template <typename T>
+	inline bool EventSystem::Unsubscribe (void (*fn) (const T&))
+	{
+		return Unsubscribe( DelegateBuilder( fn ) );
+	}
+
+	template <typename C, typename Class, typename T>
+	inline bool EventSystem::Unsubscribe (const C &ptr, void (Class:: *fn) (const T&))
+	{
+		return Unsubscribe( DelegateBuilder( ptr, fn ) );
+	}
+	
+	template <typename C, typename Class, typename T>
+	inline bool EventSystem::Unsubscribe (const C &ptr, void (Class:: *fn) (const T&) const)
+	{
+		return Unsubscribe( DelegateBuilder( ptr, fn ) );
+	}
+
+	template <typename T>
 	inline bool EventSystem::Unsubscribe (const Delegate< void (const T &) > &cb)
 	{
 		ASSERT( IsCurrentThread() );
 
 		const TypeId_t	id	= TypeId<T>();
 
-		events_map_t::iterator	iter;
+		EventsMap_t::iterator	iter;
 
 		CHECK_ERR( _events.Find( id, OUT iter ) );
 
-		iter->second->Unsubscribe( VariantRef::FromConstRef( cb ) );
+		iter->second->Unsubscribe( VariantRef::FromConst( cb ) );
 		return true;
 	}
 

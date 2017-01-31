@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 /*
 	TODO:
 		- check align on read/write/copy/size methods
@@ -52,23 +52,23 @@ namespace Compute
 	public:
 		bool Create (const uint4 &dim, ETexture::type imageType, EPixelFormat::type format,
 					 EMemoryAccess::type flags = EMemoryAccess::ReadWrite,
-					 BinaryBuffer data = Uninitialized(),
-					 Bytes<usize> xAlign = Bytes<usize>(4),
-					 Bytes<usize> xyAlign = Bytes<usize>(4));
+					 BinaryBuffer data = Uninitialized,
+					 BytesU xAlign = BytesU(4),
+					 BytesU xyAlign = BytesU(4));
 		
-		bool Create (const TexturePtr &texture, EMemoryAccess::type flags, MipmapLevel level = Uninitialized());
-		bool Create (const TexturePtr &texture, EMemoryAccess::type flags, ECubeMapFace::type face, MipmapLevel level = Uninitialized());
+		bool Create (const TexturePtr &texture, EMemoryAccess::type flags, MipmapLevel level = Uninitialized);
+		bool Create (const TexturePtr &texture, EMemoryAccess::type flags, ECubeMapFace::type face, MipmapLevel level = Uninitialized);
 
-		bool SetImage (BinaryBuffer data, const uint3 &size, const uint4 &offset = Uninitialized(),
-						Bytes<usize> xAlign = Bytes<usize>(4), Bytes<usize> xyAlign = Bytes<usize>(4));
+		bool SetImage (BinaryBuffer data, const uint3 &size, const uint4 &offset = Uninitialized,
+						BytesU xAlign = 4_B, BytesU xyAlign = 4_B);
 
 		bool GetImage (OUT Buffer<ubyte> data, const uint3 &size, const uint4 &offset,
-						Bytes<usize> xAlign = Bytes<usize>(4), Bytes<usize> xyAlign = Bytes<usize>(4));
+						BytesU xAlign = 4_B, BytesU xyAlign = 4_B);
 		
-		bool Copy (const ComputeBufferPtr &src, Bytes<usize> srcOffset, const uint4 &dstOffset, const uint4 &size);
+		bool Copy (const ComputeBufferPtr &src, BytesU srcOffset, const uint4 &dstOffset, const uint4 &size);
 		bool Copy (const ComputeImagePtr &src, const uint4 &srcOffset, const uint4 &dstOffset, const uint4 &size);
 		
-		bool CopyTo (const ComputeBufferPtr &dst, const uint4 &srcOffset, Bytes<usize> dstOffset, const uint4 &size);
+		bool CopyTo (const ComputeBufferPtr &dst, const uint4 &srcOffset, BytesU dstOffset, const uint4 &size);
 		
 		template <typename T>
 		void Clear (const T &value);
@@ -91,14 +91,14 @@ namespace Compute
 		cl::cl_mem				Id ()				const	{ return _id; }
 
 		static ComputeImagePtr  New (const SubSystemsRef ss);
-		static ComputeImagePtr  New (const TexturePtr &texture, EMemoryAccess::type flags, MipmapLevel level = Uninitialized());
+		static ComputeImagePtr  New (const TexturePtr &texture, EMemoryAccess::type flags, MipmapLevel level = Uninitialized);
 
 
 	private:
 		bool _CreateFromGLTex (gl::GLenum target, gl::GLuint textureId, EMemoryAccess::type flags, uint level);
 		void _Destroy ();
 
-		void _FillImage (BinaryBuffer pattern);
+		bool _FillImage (BinaryBuffer pattern);
 	};
 
 	

@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "RenderState.h"
 
@@ -22,7 +22,7 @@ DEBUG_ONLY(
 			<< "	blendFuncDstA:   " << EBlendFunc::ToString( blendFuncDstA )   << '\n'
 			<< "	blendModeRGB:    " << EBlendEq::ToString( blendModeRGB )      << '\n'
 			<< "	blendModeA:      " << EBlendEq::ToString( blendModeA )        << '\n'
-			<< "	colorMask:       (" << colorMask.ToString() << ")\n}";
+			<< "	colorMask:       (" << GXTypes::ToString( colorMask ) << ")\n}";
 	}
 
 /*
@@ -35,7 +35,7 @@ DEBUG_ONLY(
 		return String( "DepthBufferState {\n" )
 			<< "	test:  " << test << '\n'
 			<< "	func:  " << ECompareFunc::ToString( func ) << '\n'
-			<< "	range: (" << range.ToString() << ")\n"
+			<< "	range: (" << GXTypes::ToString( range ) << ")\n"
 			<< "	write: " << write << '\n'
 			<< "	clamp: " << clamp << "\n}";
 	}
@@ -112,7 +112,7 @@ DEBUG_ONLY(
 			str << '[' << i << ']' << colors[i].ToString() << '\n';
 		}
 
-		str << "blendColor:  (" << blendColor.ToString() << ")\n"
+		str << "blendColor:  (" << GXTypes::ToString( blendColor ) << ")\n"
 			<< depth.ToString() << '\n'
 			<< stencil.ToString() << '\n'
 			<< cullMode.ToString() << '\n'

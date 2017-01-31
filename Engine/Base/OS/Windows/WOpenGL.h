@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -7,15 +7,12 @@
 #if (defined( PLATFORM_WINDOWS ) and not defined( PLATFORM_SDL )) \
 	and (defined( GRAPHICS_API_OPENGL ) or defined( GRAPHICS_API_OPENGLES ))
 
+
 namespace Engine
 {
 namespace WinPlatform
 {
 	using namespace Base;
-	using namespace GX_STL::winapi;
-
-#	include "External/opengl/wglext.h"
-
 
 
 	//
@@ -26,68 +23,32 @@ namespace WinPlatform
 	{
 	// types
 	private:
-		typedef PROC (CALLBACK * wglGetProcAddressProc_t) (LPCSTR lpszProc);
+		typedef OS::HiddenOSTypeFrom<void*>		FuncPtr_t;
 
 
 	// variables
 	private:
-		Library						_lib;
-		wglGetProcAddressProc_t		_getProc;
+		OS::Library		_lib;
+		FuncPtr_t		_getProc;	// wglGetProcAddress*
 
 
 	// methods
 	public:
-		WindowsLibOpenGL () : _getProc(null)
-		{}
+		WindowsLibOpenGL ();
 
-		bool Load (StringCRef name = StringCRef())
-		{
-			Unload();
+		bool Load (StringCRef name = StringCRef());
 
-			if ( not name.Empty() )
-			{
-				if ( _lib.Load( name, true ) )
-					return _OnInit();
-			}
+		void Unload ();
 
-			if ( _lib.Load( GetDefaultName(), true ) )
-				return _OnInit();
-
-			return false;
-		}
-
-		void Unload ()
-		{
-			_getProc = null;
-			_lib.Unload();
-		}
-
-		void * GetProc (StringCRef address) const
-		{
-			void * res = null;
-
-			if ( _getProc != null and (res = _getProc( address.cstr() )) != null )
-				return res;
-			
-			if ( (res = _lib.GetProc( address )) != null )
-				return res;
-
-			return null;
-		}
+		void * GetProc (StringCRef address) const;
 
 		static StringCRef  GetDefaultName ()
 		{
 			return "opengl32.dll";
 		}
 
-
 	private:
-		
-		bool _OnInit ()
-		{
-			_getProc = (wglGetProcAddressProc_t) _lib.GetProc( "wglGetProcAddress" );
-			return _getProc != null;
-		}
+		bool _OnInit ();
 	};
 
 
@@ -98,54 +59,38 @@ namespace WinPlatform
 
 	class WindowsOpenGLContext : public Noncopyable
 	{
+	// types
+	private:
+		typedef OS::HiddenOSTypeFrom<void*>		FuncPtr_t;
+		typedef OS::HiddenOSTypeFrom<void*>		Handle_t;
+
+
 	// variables
 	private:
-		PFNWGLSWAPINTERVALEXTPROC			wglSwapInterval;
-		PFNWGLGETSWAPINTERVALEXTPROC		wglGetSwapInterval;
-		PFNWGLCHOOSEPIXELFORMATARBPROC		wglChoosePixelFormat;
-		PFNWGLCREATECONTEXTATTRIBSARBPROC	wglCreateContextAttribs;
-		bool								swapControlSupported;
+		FuncPtr_t		wglSwapInterval;			// PFNWGLSWAPINTERVALEXTPROC
+		FuncPtr_t		wglGetSwapInterval;			// PFNWGLGETSWAPINTERVALEXTPROC
+		FuncPtr_t		wglChoosePixelFormat;		// PFNWGLCHOOSEPIXELFORMATARBPROC
+		FuncPtr_t		wglCreateContextAttribs;	// PFNWGLCREATECONTEXTATTRIBSARBPROC
+		bool			swapControlSupported;
 
-		HDC									_deviceContext;
-		HGLRC								_renderContext;
+		Handle_t		_deviceContext;				// HDC
+		Handle_t		_renderContext;				// HGLRC
 
 
 	// methods
 	public:
 		WindowsOpenGLContext ();
 
-		bool Init (HDC dc, INOUT VideoSettings &vs);
-
+		bool Init (const Handle_t &dc, INOUT VideoSettings &vs);
 		void Destroy ();
 
-		void MakeCurrent ()
-		{
-			CHECK( wglMakeCurrent( _deviceContext, _renderContext ) == TRUE );
-		}
+		void MakeCurrent ();
+		void ResetCurrent ();
 
-		void ResetCurrent ()
-		{
-			CHECK( wglMakeCurrent( _deviceContext, null ) == TRUE );
-		}
+		bool IsCreated () const;
+		bool IsCurrent ();
 
-		bool IsCreated () const
-		{
-			return _deviceContext != null and _renderContext != null;
-		}
-
-		bool IsCurrent ()
-		{
-			return IsCreated() and wglGetCurrentContext() == _renderContext;
-		}
-
-		void SwapBuffers ()
-		{
-			if ( IsCreated() )
-			{
-				winapi::SwapBuffers( _deviceContext );
-			}
-		}
-
+		void SwapBuffers ();
 
 	private:
 		bool _InitOpenGL (INOUT VideoSettings &vs);

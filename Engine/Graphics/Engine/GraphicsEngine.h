@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -49,6 +49,8 @@ namespace Graphics
 	private:
 		void _OnResize (const SysEvent::Window &ev);
 	};
+
+	SHARED_POINTER( GraphicsEngine );
 
 
 }	// Graphics

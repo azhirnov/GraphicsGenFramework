@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -43,7 +43,7 @@ namespace Graphics
 			ImageHeader () :
 				width( 0 ), height( 0 ), depth( 0 ),
 				layer( 0 ), level( 0 ),
-				format( EPixelFormat::type(-1) )
+				format( EPixelFormat::Unknown )
 			{}
 		};
 
@@ -65,8 +65,8 @@ namespace Graphics
 
 		// methods
 			TextureHeader () :
-				ResourceFileHeader( CompileTime::Signature4::Pack< 'G', 'T', 'E', 'X' >::value, VERSION ),
-				target( ETexture::type(-1) ), format( EPixelFormat::type(-1) ),
+				ResourceFileHeader( Signature_t::Pack< 'G', 'T', 'E', 'X' >::value, VERSION ),
+				target( ETexture::Unknown ), format( EPixelFormat::Unknown ),
 				dataType( ETextureData::Unknown ), numImages( 0 ),
 				width( 0 ), height( 0 ), depth( 0 ),
 				layers( 0 ), generateMipmaps( false )

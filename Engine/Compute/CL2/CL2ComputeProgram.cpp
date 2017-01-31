@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "CL2ComputeProgram.h"
 
@@ -187,7 +187,7 @@ namespace Compute
 											 INOUT HashSet<String> &includedFiles, StringCRef srcFilename) const
 	{
 		static const StringCRef	importKey( "#include" );
-		StringCRef				path		= FileAddressUtils::GetPath( srcFilename );
+		StringCRef				path		= FileAddress::GetPath( srcFilename );
 		const usize				i			= tmp.LastIndex();
 		usize					lines		= 1;
 		usize					prev_pos	= 0;
@@ -213,8 +213,8 @@ namespace Compute
 			
 				StringParser::ToNextLine( src, pos );
 
-				FileAddressUtils::BuildPath( filename, path, fname );
-				FileAddressUtils::FormatPath( filename );
+				FileAddress::BuildPath( filename, path, fname );
+				FileAddress::FormatPath( filename );
 			}
 
 			if ( not includedFiles.IsExist( filename ) )
@@ -228,7 +228,7 @@ namespace Compute
 				CHECK_ERR( _RecursiveParse( tmp, source, includedFiles, filename ) );
 
 				tmp.PushBack( String() );
-				tmp.Back() << "#line " << lines << " \"" << FileAddressUtils::GetNameAndExt( srcFilename ) << "\"\n";
+				tmp.Back() << "#line " << lines << " \"" << FileAddress::GetNameAndExt( srcFilename ) << "\"\n";
 				source.PushBack( usize2( tmp.LastIndex(), 0 ) );
 			}
 			else
@@ -293,9 +293,9 @@ namespace Compute
 		RFilePtr	file;
 		CHECK_ERR( SubSystems()->Get< FileManager >()->OpenForRead( filename, file ) );
 
-		const Bytes<usize>	size = file->RemainingSize();
+		const BytesU	size = file->RemainingSize();
 
-		src << "#line 1 \"" << FileAddressUtils::GetNameAndExt( filename ) << "\"\n";
+		src << "#line 1 \"" << FileAddress::GetNameAndExt( filename ) << "\"\n";
 		src.Reserve( size + 2 + src.Length() );
 
 		CHECK_ERR( file->Read( src.End(), size ) );

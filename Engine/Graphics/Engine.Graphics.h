@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 /*
 	This is wrapper for low level graphics API such as OpenGL, DirectX, Vulkan, ...
 	This project provides middle level abstraction:
@@ -13,7 +13,7 @@
 
 	TODO:
 		- Font
-		- Render queue (Render pass) (or it is hight level?)
+		- Render queue (Render pass) (or it is high level?)
 */
 
 #pragma once
@@ -23,6 +23,6 @@
 #include "Engine/Graphics/Shader/UniformBlock.h"
 #include "Engine/Graphics/Shader/TextureUniform.h"
 #include "Engine/Graphics/Shader/ImageUniform.h"
-#include "Engine/Graphics/Mesh/MeshGenerator.h"
+#include "Engine/Graphics/Buffer/MeshGenerator.h"
 #include "Engine/Graphics/Query/GraphicsQuery.h"
 #include "Engine/Graphics/Profiling/FunctionGpuProfiler.h"

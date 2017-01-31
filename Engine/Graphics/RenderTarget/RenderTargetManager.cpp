@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "RenderTargetManager.h"
 
@@ -114,7 +114,7 @@ namespace Graphics
 	_OnResize
 =================================================
 */
-	void RenderTargetManager::_OnResize (const int2 &newSize)
+	void RenderTargetManager::_OnResize (const uint2 &newSize)
 	{
 		_defaultRT->SetViewport( newSize );
 	}
@@ -138,7 +138,7 @@ namespace Graphics
 	{
 		Ptr< FileManager >	fm = SubSystems()->Get< FileManager >();
 		String				name;
-		String const		path = FileAddressUtils::GetPath( filename );
+		String const		path = FileAddress::GetPath( filename );
 
 		if ( not fm->IsDirectoryExist( path ) )
 		{
@@ -169,12 +169,12 @@ namespace Graphics
 }	// Graphics
 }	// Engine
 
-#ifdef OP_USE_LODEPNG
+#ifdef GX_USE_LODEPNG
 # pragma warning (push)
 # pragma warning (disable: 4005)	// 'identifier' : macro redefinition
 #  include "External/lodepng/lodepng.h"
 # pragma warning (pop)
-#endif	// OP_USE_LODEPNG
+#endif	// GX_USE_LODEPNG
 
 namespace Engine
 {
@@ -190,12 +190,12 @@ namespace Graphics
 */
 	bool RenderTargetManager::_SaveRenderTargetImage_PNG (const RenderTargetPtr &rt, StringCRef filename, bool flipY)
 	{
-	#ifdef OP_USE_LODEPNG
-		const RectI			vp = rt->GetViewport();
-		const Bytes<usize>	align( 4 );
+	#ifdef GX_USE_LODEPNG
+		const RectU		vp = rt->GetViewport();
+		const BytesU	align( 4 );
 
 		BinaryArray		data;
-		data.Resize( AlignedImageDataSize( int3( vp.Size(), 1 ), Bytes<usize>(4), align, Bytes<usize>(1) ), false );
+		data.Resize( (usize)ImageUtils::AlignedDataSize( uint3( vp.Size(), 1 ), 4_b, align, 1_b ), false );
 
 		Buffer<ubyte>	udata( data );
 
@@ -204,7 +204,7 @@ namespace Graphics
 		if ( flipY )
 		{
 			uint const		half_height = (vp.Height() - 1) / 2;
-			usize const		line_size	= AlignedImageDataSize( int3( vp.Width(), 1, 1 ), Bytes<usize>(4), align, Bytes<usize>(1) );
+			usize const		line_size	= (usize)ImageUtils::AlignedDataSize( int3( vp.Width(), 1, 1 ), 4_b, align, 1_b );
 
 			BinaryArray	line;		line.Resize( line_size, false );
 
@@ -212,9 +212,9 @@ namespace Graphics
 			{
 				uint y1 = vp.Height() - 1 - y;
 
-				MemCopy( line.ptr(),					data.ptr() + line_size * y,	 line_size );
-				MemCopy( data.ptr() + line_size * y,	data.ptr() + line_size * y1, line_size );
-				MemCopy( data.ptr() + line_size * y1,	line.ptr(),					 line_size );
+				UnsafeMem::MemCopy( line.ptr(),						data.ptr() + line_size * y,	 BytesU(line_size) );
+				UnsafeMem::MemCopy( data.ptr() + line_size * y,		data.ptr() + line_size * y1, BytesU(line_size) );
+				UnsafeMem::MemCopy( data.ptr() + line_size * y1,	line.ptr(),					 BytesU(line_size) );
 			}
 		}
 
@@ -226,7 +226,7 @@ namespace Graphics
 	#else
 
 		return false;
-	#endif	// OP_USE_LODEPNG
+	#endif	// GX_USE_LODEPNG
 	}
 	
 /*
@@ -238,17 +238,17 @@ namespace Graphics
 */
 	bool RenderTargetManager::_SaveRenderTargetImage_RAW (const RenderTargetPtr &rt, StringCRef filename)
 	{
-		const RectI			vp = rt->GetViewport();
-		const Bytes<usize>	align( 4 );
+		const RectU		vp		= rt->GetViewport();
+		const BytesU	align	= 4_b;
 
 		BinaryArray		data;
-		data.Resize( AlignedImageDataSize( int3( vp.Size(), 1 ), Bytes<usize>(4), align, Bytes<usize>(1) ), false );
+		data.Resize( (usize)ImageUtils::AlignedDataSize( uint3( vp.Size(), 1 ), 4_b, align, 1_b ), false );
 
 		Buffer<ubyte>	udata( data );
 
 		CHECK_ERR( rt->GetImage( udata, rt->GetFormat( ERenderTarget::Color0 ), vp, ERenderTarget::Color0, align ) );
 
-		WFilePtr			file;
+		WFilePtr		file;
 		CHECK_ERR( SubSystems()->Get< FileManager >()->OpenForWrite( filename, file ) );
 		CHECK_ERR( file->Write( udata ) );
 

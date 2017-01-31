@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -33,20 +33,20 @@ namespace Graphics
 		// variables
 			EAttribute::type	type;
 			AttribIndex			index;
-			usize				offset;
+			BytesU				offset;
 			BufferBindingIndex	bufferIndex;
 			bool				enabled;
 
 		// methods
 			Attrib (GX_DEFCTOR) :
-				type( EAttribute::type(-1) ),
+				type( EAttribute::Unknown ),
 				index( AttribIndex(-1) ),
 				offset( 0 ),
 				bufferIndex( BufferBindingIndex(0) ),
 				enabled( false )
 			{}
 
-			Attrib (AttribIndex index, EAttribute::type type, usize offset, BufferBindingIndex bufferIndex = BufferBindingIndex(0)) :
+			Attrib (AttribIndex index, EAttribute::type type, BytesU offset, BufferBindingIndex bufferIndex = BufferBindingIndex(0)) :
 				type( type ),
 				index( index ),
 				offset( offset ),
@@ -58,7 +58,7 @@ namespace Graphics
 			Attrib (AttribIndex index, ValueType ClassType:: *vertex, bool norm, BufferBindingIndex bufferIndex = BufferBindingIndex(0)) :
 				type( EAttribute::SetNormalized( VertexDesc< ValueType >::attrib, norm ) ),
 				index( index ),
-				offset( ReferenceCast< usize >( vertex ) ),
+				offset( OffsetOf( vertex ) ),
 				bufferIndex( bufferIndex ),
 				enabled( true )
 			{}
@@ -104,7 +104,7 @@ namespace Graphics
 		{}
 		
 
-		Self & Add (AttribIndex index, EAttribute::type type, usize offset, BufferBindingIndex bufferIndex = BufferBindingIndex(0))
+		Self & Add (AttribIndex index, EAttribute::type type, BytesU offset, BufferBindingIndex bufferIndex = BufferBindingIndex(0))
 		{
 			// attrib allready defined
 			ASSERT( _attribs[index].index == AttribIndex(-1) );
@@ -180,7 +180,7 @@ namespace Graphics
 
 		// methods
 			Attrib () :
-				type( EAttribute::type(0) ),
+				type( EAttribute::Unknown ),
 				index( AttribIndex(-1) ),
 				enabled( false )
 			{}

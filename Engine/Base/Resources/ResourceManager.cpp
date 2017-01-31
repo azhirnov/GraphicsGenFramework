@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "ResourceManager.h"
 
@@ -55,7 +55,7 @@ namespace Base
 	{
 		SCOPELOCK( _lock );
 
-		CHECK_ERR( loader.IsNotNull() );
+		CHECK_ERR( loader );
 		CHECK_ERR( not _resourceLoaders.IsExist( ResourceMap( loader ) ) );
 
 		_resourceLoaders.Add( ResourceMap( loader ) );
@@ -67,9 +67,9 @@ namespace Base
 	UnregisterLoader
 =================================================
 */
-	void ResourceManager::UnregisterLoader (const IResourceLoaderPtr &loader)
+	bool ResourceManager::UnregisterLoader (const IResourceLoaderPtr &loader)
 	{
-		CHECK_ERR( loader.IsNotNull(), void() );
+		CHECK_ERR( loader );
 		
 		SCOPELOCK( _lock );
 
@@ -84,6 +84,8 @@ namespace Base
 				rm.loader = null;
 			}
 		}
+
+		return true;
 	}
 	
 /*
@@ -91,14 +93,15 @@ namespace Base
 	AddResource
 =================================================
 */
-	void ResourceManager::AddResource (const ResourcePtr &res)
+	bool ResourceManager::AddResource (const ResourcePtr &res)
 	{
 		SCOPELOCK( _lock );
 
-		CHECK_ERR( res.IsNotNull(), void() );
-		CHECK_ERR( _resources.IsExist( ResWrap( res ) ), void() );
+		CHECK_ERR( res );
+		CHECK_ERR( _resources.IsExist( ResWrap( res ) ) );
 
 		_resources.Add( ResWrap( res ) );
+		return true;
 	}
 	
 /*
@@ -106,13 +109,14 @@ namespace Base
 	RemoveResource
 =================================================
 */
-	void ResourceManager::RemoveResource (const ResourcePtr &res)
+	bool ResourceManager::RemoveResource (const ResourcePtr &res)
 	{
 		SCOPELOCK( _lock );
 
-		CHECK_ERR( res.IsNotNull(), void() );
+		CHECK_ERR( res );
 
 		_resources.Erase( ResWrap( res ) );
+		return true;
 	}
 	
 /*
@@ -190,11 +194,11 @@ namespace Base
 	GetUsedRamSize
 =================================================
 */
-	Bytes<usize> ResourceManager::GetUsedRamSize ()
+	BytesU ResourceManager::GetUsedRamSize ()
 	{
 		SCOPELOCK( _lock );
 
-		Bytes<usize>	size;
+		BytesU	size;
 
 		FOR( i, _resources )
 		{
@@ -208,11 +212,11 @@ namespace Base
 	GetUsedVRamSize
 =================================================
 */
-	Bytes<usize> ResourceManager::GetUsedVRamSize ()
+	BytesU ResourceManager::GetUsedVRamSize ()
 	{
 		SCOPELOCK( _lock );
 
-		Bytes<usize>	size;
+		BytesU	size;
 		
 		FOR( i, _resources )
 		{

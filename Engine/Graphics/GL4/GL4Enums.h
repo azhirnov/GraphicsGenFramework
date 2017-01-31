@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -729,7 +729,7 @@ namespace Graphics
 	UniformSizeOf
 =================================================
 */
-	inline uint EUniform::SizeOf (type value, Bytes<usize> rowAlign)
+	inline uint EUniform::SizeOf (type value, BytesU rowAlign)
 	{
 		switch ( value )
 		{
@@ -754,12 +754,12 @@ namespace Graphics
 			case Double3 :		return 8*3;
 			case Double4 :		return 8*4;
 
-			case Float2x2 :		return Align( 4*2, rowAlign ) * 2;
-			case Float3x3 :		return Align( 4*3, rowAlign ) * 3;
-			case Float4x4 :		return Align( 4*4, rowAlign ) * 4;
-			case Double2x2 :	return Align( 8*2, rowAlign ) * 2;
-			case Double3x3 :	return Align( 8*3, rowAlign ) * 3;
-			case Double4x4 :	return Align( 8*4, rowAlign ) * 4;
+			case Float2x2 :		return AlignToLarge( 4*2, rowAlign ) * 2;
+			case Float3x3 :		return AlignToLarge( 4*3, rowAlign ) * 3;
+			case Float4x4 :		return AlignToLarge( 4*4, rowAlign ) * 4;
+			case Double2x2 :	return AlignToLarge( 8*2, rowAlign ) * 2;
+			case Double3x3 :	return AlignToLarge( 8*3, rowAlign ) * 3;
+			case Double4x4 :	return AlignToLarge( 8*4, rowAlign ) * 4;
 
 			default :			return 4;
 		}

@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -181,13 +181,15 @@ namespace Graphics
 	{
 		enum type : uint
 		{
-			Vertex = 0,
+			Vertex		= 0,
 			TessControl,
 			TessEvaluation,
 			Geometry,
 			Fragment,
 			Compute,
-			_COUNT,
+
+			_Count,
+			Unknown		= uint(-1),
 		};
 
 		inline static StringCRef ToString (type value);
@@ -198,7 +200,7 @@ namespace Graphics
 	{
 		enum type : uint
 		{
-			Tex1D = 0,
+			Tex1D		= 0,
 			Tex1DArray,
 			Tex2D,
 			Tex2DArray,
@@ -208,7 +210,9 @@ namespace Graphics
 			TexCubeArray,
 			Tex3D,
 			Buffer,
-			_COUNT
+
+			_Count,
+			Unknown		= uint(-1),
 		};
 
 		inline static bool IsMultisampled (type value);
@@ -256,12 +260,14 @@ namespace Graphics
 	{
 		enum type : uint
 		{
-			Depth = 0,
+			Depth		= 0,
 			Stencil,
 			DepthStencil,
 			Color0,
 			ColorMax	= Color0 + GlobalConst::Graphics_MaxColorBuffers,
-			_COUNT		= ColorMax
+
+			_Count		= ColorMax,
+			Unknown		= uint(-1),
 		};
 
 		inline static type ToColor (uint index)		{ ASSERT(index < GlobalConst::Graphics_MaxColorBuffers);  return type( index + Color0 ); }
@@ -274,11 +280,14 @@ namespace Graphics
 	{
 		enum type : uint
 		{
-			Point,
+			Point		= 0,
 			Line,
 			LineStrip,
 			Triangle,
 			TriangleStrip,
+
+			_Count,
+			Unknown		= uint(-1),
 		};
 	};
 
@@ -667,6 +676,8 @@ namespace Graphics
 			Double2			= EValueTypeInfo::Double2,
 			Double3			= EValueTypeInfo::Double3,
 			Double4			= EValueTypeInfo::Double4,
+
+			Unknown			= uint(-1),
 		};
 
 		struct ValueType
@@ -689,12 +700,15 @@ namespace Graphics
 	{
 		enum type : uint
 		{
-			UByte = 0,
+			UByte		= 0,
 			UShort,
 			UInt,
+
+			_Count,
+			Unknown		= uint(-1),
 		};
 
-		inline static Bytes<usize> SizeOf (type value);
+		inline static BytesU SizeOf (type value);
 	};
 
 
@@ -829,6 +843,8 @@ namespace Graphics
 			ASTC_SRGB8_A8_10x10		= EValueTypeInfo::ASTC_SRGB8_A8_10x10,
 			ASTC_SRGB8_A8_12x10		= EValueTypeInfo::ASTC_SRGB8_A8_12x10,
 			ASTC_SRGB8_A8_12x12		= EValueTypeInfo::ASTC_SRGB8_A8_12x12,
+
+			Unknown					= uint(-1),
 		};
 
 		inline static bool IsCompressed (type value);
@@ -839,7 +855,7 @@ namespace Graphics
 
 		inline static uint NumColorChannels (type value);
 
-		inline static Bits<usize> BitPerPixel (type value);
+		inline static BitsU BitPerPixel (type value);
 
 		template <typename T>
 		inline static type FromType (const T& = T(), bool normalized = false);
@@ -888,6 +904,8 @@ namespace Graphics
 	{
 		enum type : uint
 		{
+			Unknown		= uint(-1),
+
 			Int			= EValueTypeInfo::Int,
 			Int2		= EValueTypeInfo::Int2,
 			Int3		= EValueTypeInfo::Int3,
@@ -967,7 +985,7 @@ namespace Graphics
 
 		inline static type	From (ETexture::type tex, EPixelFormat::type fmt);
 
-		inline static uint	SizeOf (type value, Bytes<usize> rowAlign = Bytes<usize>(1));
+		inline static uint	SizeOf (type value, BytesU rowAlign = 1_b);
 
 		inline static uint	NumColumns (type value);
 
@@ -979,7 +997,7 @@ namespace Graphics
 	{
 		enum type : uint
 		{
-			None		= 0,
+			Unknown		= 0,
 			Int4		= EValueTypeInfo::Int4,
 			UInt4		= EValueTypeInfo::UInt4,
 			Float4		= EValueTypeInfo::Float4,
@@ -994,9 +1012,12 @@ namespace Graphics
 	{
 		enum type : uint
 		{
-			Static = 0,
+			Static		= 0,
 			Dynamic,
 			Stream,
+
+			_Count,
+			Unknown		= uint(-1),
 		};
 	};
 
@@ -1019,7 +1040,7 @@ namespace Graphics
 			Texture,
 			TransformFeedback,
 			Uniform,
-			_COUNT
+			_Count
 		};
 	};
 
@@ -1028,6 +1049,7 @@ namespace Graphics
 	{
 		enum type : uint
 		{
+			Unknown					= 0,
 			VertexAttribArray		= 1 << 0,		// before draw with vertex buffer
 			ElementArray			= 1 << 1,		// before draw with index buffer
 			Uniform					= 1 << 2,		// before read from uniform buffer
@@ -1055,6 +1077,7 @@ namespace Graphics
 	{
 		enum type : uint
 		{
+			Unknown		= 0,
 			Read		= 1 << 0,
 			Write		= 1 << 1,
 			ReadWrite	= Read | Write,
@@ -1150,7 +1173,8 @@ namespace Graphics
 			ClippingInputPrimitives,
 			ClippingOutputPrimitives,
 
-			_COUNT
+			_Count,
+			Unknown	= uint(-1),
 		};
 	};
 
@@ -1158,4 +1182,4 @@ namespace Graphics
 }	// Graphics
 }	// Engine
 
-#include "../Types/Enums.inl.h"
+#include "Engine/Graphics/Types/Enums.inl.h"

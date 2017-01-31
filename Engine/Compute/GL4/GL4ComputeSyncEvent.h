@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -39,14 +39,14 @@ namespace Compute
 		bool Create ();
 		
 		// CPU-side wait
-		bool ClientWait (Time<ulong> timeout);
+		bool ClientWait (TimeL timeout);
 
 		// GPU-side wait
 		bool Wait ();
 
 		bool IsSignaled () const;
 
-		Time<ulong> MaxTimeout () const;
+		TimeL MaxTimeout () const;
 
 		static ComputeSyncEventPtr  New (const SubSystemsRef ss);
 

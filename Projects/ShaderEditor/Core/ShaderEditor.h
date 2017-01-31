@@ -1,12 +1,12 @@
-// Copyright © 2017  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
 #include "Common.h"
 #include "Renderer.h"
 #include "ISample.h"
-#include "../Particles/ParticleRenderer.h"
-#include "../Tiles/TilesManager.h"
+#include "Projects/ShaderEditor/Particles/ParticleRenderer.h"
+#include "Projects/ShaderEditor/Tiles/TilesManager.h"
 
 namespace ShaderEditor
 {
@@ -28,7 +28,7 @@ namespace ShaderEditor
 		Array< ISamplePtr >	_samples;
 		usize				_activeSample;
 		
-		Time<double>		_time;
+		TimeD				_time;
 		bool				_timePaused;
 		bool				_initialized;
 		bool				_makeScreenShot;
@@ -48,9 +48,9 @@ namespace ShaderEditor
 
 
 	private:
-		void _ActiveSample (usize index);
+		void _ActiveNextSample ();
 
-		void _Update (Time<double> dt, bool forceRedraw) override;
+		void _Update (TimeD dt, bool forceRedraw) override;
 		void _Draw ();
 
 		void _OnInit () override;

@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -129,6 +129,7 @@ namespace Base
 			return SET;
 		}
 	
+#		ifdef GX_PHYSICS_DIMENSIONS_ENABLED
 		template <typename V, typename D, typename S>
 		static constexpr type GetValueTypeOf (PhysicsValue<V,D,S> const&) {
 			return GetValueTypeOf( V() );
@@ -138,6 +139,7 @@ namespace Base
 		static constexpr type GetValueTypeOf (PhysicsValueVec<T,I> const&) {
 			return VECTOR;
 		}
+#		endif	// GX_PHYSICS_DIMENSIONS_ENABLED
 	
 		template <typename T>
 		static constexpr type GetValueTypeOf (Radians<T> const&) {

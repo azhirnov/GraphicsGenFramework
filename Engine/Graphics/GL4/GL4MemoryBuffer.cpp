@@ -1,10 +1,10 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "gl4.h"
 
 #if defined( GRAPHICS_API_OPENGL )
 
-#include "Engine/Graphics/Mesh/MemoryBuffer.h"
+#include "Engine/Graphics/Buffer/MemoryBuffer.h"
 #include "Engine/Graphics/Engine/GraphicsEngine.h"
 
 namespace Engine
@@ -68,7 +68,7 @@ namespace Graphics
 
 		CHECK( GL4Enum( format, OUT ifmt, OUT fmt, OUT type ) );
 
-		GL_CALL( glClearNamedBufferSubData( buf.Id(), ifmt, offset, size, fmt, type, pattern.ptr() ) );
+		GL_CALL( glClearNamedBufferSubData( buf.Id(), ifmt, offset, (GLsizei)size, fmt, type, pattern.ptr() ) );
 		return true;
 	}
 	
@@ -81,7 +81,7 @@ namespace Graphics
 	{
 		using namespace gl;
 
-		GL_CALL( glCopyNamedBufferSubData( src.Id(), dst.Id(), readOffset, writeOffset, size ) );
+		GL_CALL( glCopyNamedBufferSubData( src.Id(), dst.Id(), (GLsizei)readOffset, (GLsizei)writeOffset, (GLsizei)size ) );
 		return true;
 	}
 

@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -79,10 +79,10 @@ namespace Graphics
 		typedef Array< _TextureUnit >				TextureUnits_t;
 		typedef Array< _ImageUnit >					ImageUnits_t;
 		typedef Array< _Buffer >					BufferArray_t;
-		typedef FixedSizeStack< RectI, 16 >			ViewportStack_t;
-		typedef StaticArray< uint, EQuery::_COUNT >	QueryMaxIndices_t;
+		typedef FixedSizeStack< RectU, 16 >			ViewportStack_t;
+		typedef StaticArray< uint, EQuery::_Count >	QueryMaxIndices_t;
 
-		typedef StaticArray< BufferArray_t, EBufferTarget::_COUNT >	Buffers_t;
+		typedef StaticArray< BufferArray_t, EBufferTarget::_Count >	Buffers_t;
 
 		typedef StaticArray< uint, CompileTime::IntLog2< uint, EMemoryBarrier::_Last >+1 >	BarrierLastTickArray_t;
 
@@ -173,7 +173,7 @@ namespace Graphics
 		
 
 		// vertex attribs
-		void BindAttribs (const VertexAttribsPtr &attribs, const BufferID &vb, uint offset, uint stride, uint divisor = 0);
+		void BindAttribs (const VertexAttribsPtr &attribs, const BufferID &vb, BytesU offset, BytesU stride, uint divisor = 0);
 		void BindAttribs (const VertexAttribsPtr &attribs, const BufferID &ib);
 		void UnbindAttribs (const VertexAttribsPtr &attribs);
 		void UnbindAttribs ();
@@ -183,12 +183,12 @@ namespace Graphics
 		// program
 		void BindProgram (const ProgramID &id);
 		
-		void BindBufferBase (EBufferTarget::type target, const BufferID &id, uint index, usize offset = 0, usize size = -1);
-		void UnbindBufferBase (EBufferTarget::type target, const BufferID &id);
+		bool BindBufferBase (EBufferTarget::type target, const BufferID &id, uint index, BytesU offset = BytesU(0), BytesU size = BytesU(-1));
+		bool UnbindBufferBase (EBufferTarget::type target, const BufferID &id);
 		void UnbindBufferBase (const BufferID &id);
 
-		uint GetShaderBuffers (EBufferTarget::type target)	const	{ return _buffers[target].Count(); }
-		bool IsProgramBinded (const ProgramID &prog)		const	{ return prog.Id() == _currentProgram.Id(); }
+		usize GetShaderBuffers (EBufferTarget::type target)	const	{ return _buffers[target].Count(); }
+		bool  IsProgramBinded (const ProgramID &prog)		const	{ return prog.Id() == _currentProgram.Id(); }
 
 
 		// framebuffers
@@ -216,21 +216,21 @@ namespace Graphics
 		// viewport
 		void PushViewport ();
 		void PopViewport ();
-		void Viewport (const int2 &offset, const int2 &size)	{ Viewport( RectI( offset.x, offset.y, size.x, size.y ) ); }
-		void Viewport (const RectI &value);
-		void Viewports (Buffer<const RectI> values);
+		void Viewport (const uint2 &offset, const uint2 &size);
+		void Viewport (const RectU &value);
+		void Viewports (Buffer<const RectU> values);
 		void _ResetViewportStack ();
-		void _OnResize (const int2 &newSize);
+		void _OnResize (const uint2 &newSize);
 
 
 		// drawing
-		void DrawArrays (EPrimitive::type primitive, usize count, usize offset);
+		void DrawArrays (EPrimitive::type primitive, usize count, usize first);
 
-		void DrawElements (EPrimitive::type primitive, EIndex::type indexType, usize count, usize offset);
-		void DrawElementsBaseVertex (EPrimitive::type primitive, EIndex::type indexType, usize count, usize offset, uint baseVertex);
+		void DrawElements (EPrimitive::type primitive, EIndex::type indexType, usize count, BytesU offset);
+		void DrawElementsBaseVertex (EPrimitive::type primitive, EIndex::type indexType, usize count, BytesU offset, uint baseVertex);
 
-		void MultiDrawElements (EPrimitive::type primitive, EIndex::type indexType, const usize *count, const usize *offset, uint drawcount);
-		void MultiDrawElementsBaseVertex (EPrimitive::type primitive, EIndex::type indexType, const usize *count, const usize *offset, const uint *baseVertex, uint drawcount);
+		void MultiDrawElements (EPrimitive::type primitive, EIndex::type indexType, const usize *count, const BytesU *offsets, uint drawcount);
+		void MultiDrawElementsBaseVertex (EPrimitive::type primitive, EIndex::type indexType, const usize *count, const BytesU *offsets, const uint *baseVertex, uint drawcount);
 
 
 		// dispatch compute

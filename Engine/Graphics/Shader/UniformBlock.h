@@ -1,9 +1,9 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
 #include "ShaderProgram.h"
-#include "Engine/Graphics/Mesh/MemoryBuffer.h"
+#include "Engine/Graphics/Buffer/MemoryBuffer.h"
 #include "Engine/Graphics/Engine/GraphicsEngine.h"
 
 namespace Engine
@@ -22,7 +22,7 @@ namespace Graphics
 	// types
 	private:
 		static const uint	ALIGN		= sizeof(float) * 4;
-		static const uint	BUFFER_SIZE = CompileTime::Align< uint, sizeof(T), ALIGN >;
+		static const uint	BUFFER_SIZE = CompileTime::AlignToLarge< uint, sizeof(T), ALIGN >;
 
 		typedef UniformBlock<T>						Self;
 		typedef T									Struct_t;
@@ -49,7 +49,7 @@ namespace Graphics
 		T &			Get ();
 		T const &	Get () const;
 
-		void Write (BinaryBuffer data, Bytes<usize> offset);
+		void Write (BinaryBuffer data, BytesU offset);
 
 		bool _Create (const ShaderProgramPtr &program, StringCRef name, uint index);
 		void Destroy ();
@@ -110,11 +110,11 @@ namespace Graphics
 =================================================
 */
 	template <typename T>
-	inline void UniformBlock<T>::Write (BinaryBuffer data, Bytes<usize> offset)
+	inline void UniformBlock<T>::Write (BinaryBuffer data, BytesU offset)
 	{
 		CHECK( data.Count() + offset <= _bufferData.Count() );
 
-		MemCopy( _bufferData.SubArray( offset, data.Count() ), data );
+		UnsafeMem::MemCopy( _bufferData.SubArray( offset, data.Count() ), data );
 	}
 
 /*
@@ -125,7 +125,7 @@ namespace Graphics
 	template <typename T>
 	bool UniformBlock<T>::IsCreated () const
 	{
-		return _graphicsBuffers.Front().IsNotNull() and _location != -1;
+		return _graphicsBuffers.Front() and _location != -1;
 	}
 
 /*
@@ -136,7 +136,7 @@ namespace Graphics
 	template <typename T>
 	inline bool UniformBlock<T>::_Create (const ShaderProgramPtr &program, StringCRef name, uint index)
 	{
-		CHECK_ERR( program.IsNotNull() );
+		CHECK_ERR( program );
 
 		_program = program;
 
@@ -149,10 +149,10 @@ namespace Graphics
 
 		uint	size = 0;
 
-		program->_CreateUniformBuffer( OUT _location, size, name );
+		program->_CreateUniformBuffer( OUT _location, OUT size, name );
 		_bindingIndex = index;
 
-		CHECK( Align( size, ALIGN ) == _bufferData.Size() );
+		CHECK( AlignToLarge( size, BytesU(ALIGN) ) == _bufferData.Size() );
 		return true;
 	}
 	

@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -35,7 +35,7 @@ namespace Compute
 		GL4ComputeEngine (const SubSystemsRef ss);
 		~GL4ComputeEngine ();
 
-		bool Initialize (StringCRef deviceName = Uninitialized());
+		bool Initialize (StringCRef deviceName = Uninitialized);
 		void Deinitialize ();
 		
 		void Synchronize ();

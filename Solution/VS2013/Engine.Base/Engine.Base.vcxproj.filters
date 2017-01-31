@@ -2,12 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="..\..\..\Engine\Base\Engine.Base.h" />
-    <ClInclude Include="..\..\..\Engine\Base\Config\Version.h">
-      <Filter>Config</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Engine\Base\Config\Config.h">
-      <Filter>Config</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Engine\Base\Common\Common.h">
       <Filter>Common</Filter>
     </ClInclude>
@@ -178,9 +172,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Config">
-      <UniqueIdentifier>{6e4f7646-6761-4dac-a933-bc05e332b4e0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Common">
       <UniqueIdentifier>{0d5bf31c-12cd-41be-aa7f-1f244288a393}</UniqueIdentifier>
     </Filter>

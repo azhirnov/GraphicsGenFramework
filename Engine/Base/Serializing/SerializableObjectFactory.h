@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -33,7 +33,7 @@ namespace Base
 	private:
 		CtorsMap_t		_ctors;
 	
-		Mutex			_lock;
+		OS::Mutex		_lock;
 
 
 	// methods
@@ -72,7 +72,7 @@ namespace Base
 	template <typename T>
 	inline bool SerializableObjectFactory::RegisterType ()
 	{
-		return RegisterType( SerializableObjectID( T::ID ), DelegateBuilder::Create( &SerializableObjectFactory::_CtorWrapper<T> ) );
+		return RegisterType( SerializableObjectID( T::ID ), &SerializableObjectFactory::_CtorWrapper<T> );
 	}
 	
 /*

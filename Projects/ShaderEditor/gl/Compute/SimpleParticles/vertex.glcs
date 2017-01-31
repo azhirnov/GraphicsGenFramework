@@ -1,0 +1,11 @@
+
+struct ParticleVertex
+{
+	float3	prevPos;
+	float	size;
+	float3	position;
+	float	time;
+	float3	velocity;
+	uint	color;
+};
+

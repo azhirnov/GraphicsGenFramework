@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -225,7 +225,7 @@ namespace Graphics
 
 	// methods
 	public:
-		GL4ShaderID () : _id(0), _type( EShader::type(-1) ) {}
+		GL4ShaderID () : _id(0), _type( EShader::Unknown ) {}
 		GL4ShaderID (gl::GLuint id, EShader::type type) : _id(id), _type(type) {}
 
 		gl::GLuint		Id ()		const	{ return _id; }

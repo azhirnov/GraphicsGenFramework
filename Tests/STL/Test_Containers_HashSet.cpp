@@ -1,6 +1,6 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
-#include "STL/ux_stl.h"
+#include "Engine/STL/Engine.STL.h"
 #include "Debug.h"
 
 using namespace GX_STL;
@@ -34,7 +34,7 @@ struct Hash< Value >
 };
 
 
-void HashSet_Test1 ()
+static void HashSet_Test1 ()
 {
 	HashSet<Value>	s;
 
@@ -45,7 +45,7 @@ void HashSet_Test1 ()
 }
 
 
-void HashSet_Test2 ()
+static void HashSet_Test2 ()
 {
 	typedef TDebugInstCounter<5>	Elem1_t;
 	typedef TDebugInstCounter<6>	Elem2_t;
@@ -74,7 +74,7 @@ void HashSet_Test2 ()
 }
 
 
-void HashSet_Test3 ()
+static void HashSet_Test3 ()
 {
 	HashSet< String >	s;
 	usize				idx;
@@ -86,12 +86,10 @@ void HashSet_Test3 ()
 	HashSet< String >::const_iterator	iter;
 
 	ASSERT( s.Find( "333", OUT iter ) );
-
-	ASSERT( idx == 1 );
 }
 
 
-void MultiHashSet_Test1 ()
+static void MultiHashSet_Test1 ()
 {
 	MultiHashSet<Value>	m;
 	
@@ -102,7 +100,7 @@ void MultiHashSet_Test1 ()
 }
 
 
-void HashMap_Test1 ()
+static void HashMap_Test1 ()
 {
 	typedef Pair<Value, String>		P;
 
@@ -115,7 +113,7 @@ void HashMap_Test1 ()
 }
 
 
-void HashMap_Test2 ()
+static void HashMap_Test2 ()
 {
 	//typedef String					Str_t;
 	typedef StaticString<32>		Str_t;
@@ -138,61 +136,6 @@ void HashMap_Test2 ()
 }
 
 
-void HashMap_Test3 ()
-{
-#if 0
-	struct ValueWithUnion
-	{
-		String						s;
-		Union<int, float, double>	u;
-		uint						idx;
-
-		ValueWithUnion (int i, String s) : s(s), idx(0) { u.Create( i ); }
-		ValueWithUnion (float f, String s) : s(s), idx(1) { u.Create( f ); }
-		ValueWithUnion (double d, String s) : s(s), idx(2) { u.Create( d ); }
-	};
-#else
-	struct ValueWithUnion
-	{
-		uint						idx;
-
-		ValueWithUnion (int i, String s) : idx(0) {}
-		ValueWithUnion (float f, String s) : idx(1) {}
-		ValueWithUnion (double d, String s) : idx(2) {}
-	};
-#endif
-
-#if 1
-	typedef String									StString_t;
-	//typedef StaticString< 64 >						StString_t;
-	typedef MultiHashMap< StString_t, ValueWithUnion >	Map_t;
-
-	Map_t	m;
-
-	m.Add( "111", ValueWithUnion( 1, "aaa" ) );
-	m.Add( "222", ValueWithUnion( 2.0f, "bbb" ) );
-	m.Add( "333", ValueWithUnion( 4.0, "ccc" ) );
-
-	Map_t::iterator	iter;
-	ASSERT( m.Find( "222", iter ) );
-	//ASSERT( iter->second.u.Is<float>() );
-	//ASSERT( iter->second.s == "bbb" );
-#else
-
-	typedef HashMap< int, ValueWithUnion >	Map_t;
-	
-	Map_t	m;
-
-	m.Add( 111, ValueWithUnion( 1, "aaa" ) );
-	m.Add( 222, ValueWithUnion( 2.0f, "bbb" ) );
-	m.Add( 333, ValueWithUnion( 4.0, "ccc" ) );
-
-	Map_t::iterator	iter;
-	ASSERT( m.Find( 222, iter ) );
-#endif
-}
-
-
 extern void Test_Containers_HashSet ()
 {
 	HashSet_Test1();
@@ -203,5 +146,4 @@ extern void Test_Containers_HashSet ()
 
 	HashMap_Test1();
 	HashMap_Test2();
-	HashMap_Test3();
 }

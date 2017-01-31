@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -46,28 +46,28 @@ namespace Compute
 	public:
 		bool Create (const uint4 &dim, ETexture::type imageType, EPixelFormat::type format,
 					 EMemoryAccess::type flags = EMemoryAccess::ReadWrite,
-					 BinaryBuffer data = Uninitialized(),
-					 Bytes<usize> xAlign = Bytes<usize>(4),
-					 Bytes<usize> xyAlign = Bytes<usize>(4));
+					 BinaryBuffer data = Uninitialized,
+					 BytesU xAlign = 4_b,
+					 BytesU xyAlign = 4_b);
 		
-		bool Create (const TexturePtr &texture, EMemoryAccess::type flags, MipmapLevel level = MipmapLevel(), TexArrLayer layer = Uninitialized());
+		bool Create (const TexturePtr &texture, EMemoryAccess::type flags, MipmapLevel level = MipmapLevel(), TexArrLayer layer = Uninitialized);
 
-		bool SetImage (BinaryBuffer data, const uint3 &size, const uint4 &offset = Uninitialized(),
-						Bytes<usize> xAlign = Bytes<usize>(4), Bytes<usize> xyAlign = Bytes<usize>(4));
+		bool SetImage (BinaryBuffer data, const uint3 &size, const uint4 &offset = Uninitialized,
+						BytesU xAlign = 4_b, BytesU xyAlign = 4_b);
 
 		bool GetImage (OUT Buffer<ubyte> data, const uint3 &size, const uint4 &offset,
-						Bytes<usize> xAlign = Bytes<usize>(4), Bytes<usize> xyAlign = Bytes<usize>(4));
+						BytesU xAlign = 4_b, BytesU xyAlign = 4_b);
 		
-		bool Copy (const ComputeBufferPtr &src, Bytes<usize> srcOffset, const uint4 &dstOffset, const uint4 &size);
+		bool Copy (const ComputeBufferPtr &src, BytesU srcOffset, const uint4 &dstOffset, const uint4 &size);
 		bool Copy (const ComputeImagePtr &src, const uint4 &srcOffset, const uint4 &dstOffset, const uint4 &size);
 		
-		bool CopyTo (const ComputeBufferPtr &dst, const uint4 &srcOffset, Bytes<usize> dstOffset, const uint4 &size);
+		bool CopyTo (const ComputeBufferPtr &dst, const uint4 &srcOffset, BytesU dstOffset, const uint4 &size);
 
 		void Bind (uint unit, EMemoryAccess::type access) const;
 		
 		bool					IsShared ()			const	{ return _shared.IsNotNull(); }
 		TexturePtr const&		GetSharedObject ()	const	{ return _shared; }
-		TextureID				Id ()				const	{ return _shared.IsNull() ? TextureID() : _shared->GetTextureID(); }
+		TextureID				Id ()				const	{ return _shared ? _shared->GetTextureID() : TextureID(); }
 
 		uint4 const &			Dimension ()		const;
 		uint					Width ()			const	{ return Dimension().x; }
@@ -100,7 +100,7 @@ namespace Compute
 	inline uint4 const &  GL4ComputeImage::Dimension () const
 	{
 		static const uint4	tmp = uint4(0);
-		return _shared.IsNotNull() ? _shared->Dimension() : tmp;
+		return _shared ? _shared->Dimension() : tmp;
 	}
 	
 /*
@@ -110,7 +110,7 @@ namespace Compute
 */
 	inline EPixelFormat::type  GL4ComputeImage::PixelFormat () const
 	{
-		return _shared.IsNotNull() ? _shared->PixelFormat() : EPixelFormat::type(-1);
+		return _shared ? _shared->PixelFormat() : EPixelFormat::Unknown;
 	}
 	
 /*
@@ -120,7 +120,7 @@ namespace Compute
 */
 	inline ETexture::type  GL4ComputeImage::ImageType () const
 	{
-		return _shared.IsNotNull() ? _shared->TextureType() : ETexture::type(-1);
+		return _shared ? _shared->TextureType() : ETexture::Unknown;
 	}
 
 }	// Compute

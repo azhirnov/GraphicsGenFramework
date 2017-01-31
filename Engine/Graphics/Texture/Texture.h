@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 /*
 	Texture sizes for any types:
 		- Tex1D:			( width,	0,			0,		0		)
@@ -70,27 +70,27 @@ namespace Graphics
 		
 	public:
 		void Bind (uint unit);
-		void BindImage (uint unit, EMemoryAccess::type access, MipmapLevel level, TexArrLayer layer = Uninitialized());
+		bool BindImage (uint unit, EMemoryAccess::type access, MipmapLevel level, TexArrLayer layer = Uninitialized);
 
-		bool Create (const uint4 &dim, EPixelFormat::type format, const MipmapLevelsRange &levels = Uninitialized(), MultiSamples samples = Uninitialized());
+		bool Create (const uint4 &dim, EPixelFormat::type format, const MipmapLevelsRange &levels = Uninitialized, MultiSamples samples = Uninitialized);
 		bool AllocLevel (MipmapLevel level);
 
 		bool AddImage (const uint4 &offset, MipmapLevel level, const uint3 &size, EPixelFormat::type format, BinaryBuffer data,
-						Bytes<usize> xAlign = Bytes<usize>(4), Bytes<usize> xyAlign = Bytes<usize>(4));
+						BytesU xAlign = 4_b, BytesU xyAlign = 4_b);
 		
 		bool GetImage (OUT Buffer<ubyte> &data, MipmapLevel level, EPixelFormat::type format,
-						Bytes<usize> xAlign = Bytes<usize>(4), Bytes<usize> xyAlign = Bytes<usize>(4));
+						BytesU xAlign = 4_b, BytesU xyAlign = 4_b);
 
 		bool GetImage (OUT Buffer<ubyte> &data, const uint4 &offset, MipmapLevel level,
 						const uint3 &size, EPixelFormat::type format,
-						Bytes<usize> xAlign = Bytes<usize>(4), Bytes<usize> xyAlign = Bytes<usize>(4));
+						BytesU xAlign = 4_b, BytesU xyAlign = 4_b);
 
 		bool SetSampler (const SamplerPtr &sampler);
 
 		bool GenerateMipmaps ();
 		//bool GenerateMipmaps (const uint2 &levels);	// TODO
 		
-		void Barrier (EMemoryBarrier::type flags = EMemoryBarrier::type(0));
+		void Barrier (EMemoryBarrier::type flags = EMemoryBarrier::Unknown);
 
 		bool				HasLevel (MipmapLevel level)		const	{ return _levels.Get( level.Get() ); }
 		uint				MaxLevels ()						const	{ return _maxMipmaps; }
@@ -123,11 +123,11 @@ namespace Graphics
 
 	// constructors
 	public:
-		static TexturePtr NewTex2D			 (const SubSystemsRef ss, const uint2 &size, EPixelFormat::type format, const MipmapLevelsRange &levels = Uninitialized(), MultiSamples samples = Uninitialized(), ETextureData::type dataType = ETextureData::Unknown);
-		static TexturePtr NewTex2DArray		 (const SubSystemsRef ss, const uint2 &size, TexArrLayer layers, EPixelFormat::type format, const MipmapLevelsRange &levels = Uninitialized(), MultiSamples samples = Uninitialized(), ETextureData::type dataType = ETextureData::Unknown);
-		static TexturePtr NewTex3D			 (const SubSystemsRef ss, const uint3 &size, EPixelFormat::type format, const MipmapLevelsRange &levels = Uninitialized(), ETextureData::type dataType = ETextureData::Unknown);
-		static TexturePtr NewTexCubeMap		 (const SubSystemsRef ss, const uint2 &size, EPixelFormat::type format, const MipmapLevelsRange &levels = Uninitialized(), ETextureData::type dataType = ETextureData::Unknown);
-		static TexturePtr NewTexCubeMapArray (const SubSystemsRef ss, const uint2 &size, TexArrLayer layers, EPixelFormat::type format, const MipmapLevelsRange &levels = Uninitialized(), ETextureData::type dataType = ETextureData::Unknown);
+		static TexturePtr NewTex2D			 (const SubSystemsRef ss, const uint2 &size, EPixelFormat::type format, const MipmapLevelsRange &levels = Uninitialized, MultiSamples samples = Uninitialized, ETextureData::type dataType = ETextureData::Unknown);
+		static TexturePtr NewTex2DArray		 (const SubSystemsRef ss, const uint2 &size, TexArrLayer layers, EPixelFormat::type format, const MipmapLevelsRange &levels = Uninitialized, MultiSamples samples = Uninitialized, ETextureData::type dataType = ETextureData::Unknown);
+		static TexturePtr NewTex3D			 (const SubSystemsRef ss, const uint3 &size, EPixelFormat::type format, const MipmapLevelsRange &levels = Uninitialized, ETextureData::type dataType = ETextureData::Unknown);
+		static TexturePtr NewTexCubeMap		 (const SubSystemsRef ss, const uint2 &size, EPixelFormat::type format, const MipmapLevelsRange &levels = Uninitialized, ETextureData::type dataType = ETextureData::Unknown);
+		static TexturePtr NewTexCubeMapArray (const SubSystemsRef ss, const uint2 &size, TexArrLayer layers, EPixelFormat::type format, const MipmapLevelsRange &levels = Uninitialized, ETextureData::type dataType = ETextureData::Unknown);
 		static TexturePtr New				 (const SubSystemsRef ss, PackFileID fileID, ETexture::type target, ETextureData::type dataType = ETextureData::Unknown);
 
 
@@ -136,16 +136,16 @@ namespace Graphics
 		bool _Create (const uint4 &dim, EPixelFormat::type format, uint2 levels, MultiSamples samples);
 
 		bool _AddImage (const uint4 &offset, uint level, const uint3 &size, EPixelFormat::type format,
-						BinaryBuffer data, Bytes<usize> xAlign, Bytes<usize> xyAlign);
+						BinaryBuffer data, BytesU xAlign, BytesU xyAlign);
 
 		bool _AddCompressedImage (const uint4 &offset, uint level, const uint3 &size, EPixelFormat::type format,
-									BinaryBuffer data, Bytes<usize> xAlign, Bytes<usize> xyAlign);
+									BinaryBuffer data, BytesU xAlign, BytesU xyAlign);
 
 		bool _GetImage (INOUT Buffer<ubyte> &data, uint level, EPixelFormat::type format,
-						Bytes<usize> xAlign, Bytes<usize> xyAlign) const;
+						BytesU xAlign, BytesU xyAlign) const;
 		
 		bool _GetSubImage (INOUT Buffer<ubyte> &data, const uint4 &offset, uint level, const uint3 &size,
-							EPixelFormat::type format, Bytes<usize> xAlign, Bytes<usize> xyAlign) const;
+							EPixelFormat::type format, BytesU xAlign, BytesU xyAlign) const;
 
 		bool _AllocLevel (uint level);
 		bool _GenerateMipmaps ();
@@ -155,13 +155,11 @@ namespace Graphics
 	// hidden methods
 	private:
 		void _Destroy ();
-		void _BarrierNow (EMemoryBarrier::type flags = EMemoryBarrier::type(0));
+		void _BarrierNow (EMemoryBarrier::type flags = EMemoryBarrier::Unknown);
 
-		static usize _GetImageSize (EPixelFormat::type format, ETexture::type type, const uint3 &dim,
-									Bytes<usize> xAlign, Bytes<usize> xyAlign);
+		static BytesU _GetImageSize (EPixelFormat::type format, ETexture::type type, const uint3 &dim, BytesU xAlign, BytesU xyAlign);
 
-		static usize _GetImageSize (EPixelFormat::type format, ETexture::type type, const uint4 &dim,
-									Bytes<usize> xAlign, Bytes<usize> xyAlign);
+		static BytesU _GetImageSize (EPixelFormat::type format, ETexture::type type, const uint4 &dim, BytesU xAlign, BytesU xyAlign);
 
 		static void _CheckDataTypeAndFormat (EPixelFormat::type format, ETextureData::type dataType);
 	};

@@ -1,12 +1,12 @@
-// Copyright © 2017  Zhirnov Andrey. All rights reserved.
+/// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
 #include "Engine/Compute/Engine.Compute.h"
-#include "../../Shared/Controllers/ScaleBiasController.h"
-#include "../../Shared/Controllers/FreeCameraController.h"
-#include "../../Shared/Controllers/FlightCameraController.h"
-#include "../../Shared/Loaders/ImageLoader.h"
+#include "Projects/Shared/Controllers/ScaleBiasController.h"
+#include "Projects/Shared/Controllers/FreeCameraController.h"
+#include "Projects/Shared/Controllers/FlightCameraController.h"
+#include "Projects/Shared/Loaders/ImageLoader.h"
 
 #ifndef COMPUTE_API_OPENGL
 #	error Use OpenGL!

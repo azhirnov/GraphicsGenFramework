@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -27,7 +27,7 @@ namespace Base
 									// TODO: for android:
 									//	getContext().getApplicationInfo().nativeLibraryDir;
 									// String libraryPath = getContext().getApplicationInfo().dataDir + "/lib";
-			_COUNT
+			_Count
 		};
 
 		inline static const char * Name (type value)
@@ -41,7 +41,7 @@ namespace Base
 					"sdcard",
 					"library"
 				};
-				STATIC_ASSERT( COUNT_OF(names) == _COUNT );
+				STATIC_ASSERT( CountOf(names) == _Count );
 				return names[ value ];
 			)
 

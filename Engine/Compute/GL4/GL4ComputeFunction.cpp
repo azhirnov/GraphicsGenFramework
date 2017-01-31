@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -40,7 +40,7 @@ namespace Compute
 	{
 		Destroy();
 
-		CHECK_ERR( program.IsNotNull() and program->IsCreated() );
+		CHECK_ERR( program and program->IsCreated() );
 		
 		_program = program;
 
@@ -91,7 +91,7 @@ namespace Compute
 */
 	void GL4ComputeFunction::Destroy ()
 	{
-		if ( _program.IsNotNull() and _progID.IsValid() )
+		if ( _program and _progID.IsValid() )
 		{
 			_program->SubSystems()->Get< GraphicsEngine >()->GetContext()->DeleteProgram( _progID );
 		}
@@ -199,6 +199,10 @@ namespace Compute
 		{
 			_RunFixedGroupSize( size );
 		}
+
+		// if you copy-paste function call and forget rename,
+		// assert will triggered on _CheckArgs()
+		DEBUG_ONLY( ResetArgs(); )
 	}
 	
 /*
@@ -418,6 +422,23 @@ namespace Compute
 			value->Bind( _arg.index, _arg.writeAccess ? EMemoryAccess::ReadWrite : EMemoryAccess::Read );
 		}
 
+		void operator () (const MemoryBufferPtr &value) const
+		{
+			ASSERT( _arg.type == Arg::StorageBuffer );
+
+			value->BindBase( EBufferTarget::ShaderStorage, _arg.index, _arg.writeAccess ? EMemoryAccess::ReadWrite : EMemoryAccess::Read );
+		}
+
+		void operator () (const VertexBufferPtr &value) const
+		{
+			operator() ((MemoryBufferPtr) value);
+		}
+
+		void operator () (const IndexBufferPtr &value) const
+		{
+			operator() ((MemoryBufferPtr) value);
+		}
+
 		void operator () (const TexturePtr &value) const
 		{
 			ASSERT( _arg.type == Arg::Texture );
@@ -495,10 +516,23 @@ namespace Compute
 	{
 		FOR( i, _args )
 		{
-			if ( not _args[i].second.value.IsCreated() )
+			if ( not _args[i].second.value )
 			{
 				LOG( (String("Uninitialized function argument: ") + StringCRef( _args[i].first )).cstr(), ELog::Warning );
 			}
+		}
+	}
+	
+/*
+=================================================
+	ResetArgs
+=================================================
+*/
+	void GL4ComputeFunction::ResetArgs ()
+	{
+		FOR( i, _args )
+		{
+			_args[i].second.value.Destroy();
 		}
 	}
 		

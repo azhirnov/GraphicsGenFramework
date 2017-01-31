@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "cl2.h"
 #include "Engine/Base/Engine.Base.h"
@@ -250,7 +250,7 @@ namespace cl
 		msg << ", in " << clcall;
 		msg << ", function: " << func;
 
-		LOG_EXT( msg.cstr(), ELog::Error, file, line );
+		LOG( msg.cstr(), ELog::Error, file, line );
 		return false;
 	}
 

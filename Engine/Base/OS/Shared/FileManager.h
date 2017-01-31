@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -45,7 +45,7 @@ namespace Base
 		bool OpenForDecrypt (StringCRef filename, RFilePtr &file, StringCRef password) const;
 		bool CreateEncryptFile (StringCRef filename, WFilePtr &file, StringCRef password) const;
 
-		bool CreateMemFile (WFilePtr &file, Bytes<usize> reserve = Bytes<usize>()) const;
+		bool CreateMemFile (WFilePtr &file, BytesU reserve = BytesU()) const;
 		bool SaveMemFile (StringCRef filename, const WFilePtr &file) const;
 		bool ReadToMem (StringCRef filename, RFilePtr &file) const;
 		bool ReadToMem (const RFilePtr &fromFile, RFilePtr &toFile) const;

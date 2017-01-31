@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -16,26 +16,31 @@ namespace Base
 	struct ResourceMemStat
 	{
 	private:
-		Bytes<usize>	_ram;
-		Bytes<usize>	_vram;
+		BytesU	_ram;
+		BytesU	_vram;
 
 	public:
 		ResourceMemStat ()
 		{}
 
-		Bytes<usize>	GetRamSize ()	const	{ return _ram; }
-		Bytes<usize>	GetVRamSize ()	const	{ return _vram; }
+		BytesU	GetRamSize ()	const	{ return _ram; }
+		BytesU	GetVRamSize ()	const	{ return _vram; }
 
-		void Set (Bytes<usize> ram, Bytes<usize> vram)
+		void Set (BytesU ram, BytesU vram)
 		{
 			_ram	= ram;
 			_vram	= vram;
 		}
 
-		void Add (Bytes<usize> ram, Bytes<usize> vram)
+		void Add (BytesU ram, BytesU vram)
 		{
 			_ram	+= ram;
 			_vram	+= vram;
+		}
+
+		void Clear ()
+		{
+			_ram = _vram = BytesU();
 		}
 
 		void Swap (ResourceMemStat &other)

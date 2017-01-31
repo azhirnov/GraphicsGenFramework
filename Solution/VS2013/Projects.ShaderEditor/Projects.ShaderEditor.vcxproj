@@ -20,16 +20,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Projects\ShaderEditor\Core\Common.h" />
+    <ClInclude Include="..\..\..\Projects\ShaderEditor\Core\IGenerator.h" />
     <ClInclude Include="..\..\..\Projects\ShaderEditor\Core\ISample.h" />
+    <ClInclude Include="..\..\..\Projects\ShaderEditor\Core\IShader.h" />
     <ClInclude Include="..\..\..\Projects\ShaderEditor\Core\Renderer.h" />
     <ClInclude Include="..\..\..\Projects\ShaderEditor\Core\ShaderEditor.h" />
-    <ClInclude Include="..\..\..\Projects\ShaderEditor\Generators\IGenerator.h" />
+    <ClInclude Include="..\..\..\Projects\ShaderEditor\Particles\ParticleEmitter.h" />
     <ClInclude Include="..\..\..\Projects\ShaderEditor\Particles\ParticleRenderer.h" />
-    <ClInclude Include="..\..\..\Projects\ShaderEditor\Samples\Shadertoy\ShadertoySamples.h" />
-    <ClInclude Include="..\..\..\Projects\ShaderEditor\Samples\TileLandscape\TileLandscapeSample.h" />
-    <ClInclude Include="..\..\..\Projects\ShaderEditor\Shaders\IShader.h" />
-    <ClInclude Include="..\..\..\Projects\ShaderEditor\Shaders\LandscapeShader.h" />
-    <ClInclude Include="..\..\..\Projects\ShaderEditor\Shaders\Simple3DShader.h" />
+    <ClInclude Include="..\..\..\Projects\ShaderEditor\Samples\Particles\ParticlesSample.h" />
+    <ClInclude Include="..\..\..\Projects\ShaderEditor\Samples\RayTracing\RayTracingSamples.h" />
+    <ClInclude Include="..\..\..\Projects\ShaderEditor\Samples\SimpleLandscape\SimpleLandscapeSample.h" />
+    <ClInclude Include="..\..\..\Projects\ShaderEditor\Samples\TessLandscape\TessLandscapeSample.h" />
     <ClInclude Include="..\..\..\Projects\ShaderEditor\Tiles\Tile.h" />
     <ClInclude Include="..\..\..\Projects\ShaderEditor\Tiles\TilesManager.h" />
   </ItemGroup>
@@ -37,12 +38,22 @@
     <ClCompile Include="..\..\..\Projects\ShaderEditor\Core\ISample.cpp" />
     <ClCompile Include="..\..\..\Projects\ShaderEditor\Core\Renderer.cpp" />
     <ClCompile Include="..\..\..\Projects\ShaderEditor\Core\ShaderEditor.cpp" />
-    <ClCompile Include="..\..\..\Projects\ShaderEditor\Generators\Microscheme\MicroschemeShader.cpp" />
-    <ClCompile Include="..\..\..\Projects\ShaderEditor\Generators\TileLandscape\TileLandscapeGenerator.cpp" />
+    <ClCompile Include="..\..\..\Projects\ShaderEditor\gl\Compute\Microscheme\MicroschemeShader.cpp" />
+    <ClCompile Include="..\..\..\Projects\ShaderEditor\gl\Compute\SimpleLandscape\SimpleLandscapeGenerator.cpp" />
+    <ClCompile Include="..\..\..\Projects\ShaderEditor\gl\Compute\SimpleParticles\SimpleParticlesGenerator.cpp" />
+    <ClCompile Include="..\..\..\Projects\ShaderEditor\gl\Compute\TessLandscape\TessLandscapeGenerator.cpp" />
+    <ClCompile Include="..\..\..\Projects\ShaderEditor\gl\Compute\ThousandsOfStars\ThousandsOfStarsGenerator.cpp" />
+    <ClCompile Include="..\..\..\Projects\ShaderEditor\gl\Compute\VoronoiRecursion\VoronoiRecursionGenerator.cpp" />
+    <ClCompile Include="..\..\..\Projects\ShaderEditor\gl\Graphics\Simple3D\Simple3DShader.cpp" />
+    <ClCompile Include="..\..\..\Projects\ShaderEditor\gl\Graphics\SimpleParticles\SimpleParticlesShader.cpp" />
+    <ClCompile Include="..\..\..\Projects\ShaderEditor\gl\Graphics\TessLandscape\TessLandscapeShader.cpp" />
     <ClCompile Include="..\..\..\Projects\ShaderEditor\Main.cpp" />
+    <ClCompile Include="..\..\..\Projects\ShaderEditor\Particles\ParticleEmitter.cpp" />
     <ClCompile Include="..\..\..\Projects\ShaderEditor\Particles\ParticleRenderer.cpp" />
-    <ClCompile Include="..\..\..\Projects\ShaderEditor\Samples\Shadertoy\ShadertoySamples.cpp" />
-    <ClCompile Include="..\..\..\Projects\ShaderEditor\Samples\TileLandscape\TileLandscapeSample.cpp" />
+    <ClCompile Include="..\..\..\Projects\ShaderEditor\Samples\Particles\ParticlesSample.cpp" />
+    <ClCompile Include="..\..\..\Projects\ShaderEditor\Samples\RayTracing\RayTracingSamples.cpp" />
+    <ClCompile Include="..\..\..\Projects\ShaderEditor\Samples\SimpleLandscape\SimpleLandscapeSample.cpp" />
+    <ClCompile Include="..\..\..\Projects\ShaderEditor\Samples\TessLandscape\TessLandscapeSample.cpp" />
     <ClCompile Include="..\..\..\Projects\ShaderEditor\Tiles\Tile.cpp" />
     <ClCompile Include="..\..\..\Projects\ShaderEditor\Tiles\TilesManager.cpp" />
   </ItemGroup>
@@ -52,31 +63,55 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\Projects\ShaderEditor\Generators\Microscheme\create_grid.glcs" />
-    <None Include="..\..\..\Projects\ShaderEditor\Generators\Microscheme\main.glcs" />
-    <None Include="..\..\..\Projects\ShaderEditor\Generators\TileLandscape\gen_diffuse.glcs" />
-    <None Include="..\..\..\Projects\ShaderEditor\Generators\TileLandscape\gen_height.glcs" />
-    <None Include="..\..\..\Projects\ShaderEditor\Generators\TileLandscape\gen_landscape.glcs" />
-    <None Include="..\..\..\Projects\ShaderEditor\Generators\TileLandscape\gen_normals.glcs" />
-    <None Include="..\..\..\Projects\ShaderEditor\Generators\TileLandscape\vertex.glcs" />
     <None Include="..\..\..\Projects\ShaderEditor\gl\Common.glcs" />
-    <None Include="..\..\..\Projects\ShaderEditor\gl\Noise\Cellular.glcs" />
-    <None Include="..\..\..\Projects\ShaderEditor\gl\Noise\FBM.glcs" />
-    <None Include="..\..\..\Projects\ShaderEditor\gl\Noise\Gabor.glcs" />
-    <None Include="..\..\..\Projects\ShaderEditor\gl\Noise\Perlin.glcs" />
-    <None Include="..\..\..\Projects\ShaderEditor\gl\Noise\Simplex.glcs" />
-    <None Include="..\..\..\Projects\ShaderEditor\gl\Noise\ValueNoise.glcs" />
-    <None Include="..\..\..\Projects\ShaderEditor\gl\Noise\Voronoi.glcs" />
-    <None Include="..\..\..\Projects\ShaderEditor\gl\Noise\VoronoiNoise.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\Microscheme\create_grid.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\Microscheme\main.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\SimpleLandscape\gen_diffuse.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\SimpleLandscape\gen_height.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\SimpleLandscape\gen_landscape.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\SimpleLandscape\gen_normals.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\SimpleLandscape\vertex.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\SimpleParticles\init.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\SimpleParticles\update.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\SimpleParticles\vertex.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\TessLandscape\gen_diffuse.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\TessLandscape\gen_height.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\TessLandscape\gen_landscape.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\TessLandscape\gen_normals.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\TessLandscape\vertex.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\ThousandsOfStars\pass1.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\ThousandsOfStars\pass2.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\VoronoiRecursion\main.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Common\Defines.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Common\GlobalIndex.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Effects\Blur.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Math\Color.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Math\Math.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Math\MathDef.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Math\Matrix.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Math\Quaternion.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Noise\Billow.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Noise\Cellular.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Noise\FBM.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Noise\Gabor.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Noise\Perlin.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Noise\Simplex.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Noise\Turbulence.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Noise\ValueNoise.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Noise\Voronoi.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Noise\VoronoiNoise.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Noise\_NoiseUtils.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Particles\Emitters.glcs" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Graphics\Simple3D\shader.glsl" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Graphics\SimpleParticles\dots.glsl" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Graphics\SimpleParticles\rays.glsl" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Graphics\SimpleParticles\shader.glsl" />
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Graphics\TessLandscape\shader.glsl" />
     <None Include="..\..\..\Projects\ShaderEditor\gl\Shaders\landscape.glsl" />
     <None Include="..\..\..\Projects\ShaderEditor\gl\Shaders\simple3d.glsl" />
     <None Include="..\..\..\Projects\ShaderEditor\gl\Shaders\textureView.glsl" />
     <None Include="..\..\..\Projects\ShaderEditor\gl\Shaders\textureViewI.glsl" />
     <None Include="..\..\..\Projects\ShaderEditor\gl\Shaders\textureViewU.glsl" />
-    <None Include="..\..\..\Projects\ShaderEditor\gl\STL\Defines\Defines.glcs" />
-    <None Include="..\..\..\Projects\ShaderEditor\gl\STL\GlobalIndex.glcs" />
-    <None Include="..\..\..\Projects\ShaderEditor\gl\STL\Math\Color.glcs" />
-    <None Include="..\..\..\Projects\ShaderEditor\gl\STL\Math\Math.glcs" />
     <None Include="..\..\..\Projects\ShaderEditor\gl\_Shadertoy\Terrain\MysteryMountains.glcs" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -188,13 +223,13 @@
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__GX_NO_EXCEPTIONS__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>false</TreatWarningAsError>
       <CompileAsManaged>false</CompileAsManaged>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <StringPooling>true</StringPooling>
-      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
@@ -205,6 +240,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <ControlFlowGuard>false</ControlFlowGuard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>No</GenerateDebugInformation>
@@ -221,13 +257,13 @@
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__GX_NO_EXCEPTIONS__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>false</TreatWarningAsError>
       <CompileAsManaged>false</CompileAsManaged>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <StringPooling>true</StringPooling>
-      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
@@ -238,6 +274,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <ControlFlowGuard>false</ControlFlowGuard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>No</GenerateDebugInformation>

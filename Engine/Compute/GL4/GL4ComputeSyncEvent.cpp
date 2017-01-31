@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "GL4ComputeSyncEvent.h"
 
@@ -61,7 +61,7 @@ namespace Compute
 	ClientWait
 =================================================
 */
-	bool GL4ComputeSyncEvent::ClientWait (Time<ulong> timeout)
+	bool GL4ComputeSyncEvent::ClientWait (TimeL timeout)
 	{
 		using namespace gl;
 
@@ -115,14 +115,14 @@ namespace Compute
 	MaxTimeout
 =================================================
 */
-	Time<ulong> GL4ComputeSyncEvent::MaxTimeout () const
+	TimeL GL4ComputeSyncEvent::MaxTimeout () const
 	{
 		using namespace gl;
 
 		GLint64	time = 0;
 		GL_CALL( glGetInteger64v( GL_MAX_SERVER_WAIT_TIMEOUT, &time ) );
 
-		return Time<ulong>().FromNanoSeconds( time );;
+		return TimeL::FromNanoSeconds( time );;
 	}
 
 /*

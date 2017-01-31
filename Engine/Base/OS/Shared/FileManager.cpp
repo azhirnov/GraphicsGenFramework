@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "FileManager.h"
 #include "Engine/Base/OS/OS.h"
@@ -168,7 +168,7 @@ namespace Base
 	CreateMemFile
 =================================================
 */
-	bool FileManager::CreateMemFile (WFilePtr &file, Bytes<usize> reserve) const
+	bool FileManager::CreateMemFile (WFilePtr &file, BytesU reserve) const
 	{
 		MemWFilePtr	wfile = File::MemWFile::New();
 
@@ -205,7 +205,7 @@ namespace Base
 		CHECK_ERR( OpenForRead( filename, rfile ) );
 		
 		MemRFilePtr	mfile;
-		CHECK_ERR( (mfile = File::MemRFile::New( rfile )).IsNotNull() );
+		CHECK_ERR( mfile = File::MemRFile::New( rfile ) );
 
 		file = mfile;
 		return true;
@@ -218,10 +218,10 @@ namespace Base
 */
 	bool FileManager::ReadToMem (const RFilePtr &fromFile, RFilePtr &toFile) const
 	{
-		CHECK_ERR( fromFile.IsNotNull() and fromFile->IsOpened() );
+		CHECK_ERR( fromFile and fromFile->IsOpened() );
 
 		MemRFilePtr	mfile;
-		CHECK_ERR( (mfile = File::MemRFile::New( fromFile )).IsNotNull() );
+		CHECK_ERR( mfile = File::MemRFile::New( fromFile ) );
 
 		toFile = mfile;
 		return true;
@@ -234,11 +234,11 @@ namespace Base
 */
 	bool FileManager::ReadToMemIfSmall (const RFilePtr &fromFile, RFilePtr &toFile) const
 	{
-		CHECK_ERR( fromFile.IsNotNull() and fromFile->IsOpened() );
+		CHECK_ERR( fromFile and fromFile->IsOpened() );
 
 		const usize	max_size = 1 << 20;	// 1Mb
 
-		usize	size = fromFile->Size();
+		usize	size = (usize)fromFile->Size();
 
 		if ( size > max_size )
 		{
@@ -247,7 +247,7 @@ namespace Base
 		}
 
 		MemRFilePtr	mfile;
-		CHECK_ERR( (mfile = File::MemRFile::New( fromFile )).IsNotNull() );
+		CHECK_ERR( mfile = File::MemRFile::New( fromFile ) );
 
 		toFile = mfile;
 		return true;
@@ -260,21 +260,21 @@ namespace Base
 */
 	bool FileManager::CopyFile (const RFilePtr &fromFile, const WFilePtr &toFile) const
 	{
-		CHECK_ERR( fromFile.IsNotNull() and toFile.IsNotNull() );
+		CHECK_ERR( fromFile and toFile );
 
-		const usize		rsize			= fromFile->RemainingSize();
+		const usize		rsize			= (usize)fromFile->RemainingSize();
 		const usize		bufsize			= rsize < (128u << 20) ? (1u << 20) : (16u << 20);
 		usize			size			= 0;
 		Array< ubyte >	buf;			buf.Resize( bufsize );
 		
 		while ( size < rsize )
 		{
-			const Bytes<isize>	readn  = fromFile->ReadBuf( buf.ptr(), buf.Size() );
+			const BytesU	readn  = fromFile->ReadBuf( buf.ptr(), buf.Size() );
 
 			CHECK_ERR( readn > 0 );
-			CHECK_ERR( toFile->Write( buf.ptr(), readn.To<usize>() ) );
+			CHECK_ERR( toFile->Write( buf.ptr(), readn ) );
 
-			size += readn;
+			size += (usize)readn;
 		}
 
 		CHECK_ERR( size == rsize );
@@ -306,7 +306,7 @@ namespace Base
 */
 	bool FileManager::CreateDirectories (StringCRef dir) const
 	{
-		return _platform_::FileSystem::CreateDirectories( dir );
+		return OS::FileSystem::CreateDirectories( dir );
 	}
 	
 /*
@@ -316,7 +316,7 @@ namespace Base
 */
 	bool FileManager::FindAndSetCurrentDir (StringCRef dirname, uint searchDepth) const
 	{
-		return _platform_::FileSystem::FindAndSetCurrentDir( dirname, searchDepth );
+		return OS::FileSystem::FindAndSetCurrentDir( dirname, searchDepth );
 	}
 
 /*
@@ -326,7 +326,7 @@ namespace Base
 */
 	bool FileManager::IsFileExist (StringCRef filename) const
 	{
-		return _platform_::FileSystem::IsFileExist( filename );
+		return OS::FileSystem::IsFileExist( filename );
 	}
 
 /*
@@ -336,7 +336,7 @@ namespace Base
 */
 	bool FileManager::IsDirectoryExist (StringCRef dirname) const
 	{
-		return _platform_::FileSystem::IsDirectoryExist( dirname );
+		return OS::FileSystem::IsDirectoryExist( dirname );
 	}
 	
 /*
@@ -346,7 +346,7 @@ namespace Base
 */
 	bool FileManager::NewDirectory (StringCRef dir) const
 	{
-		return _platform_::FileSystem::NewDirectory( dir );
+		return OS::FileSystem::NewDirectory( dir );
 	}
 	
 /*
@@ -356,7 +356,7 @@ namespace Base
 */
 	bool FileManager::DeleteEmptyDirectory (StringCRef dir) const
 	{
-		return _platform_::FileSystem::DeleteEmptyDirectory( dir );
+		return OS::FileSystem::DeleteEmptyDirectory( dir );
 	}
 	
 /*
@@ -366,7 +366,7 @@ namespace Base
 */
 	bool FileManager::DeleteDirectory (StringCRef dir) const
 	{
-		return _platform_::FileSystem::DeleteDirectory( dir );
+		return OS::FileSystem::DeleteDirectory( dir );
 	}
 	
 /*
@@ -376,7 +376,7 @@ namespace Base
 */
 	bool FileManager::DeleteFile (StringCRef filename)
 	{
-		return _platform_::FileSystem::DeleteFile( filename );
+		return OS::FileSystem::DeleteFile( filename );
 	}
 	
 /*
@@ -386,7 +386,7 @@ namespace Base
 */
 	bool FileManager::SetCurrentDirectory (StringCRef dir) const
 	{
-		return _platform_::FileSystem::SetCurrentDirectory( dir );
+		return OS::FileSystem::SetCurrentDirectory( dir );
 	}
 	
 /*
@@ -396,7 +396,7 @@ namespace Base
 */
 	bool FileManager::GetCurrentDirectory (OUT String &dir) const
 	{
-		return _platform_::FileSystem::GetCurrentDirectory( dir );
+		return OS::FileSystem::GetCurrentDirectory( dir );
 	}
 	
 /*
@@ -406,7 +406,7 @@ namespace Base
 */
 	bool FileManager::SearchFile (StringCRef file, uint depth, OUT String &result) const
 	{
-		return _platform_::FileSystem::SearchFile( file, depth, result );
+		return OS::FileSystem::SearchFile( file, depth, result );
 	}
 	
 /*
@@ -416,7 +416,7 @@ namespace Base
 */
 	bool FileManager::SearchFileForward (StringCRef file, uint depth, OUT String &result) const
 	{
-		return _platform_::FileSystem::SearchFileForward( file, depth, result );
+		return OS::FileSystem::SearchFileForward( file, depth, result );
 	}
 	
 /*
@@ -426,7 +426,7 @@ namespace Base
 */
 	bool FileManager::SearchFileBackward (StringCRef file, uint depth, OUT String &result) const
 	{
-		return _platform_::FileSystem::SearchFileBackward( file, depth, result );
+		return OS::FileSystem::SearchFileBackward( file, depth, result );
 	}
 	
 /*
@@ -436,7 +436,7 @@ namespace Base
 */
 	bool FileManager::SearchDir (StringCRef dir, uint depth, OUT String &result) const
 	{
-		return _platform_::FileSystem::SearchDir( dir, depth, result );
+		return OS::FileSystem::SearchDir( dir, depth, result );
 	}
 	
 /*
@@ -446,7 +446,7 @@ namespace Base
 */
 	bool FileManager::SearchDirForward (StringCRef dir, uint depth, OUT String &result) const
 	{
-		return _platform_::FileSystem::SearchDirForward( dir, depth, result );
+		return OS::FileSystem::SearchDirForward( dir, depth, result );
 	}
 	
 /*
@@ -456,7 +456,7 @@ namespace Base
 */
 	bool FileManager::SearchDirBackward (StringCRef dir, uint depth, OUT String &result) const
 	{
-		return _platform_::FileSystem::SearchDirBackward( dir, depth, result );
+		return OS::FileSystem::SearchDirBackward( dir, depth, result );
 	}
 	
 /*
@@ -472,9 +472,9 @@ namespace Base
 			return true;
 		}
 
-		StringCRef	ext = FileAddressUtils::GetExtension( filename );
-		StringCRef	name = FileAddressUtils::GetName( filename );
-		StringCRef	path = FileAddressUtils::GetPath( filename );
+		StringCRef	ext = FileAddress::GetExtension( filename );
+		StringCRef	name = FileAddress::GetName( filename );
+		StringCRef	path = FileAddress::GetPath( filename );
 
 		result.Clear();
 		result.Reserve( filename.Length() + 10 );

@@ -1,4 +1,4 @@
-// Copyright © 2017  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "ShaderEditor.h"
 
@@ -47,18 +47,29 @@ namespace ShaderEditor
 		_samples.PushBack( sample );
 
 		if ( _activeSample == -1 )
-			_ActiveSample( 0 );
+		{
+			_ActiveNextSample();
+		}
 	}
 
 /*
 =================================================
-	_ActiveSample
+	_ActiveNextSample
 =================================================
 */
-	void ShaderEditorCore::_ActiveSample (usize index)
+	void ShaderEditorCore::_ActiveNextSample ()
 	{
+		_time.SetSeconds( 0.0 );
+
 		if ( _activeSample < _samples.Count() )
+		{
+			if ( _samples[ _activeSample ]->Next() )
+				return;
+
 			_samples[ _activeSample ]->Release();
+		}
+
+		uint	index = Wrap( _activeSample + 1, 0u, _samples.LastIndex() );
 
 		_activeSample = -1;
 
@@ -106,7 +117,7 @@ namespace ShaderEditor
 	_Update
 =================================================
 */
-	void ShaderEditorCore::_Update (Time<double> dt, bool)
+	void ShaderEditorCore::_Update (TimeD dt, bool)
 	{
 		if ( not _initialized )
 			return;
@@ -126,7 +137,7 @@ namespace ShaderEditor
 		
 		// reset timer
 		if ( input->IsKeyClicked( EKey::T ) )
-			_time.FromSeconds( 0.0 );
+			_time.SetSeconds( 0.0 );
 
 		// pause time 
 		if ( input->IsKeyClicked( EKey::P ) )
@@ -139,11 +150,8 @@ namespace ShaderEditor
 		if ( input->IsKeyClicked( EKey::PRINTSCREEN ) )
 			_makeScreenShot = true;
 
-		if ( input->IsKeyClicked( EKey::PLUS ) )
-			_ActiveSample( _activeSample+1 );
-		else
-		if ( input->IsKeyClicked( EKey::MINUS ) )
-			_ActiveSample( _activeSample-1 );
+		if ( input->IsKeyClicked( EKey::BACKSPACE ) )
+			_ActiveNextSample();
 		
 		if ( _activeSample < _samples.Count() )
 			_samples[ _activeSample ]->Update( dt );
@@ -157,7 +165,7 @@ namespace ShaderEditor
 	void ShaderEditorCore::_OnInit ()
 	{
 		CHECK( SubSystems()->Get< Platform >()->
-			InitWindow( Platform::WindowDesc( "ShaderEditor", int2(800, 600), MinValue<int2>(), false, true ) ) );
+			InitWindow( Platform::WindowDesc( "ShaderEditor", uint2(800, 600), MinValue<int2>(), false, true ) ) );
 		
 		CHECK( SubSystems()->Get< Platform >()->
 			InitRender( VideoSettings( VideoSettings::RGBA8, VideoSettings::DEPTH_24, VideoSettings::NO_STENCIL,
@@ -190,7 +198,7 @@ namespace ShaderEditor
 		CHECK( _particleRenderer.Initialize() );
 		
 		InitializeShaderSamples( this );
-		_time.FromSeconds( 0.0 );
+		_time.SetSeconds( 0.0 );
 		
 		if ( _activeSample < _samples.Count() )
 			_samples[ _activeSample ]->Init();
@@ -235,6 +243,8 @@ namespace ShaderEditor
 */
 	void ShaderEditorCore::_Reload ()
 	{
+		SubSystems()->Get< GraphicsEngine >()->GetShaderManager()->ClearShaderCache();
+
 		CHECK( _renderer.Reload() );
 		CHECK( _tilesManager.Reload() );
 		CHECK( _particleRenderer.Reload() );

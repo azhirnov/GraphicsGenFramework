@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "Texture.h"
 #include "Engine/Graphics/Engine/GraphicsEngine.h"
@@ -18,7 +18,7 @@ namespace Graphics
 		ETexture::type	target	= samples > MultiSamples(1) ? ETexture::Tex2DMS : ETexture::Tex2D;
 		TexturePtr		p		= BaseObject::_New( new Texture( PackFileID(), target, dataType, ss ) );
 
-		CHECK_ERR( p->Create( uint4( size, 1u, 1u ), format, levels, samples ), null );
+		CHECK_ERR( p->Create( uint4( size, 1u, 1u ), format, levels, samples ) );
 		return p;
 	}
 
@@ -27,7 +27,7 @@ namespace Graphics
 		ETexture::type	target	= samples > MultiSamples(1) ? ETexture::Tex2DMSArray : ETexture::Tex2DArray;
 		TexturePtr		p		= BaseObject::_New( new Texture( PackFileID(), target, dataType, ss ) );
 
-		CHECK_ERR( p->Create( uint4( size, 1u, layers.Get() ), format, levels, samples ), null );
+		CHECK_ERR( p->Create( uint4( size, 1u, layers.Get() ), format, levels, samples ) );
 		return p;
 	}
 
@@ -35,7 +35,7 @@ namespace Graphics
 	{
 		TexturePtr	p = BaseObject::_New( new Texture( PackFileID(), ETexture::Tex3D, dataType, ss ) );
 
-		CHECK_ERR( p->Create( uint4( size, 1u ), format, levels, Uninitialized() ), null );
+		CHECK_ERR( p->Create( uint4( size, 1u ), format, levels, Uninitialized ) );
 		return p;
 	}
 
@@ -43,7 +43,7 @@ namespace Graphics
 	{
 		TexturePtr	p = BaseObject::_New( new Texture( PackFileID(), ETexture::TexCube, dataType, ss ) );
 
-		CHECK_ERR( p->Create( uint4( size, 6u, 1u ), format, levels, Uninitialized() ), null );
+		CHECK_ERR( p->Create( uint4( size, 6u, 1u ), format, levels, Uninitialized ) );
 		return p;
 	}
 
@@ -51,7 +51,7 @@ namespace Graphics
 	{
 		TexturePtr	p = BaseObject::_New( new Texture( PackFileID(), ETexture::TexCubeArray, dataType, ss ) );
 
-		CHECK_ERR( p->Create( uint4( size, 6u, layers.Get() ), format, levels, Uninitialized() ), null );
+		CHECK_ERR( p->Create( uint4( size, 6u, layers.Get() ), format, levels, Uninitialized ) );
 		return p;
 	}
 	
@@ -73,7 +73,7 @@ namespace Graphics
 	Texture::Texture (PackFileID fileID, ETexture::type target, ETextureData::type dataType, const SubSystemsRef ss) :
 		Resource( fileID, EResource::Texture, ss ),
 		_maxMipmaps(0),
-		_format( EPixelFormat::type(-1) ),
+		_format( EPixelFormat::Unknown ),
 		_target( target ),
 		_dataType( dataType ),
 		_imgSupported( false )
@@ -97,6 +97,8 @@ namespace Graphics
 */
 	void Texture::_Destroy ()
 	{
+		Resource::_Destroy();
+
 		SubSystems()->Get< GraphicsEngine >()->GetContext()->DeleteTexture( _tex );
 
 		_pendingBarrier.Reset();
@@ -107,7 +109,7 @@ namespace Graphics
 		_maxMipmaps		= 0;
 		_levels			= 0;
 		_multiSamples	= MultiSamples();
-		_format			= EPixelFormat::type(-1);
+		_format			= EPixelFormat::Unknown;
 		_imgSupported	= false;
 	}
 	
@@ -146,7 +148,7 @@ namespace Graphics
 */
 	bool Texture::IsValid () const
 	{
-		return IsResourceLoaded() and _tex.IsValid();
+		return _IsResourceLoaded() and _tex.IsValid();
 	}
 	
 /*
@@ -156,13 +158,15 @@ namespace Graphics
 */
 	void Texture::Bind (uint unit)
 	{
+		CHECK( _tex.IsValid() );
+
 		Barrier( EMemoryBarrier::TextureFetch );
 		
 		Ptr< StateManager >	sm = SubSystems()->Get< GraphicsEngine >()->GetStateManager();
 
 		sm->BindTexture( _tex, unit );
 
-		if ( GetSampler().IsNotNull() )
+		if ( GetSampler() )
 		{
 			sm->BindSampler( GetSampler()->GetSamplerID(), unit );
 		}
@@ -173,9 +177,11 @@ namespace Graphics
 	BindImage
 =================================================
 */
-	void Texture::BindImage (uint unit, EMemoryAccess::type access, MipmapLevel level, TexArrLayer layer)
+	bool Texture::BindImage (uint unit, EMemoryAccess::type access, MipmapLevel level, TexArrLayer layer)
 	{
-		CHECK( _imgSupported );
+		CHECK( _tex.IsValid() );
+		CHECK_ERR( _imgSupported );
+		CHECK_ERR( not (EnumEq( access, EMemoryAccess::Write ) and _IsResourceLocked()) );
 
 		Ptr< StateManager >		sm = SubSystems()->Get< GraphicsEngine >()->GetStateManager();
 
@@ -188,6 +194,7 @@ namespace Graphics
 		{
 			sm->CreateBarrier( OUT _pendingBarrier );
 		}
+		return true;
 	}
 
 /*
@@ -197,7 +204,9 @@ namespace Graphics
 */
 	bool Texture::Create (const uint4 &dim, EPixelFormat::type format, const MipmapLevelsRange &levels, MultiSamples samples)
 	{
-		CHECK_ERR( not IsResourceLocked() );
+		CHECK_ERR( not _IsResourceLocked() );
+		
+		_Destroy();
 
 		_CheckDataTypeAndFormat( format, _dataType );
 
@@ -206,8 +215,10 @@ namespace Graphics
 		_pendingBarrier.Reset();
 
 		_imgSupported = EPixelFormat::IsSupportedForImage( format );
+		
+		_EditMemStat().Set( BytesU(), _GetImageSize( PixelFormat(), TextureType(), Dimension(), 1_b, 1_b ) );	// TODO: add mipmaps size
 
-		_SetLoadState( ELoadState::Created );
+		_SetResourceStatus( EResourceStatus::Loaded );
 		return true;
 	}
 
@@ -217,13 +228,16 @@ namespace Graphics
 =================================================
 */
 	bool Texture::AddImage (const uint4 &offset, MipmapLevel level, const uint3 &size, EPixelFormat::type format,
-							BinaryBuffer data, Bytes<usize> xAlign, Bytes<usize> xyAlign)
+							BinaryBuffer data, BytesU xAlign, BytesU xyAlign)
 	{
-		CHECK_ERR( not IsResourceLocked() );
+		CHECK_ERR( IsValid() );
+		CHECK_ERR( not _IsResourceLocked() );
 		CHECK_ERR( _format == format );	// TODO: is it needed ?
 
 		_BarrierNow( EMemoryBarrier::TextureUpdate );
 		
+		_EditMemStat().Add( BytesU(), data.Size() );
+
 		if ( EPixelFormat::IsCompressed( format ) )
 			return _AddCompressedImage( offset, level.Get(), size, format, data, xAlign, xyAlign );
 		else
@@ -237,10 +251,13 @@ namespace Graphics
 */
 	bool Texture::AllocLevel (MipmapLevel level)
 	{
-		CHECK_ERR( not IsResourceLocked() );
+		CHECK_ERR( IsValid() );
+		CHECK_ERR( not _IsResourceLocked() );
 		CHECK_ERR( not HasLevel( level ) );
 		
 		_BarrierNow( EMemoryBarrier::TextureUpdate );
+		
+		_EditMemStat().Add( BytesU(), _GetImageSize( PixelFormat(), TextureType(), LevelDimension(level), 1_b, 1_b ) );
 
 		return _AllocLevel( level.Get() );
 	}
@@ -251,8 +268,9 @@ namespace Graphics
 =================================================
 */
 	bool Texture::GetImage (OUT Buffer<ubyte> &data, MipmapLevel level, EPixelFormat::type format,
-							Bytes<usize> xAlign, Bytes<usize> xyAlign)
+							BytesU xAlign, BytesU xyAlign)
 	{
+		CHECK_ERR( IsValid() );
 		CHECK_ERR( not HasLevel( level ) );
 		
 		_BarrierNow( EMemoryBarrier::TextureUpdate );
@@ -267,8 +285,9 @@ namespace Graphics
 */
 	bool Texture::GetImage (OUT Buffer<ubyte> &data, const uint4 &offset, MipmapLevel level,
 							const uint3 &size, EPixelFormat::type format,
-							Bytes<usize> xAlign, Bytes<usize> xyAlign)
+							BytesU xAlign, BytesU xyAlign)
 	{
+		CHECK_ERR( IsValid() );
 		CHECK_ERR( not HasLevel( level ) );
 		
 		_BarrierNow( EMemoryBarrier::TextureUpdate );
@@ -283,9 +302,12 @@ namespace Graphics
 */
 	bool Texture::GenerateMipmaps ()
 	{
-		CHECK_ERR( not IsResourceLocked() );
+		CHECK_ERR( IsValid() );
+		CHECK_ERR( not _IsResourceLocked() );
 		
 		_BarrierNow( EMemoryBarrier::TextureUpdate );
+		
+		_EditMemStat().Set( BytesU(), BytesU( _GetImageSize( PixelFormat(), TextureType(), Dimension(), 1_b, 1_b ) * 4 / 3 ) );
 
 		return _GenerateMipmaps();
 	}
@@ -297,7 +319,8 @@ namespace Graphics
 */
 	bool Texture::SetSampler (const SamplerPtr &sampler)
 	{
-		CHECK_ERR( not IsResourceLocked() );
+		CHECK_ERR( _IsResourceCreatedOrLoaded() );	// if texture not created on destroy sampler will be reset to null
+		CHECK_ERR( not _IsResourceLocked() );
 
 		_sampler = sampler;
 		return true;
@@ -353,7 +376,7 @@ namespace Graphics
 			//case ETexture::Tex2DMS :	// not supported for multisampled texture
 		}
 
-		RETURN_ERR( "invalid texture type", uint4(0) );
+		RETURN_ERR( "invalid texture type" );
 	}
 		
 /*
@@ -371,11 +394,11 @@ namespace Graphics
 
 			case ETexture::Tex1D :
 			case ETexture::Tex2D :
-			case ETexture::Tex3D :			return GetNumberOfMipmaps( dim.Max() ) + 1;
+			case ETexture::Tex3D :			return ImageUtils::GetNumberOfMipmaps( dim.Max() ) + 1;
 
 			case ETexture::TexCube :
 			case ETexture::TexCubeArray :
-			case ETexture::Tex2DArray :		return GetNumberOfMipmaps( dim.xy().Max() ) + 1;
+			case ETexture::Tex2DArray :		return ImageUtils::GetNumberOfMipmaps( dim.xy().Max() ) + 1;
 		}
 
 		RETURN_ERR( "invalid texture type", uint(1) );
@@ -414,19 +437,18 @@ namespace Graphics
 	_GetImageSize
 =================================================
 */
-	usize Texture::_GetImageSize (EPixelFormat::type format, ETexture::type type, const uint3 &size,
-									Bytes<usize> xAlign, Bytes<usize> xyAlign)
+	BytesU Texture::_GetImageSize (EPixelFormat::type format, ETexture::type type, const uint3 &size,
+										 BytesU xAlign, BytesU xyAlign)
 	{
-		CHECK_ERR( not EPixelFormat::IsCompressed( format ), 0 );
+		CHECK_ERR( not EPixelFormat::IsCompressed( format ), BytesU() );
 
-		Bytes<usize>	bpp = Bytes<usize>( EPixelFormat::BitPerPixel( format ) );
+		BytesU			bpp = BytesU( EPixelFormat::BitPerPixel( format ) );
 		uint3 const		dim	= Max( size, uint3(1) );
 
-		return AlignedImageDataSize( dim, bpp, xAlign, xyAlign );
+		return ImageUtils::AlignedDataSize( dim, bpp, xAlign, xyAlign );
 	}
 
-	usize Texture::_GetImageSize (EPixelFormat::type format, ETexture::type type, const uint4 &dim,
-									Bytes<usize> xAlign, Bytes<usize> xyAlign)
+	BytesU Texture::_GetImageSize (EPixelFormat::type format, ETexture::type type, const uint4 &dim, BytesU xAlign, BytesU xyAlign)
 	{
 		return _GetImageSize( format, type, Utils::ConvertSize( type, dim ), xAlign, xyAlign );
 	}
@@ -522,7 +544,7 @@ namespace Graphics
 			case ETexture::TexCubeArray :	return uint4( dim.xy(), 6, dim.w );
 		}
 
-		RETURN_ERR( "invalid texture type", uint4(0) );
+		RETURN_ERR( "invalid texture type" );
 	}
 
 

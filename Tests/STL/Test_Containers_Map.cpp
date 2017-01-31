@@ -1,6 +1,6 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
-#include "STL/ux_stl.h"
+#include "Engine/STL/Engine.STL.h"
 #include "Debug.h"
 
 using namespace GX_STL;
@@ -8,7 +8,7 @@ using namespace GX_STL::GXTypes;
 using namespace GX_STL::GXMath;
 
 
-void Map_Test1 ()
+static void Map_Test1 ()
 {
 	Map<int, String>	m;
 
@@ -22,7 +22,7 @@ void Map_Test1 ()
 }
 
 
-void Map_Test2 ()
+static void Map_Test2 ()
 {
 	typedef TDebugInstCounter<5>	Elem1_t;
 	typedef TDebugInstCounter<6>	Elem2_t;
@@ -51,7 +51,7 @@ void Map_Test2 ()
 }
 
 
-void Map_Test3 ()
+static void Map_Test3 ()
 {
 	struct ValueWithUnion
 	{

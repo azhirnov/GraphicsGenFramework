@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -48,7 +48,7 @@ namespace Graphics
 		RenderTargetPtr const&	GetCurrent ()				const	{ return _rtStack.Back(); }
 		RenderTargetPtr const&	GetSystemRenderTarget ()	const	{ return _defaultRT; }
 
-		void _OnResize (const int2 &newSize);
+		void _OnResize (const uint2 &newSize);
 
 
 	private:

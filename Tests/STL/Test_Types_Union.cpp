@@ -1,6 +1,6 @@
-// Copyright © 2017  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
-#include "STL/ux_stl.h"
+#include "Engine/STL/Engine.STL.h"
 
 using namespace GX_STL;
 using namespace GX_STL::GXTypes;
@@ -10,7 +10,7 @@ using namespace GX_STL::GXMath;
 typedef Union< byte, short, int, ilong, float, double >		Union_t;
 
 
-void Union_Test1 ()
+static void Union_Test1 ()
 {
 	float		f1 = 1.74323f;
 	Union_t		u;	u.Create( f1 );

@@ -1,6 +1,6 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
-#include "STL/ux_stl.h"
+#include "Engine/STL/Engine.STL.h"
 
 using namespace GX_STL;
 using namespace GX_STL::GXTypes;
@@ -13,6 +13,7 @@ extern void Test_CompileTime_TypeTraits ();
 extern void Test_CompileTime_TemplateMath ();
 extern void Test_CompileTime_StaticFloat ();
 extern void Test_CompileTime_TypeQualifier ();
+extern void Test_CompileTime_MainType ();
 
 extern void Test_Containers_Array ();
 extern void Test_Containers_Queue ();
@@ -42,8 +43,9 @@ extern void Test_Types_StringParser ();
 extern void Test_Types_Union ();
 
 extern void Test_OS_Date ();
+extern void Test_OS_FileSystem ();
+
 extern void Test_SimpleScript ();
-extern void Test_CompileTime_MainType ();
 extern void Test_Temp ();
 
 
@@ -88,8 +90,11 @@ void main ()
 	Test_Types_Union();
 
 	Test_OS_Date();
+	Test_OS_FileSystem();
 
 	Test_SimpleScript();
+	
+	DEBUG_ONLY( Referenced::s_ChenckNotReleasedObjects() );
 
 	WARNING( "Tests Finished!" );
 }

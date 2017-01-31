@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -74,7 +74,7 @@ namespace Compute
 		bool Create (const ComputeProgramPtr &program, StringCRef name);
 		void Destroy ();
 
-		void Run (const uint3 &size, const uint3 &localSize = Uninitialized());
+		void Run (const uint3 &size, const uint3 &localSize = Uninitialized);
 
 
 		template <typename T>
@@ -94,7 +94,7 @@ namespace Compute
 		void GetArgNames (OUT Array<StringCRef> &names) const;
 
 
-		bool	IsCreated ()	const	{ return _program.IsNotNull() and _id != null; }
+		bool	IsCreated ()	const	{ return _program and _id != null; }
 		usize	NumArgs ()		const	{ return _args.Count(); }
 
 
@@ -102,7 +102,7 @@ namespace Compute
 		bool _Create (const ComputeProgramPtr &program, StringCRef name);
 		void _Delete ();
 		void _PrintInfo (StringCRef name);
-		void _InitArgs ();
+		bool _InitArgs ();
 		void _SetArgs ();
 		void _CheckArgs ();
 		bool _ParseKernelArgs (StringCRef source, usize pos);

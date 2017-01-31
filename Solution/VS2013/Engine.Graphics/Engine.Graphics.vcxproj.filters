@@ -41,7 +41,7 @@
       <UniqueIdentifier>{bfcc8e9e-01ee-4600-b0ee-c7ddf90120bc}</UniqueIdentifier>
     </Filter>
     <Filter Include="Buffer">
-      <UniqueIdentifier>{b3143d1e-f1fc-47a7-be18-7695acb16887}</UniqueIdentifier>
+      <UniqueIdentifier>{4f463c37-4cb3-4997-a1e9-bac3e17802c1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -124,17 +124,11 @@
     <ClInclude Include="..\..\..\Engine\Graphics\Shader\TextureUniform.h">
       <Filter>Shader</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Engine\Graphics\Mesh\MeshGenerator.h">
-      <Filter>Buffer</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Engine\Graphics\GL4\GL4Emulator.h">
       <Filter>GL4</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Engine\Graphics\Shader\ImageUniform.h">
       <Filter>Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Engine\Graphics\Mesh\MemoryBuffer.h">
-      <Filter>Buffer</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Engine\Graphics\Shader\ShaderManager.h">
       <Filter>Shader</Filter>
@@ -153,6 +147,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Engine\Graphics\Types\MemoryBarrierObj.h">
       <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\Buffer\MemoryBuffer.h">
+      <Filter>Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Engine\Graphics\Buffer\MeshGenerator.h">
+      <Filter>Buffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -192,14 +192,8 @@
     <ClCompile Include="..\..\..\Engine\Graphics\Shader\ShaderProgram.cpp">
       <Filter>Shader</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Engine\Graphics\Mesh\MeshGenerator.cpp">
-      <Filter>Buffer</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Engine\Graphics\Types\RenderState.cpp">
       <Filter>Types</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Engine\Graphics\Mesh\MemoryBuffer.cpp">
-      <Filter>Buffer</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Engine\Graphics\GL4\GL4MemoryBuffer.cpp">
       <Filter>GL4</Filter>
@@ -215,6 +209,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\Engine\Graphics\GL4\GL4GraphicsQuery.cpp">
       <Filter>GL4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Graphics\Buffer\MemoryBuffer.cpp">
+      <Filter>Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Graphics\Buffer\MeshGenerator.cpp">
+      <Filter>Buffer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

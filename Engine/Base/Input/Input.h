@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -31,8 +31,6 @@ namespace Base
 			};
 		};
 
-		typedef SysEvent::time_t	time_t;
-
 		struct Touch
 		{
 			// in pixels
@@ -41,7 +39,7 @@ namespace Base
 			int2	delta;
 
 			float	pressure;
-			time_t	time;	// time when button pressed
+			TimeD	time;	// time when button pressed
 			ubyte	state;
 			bool	active  : 1;
 			bool	motion	: 1;
@@ -71,7 +69,7 @@ namespace Base
 		};
 
 		typedef StaticArray< Touch, MAX_TOUCHES >		touch_data_t;
-		typedef StaticArray< ubyte, EKey::_COUNT >		keys_t;
+		typedef StaticArray< ubyte, EKey::_Count >		keys_t;
 
 		SHARED_POINTER( Input );
 

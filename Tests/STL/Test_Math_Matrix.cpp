@@ -1,6 +1,6 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
-#include "STL/ux_stl.h"
+#include "Engine/STL/Engine.STL.h"
 
 using namespace GX_STL;
 using namespace GX_STL::GXTypes;
@@ -8,7 +8,7 @@ using namespace GX_STL::GXMath;
 
 
 template <typename T, usize C, usize R, usize Q>
-Matrix<T,Q,R> Mul (const Matrix<T,C,R> &left, const Matrix<T,Q,C> &right)
+static Matrix<T,Q,R> Mul (const Matrix<T,C,R> &left, const Matrix<T,Q,C> &right)
 {
 	Matrix<T,Q,R>	result;
 

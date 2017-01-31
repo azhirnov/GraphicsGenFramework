@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 /*
 	This is helper class for game applications
 */
@@ -27,10 +27,10 @@ namespace GameUtils
 
 	// variables
 	private:
-		DEBUG_ONLY(
-			TimeProfiler<double>	__fpsTimer;
-			uint					__frameCounter;
-		)
+		//DEBUG_ONLY(
+			TimeProfilerD	__fpsTimer;
+			uint			__frameCounter;
+		//)
 		
 		bool					__entered	: 1;
 		bool					__inited	: 1;
@@ -40,7 +40,7 @@ namespace GameUtils
 	private:
 		void _UpdateFPS ()
 		{
-			DEBUG_ONLY(
+			//DEBUG_ONLY(
 				++__frameCounter;
 
 				if ( __fpsTimer.GetTimeDelta().Seconds() > 5.0 )
@@ -51,7 +51,7 @@ namespace GameUtils
 					__frameCounter = 0;
 					__fpsTimer.Start();
 				}
-			)
+			//)
 		}
 
 
@@ -61,26 +61,26 @@ namespace GameUtils
 			BaseApplication( thread ),
 			__entered(false), __inited(false)
 		{
-			GetEventSystem()->Subscribe( DelegateBuilder::Create( GameApplicationPtr(this), &GameApplication::_OnUpdate ) );
-			GetEventSystem()->Subscribe( DelegateBuilder::Create( GameApplicationPtr(this), &GameApplication::_OnAppEvent ) );
-			GetEventSystem()->Subscribe( DelegateBuilder::Create( GameApplicationPtr(this), &GameApplication::_OnWindowEvent ) );
+			GetEventSystem()->Subscribe( GameApplicationPtr(this), &GameApplication::_OnUpdate );
+			GetEventSystem()->Subscribe( GameApplicationPtr(this), &GameApplication::_OnAppEvent );
+			GetEventSystem()->Subscribe( GameApplicationPtr(this), &GameApplication::_OnWindowEvent );
 
-			DEBUG_ONLY(
+			//DEBUG_ONLY(
 				__frameCounter = 0;
 				__fpsTimer.Start();
-			)
+			//)
 		}
 
 
 		~GameApplication ()
 		{
-			GetEventSystem()->Unsubscribe( DelegateBuilder::Create( GameApplicationPtr(this), &GameApplication::_OnWindowEvent ) );
-			GetEventSystem()->Unsubscribe( DelegateBuilder::Create( GameApplicationPtr(this), &GameApplication::_OnAppEvent ) );
-			GetEventSystem()->Unsubscribe( DelegateBuilder::Create( GameApplicationPtr(this), &GameApplication::_OnUpdate ) );
+			GetEventSystem()->Unsubscribe( GameApplicationPtr(this), &GameApplication::_OnWindowEvent );
+			GetEventSystem()->Unsubscribe( GameApplicationPtr(this), &GameApplication::_OnAppEvent );
+			GetEventSystem()->Unsubscribe( GameApplicationPtr(this), &GameApplication::_OnUpdate );
 		}
 	
 
-		virtual void _Update (Time<double> dt, bool forceRedraw) = 0;
+		virtual void _Update (TimeD dt, bool forceRedraw) = 0;
 
 		virtual void _OnInit () = 0;
 
@@ -108,7 +108,7 @@ namespace GameUtils
 			}
 			else
 			{
-				Thread::Sleep( 10 );
+				OS::Thread::Sleep( TimeU::FromMilliSeconds( 10 ) );
 			}
 		}
 	

@@ -1,4 +1,4 @@
-// Copyright © 2017  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "GraphicsQuery.h"
 #include "Engine/Graphics/Engine/GraphicsEngine.h"
@@ -15,7 +15,7 @@ namespace Graphics
 */
 	GraphicsQuery::GraphicsQuery (const SubSystemsRef ss) :
 		BaseObject( ss ),
-		_target( EQuery::type(-1) ),	_index( -1 ),
+		_target( EQuery::Unknown ),		_index( -1 ),
 		_resultAvailable( false ),		_result( 0 ),
 		_resultCached( false )
 	{
@@ -53,7 +53,7 @@ namespace Graphics
 	{
 		SubSystems()->Get< GraphicsEngine >()->GetContext()->DeleteQuery( _id );
 
-		_target				= EQuery::type(-1);
+		_target				= EQuery::Unknown;
 		_index				= uint(-1);
 		_result				= 0;
 		_resultAvailable	= false;
@@ -92,7 +92,7 @@ namespace Graphics
 		{
 			SubSystems()->Get< GraphicsEngine >()->GetStateManager()->EndQuery( _id, _target, _index );
 
-			_target	= EQuery::type(-1);
+			_target	= EQuery::Unknown;
 			_index	= uint(-1);
 		}
 	}

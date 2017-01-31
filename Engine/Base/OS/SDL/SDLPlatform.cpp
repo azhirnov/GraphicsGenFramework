@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "SDLPlatform.h"
 
@@ -96,11 +96,11 @@ namespace SdlPlatform
 		SDL_CHECK( SDL_Init( SDL_INIT_VIDEO ) == 0 );
 		//SDL_CHECK( SDL_VideoInit( null ) == 0 );
 
-		const int2	scr_res	= _GetScreenResolution();
+		const uint2	scr_res	= _GetScreenResolution();
 
 		_window = windowDesc;
 
-		_window.size = Clamp( _window.size, int2(0), scr_res );
+		_window.size = Clamp( _window.size, uint2(0), scr_res );
 		
 		_windowCaption = _window.caption;
 
@@ -114,7 +114,7 @@ namespace SdlPlatform
 		}
 		else
 		{ 
-			_window.pos = Max( (scr_res - _window.size) / 2, int2(0) );
+			_window.pos = Max( int2(scr_res - _window.size) / 2, int2(0) );
 		}
 
 		uint	flags = int(SDL_WINDOW_OPENGL) | int(SDL_WINDOW_HIDDEN);
@@ -137,9 +137,9 @@ namespace SdlPlatform
 	set display mode for fullscreen window
 =================================================
 */
-	void SDLPlatform::InitDisplay (const Display &disp)
+	bool SDLPlatform::InitDisplay (const Display &disp)
 	{
-		CHECK_ERR( _wnd != null, void() );
+		CHECK_ERR( _wnd != null );
 
 		SDL_DisplayMode mode = {0};
 		SDL_GetCurrentDisplayMode( 0, &mode );
@@ -148,10 +148,11 @@ namespace SdlPlatform
 		mode.h				= disp.Resolution().y;
 		mode.refresh_rate	= disp.Frequency();
 
-		SDL_CALL( SDL_SetWindowDisplayMode( _wnd, &mode ) == 0 );
+		SDL_CHECK( SDL_SetWindowDisplayMode( _wnd, &mode ) == 0 );
 		
 		_UpdateDisplayParams();
 		_UpdateWindowParams();
+		return true;
 	}
 	
 /*
@@ -280,7 +281,11 @@ namespace SdlPlatform
 		if ( _isLooping )
 		{
 			_pause |= ON_DESTROY;
-			SDL_DestroyWindow( _wnd );
+
+			SDL_Event	ev;
+			ev.type = SDL_QUIT;
+
+			SDL_PushEvent( &ev );
 		}
 	}
 	
@@ -291,7 +296,7 @@ namespace SdlPlatform
 */
 	void SDLPlatform::OpenURL (StringCRef url)
 	{
-		PlatformUtils::OpenURL( url );
+		OS::PlatformUtils::OpenURL( url );
 	}
 	
 /*
@@ -299,12 +304,12 @@ namespace SdlPlatform
 	_GetScreenResolution
 =================================================
 */
-	int2 SDLPlatform::_GetScreenResolution ()
+	uint2 SDLPlatform::_GetScreenResolution ()
 	{
 		SDL_DisplayMode mode = {0};
 		//SDL_GetDesktopDisplayMode( 0, &mode );
 		SDL_GetCurrentDisplayMode( 0, &mode );
-		return int2( mode.w, mode.h );
+		return uint2( mode.w, mode.h );
 	}
 	
 /*
@@ -347,11 +352,11 @@ namespace SdlPlatform
 	_GetWindowSize
 =================================================
 */
-	int2 SDLPlatform::_GetWindowSize (SDL_Window *wnd)
+	uint2 SDLPlatform::_GetWindowSize (SDL_Window *wnd)
 	{
 		int2 size;
 		SDL_GetWindowSize( wnd, &size.x, &size.y );
-		return size;
+		return uint2(size);
 	}
 
 /*
@@ -392,18 +397,18 @@ namespace SdlPlatform
 	_Resize
 =================================================
 */
-	void SDLPlatform::_Resize (int2 size, bool alignCenter)
+	void SDLPlatform::_Resize (uint2 size, bool alignCenter)
 	{
-		int2 const	res = _GetScreenResolution().To<int2>();
+		uint2 const	res = _GetScreenResolution();
 		int2		pos;
 
-		size = Clamp( size, int2(12), res );
+		size = Clamp( size, uint2(12), res );
 		
 		SDL_SetWindowSize( _wnd, size.x, size.y );
 
 		if ( alignCenter )
 		{
-			pos = Max( (res - size) / 2, int2(0) );
+			pos = Max( int2(res - size) / 2, int2(0) );
 
 			SDL_SetWindowPosition( _wnd, pos.x, pos.y );
 		}
@@ -538,7 +543,7 @@ namespace SdlPlatform
 
 						// resize //
 						case SDL_WINDOWEVENT_RESIZED :
-							_OnResized( int2( ev.window.data1, ev.window.data2 ) );
+							_OnResized( uint2( ev.window.data1, ev.window.data2 ) );
 							break;
 
 						// move //
@@ -581,7 +586,7 @@ namespace SdlPlatform
 				// mouse wheel //
 				case SDL_MOUSEWHEEL :
 				{
-					const short		wheel_delta = ev.wheel.y;
+					const short		wheel_delta = (short) ev.wheel.y;
 					_SendEvent( SysEvent::RawKey( _GetTimestamp(), wheel_delta > 0 ? EKey::M_WHEEL_UP : EKey::M_WHEEL_DOWN, true ) );	
 					break;
 				}
@@ -658,7 +663,7 @@ namespace SdlPlatform
 	_OnResized
 =================================================
 */
-	void SDLPlatform::_OnResized (const int2 &newSize)
+	void SDLPlatform::_OnResized (const uint2 &newSize)
 	{
 		_window.size = newSize;
 
@@ -768,8 +773,7 @@ namespace SdlPlatform
 		Ptr< Application >	app;
 		createApp( &sys, app.ref() );
 
-		CHECK_ERR( app.IsNotNull() );
-
+		CHECK_ERR( app );
 		app->GetEventSystem()->Send( SysEvent::Application( SysEvent::Application::CREATED ) );
 
 		int ret = app->SubSystems()->Get< Platform >().ToPtr< SDLPlatform >()->Loop();

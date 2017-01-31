@@ -1,0 +1,39 @@
+
+[HEADER]
+
+real Billow (in real3 point, real frequency, real lacunarity, real persistence, int octaveCount, int seed);
+
+
+//-----------------------------------------------------------------------------
+[SOURCE]
+
+//	This file based on code from "libNoise" project by Jason Bevins http://libnoise.sourceforge.net/
+//	Released under the terms of the GNU Lesser General Public License.
+
+#import "Core/Math/Math.glcs"
+#import "Core/Noise/_NoiseUtils.glcs"
+
+real Billow (in real3 point, real frequency, real lacunarity, real persistence, int octaveCount, int seed)
+{
+	real	value	= 0.0;
+	real	signal	= 0.0;
+	real	pers	= 1.0;
+	
+	point *= frequency;
+
+	for (int octave = 0; octave < octaveCount; ++octave)
+	{
+		real3 n = MakeInt32Range( point );
+		
+		int oseed = (seed + octave) & 0xffffffff;
+		signal = GradientCoherentNoise3D( n, oseed );
+		signal = 2.0 * Abs(signal) - 1.0;
+		value += signal * pers;
+		
+		point *= lacunarity;
+		pers  *= persistence;
+	}
+
+	value += 0.5;
+	return value;
+}

@@ -35,6 +35,7 @@
     <ClCompile Include="..\..\..\Tests\STL\Test_Containers_HashSet.cpp" />
     <ClCompile Include="..\..\..\Tests\STL\Test_Types_Union.cpp" />
     <ClCompile Include="..\..\..\Tests\STL\Test_Math_Bit.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_OS_FileSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Tests\STL\Debug.h" />

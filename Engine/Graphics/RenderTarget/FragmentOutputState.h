@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -27,7 +27,7 @@ namespace Graphics
 
 	// methods
 	public:
-		FragmentOutputState (GX_DEFCTOR) : _outputs( EFragOutput::None )
+		FragmentOutputState (GX_DEFCTOR) : _outputs( EFragOutput::Unknown )
 		{
 		}
 
@@ -77,7 +77,7 @@ namespace Graphics
 
 		bool IsEnabled (usize index) const
 		{
-			return _outputs[ index ] != EFragOutput::None;
+			return _outputs[ index ] != EFragOutput::Unknown;
 		}
 
 

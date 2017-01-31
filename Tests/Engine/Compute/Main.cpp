@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "Engine/Compute/Engine.Compute.h"
 
@@ -38,7 +38,7 @@ public:
 
 
 	// GameApplication //
-	void _Update (Time<double> dt, bool forceRedraw)
+	void _Update (TimeD dt, bool forceRedraw)
 	{
 	}
 

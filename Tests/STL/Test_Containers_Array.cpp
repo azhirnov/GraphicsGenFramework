@@ -1,6 +1,6 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
-#include "STL/ux_stl.h"
+#include "Engine/STL/Engine.STL.h"
 #include "Debug.h"
 #include <algorithm>
 
@@ -22,7 +22,7 @@ typedef Array< ElemStr_t >				StrArray_t;
 typedef std::vector< VElemStr_t >		StrVector_t;
 
 
-void Array_Test1 ()
+static void Array_Test1 ()
 {
 	VElem_t::ClearStatistic();
 
@@ -56,7 +56,8 @@ void Array_Test1 ()
 	ASSERT( (arr == Buffer<Elem_t>( (Elem_t *)&vec[0], vec.size() )) );
 }
 
-void Array_Test2 ()
+
+static void Array_Test2 ()
 {
 	Array_t		arr;
 
@@ -75,7 +76,8 @@ void Array_Test2 ()
 	arr.Insert( e1, 16 );
 }
 
-void Array_Test3 ()
+
+static void Array_Test3 ()
 {
 	Array_t		arr;
 	arr.Resize( 12, false );
@@ -91,7 +93,8 @@ void Array_Test3 ()
 	arr << Buffer<const Elem_t>();
 }
 
-void Array_Test4 ()
+
+static void Array_Test4 ()
 {
 	ElemStr_t::ClearStatistic();
 	VElemStr_t::ClearStatistic();
@@ -112,33 +115,6 @@ void Array_Test4 ()
 	std::sort( vec.begin(), vec.end(), LAMBDA()(const auto &x, const auto &y) -> bool { return x.secondVal < y.secondVal; } );
 
 	ASSERT(( arr == Buffer<ElemStr_t>( (ElemStr_t *)&vec[0], vec.size() ) ));
-}
-
-void Array_Test5 ()
-{
-	/*Array< StaticString<32>	>	arr;
-
-	arr << "1111" << "1222" << "1333" << "1444" << "1555" << "1666" << "1777" << "1888";
-	arr << "2111" << "2222" << "2333" << "2444" << "2555" << "2666" << "2777" << "2888";
-	arr << "3111" << "3222" << "3333" << "3444" << "3555" << "3666" << "3777" << "3888";
-	arr << "4111" << "4222" << "4333" << "4444" << "4555" << "4666" << "4777" << "4888";
-
-	//ASSERT( arr[0] == "111" );*/
-
-	/*typedef FixedSizeArray< Elem_t, 2 >		FArr_t;
-	typedef Array< FArr_t >					FEArr_t;
-
-	FEArr_t		arr;
-	FArr_t		a;		a << Elem_t( 1 );
-	FArr_t		b;		b << Elem_t( 2 ) << Elem_t( 3 );
-	FArr_t		c;		c << Elem_t( 4 ) << Elem_t( 5 );
-	FArr_t		d;		d << Elem_t( 6 ) << Elem_t( 7 );
-
-	arr << a << b << c << d;
-	arr << a << b << c << d;
-	arr << a << b << c << d;
-	arr << a << b << c << d;
-	arr << a << b << c << d;*/
 }
 
 
@@ -163,8 +139,4 @@ extern void Test_Containers_Array ()
 	ASSERT( ElemStr_t::CheckStatistic() );
 	ASSERT( VElemStr_t::CheckStatistic() );
 	ElemStr_t::ClearStatistic();
-
-	Array_Test5();
-	ASSERT( Elem_t::CheckStatistic() );
-	Elem_t::ClearStatistic();
 }

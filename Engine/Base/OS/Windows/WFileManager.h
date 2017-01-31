@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -87,7 +87,7 @@ namespace Base
 */
 	inline ulong FileManager::GetFileSize (StringCRef filename) const
 	{
-		return FileSystem::GetFileSize( filename );
+		return OS::FileSystem::GetFileSize( filename );
 	}
 
 

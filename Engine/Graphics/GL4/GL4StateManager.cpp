@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "GL4StateManager.h"
 
@@ -21,7 +21,7 @@ namespace Graphics
 	GL4StateManager::GL4StateManager () :
 		_activeUnit(0), _maxAnisotropy(0), _currentVA(0), _currentProgram(0), _currentRenderTarget(0),
 		_tessellationPatch(0), _maxColorAttachments(0), _framebufferSRGB(false), 
-		_memBarrierBeforeDraw( EMemoryBarrier::type(0) ), _barrierTicks( 1 ),
+		_memBarrierBeforeDraw( EMemoryBarrier::Unknown ), _barrierTicks( 1 ),
 		_memBarrierLastTicks( 0 )
 	{
 	}
@@ -125,7 +125,7 @@ namespace Graphics
 		int	viewport[4] = {};
 		GL_CALL( glGetIntegerv( GL_VIEWPORT, viewport ) );
 
-		_viewportStack.SetDefault( RectI( viewport[0], viewport[1], viewport[2] + viewport[0], viewport[3] + viewport[1] ) );
+		_viewportStack.SetDefault( RectU( viewport[0], viewport[1], viewport[2] + viewport[0], viewport[3] + viewport[1] ) );
 
 		GL_CALL( glGetFloatv( GL_POINT_SIZE_RANGE, _pointSizeRange.ptr() ) );
 
@@ -153,7 +153,7 @@ namespace Graphics
 		_currentProgram			= ProgramID();
 		_currentRenderTarget	= 0;
 		_maxColorAttachments	= 0;
-		_memBarrierBeforeDraw	= EMemoryBarrier::type(0);
+		_memBarrierBeforeDraw	= EMemoryBarrier::Unknown;
 		_barrierTicks			= 0;
 	}
 	
@@ -178,7 +178,7 @@ namespace Graphics
 
 		_FilterMemoryBarrier( obj.Ticks(), INOUT flags );
 
-		if ( flags == EMemoryBarrier::type(0) )
+		if ( flags == EMemoryBarrier::Unknown )
 		{
 			obj.Reset();
 			return;
@@ -202,7 +202,7 @@ namespace Graphics
 
 		_FilterMemoryBarrier( obj.Ticks(), INOUT flags );
 		
-		if ( flags == EMemoryBarrier::type(0) )
+		if ( flags == EMemoryBarrier::Unknown )
 		{
 			obj.Reset();
 			return;
@@ -228,14 +228,14 @@ namespace Graphics
 */
 	void GL4StateManager::_SetMemoryBarrierBeforeDraw ()
 	{
-		if ( _memBarrierBeforeDraw != EMemoryBarrier::type(0) )
+		if ( _memBarrierBeforeDraw != EMemoryBarrier::Unknown )
 		{
 			_MemoryBarrier( _memBarrierBeforeDraw );
 		}
 
 		_IncBarrierTicks();
 
-		_memBarrierBeforeDraw = EMemoryBarrier::type(0);
+		_memBarrierBeforeDraw = EMemoryBarrier::Unknown;
 	}
 	
 /*
@@ -275,10 +275,10 @@ namespace Graphics
 */
 	void GL4StateManager::_FilterMemoryBarrier (uint ticks, INOUT EMemoryBarrier::type &flags)
 	{
-		EMemoryBarrier::type	filtered = EMemoryBarrier::type(0);
+		EMemoryBarrier::type	filtered = EMemoryBarrier::Unknown;
 
 		if ( ticks == MemoryBarrierObj::TicksInit() or
-			 flags == EMemoryBarrier::type(0) )
+			 flags == EMemoryBarrier::Unknown )
 		{
 			flags = filtered;
 			return;
@@ -420,7 +420,7 @@ namespace Graphics
 		{
 			if ( _imageUnits[i].binded == id )
 			{
-				GL_CALL( glBindImageTexture( i, 0, 0, false, 0, GL_READ_ONLY, GL_RGBA8 ) );
+				GL_CALL( glBindImageTexture( (GLuint)i, 0, 0, false, 0, GL_READ_ONLY, GL_RGBA8 ) );
 
 				_imageUnits[ i ] = _ImageUnit();
 			}
@@ -457,7 +457,7 @@ namespace Graphics
 			{
 				_textureUnits[i].sampler = SamplerID();
 
-				GL_CALL( glBindSampler( i, 0 ) );
+				GL_CALL( glBindSampler( (GLuint)i, 0 ) );
 			}
 		}
 	}
@@ -467,7 +467,7 @@ namespace Graphics
 	BindAttribs
 =================================================
 */
-	void GL4StateManager::BindAttribs (const VertexAttribsPtr &attribs, const BufferID &vb, uint offset, uint stride, uint divisor)
+	void GL4StateManager::BindAttribs (const VertexAttribsPtr &attribs, const BufferID &vb, BytesU offset, BytesU stride, uint divisor)
 	{
 		VertexAttribsID const &	va			= attribs->GetID();
 		const uint				bind_idx	= 0;	// TODO
@@ -483,8 +483,8 @@ namespace Graphics
 			return;
 
 		buf.id      = vb.Id();
-		buf.offset  = offset;
-		buf.stride  = stride;
+		buf.offset  = (uint)offset;
+		buf.stride  = (uint)stride;
 		buf.divisor = divisor;
 
 		GL_CALL( glVertexArrayVertexBuffer( va._id, bind_idx, buf.id, buf.offset, buf.stride ) );
@@ -1130,27 +1130,29 @@ namespace Graphics
 	BindBuffer
 =================================================
 */
-	void GL4StateManager::BindBufferBase (EBufferTarget::type target, const BufferID &id, uint index, usize offset, usize size)
+	bool GL4StateManager::BindBufferBase (EBufferTarget::type target, const BufferID &id, uint index, BytesU offset, BytesU size)
 	{
-		CHECK_ERR( target < _buffers.Count(), void() );
+		CHECK_ERR( target < _buffers.Count() );
 
 		BufferArray_t &		buffers = _buffers[ target ];
 
-		CHECK_ERR( index < buffers.Count(), void() );
+		CHECK_ERR( index < buffers.Count() );
 
-		const _Buffer		buf( id, offset, size );
+		const _Buffer		buf( id, (usize)offset, (usize)size );
 		const GLenum		targ = GL4Enum( target );
 
 		if ( buffers[ index ] == buf )
-			return;
+			return true;
 		
-		if ( offset == 0 and size == usize(-1) ) {
+		if ( offset == 0 and size == BytesU(-1) ) {
 			GL_CALL( glBindBufferBase( targ, index, id.Id() ) );
 		}
 		else {
 			GL_CALL( glBindBufferRange( targ, index, id.Id(), GLintptr(offset), GLsizeiptr(size) ) );
 		}
+
 		buffers[ index ] = buf;
+		return true;
 	}
 	
 /*
@@ -1158,12 +1160,12 @@ namespace Graphics
 	UnbindBuffer
 =================================================
 */
-	void GL4StateManager::UnbindBufferBase (EBufferTarget::type target, const BufferID &id)
+	bool GL4StateManager::UnbindBufferBase (EBufferTarget::type target, const BufferID &id)
 	{
 		if ( not id.IsValid() )
-			return;
+			return true;
 
-		CHECK_ERR( target < _buffers.Count(), void() );
+		CHECK_ERR( target < _buffers.Count() );
 
 		BufferArray_t &		buffers	= _buffers[ target ];
 		const GLenum		targ	= GL4Enum( target );
@@ -1177,6 +1179,7 @@ namespace Graphics
 				buffers[i] = _Buffer();
 			}
 		}
+		return true;
 	}
 	
 /*
@@ -1239,7 +1242,7 @@ namespace Graphics
 	{
 		_viewportStack.Pop();
 		
-		RectI const &	value = _viewportStack.Get();
+		RectU const &	value = _viewportStack.Get();
 
 		GL_CALL( glViewport( value.left, value.bottom, value.Width(), value.Height() ) );
 	}
@@ -1249,7 +1252,12 @@ namespace Graphics
 	Viewport
 =================================================
 */
-	void GL4StateManager::Viewport (const RectI &value)
+	void GL4StateManager::Viewport (const uint2 &offset, const uint2 &size)
+	{
+		Viewport( RectU( offset.x, offset.y, offset.x + size.x, offset.y + size.y ) );
+	}
+
+	void GL4StateManager::Viewport (const RectU &value)
 	{
 		if ( value != _viewportStack.Get() )
 		{
@@ -1264,17 +1272,17 @@ namespace Graphics
 	Viewports
 =================================================
 */
-	void GL4StateManager::Viewports (Buffer<const RectI> values)
+	void GL4StateManager::Viewports (Buffer<const RectU> values)
 	{
 		StaticArray< float4, GlobalConst::Graphics_MaxViewports >	fvps;
 
 		FOR( i, fvps ) {
-			fvps[i] = int4( values[i].left, values[i].bottom, values[i].Width(), values[i].Height() ).To<float4>();
+			fvps[i] = uint4( values[i].left, values[i].bottom, values[i].Width(), values[i].Height() ).To<float4>();
 		}
 
 		GL_CALL( glViewportArrayv( 0, GLsizei(values.Count()), (const GLfloat *) fvps.ptr() ) );
 
-		_viewportStack.Set( RectI() );	// to disable state caching
+		_viewportStack.Set( RectU() );	// to disable state caching
 	}
 	
 /*
@@ -1282,10 +1290,10 @@ namespace Graphics
 	_OnResize
 =================================================
 */
-	void GL4StateManager::_OnResize (const int2 &newSize)
+	void GL4StateManager::_OnResize (const uint2 &newSize)
 	{
 		_viewportStack.Clear();
-		_viewportStack.SetDefault( RectI( 0, 0, newSize.x, newSize.y ) );
+		_viewportStack.SetDefault( RectU( 0, 0, newSize.x, newSize.y ) );
 		
 		_UpdateCurrentViewport();
 	}
@@ -1308,7 +1316,7 @@ namespace Graphics
 */
 	void GL4StateManager::_UpdateCurrentViewport ()
 	{
-		RectI const &	value = _viewportStack.Get();
+		RectU const &	value = _viewportStack.Get();
 
 		GL_CALL( glViewport( value.left, value.bottom, value.Width(), value.Height() ) );
 	}
@@ -1326,7 +1334,7 @@ namespace Graphics
 			String	s;
 			s	<< "Warning: program attribs not compatible with binded VAO!\n"
 				<< "program attribs:\n" << _currentProgram._input.ToString()
-				<< "\ncurrent attribs:\n" << _attribsState.ToString();
+				<< "-----\ncurrent attribs:\n" << _attribsState.ToString();
 			LOG( s.cstr(), ELog::Warning );
 		})
 	}
@@ -1352,7 +1360,7 @@ namespace Graphics
 	DrawElements
 =================================================
 */
-	void GL4StateManager::DrawElements (EPrimitive::type primitive, EIndex::type indexType, usize count, usize offset)
+	void GL4StateManager::DrawElements (EPrimitive::type primitive, EIndex::type indexType, usize count, BytesU offset)
 	{
 		_CheckProgramInOutStates();
 		
@@ -1360,7 +1368,7 @@ namespace Graphics
 		
 		_SetMemoryBarrierBeforeDraw();
 
-		GL_CALL( glDrawElements( mode, GLsizei(count), GL4Enum( indexType ), (const void *) offset ) );
+		GL_CALL( glDrawElements( mode, GLsizei(count), GL4Enum( indexType ), (const void *) (usize)offset ) );
 	}
 	
 /*
@@ -1368,7 +1376,7 @@ namespace Graphics
 	DrawElementsBaseVertex
 =================================================
 */
-	void GL4StateManager::DrawElementsBaseVertex (EPrimitive::type primitive, EIndex::type indexType, usize count, usize offset, uint baseVertex)
+	void GL4StateManager::DrawElementsBaseVertex (EPrimitive::type primitive, EIndex::type indexType, usize count, BytesU offset, uint baseVertex)
 	{
 		_CheckProgramInOutStates();
 		
@@ -1376,7 +1384,7 @@ namespace Graphics
 		
 		_SetMemoryBarrierBeforeDraw();
 
-		GL_CALL( glDrawElementsBaseVertex( mode, GLsizei(count), GL4Enum( indexType ), (const void *) offset, GLint(baseVertex) ) );
+		GL_CALL( glDrawElementsBaseVertex( mode, GLsizei(count), GL4Enum( indexType ), (const void *) (usize)offset, GLint(baseVertex) ) );
 	}
 	
 /*
@@ -1384,7 +1392,7 @@ namespace Graphics
 	MultiDrawElements
 =================================================
 */
-	void GL4StateManager::MultiDrawElements (EPrimitive::type primitive, EIndex::type indexType, const usize *count, const usize *offset, uint drawcount)
+	void GL4StateManager::MultiDrawElements (EPrimitive::type primitive, EIndex::type indexType, const usize *count, const BytesU *offsets, uint drawcount)
 	{
 		_CheckProgramInOutStates();
 		
@@ -1392,8 +1400,10 @@ namespace Graphics
 		
 		_SetMemoryBarrierBeforeDraw();
 
+		STATIC_ASSERT( sizeof(offsets[0]) == sizeof(void *) );
+
 		GL_CALL( glMultiDrawElements( mode, (const GLsizei *) count, GL4Enum( indexType ),
-									  (const void *const*) offset, drawcount ) );
+									  (const void *const*) offsets, drawcount ) );
 	}
 	
 /*
@@ -1401,16 +1411,18 @@ namespace Graphics
 	MultiDrawElementsBaseVertex
 =================================================
 */
-	void GL4StateManager::MultiDrawElementsBaseVertex (EPrimitive::type primitive, EIndex::type indexType, const usize *count, const usize *offset, const uint *baseVertex, uint drawcount)
+	void GL4StateManager::MultiDrawElementsBaseVertex (EPrimitive::type primitive, EIndex::type indexType, const usize *count, const BytesU *offsets, const uint *baseVertex, uint drawcount)
 	{
 		_CheckProgramInOutStates();
 
 		const GLenum mode = IsTessellationEnabled() ? GL_PATCHES : GL4Enum( primitive );
 		
 		_SetMemoryBarrierBeforeDraw();
+		
+		STATIC_ASSERT( sizeof(offsets[0]) == sizeof(void *) );
 
 		GL_CALL( glMultiDrawElementsBaseVertex( mode, (const GLsizei *) count, GL4Enum( indexType ),
-												(const void *const*) offset, drawcount, (const GLint *) baseVertex ) );
+												(const void *const*) offsets, drawcount, (const GLint *) baseVertex ) );
 	}
 	
 /*

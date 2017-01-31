@@ -1,8 +1,8 @@
-// Copyright © 2017  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
-#include "../Core/Common.h"
+#include "ParticleEmitter.h"
 
 namespace ShaderEditor
 {
@@ -13,6 +13,10 @@ namespace ShaderEditor
 
 	class ParticleRenderer : public BaseObject
 	{
+	// types
+	private:
+
+
 	// variables
 	private:
 

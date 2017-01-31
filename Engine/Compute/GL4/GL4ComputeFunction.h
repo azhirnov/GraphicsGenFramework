@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -33,7 +33,8 @@ namespace Compute
 						double, double2, double3, double4,
 						double2x2, double3x3, double4x4,
 						ComputeBufferPtr, ComputeImagePtr,
-						TexturePtr >							ArgValue_t;
+						TexturePtr, MemoryBufferPtr,
+						VertexBufferPtr, IndexBufferPtr >		ArgValue_t;
 
 		struct _SetArgFunc;
 
@@ -49,7 +50,7 @@ namespace Compute
 				AtomicCounterBuffer,
 				StorageBuffer,
 				UniformBuffer,
-				_COUNT
+				_Count
 			};
 
 		// variables
@@ -89,7 +90,7 @@ namespace Compute
 
 		bool Load (const SubSystemsRef ss, StringCRef filename, EShaderCompilationFlags::type flags);
 
-		void Run (const uint3 &size, const uint3 &localSize = Uninitialized());
+		void Run (const uint3 &size, const uint3 &localSize = Uninitialized);
 
 
 		template <typename T>
@@ -105,8 +106,10 @@ namespace Compute
 		
 		void GetArgNames (OUT Array<StringCRef> &names) const;
 
+		void ResetArgs ();
 
-		bool	IsCreated ()	const	{ return _program.IsNotNull() and _progID.IsValid(); }
+
+		bool	IsCreated ()	const	{ return _program and _progID.IsValid(); }
 		usize	NumArgs ()		const	{ return _args.Count(); }
 
 
@@ -165,7 +168,7 @@ namespace Compute
 	template <typename T>
 	inline GL4ComputeFunction & GL4ComputeFunction::SetArg (StringCRef name, const Quaternion<T> &value)
 	{
-		return SetArg( name, value.ToVec() );
+		return SetArg( name, value.xyzw() );
 	}
 	
 	template <typename T>

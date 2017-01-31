@@ -1,4 +1,4 @@
-// Copyright © 2017  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "TilesManager.h"
 
@@ -35,7 +35,7 @@ namespace ShaderEditor
 	bool TilesManager::Initialize ()
 	{
 		const real2	clip_planes	= _controller.GetClipPlanes();
-		const uint	max_zoom	= 8;
+		const uint	max_zoom	= 5;
 
 		_maxTileSize	= (real) NearPowerOfTwo( int( clip_planes.y ) );
 		_maxZoom		= Clamp( IntLog2( (int)_maxTileSize ), 1u, max_zoom );
@@ -100,7 +100,7 @@ namespace ShaderEditor
 			const real3		cameraPos;
 			const real		globalScale;
 
-			RecursiveDraw (Shared::FreeCameraController &controller, real globalScale) :
+			RecursiveDraw (CameraController_t &controller, real globalScale) :
 				cameraPos( controller.GetPosition() ),
 				viewProjMat( controller.GetViewProjMatrix() ),
 				globalScale( globalScale )
@@ -154,7 +154,7 @@ namespace ShaderEditor
 	Update
 =================================================
 */
-	void TilesManager::Update (Time<double> dt)
+	void TilesManager::Update (TimeD dt)
 	{
 		real3 const	prev_pos	= _controller.GetPosition();
 
@@ -253,7 +253,7 @@ namespace ShaderEditor
 					{
 						TilePtr						tile 	= Tile::New( base_tile->SubSystems() );
 						Transformation<real> const&	base_tr	= base_tile->_transform;
-						int2						index	= int2( j & 1, j >> 1 );
+						int2						index	= usize2( j & 1, j >> 1 ).To<int2>();
 
 						tile->_Create(
 							Transformation<real>(
@@ -315,7 +315,7 @@ namespace ShaderEditor
 			FOR( i, _tiles )
 			{
 				TilePtr	tile 	= Tile::New( SubSystems() );
-				int2	index	= int2( i % rect_size.x, i / rect_size.x ) + _tilesRect.LeftBottom();
+				int2	index	= usize2( i % rect_size.x, i / rect_size.x ).To<int2>() + _tilesRect.LeftBottom();
 
 				ASSERT( All( index >= _tilesRect.LeftBottom() ) and
 						All( index <  _tilesRect.RightTop() ) );
@@ -380,7 +380,7 @@ namespace ShaderEditor
 		{
 			TilePtr tile = _pendingToInit.Front();	_pendingToInit.PopFront();
 
-			if ( _initializer.IsNotNull() )
+			if ( _initializer )
 				_initializer->InitTile( tile );
 
 			tile->_initialized = true;
@@ -448,7 +448,7 @@ namespace ShaderEditor
 */
 	MeshGenerator::Mesh TilesManager::CreateTilePlane (const SubSystemsRef ss, uint numVertices)
 	{
-		CHECK_ERR( numVertices > 0, MeshGenerator::Mesh() );
+		CHECK_ERR( numVertices > 0 );
 
 		Array<MeshVertex>	vertices;
 		Array<uint>			indices;
@@ -510,7 +510,7 @@ namespace ShaderEditor
 		CHECK( mesh.vertexBuffer->Create() );
 		CHECK( mesh.vertexBuffer->SetData( BinaryBuffer::From( vertices ), EBufferUsage::Static ) );
 
-		mesh.vertexBuffer->SetAttribs( attr, Bytes<uint>::SizeOf<MeshVertex>() );
+		mesh.vertexBuffer->SetAttribs( attr, BytesU::SizeOf<MeshVertex>() );
 		mesh.vertexBuffer->SetPrimitive( EPrimitive::Triangle );
 
 		CHECK( mesh.indexBuffer->Create() );

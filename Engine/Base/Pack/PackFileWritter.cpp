@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "PackFileWritter.h"
 
@@ -50,7 +50,7 @@ namespace Base
 			RFilePtr	file;
 			CHECK_ERR( SubSystems()->Get< FileManager >()->OpenForRead( _fileMap[i].second, file ) );
 
-			const usize	file_size = file->Size() + sizeof(PackFileID);
+			const usize	file_size = (usize)file->Size() + sizeof(PackFileID);
 
 			CHECK_ERR( offset + file_size < _maxSize );
 

@@ -1,8 +1,10 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "WPlatform.h"
 
 #if defined( PLATFORM_WINDOWS ) and not defined( PLATFORM_SDL )
+
+#include <Windows.h>
 
 namespace Engine
 {
@@ -14,9 +16,9 @@ namespace WinPlatform
 =================================================
 */
 	WindowsPlatform::WindowsPlatform (const IParallelThreadPtr &thread) :
-		Platform( thread ), _graphicsContext(),
-		_pause(NO_FOCUS), _wnd(null), _dc(null), _isLooping(false), _terminated(false),
-		_surfaceCreated(false)
+		Platform( thread ), _graphicsContext(), _pause(NO_FOCUS),
+		_wnd( UninitializedT<HWND>() ),	_dc( UninitializedT<HDC>() ),
+		_isLooping(false), _terminated(false), _surfaceCreated(false)
 	{
 		_timer.Start();
 
@@ -191,7 +193,7 @@ namespace WinPlatform
 		if ( _isLooping )
 		{
 			_pause |= ON_DESTROY;
-			PostMessageA( _wnd, WM_CLOSE, 0, 0 );
+			PostMessageA( _wnd.Get<HWND>(), WM_CLOSE, 0, 0 );
 		}
 	}
 
@@ -202,7 +204,7 @@ namespace WinPlatform
 */
 	void WindowsPlatform::OpenURL (StringCRef url)
 	{
-		PlatformUtils::OpenURL( url );
+		OS::PlatformUtils::OpenURL( url );
 	}
 	
 /*
@@ -210,18 +212,19 @@ namespace WinPlatform
 	InitDisplay
 =================================================
 */
-	void WindowsPlatform::InitDisplay (const Display &disp)
+	bool WindowsPlatform::InitDisplay (const Display &disp)
 	{
 		if ( Any( disp.Resolution() != _display.Resolution() ) or
 			 disp.Frequency() != _display.Frequency() )
 		{
-			_ChangeScreenResolution( disp.Resolution(), disp.Frequency() );
+			CHECK_ERR( _ChangeScreenResolution( disp.Resolution(), disp.Frequency() ) );
 		}
 		
 		_display = disp;
 
 		_UpdateDisplayParams();
 		_UpdateWindowParams();
+		return true;
 	}
 	
 /*
@@ -245,7 +248,7 @@ namespace WinPlatform
 */
 	bool WindowsPlatform::InitRender (const VideoSettings &vs)
 	{
-		CHECK_ERR( _dc != null );
+		CHECK_ERR( _dc.IsNotNull<HDC>() );
 
 		_videoSettings = vs;
 
@@ -260,14 +263,14 @@ namespace WinPlatform
 */
 	bool WindowsPlatform::InitWindow (const WindowDesc &windowDesc)
 	{
-		if ( _dc != null )
+		if ( _dc.IsNotNull<HDC>() )
 			_Destroy();
 		
-		const int2	scr_res	= _GetScreenResolution();
+		const uint2	scr_res	= _GetScreenResolution();
 
 		_window = windowDesc;
 
-		_window.size = Clamp( _window.size, int2(0), scr_res );
+		_window.size = Clamp( _window.size, uint2(0), scr_res );
 		
 		_windowCaption = _window.caption;
 
@@ -293,16 +296,16 @@ namespace WinPlatform
 			else
 				wndStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
 
-			AdjustWindowRectEx( &winRect, wndStyle, 0, wndExtStyle );
+			::AdjustWindowRectEx( &winRect, wndStyle, 0, wndExtStyle );
 
-			if ( All( _window.pos < -_window.size ) )
+			if ( All( _window.pos < -int2(_window.size) ) )
 			{
-				_window.pos.x = Max( 0, scr_res.x - int(winRect.right - winRect.left) ) / 2;
-				_window.pos.y = Max( 0, scr_res.y - int(winRect.bottom - winRect.top) ) / 2;		
+				_window.pos.x = Max( 0, (int)scr_res.x - int(winRect.right - winRect.left) ) / 2;
+				_window.pos.y = Max( 0, (int)scr_res.y - int(winRect.bottom - winRect.top) ) / 2;		
 			}
 		}
 
-		_wnd = CreateWindowEx(	wndExtStyle,
+		_wnd = ::CreateWindowEx( wndExtStyle,
 								_GetClassName().cstr(),
 								_windowCaption.cstr(),
 								wndStyle,
@@ -312,13 +315,12 @@ namespace WinPlatform
 								winRect.bottom - winRect.top,
 								null,
 								null,
-								_GetInstance(),
+								_GetInstance().Get<HMODULE>(),
 								null );
+		CHECK_ERR( _wnd.IsNotNull<HWND>() );
 
-		CHECK_ERR( _wnd != null );
-
-		_dc = GetDC( _wnd );
-		CHECK_ERR( _dc != null );
+		_dc = ::GetDC( _wnd.Get<HWND>() );
+		CHECK_ERR( _dc.IsNotNull<HDC>() );
 
 		_InitRawInput();
 
@@ -334,7 +336,7 @@ namespace WinPlatform
 */
 	void WindowsPlatform::_UpdateWindowParams ()
 	{
-		if ( _wnd == null )
+		if ( _wnd.IsNull<HWND>() )
 		{
 			_window	= WindowDesc();
 			_windowCaption.Clear();
@@ -353,7 +355,7 @@ namespace WinPlatform
 */
 	bool WindowsPlatform::_RegisterClass ()
 	{
-		HMODULE			instance	= _GetInstance();
+		HMODULE			instance	= _GetInstance().Get<HMODULE>();
 		const String	class_name	= _GetClassName();
 
 		WNDCLASSA	tmp = {0};
@@ -388,7 +390,7 @@ namespace WinPlatform
 */
 	bool WindowsPlatform::_InitRawInput ()
 	{
-		CHECK_ERR( _wnd != null );
+		CHECK_ERR( _wnd.IsNotNull<HWND>() );
 
 		RAWINPUTDEVICE	Rid[2];
 		// usage params:
@@ -398,13 +400,13 @@ namespace WinPlatform
 		Rid[0].usUsagePage	= 0x01;
 		Rid[0].usUsage		= 0x02;
 		Rid[0].dwFlags		= 0;
-		Rid[0].hwndTarget	= _wnd;
+		Rid[0].hwndTarget	= _wnd.Get<HWND>();
 		
 		// keyboard
 		Rid[1].usUsagePage	= 0x01;
 		Rid[1].usUsage		= 0x06;
 		Rid[1].dwFlags		= 0;	// RIDEV_INPUTSINK | RIDEV_NOHOTKEYS | RIDEV_NOLEGACY | RIDEV_REMOVE;
-		Rid[1].hwndTarget	= _wnd;
+		Rid[1].hwndTarget	= _wnd.Get<HWND>();
 		
 		CHECK_ERR( RegisterRawInputDevices( &Rid[0], 2, sizeof(Rid[0]) ) == TRUE );
 		return true;
@@ -415,15 +417,15 @@ namespace WinPlatform
 	_Resize
 =================================================
 */
-	void WindowsPlatform::_Resize (int2 size, bool alignCenter)
+	void WindowsPlatform::_Resize (uint2 size, bool alignCenter)
 	{
-		int2 const	res = _GetScreenResolution().To<int2>();
+		uint2 const	res = _GetScreenResolution();
 		int2		pos;
 
-		size = Clamp( size, int2(12), res );
+		size = Clamp( size, uint2(12), res );
 
-		DWORD dwStyle	= (DWORD) GetWindowLongA( _wnd, GWL_STYLE );
-		DWORD dwExStyle	= (DWORD) GetWindowLongA( _wnd, GWL_EXSTYLE );
+		DWORD dwStyle	= (DWORD) ::GetWindowLongA( _wnd.Get<HWND>(), GWL_STYLE );
+		DWORD dwExStyle	= (DWORD) ::GetWindowLongA( _wnd.Get<HWND>(), GWL_EXSTYLE );
 
 		RECT	winRect = { 0, 0, size.x, size.y };
 		AdjustWindowRectEx( &winRect, dwStyle, FALSE, dwExStyle );
@@ -432,10 +434,10 @@ namespace WinPlatform
 
 		if ( alignCenter )
 		{
-			pos.x = Max( 0, res.x - int(winRect.right  - winRect.left) ) / 2;
-			pos.y = Max( 0, res.y - int(winRect.bottom - winRect.top) ) / 2;
+			pos.x = Max( 0, (int)res.x - int(winRect.right  - winRect.left) ) / 2;
+			pos.y = Max( 0, (int)res.y - int(winRect.bottom - winRect.top) ) / 2;
 
-			SetWindowPos( _wnd, HWND_TOP, pos.x, pos.y, winRect.right - winRect.left,
+			::SetWindowPos( _wnd.Get<HWND>(), HWND_TOP, pos.x, pos.y, winRect.right - winRect.left,
 							winRect.bottom - winRect.top, SWP_FRAMECHANGED );
 		}
 	}
@@ -445,7 +447,7 @@ namespace WinPlatform
 	_ProcessMessage
 =================================================
 */
-	isize WindowsPlatform::_ProcessMessage (UINT uMsg, WPARAM wParam, LPARAM lParam)
+	isize WindowsPlatform::_ProcessMessage (uint uMsg, usize wParam, isize lParam)
 	{
 		// WM_PAINT //
 		if ( uMsg == WM_PAINT and _pause == 0 )
@@ -460,7 +462,7 @@ namespace WinPlatform
 			ubyte	a_data[60];
 			uint	u_size = sizeof(a_data);
 
-			if ( GetRawInputData( (HRAWINPUT)lParam, RID_INPUT, a_data, &u_size, sizeof(RAWINPUTHEADER) ) != -1 )
+			if ( ::GetRawInputData( (HRAWINPUT)lParam, RID_INPUT, a_data, &u_size, sizeof(RAWINPUTHEADER) ) != -1 )
 			{
 				RAWINPUT  *	p_data = (RAWINPUT *)a_data;
 
@@ -469,7 +471,7 @@ namespace WinPlatform
 				{
 					ushort	u_right = p_data->data.keyboard.Flags & RI_KEY_E0 ? EKey::right_offset : 0;
 					
-					if ( p_data->data.keyboard.VKey + u_right >= EKey::_COUNT )
+					if ( p_data->data.keyboard.VKey + u_right >= EKey::_Count )
 						u_right = 0;
 
 					bool	pressed = not EnumEq( p_data->data.keyboard.Flags, RI_KEY_BREAK );
@@ -538,7 +540,7 @@ namespace WinPlatform
 		if ( uMsg == WM_MOVE )
 		{
 			RECT	winRect = {0,0,0,0};
-			GetWindowRect( _wnd, &winRect );
+			::GetWindowRect( _wnd.Get<HWND>(), &winRect );
 			int2	new_pos = int2( winRect.left, winRect.top );
 
 			_window.pos = new_pos;
@@ -566,7 +568,7 @@ namespace WinPlatform
 		{
 			if ( wParam != SIZE_MINIMIZED )
 			{
-				_OnResized( int2( LOWORD( lParam ), HIWORD( lParam ) ) );
+				_OnResized( uint2( LOWORD( lParam ), HIWORD( lParam ) ) );
 			}
 		}
 		else
@@ -578,22 +580,11 @@ namespace WinPlatform
 
 		// WM_CLOSE //
 		if ( uMsg == WM_CLOSE ) {
-			PostMessageA( _wnd, WM_QUIT, 0, 0 );
+			::PostMessageA( _wnd.Get<HWND>(), WM_QUIT, 0, 0 );
 			return 1;
 		}
 
-		return DefWindowProcA( _wnd, uMsg, wParam, lParam );
-	}
-	
-/*
-=================================================
-	_MsgProc
-=================================================
-*/
-	LRESULT CALLBACK WindowsPlatform::_MsgProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-	{
-		WindowsPlatform *	wp = (WindowsPlatform *)GetWindowLongPtrA( hWnd, GWLP_USERDATA );
-		return wp->_ProcessMessage( uMsg, wParam, lParam );
+		return ::DefWindowProcA( _wnd.Get<HWND>(), uMsg, wParam, lParam );
 	}
 
 /*
@@ -603,37 +594,46 @@ namespace WinPlatform
 */
 	bool WindowsPlatform::_EventLoop ()
 	{
+		struct Utils {
+			static LRESULT CALLBACK MsgProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+			{
+				WindowsPlatform *	wp = (WindowsPlatform *)GetWindowLongPtrA( hWnd, GWLP_USERDATA );
+				return wp->_ProcessMessage( uMsg, wParam, lParam );
+			}
+		};
+
 		if ( _terminated )
 			return true;
 
-		CHECK_ERR( _wnd != null );
+		CHECK_ERR( _wnd.IsNotNull<HWND>() );
 
 		MSG		msg	= {0};
 		
 		_isLooping = true;
 		
-		_graphicsContext.ResetCurrent();
+		if ( _graphicsContext.IsCreated() )
+			_graphicsContext.ResetCurrent();
 
-		SetWindowLongPtrA( _wnd, GWLP_USERDATA, (LONG_PTR) this );
-		SetWindowLongPtrA( _wnd, GWLP_WNDPROC,  (LONG_PTR) &_MsgProc );
+		::SetWindowLongPtrA( _wnd.Get<HWND>(), GWLP_USERDATA, (LONG_PTR) this );
+		::SetWindowLongPtrA( _wnd.Get<HWND>(), GWLP_WNDPROC,  (LONG_PTR) &Utils::MsgProc );
 
-		SetForegroundWindow( _wnd );
-		ShowWindow( _wnd, SW_SHOWNA );
+		::SetForegroundWindow( _wnd.Get<HWND>() );
+		::ShowWindow( _wnd.Get<HWND>(), SW_SHOWNA );
 
 		while ( _isLooping )
 		{
-			while ( PeekMessageA( &msg, 0, 0, 0, PM_REMOVE ) )
+			while ( ::PeekMessageA( &msg, 0, 0, 0, PM_REMOVE ) )
 			{
 				if ( WM_QUIT == msg.message )
 					_isLooping = false;
 				else
-					DispatchMessageA( &msg );
+					::DispatchMessageA( &msg );
 			}
 
 			_Update( false );
 		}
 		
-		SetWindowLongPtrA( _wnd, GWLP_WNDPROC, (LONG_PTR) DefWindowProcA );
+		::SetWindowLongPtrA( _wnd.Get<HWND>(), GWLP_WNDPROC, (LONG_PTR) ::DefWindowProcA );
 
 		CHECK_ERR( ((int)msg.wParam) != -1 );
 		return true;
@@ -646,24 +646,24 @@ namespace WinPlatform
 */
 	void WindowsPlatform::_Destroy ()
 	{
-		if ( _dc != null )
+		if ( _dc.IsNotNull<HDC>() )
 		{
 			_graphicsContext.Destroy();
 
-			ReleaseDC( _wnd, _dc );
+			::ReleaseDC( _wnd.Get<HWND>(), _dc.Get<HDC>() );
 			_dc = null;
 		}
 
-		if ( _wnd != null )
+		if ( _wnd.IsNotNull<HWND>() )
 		{
-			DestroyWindow( _wnd );
+			::DestroyWindow( _wnd.Get<HWND>() );
 			_wnd = null;
 
 			if ( _window.fullscreen )
 				_ChangeToDefaultResolution();
 		}
 
-		UnregisterClass( _GetClassName().cstr(), _GetInstance() );
+		::UnregisterClass( _GetClassName().cstr(), _GetInstance().Get<HMODULE>() );
 
 		_window = WindowDesc();
 	}
@@ -673,14 +673,10 @@ namespace WinPlatform
 	_GetScreenResolution
 =================================================
 */
-	int2 WindowsPlatform::_GetScreenResolution ()
+	uint2 WindowsPlatform::_GetScreenResolution ()
 	{
-		enum {
-			SM_CXSCREEN	= 0,
-			SM_CYSCREEN	= 1,
-		};
-		return int2( GetSystemMetrics( SM_CXSCREEN ),
-					 GetSystemMetrics( SM_CYSCREEN ) );
+		return uint2( ::GetSystemMetrics( SM_CXSCREEN ),
+					  ::GetSystemMetrics( SM_CYSCREEN ) );
 	}
 	
 /*
@@ -690,17 +686,13 @@ namespace WinPlatform
 */
 	float2 WindowsPlatform::_ScreenPhysicalSize ()
 	{
-		enum {
-			HORZSIZE	= 4,
-			VERTSIZE	= 6,
-		};
 		float2	size;
-		HDC		hDCScreen	= GetDC( null );
+		HDC		hDCScreen	= ::GetDC( null );
 		
-		size.x = (float) GetDeviceCaps( hDCScreen, HORZSIZE );
-		size.y = (float) GetDeviceCaps( hDCScreen, VERTSIZE );
+		size.x = (float) ::GetDeviceCaps( hDCScreen, HORZSIZE );
+		size.y = (float) ::GetDeviceCaps( hDCScreen, VERTSIZE );
 		
-		ReleaseDC( null, hDCScreen );
+		::ReleaseDC( null, hDCScreen );
 		return size * 0.001f;
 	}
 	
@@ -711,14 +703,11 @@ namespace WinPlatform
 */
 	uint WindowsPlatform::_GetDisplayFrequency ()
 	{
-		enum {
-			VREFRESH	= 116
-		};
-		HDC		hDCScreen	= GetDC( null );
+		HDC		hDCScreen	= ::GetDC( null );
 		
-		uint freq = GetDeviceCaps( hDCScreen, VREFRESH );
+		uint freq = ::GetDeviceCaps( hDCScreen, VREFRESH );
 		
-		ReleaseDC( null, hDCScreen );
+		::ReleaseDC( null, hDCScreen );
 		return freq;
 	}
 
@@ -727,7 +716,7 @@ namespace WinPlatform
 	_ChangeScreenResolution
 =================================================
 */
-	bool WindowsPlatform::_ChangeScreenResolution (const int2 &size, uint freq)
+	bool WindowsPlatform::_ChangeScreenResolution (const uint2 &size, uint freq)
 	{
 		DEVMODEA	mode = {0};
 		mode.dmSize				= sizeof( mode );
@@ -738,11 +727,11 @@ namespace WinPlatform
 		mode.dmFields			= DM_BITSPERPEL | DM_PELSWIDTH |
 								  DM_PELSHEIGHT | (freq ? DM_DISPLAYFREQUENCY : 0);
 
-		if ( ChangeDisplaySettings( &mode, CDS_FULLSCREEN ) != DISP_CHANGE_SUCCESSFUL )
+		if ( ::ChangeDisplaySettings( &mode, CDS_FULLSCREEN ) != DISP_CHANGE_SUCCESSFUL )
 		{
 			mode.dmFields &= ~DM_DISPLAYFREQUENCY;
 
-			CHECK_ERR( ChangeDisplaySettings( &mode, CDS_FULLSCREEN ) != DISP_CHANGE_SUCCESSFUL );
+			CHECK_ERR( ::ChangeDisplaySettings( &mode, CDS_FULLSCREEN ) != DISP_CHANGE_SUCCESSFUL );
 		}
 
 		return true;
@@ -755,7 +744,7 @@ namespace WinPlatform
 */
 	bool WindowsPlatform::_ChangeToDefaultResolution ()
 	{
-		CHECK_ERR( ChangeDisplaySettings( (DEVMODEA *)null, CDS_RESET ) != DISP_CHANGE_SUCCESSFUL );
+		CHECK_ERR( ::ChangeDisplaySettings( (DEVMODEA *)null, CDS_RESET ) != DISP_CHANGE_SUCCESSFUL );
 		return true;
 	}
 
@@ -767,11 +756,11 @@ namespace WinPlatform
 	bool WindowsPlatform::_GetLibraryPath (OUT String &path)
 	{
 		char		buf[ MAX_PATH<<2 ] = {0};
-		const usize	len = GetModuleFileName( _GetInstance(), buf, (DWORD) CountOf(buf) );
+		const usize	len = ::GetModuleFileName( _GetInstance().Get<HMODULE>(), buf, (DWORD) CountOf(buf) );
 
 		if ( len != 0 )
 		{
-			path = FileAddressUtils::GetPath( StringCRef( buf ) );
+			path = FileAddress::GetPath( StringCRef( buf ) );
 			return true;
 		}
 		return false;
@@ -782,10 +771,10 @@ namespace WinPlatform
 	_GetWindowPos
 =================================================
 */
-	int2 WindowsPlatform::_GetWindowPos (HWND wnd)
+	int2 WindowsPlatform::_GetWindowPos (const Handle_t &wnd)
 	{
 		RECT	win_rect = {0,0,0,0};
-		winapi::GetWindowRect( wnd, &win_rect );
+		::GetWindowRect( wnd.Get<HWND>(), &win_rect );
 		return int2( win_rect.left, win_rect.top );
 	}
 	
@@ -794,11 +783,11 @@ namespace WinPlatform
 	_GetWindowSize
 =================================================
 */
-	int2 WindowsPlatform::_GetWindowSize (HWND wnd)
+	uint2 WindowsPlatform::_GetWindowSize (const Handle_t &wnd)
 	{
 		RECT	win_rect = {0,0,0,0};
-		winapi::GetClientRect( wnd, &win_rect );
-		return int2( win_rect.right - win_rect.left, win_rect.bottom - win_rect.top );
+		::GetClientRect( wnd.Get<HWND>(), &win_rect );
+		return uint2( win_rect.right - win_rect.left, win_rect.bottom - win_rect.top );
 	}
 
 /*
@@ -816,9 +805,9 @@ namespace WinPlatform
 	_GetInstance
 =================================================
 */
-	HMODULE WindowsPlatform::_GetInstance ()
+	WindowsPlatform::Handle_t  WindowsPlatform::_GetInstance ()
 	{
-		return GetModuleHandle( (LPCSTR) null );
+		return Handle_t( ::GetModuleHandle( (LPCSTR) null ) );
 	}
 
 /*
@@ -890,7 +879,7 @@ namespace WinPlatform
 	_OnResized
 =================================================
 */
-	void WindowsPlatform::_OnResized (const int2 &newSize)
+	void WindowsPlatform::_OnResized (const uint2 &newSize)
 	{
 		_window.size = newSize;
 
@@ -946,7 +935,7 @@ namespace WinPlatform
 		app->FlushMessages();
 		app->ProcessMessages();
 
-		const SysEvent::time_t	curr_time = _GetTimestamp();
+		const TimeD		curr_time = _GetTimestamp();
 
 		_SendEvent( SysEvent::Update( curr_time - _lastUpdateTime, redraw, _graphicsContext.IsCreated() ) );
 
@@ -954,7 +943,7 @@ namespace WinPlatform
 
 		if ( _cursor.alwaysInCenter )
 		{
-			const int2	pos = _window.size / 2;
+			const uint2	pos = _window.size / 2;
 			SetCursorPos( pos.x, pos.y );
 		}
 	}
@@ -1007,7 +996,7 @@ namespace WinPlatform
 		Ptr< Application >	app;
 		createApp( &sys, app.ref() );
 
-		CHECK_ERR( app.IsNotNull() );
+		CHECK_ERR( app );
 
 		app->GetEventSystem()->Send( SysEvent::Application( SysEvent::Application::CREATED ) );
 

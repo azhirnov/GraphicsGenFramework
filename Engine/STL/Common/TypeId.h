@@ -1,0 +1,121 @@
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
+
+#pragma once
+
+#include "Engine/STL/Common/Types.h"
+#include "Engine/STL/CompileTime/TypeQualifier.h"
+#include "Engine/STL/Algorithms/Hash.h"
+#include <typeindex>
+
+namespace GX_STL
+{
+namespace GXTypes
+{
+	
+	//
+	// Type ID
+	//
+
+	namespace _types_hidden_
+	{
+
+#	if 0
+		struct _TypeID : public CompileTime::PODType
+		{
+		private:
+			usize	_value;
+
+		public:
+			_TypeID () : _value(0) {}
+
+			bool operator == (_TypeID right) const	{ return _value == right._value; }
+			bool operator != (_TypeID right) const	{ return _value != right._value; }
+			bool operator >  (_TypeID right) const	{ return _value >  right._value; }
+			bool operator <  (_TypeID right) const	{ return _value <  right._value; }
+			bool operator >= (_TypeID right) const	{ return _value >= right._value; }
+			bool operator <= (_TypeID right) const	{ return _value <= right._value; }
+
+			usize Get () const						{ return _value; }
+		};
+
+
+		template <typename T>
+		struct _TypeId
+		{
+			static _TypeID  Get ()
+			{
+				static usize id = (usize) &id;
+				return (_TypeID const &) id;
+			}
+		};
+
+#	else
+
+		struct _TypeID : public CompileTime::PODType
+		{
+		private:
+			enum UnknownType {};
+
+			std::type_index		_value;
+
+		public:
+			_TypeID () : _value(typeid(UnknownType)) {}
+
+			_TypeID (const std::type_index &value) : _value(value) {}
+
+			forceinline bool operator == (_TypeID right) const	{ return _value == right._value; }
+			forceinline bool operator != (_TypeID right) const	{ return _value != right._value; }
+			forceinline bool operator >  (_TypeID right) const	{ return _value >  right._value; }
+			forceinline bool operator <  (_TypeID right) const	{ return _value <  right._value; }
+			forceinline bool operator >= (_TypeID right) const	{ return _value >= right._value; }
+			forceinline bool operator <= (_TypeID right) const	{ return _value <= right._value; }
+
+			forceinline std::type_index Get () const			{ return _value; }
+		};
+
+		
+		template <typename T>
+		struct _TypeId
+		{
+			forceinline static _TypeID  Get ()
+			{
+				return _TypeID( typeid(T) );
+			}
+		};
+
+#	endif
+
+	}	// _types_hidden_
+
+
+	typedef _types_hidden_::_TypeID		TypeId_t;
+
+
+	template <typename T>
+	forceinline static TypeId_t  TypeId ()
+	{
+		return _types_hidden_::_TypeId<T>::Get();
+	}
+
+	template <typename T>
+	forceinline static TypeId_t  TypeIdOf (const T&)
+	{
+		return TypeId<T>();
+	}
+	
+
+	template <>
+	struct Hash< TypeId_t >
+	{
+		typedef TypeId_t												key_t;
+		typedef Hash< TypeTraits::ResultOf< decltype(&key_t::Get) > >	base_t;
+		typedef base_t::result_t										result_t;
+
+		result_t operator () (const key_t &x) const
+		{
+			return base_t()( x.Get() );
+		}
+	};
+	
+}	// GXTypes
+}	// GX_STL

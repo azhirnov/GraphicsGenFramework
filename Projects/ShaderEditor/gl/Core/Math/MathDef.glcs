@@ -1,0 +1,69 @@
+/*
+	GLSL function restyling.
+*/
+
+[HEADER]
+
+// functions redefinition
+#define Sin							sin
+#define Cos							cos
+#define ASin						asin
+#define ACos						acos
+#define SinH						sinh
+#define CosH						cosh
+#define ASinH						asinh
+#define ACosH						acosh
+#define Tan							tan
+#define ATan						atan
+#define TanH						tanh
+#define ATanH						atanh
+#define Abs							abs
+#define SignOrZero					sign
+#define Clamp						clamp
+#define All							all
+#define Any							any
+#define Max							max
+#define Min							min
+#define Pow							pow
+#define Ln							log
+#define Log2						log2
+#define Exp							exp
+#define Exp2						exp2
+#define Sqrt						sqrt
+#define InvSqrt						inversesqrt
+#define Mod							mod
+#define Fract						fract
+#define Floor						floor
+#define Ceil						ceil
+#define Trunc						trunc
+#define Round						round
+#define Reflect						reflect
+#define Refract						refract
+#define Cross						cross
+#define Dot							dot
+#define Distance					distance
+#define Length						length
+#define Normalize					normalize
+#define Less( _a_, _b_ )			lessThan( (_a_), (_b_) )
+#define LessEqual( _a_, _b_ )		lessThanEqual( (_a_), (_b_) )
+#define Greater( _a_, _b_ )			greaterThan( (_a_), (_b_) )
+#define GreaterEqual( _a_, _b_ )	greaterThanEqual( (_a_), (_b_) )
+#define AllLess( _a_, _b_ )			all( lessThan( (_a_), (_b_) ) )
+#define AllLessEqual( _a_, _b_ )	all( lessThanEqual( (_a_), (_b_) ) )
+#define AllGreater( _a_, _b_ )		all( greaterThan( (_a_), (_b_) ) )
+#define AllGreaterEqual( _a_, _b_ )	all( greaterThanEqual( (_a_), (_b_) ) )
+#define AnyLess( _a_, _b_ )			any( lessThan( (_a_), (_b_) ) )
+#define AnyLessEqual( _a_, _b_ )	any( lessThanEqual( (_a_), (_b_) ) )
+#define AnyGreater( _a_, _b_ )		any( greaterThan( (_a_), (_b_) ) )
+#define AnyGreaterEqual( _a_, _b_ )	any( greaterThanEqual( (_a_), (_b_) ) )
+#define AllEqual( _a_, _b_ )		all( Equals( (_a_), (_b_) )
+#define IsNan						isnan
+#define IsInf						isinf
+#define SmoothStep					smoothstep
+#define Step						step
+#define BitScanReverse				findMSB
+#define BitScanForward				findLSB
+#define IntLog2						BitScanReverse
+#define Pi							3.14159265358979323846
+#define Lerp						mix
+

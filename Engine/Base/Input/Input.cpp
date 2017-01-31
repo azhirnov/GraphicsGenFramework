@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "Engine/Base/OS/OS.h"
 #include "Input.h"
@@ -21,8 +21,8 @@ namespace Base
 		
 		EventSystemPtr	es = SubSystems()->Get< Application >()->GetEventSystem();
 
-		es->Subscribe( DelegateBuilder::Create( InputPtr(this), &Input::_OnTouch ) );
-		es->Subscribe( DelegateBuilder::Create( InputPtr(this), &Input::_OnKey ) );
+		es->Subscribe( InputPtr(this), &Input::_OnTouch );
+		es->Subscribe( InputPtr(this), &Input::_OnKey );
 	}
 	
 /*
@@ -34,10 +34,10 @@ namespace Base
 	{
 		EventSystemPtr	es = SubSystems()->Get< Application >()->GetEventSystem();
 
-		if ( es.IsNotNull() )
+		if ( es )
 		{
-			es->Unsubscribe( DelegateBuilder::Create( InputPtr(this), &Input::_OnTouch ) );
-			es->Unsubscribe( DelegateBuilder::Create( InputPtr(this), &Input::_OnKey ) );
+			es->Unsubscribe( InputPtr(this), &Input::_OnTouch );
+			es->Unsubscribe( InputPtr(this), &Input::_OnKey );
 
 			//es->Wait();
 		}

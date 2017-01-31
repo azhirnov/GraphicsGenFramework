@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -13,17 +13,15 @@ namespace Base
 	{
 	// types
 	public:
-		typedef Time<double>	time_t;
-
 		struct Update
 		{
 		// variables
-			time_t		timeDelta;
+			TimeD		timeDelta;
 			bool		forceRedraw;
 			bool		renderAvailable;
 
 		// methods
-			Update (const time_t &timeDelta, bool forceRedraw, bool renderAvailable) :
+			Update (const TimeD &timeDelta, bool forceRedraw, bool renderAvailable) :
 				timeDelta(timeDelta),
 				forceRedraw(forceRedraw),
 				renderAvailable(renderAvailable)
@@ -33,7 +31,7 @@ namespace Base
 		struct RawTouch
 		{
 		// variables
-			time_t		timestamp;
+			TimeD		timestamp;
 			float2		point;
 			float		pressure;
 			ushort		id;
@@ -41,7 +39,7 @@ namespace Base
 			bool		inMotion;
 
 		// methods
-			RawTouch (const time_t &timestamp, const float2 &point, float pressure, uint id, bool pressed, bool inMotion) :
+			RawTouch (const TimeD &timestamp, const float2 &point, float pressure, uint id, bool pressed, bool inMotion) :
 				timestamp(timestamp), point(point), pressure(pressure), id((ushort)id), pressed(pressed), inMotion(inMotion)
 			{}
 		};
@@ -49,12 +47,12 @@ namespace Base
 		struct RawKey
 		{
 		// variables
-			time_t		timestamp;
+			TimeD		timestamp;
 			EKey::type	key;
 			bool		pressed;
 
 		// methods
-			RawKey (const time_t &timestamp, EKey::type key, bool pressed) :
+			RawKey (const TimeD &timestamp, EKey::type key, bool pressed) :
 				timestamp(timestamp), key(key), pressed(pressed)
 			{}
 		};
@@ -62,11 +60,11 @@ namespace Base
 		struct RawMouseMove
 		{
 		// variables
-			time_t		timestamp;
+			TimeD		timestamp;
 			float2		delta;
 
 		// methods
-			RawMouseMove (const time_t &timestamp, const float2 &delta) :
+			RawMouseMove (const TimeD &timestamp, const float2 &delta) :
 				timestamp(timestamp), delta(delta)
 			{}
 		};
@@ -133,7 +131,7 @@ namespace Base
 
 		// variables
 			EType						type;
-			int2						size;			// RESIZED
+			uint2						size;			// RESIZED
 			EDisplayOrientation::type	orientation;	// ORIENTATION_CHANGED
 
 		// methods
@@ -142,7 +140,7 @@ namespace Base
 				type(type)
 			{}
 
-			Window (EType type, const int2 &size) :
+			Window (EType type, const uint2 &size) :
 				type(type), size(size)
 			{
 				ASSERT( type == RESIZED );

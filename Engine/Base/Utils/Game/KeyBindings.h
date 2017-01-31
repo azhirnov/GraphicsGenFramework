@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -53,7 +53,7 @@ namespace GameUtils
 
 		typedef Map< ActionType, KeyBind >		KeyMap_t;
 		typedef Event< Delegate_t >				AnyActionEvent_t;
-		typedef StaticBitArray< EKey::_COUNT >	KeyStates_t;
+		typedef StaticBitArray< EKey::_Count >	KeyStates_t;
 		typedef StaticArray< KeyStates_t, 2 >	KeyStates2_t;
 
 		typedef StaticLimit< ubyte, 0, 1, StaticLimitStrategy::Wrap >	Index01_t;
@@ -75,16 +75,16 @@ namespace GameUtils
 		{
 			EventSystemPtr	es = SubSystems()->Get< Application >()->GetEventSystem();
 
-			es->Subscribe( DelegateBuilder::Create( SelfPtr(this), &KeyBindings::_OnKey ) );
+			es->Subscribe( SelfPtr(this), &KeyBindings::_OnKey );
 		}
 
 		~KeyBindings ()
 		{
 			EventSystemPtr	es = SubSystems()->Get< Application >()->GetEventSystem();
 
-			if ( es.IsNotNull() )
+			if ( es )
 			{
-				es->Unsubscribe( DelegateBuilder::Create( SelfPtr(this), &KeyBindings::_OnKey ) );
+				es->Unsubscribe( SelfPtr(this), &KeyBindings::_OnKey );
 			}
 		}
 		

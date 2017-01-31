@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -27,7 +27,7 @@ namespace Graphics
 
 	// types
 	public:
-		typedef Bitfield< EShader::_COUNT >		ShaderBits_t;
+		typedef Bitfield< EShader::_Count >		ShaderBits_t;
 
 		typedef Event< void() >					OnBindProgram_t;
 

@@ -1,4 +1,4 @@
-// Copyright © 2017  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -22,17 +22,17 @@ namespace Graphics
 
 	// methods
 	public:
-		MemoryBarrierObj () : _ticks( TicksInit() ), _barrier( EMemoryBarrier::type(0) )
+		MemoryBarrierObj () : _ticks( TicksInit() ), _barrier( EMemoryBarrier::Unknown )
 		{}
 
 		explicit
-		MemoryBarrierObj (uint ticks) : _ticks( ticks ), _barrier( EMemoryBarrier::type(0) )
+		MemoryBarrierObj (uint ticks) : _ticks( ticks ), _barrier( EMemoryBarrier::Unknown )
 		{}
 
 		void Reset ()
 		{
 			_ticks	 = TicksInit();
-			_barrier = EMemoryBarrier::type(0);
+			_barrier = EMemoryBarrier::Unknown;
 		}
 
 		void Filter (INOUT EMemoryBarrier::type &flags)

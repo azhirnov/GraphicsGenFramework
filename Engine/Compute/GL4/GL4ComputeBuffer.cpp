@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "GL4ComputeBuffer.h"
 
@@ -16,7 +16,7 @@ namespace Compute
 */
 	GL4ComputeBuffer::GL4ComputeBuffer (const SubSystemsRef ss) :
 		BaseObject( ss ),
-		_flags( EMemoryAccess::type(0) )
+		_flags( EMemoryAccess::Unknown )
 	{
 	}
 	
@@ -48,7 +48,7 @@ namespace Compute
 	Create
 =================================================
 */
-	bool GL4ComputeBuffer::Create (Bytes<usize> size, EMemoryAccess::type flags)
+	bool GL4ComputeBuffer::Create (BytesU size, EMemoryAccess::type flags)
 	{
 		_Destroy();
 		
@@ -92,7 +92,7 @@ namespace Compute
 	{
 		_Destroy();
 
-		CHECK_ERR( shared.IsNotNull() and shared->IsValid() );
+		CHECK_ERR( shared and shared->IsValid() );
 
 		_shared	= shared;
 		_flags	= flags;
@@ -105,7 +105,7 @@ namespace Compute
 	Read
 =================================================
 */
-	bool GL4ComputeBuffer::Read (Buffer<ubyte> data, Bytes<usize> offset) const
+	bool GL4ComputeBuffer::Read (OUT Buffer<ubyte> data, BytesU offset) const
 	{
 		CHECK_ERR( IsCreated() );
 
@@ -118,7 +118,7 @@ namespace Compute
 	Write
 =================================================
 */
-	bool GL4ComputeBuffer::Write (BinaryBuffer data, Bytes<usize> offset)
+	bool GL4ComputeBuffer::Write (BinaryBuffer data, BytesU offset)
 	{
 		CHECK_ERR( IsCreated() );
 
@@ -131,7 +131,7 @@ namespace Compute
 	Copy
 =================================================
 */
-	bool GL4ComputeBuffer::Copy (const ComputeImagePtr &src, const uint4 &srcOffset, Bytes<usize> dstOffset, const uint4 &size)
+	bool GL4ComputeBuffer::Copy (const ComputeImagePtr &src, const uint4 &srcOffset, BytesU dstOffset, const uint4 &size)
 	{
 		return src->CopyTo( this, srcOffset, dstOffset, size );
 	}
@@ -141,9 +141,9 @@ namespace Compute
 	Copy
 =================================================
 */
-	bool GL4ComputeBuffer::Copy (const ComputeBufferPtr &src, Bytes<usize> srcOffset, Bytes<usize> dstOffset, Bytes<usize> size)
+	bool GL4ComputeBuffer::Copy (const ComputeBufferPtr &src, BytesU srcOffset, BytesU dstOffset, BytesU size)
 	{
-		CHECK_ERR( src.IsNotNull() );
+		CHECK_ERR( src );
 		CHECK_ERR( this->IsCreated() and src->IsCreated() );
 
 		return _shared->Copy( src, srcOffset, dstOffset, size );
@@ -168,7 +168,7 @@ namespace Compute
 	{
 		ComputeBufferPtr	buf = New( shared->SubSystems() );
 
-		CHECK_ERR( buf->Create( shared, flags ), null );
+		CHECK_ERR( buf->Create( shared, flags ) );
 		return buf;
 	}
 	
@@ -180,7 +180,7 @@ namespace Compute
 	void GL4ComputeBuffer::_Destroy ()
 	{
 		_shared	= null;
-		_flags	= EMemoryAccess::type(0);
+		_flags	= EMemoryAccess::Unknown;
 	}
 		
 

@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "Engine/Base/Engine.Base.h"
 
@@ -27,7 +27,7 @@ public:
 
 
 	// GameApplication //
-	void _Update (Time<double> dt, bool forceRedraw)
+	void _Update (TimeD dt, bool forceRedraw)
 	{
 	}
 
@@ -38,7 +38,7 @@ public:
 		CPUTIME_PROFILER( "OnInit2", 0.001 );
 
 		SubSystems()->Get< Platform >()->
-			InitWindow( Platform::WindowDesc( "Test", int2(800, 600), MinValue<int2>(), false, true ) );
+			InitWindow( Platform::WindowDesc( "Test", uint2(800, 600), MinValue<int2>(), false, true ) );
 
 		SubSystems()->Get< Platform >()->
 			InitRender( VideoSettings() );

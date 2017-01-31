@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -23,8 +23,8 @@ namespace Base
 		struct WindowDesc
 		{
 		// variables
-			StringCRef	caption;
-			int2			size;
+			StringCRef		caption;
+			uint2			size;
 			int2			pos;			// set min value to align in center
 			bool			fullscreen;
 			bool			resizeble;
@@ -34,7 +34,7 @@ namespace Base
 				caption(), size(0), pos(), fullscreen(false), resizeble(false)
 			{}
 
-			WindowDesc (StringCRef caption, const int2 &size, const int2 &pos, bool fullscreen, bool resizeble) :
+			WindowDesc (StringCRef caption, const uint2 &size, const int2 &pos, bool fullscreen, bool resizeble) :
 				caption(caption), size(size), pos(pos), fullscreen(fullscreen), resizeble(resizeble)
 			{}
 		};
@@ -83,7 +83,7 @@ namespace Base
 	public:
 
 		// Render //
-		virtual void InitDisplay (const Display &disp) = 0;
+		virtual bool InitDisplay (const Display &disp) = 0;
 		virtual bool InitWindow (const WindowDesc &window) = 0;
 		virtual bool InitRender (const VideoSettings &vs) = 0;
 		virtual void SetDisplayOrientation (EDisplayOrientation::type orientation) = 0;

@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "CL2ComputeBuffer.h"
 
@@ -19,7 +19,7 @@ namespace Compute
 */
 	CL2ComputeBuffer::CL2ComputeBuffer (const SubSystemsRef ss) :
 		BaseObject( ss ),
-		_shared( null ), _id( null ), _size( 0 ), _flags( EMemoryAccess::type(0) )
+		_shared( null ), _id( null ), _size( 0 ), _flags( EMemoryAccess::Unknown )
 	{
 	}
 	
@@ -38,7 +38,7 @@ namespace Compute
 	Create
 =================================================
 */
-	bool CL2ComputeBuffer::Create (Bytes<usize> size, EMemoryAccess::type flags)
+	bool CL2ComputeBuffer::Create (BytesU size, EMemoryAccess::type flags)
 	{
 		using namespace cl;
 
@@ -95,7 +95,7 @@ namespace Compute
 		
 		_Destroy();
 		
-		CHECK_ERR( shared.IsNotNull() and shared->IsValid() );
+		CHECK_ERR( shared and shared->IsValid() );
 
 		cl_int	cl_err = 0;
 
@@ -126,7 +126,7 @@ namespace Compute
 
 		_shared = null;
 		_size	= 0;
-		_flags	= EMemoryAccess::type(0);
+		_flags	= EMemoryAccess::Unknown;
 
 		if ( _id == null )
 			return;
@@ -140,7 +140,7 @@ namespace Compute
 	Read
 =================================================
 */
-	bool CL2ComputeBuffer::Read (Buffer<ubyte> data, Bytes<usize> offset) const
+	bool CL2ComputeBuffer::Read (Buffer<ubyte> data, BytesU offset) const
 	{
 		using namespace cl;
 		
@@ -170,7 +170,7 @@ namespace Compute
 	Write
 =================================================
 */
-	bool CL2ComputeBuffer::Write (BinaryBuffer data, Bytes<usize> offset)
+	bool CL2ComputeBuffer::Write (BinaryBuffer data, BytesU offset)
 	{
 		using namespace cl;
 		
@@ -200,7 +200,7 @@ namespace Compute
 	Copy
 =================================================
 */
-	bool CL2ComputeBuffer::Copy (const ComputeImagePtr &src, const uint4 &srcOffset, Bytes<usize> dstOffset, const uint4 &size)
+	bool CL2ComputeBuffer::Copy (const ComputeImagePtr &src, const uint4 &srcOffset, BytesU dstOffset, const uint4 &size)
 	{
 		return src->CopyTo( this, srcOffset, dstOffset, size );
 	}
@@ -210,12 +210,12 @@ namespace Compute
 	Copy
 =================================================
 */
-	bool CL2ComputeBuffer::Copy (const ComputeBufferPtr &src, Bytes<usize> srcOffset, Bytes<usize> dstOffset, Bytes<usize> size)
+	bool CL2ComputeBuffer::Copy (const ComputeBufferPtr &src, BytesU srcOffset, BytesU dstOffset, BytesU size)
 	{
 		using namespace cl;
 		
 		CHECK_ERR( IsCreated() );
-		CHECK_ERR( src.IsNotNull() and src->IsCreated() );
+		CHECK_ERR( src and src->IsCreated() );
 		CHECK_ERR( srcOffset + size <= src->Size() );
 		CHECK_ERR( dstOffset + size <= this->Size() );
 		
@@ -242,11 +242,11 @@ namespace Compute
 	_FillBuffer
 =================================================
 */
-	void CL2ComputeBuffer::_FillBuffer (usize offset, usize size, BinaryBuffer pattern)
+	bool CL2ComputeBuffer::_FillBuffer (usize offset, usize size, BinaryBuffer pattern)
 	{
 		using namespace cl;
 		
-		CHECK_ERR( IsCreated(), void() );
+		CHECK_ERR( IsCreated() );
 
 		cl_command_queue	cmd_queue = SubSystems()->Get< ComputeEngine >()->GetCommandQueue();
 
@@ -260,9 +260,10 @@ namespace Compute
 					offset,
 					size,
 					0, null,
-					null ), void() );
+					null ) );
 
 		CL2ComputeUtils::ReleaseObjects( cmd_queue, this );
+		return true;
 	}
 		
 /*

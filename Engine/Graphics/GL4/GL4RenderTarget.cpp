@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "gl4.h"
 
@@ -104,7 +104,7 @@ namespace Graphics
 		using namespace gl;
 
 		CHECK_ERR( not _isSystemRT );
-		CHECK_ERR( texture.IsNotNull() );
+		CHECK_ERR( texture );
 		CHECK_ERR( target < (isize)_targets.Count() );
 
 		_BeforeAttach( target );
@@ -131,7 +131,7 @@ namespace Graphics
 		using namespace gl;
 
 		CHECK_ERR( not _isSystemRT );
-		CHECK_ERR( texture.IsNotNull() );
+		CHECK_ERR( texture );
 		CHECK_ERR( target < (isize)_targets.Count() );
 		
 		_BeforeAttach( target );
@@ -237,7 +237,7 @@ namespace Graphics
 
 			if ( target.IsEnabled() and is_color )
 			{
-				uint	idx		= i - ERenderTarget::Color0;
+				usize	idx		= i - ERenderTarget::Color0;
 				bool	is_srgb	= EPixelFormat::ColorSpace::IsNonLinear( target.texture->PixelFormat() );
 
 				draw_buffers[idx] = GL_COLOR_ATTACHMENT0 + GLenum(idx);
@@ -259,8 +259,8 @@ namespace Graphics
 	GetImage
 =================================================
 */
-	bool RenderTarget::GetImage (OUT Buffer<ubyte> &data, EPixelFormat::type format, const RectI &region,
-								 ERenderTarget::type target, Bytes<usize> align) const
+	bool RenderTarget::GetImage (OUT Buffer<ubyte> &data, EPixelFormat::type format, const RectU &region,
+								 ERenderTarget::type target, BytesU align) const
 	{
 		using namespace gl;
 		

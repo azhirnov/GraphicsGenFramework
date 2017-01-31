@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "ShaderManager.h"
 #include "Engine/Graphics/Engine/GraphicsEngine.h"
@@ -7,14 +7,14 @@ namespace Engine
 {
 namespace Graphics
 {
-	
+
 /*
 =================================================
 	constructor
 =================================================
 */
 	inline ShaderManager::LoadedShader::LoadedShader () :
-		flags( EShaderCompilationFlags::None ), shaderType( EShader::type(-1) )
+		flags( EShaderCompilationFlags::None ), shaderType( EShader::Unknown )
 	{}
 	
 /*
@@ -25,7 +25,7 @@ namespace Graphics
 	inline ShaderManager::LoadedShader::LoadedShader (StringCRef address, EShader::type type, EShaderCompilationFlags::type flags) :
 		address( address ), flags( flags ), shaderType( type )
 	{
-		FileAddressUtils::FormatPath( INOUT this->address );
+		FileAddress::FormatPath( INOUT this->address );
 	}
 
 /*
@@ -114,7 +114,7 @@ namespace Graphics
 		{
 			CHECK( SubSystems()->Get< FileManager >()->IsDirectoryExist( dir ) );
 
-			FileAddressUtils::FormatPath( INOUT _debugOutputFolder );
+			FileAddress::FormatPath( INOUT _debugOutputFolder );
 		}
 	}
 
@@ -128,7 +128,7 @@ namespace Graphics
 		CHECK_ERR( SubSystems()->Get< FileManager >()->IsDirectoryExist( dir ) );
 
 		String str = dir;
-		FileAddressUtils::FormatPath( str );
+		FileAddress::FormatPath( str );
 
 		ASSERT( not _includeDirs.IsExist( str ) );
 
@@ -151,7 +151,7 @@ namespace Graphics
 			CHECK_ERR( fm->IsDirectoryExist( dirs[i] ) );
 			
 			str = dirs[i];
-			FileAddressUtils::FormatPath( str );
+			FileAddress::FormatPath( str );
 			
 			ASSERT( not _includeDirs.IsExist( str ) );
 
@@ -165,11 +165,12 @@ namespace Graphics
 	ClearIncludeDirectories
 =================================================
 */
-	void ShaderManager::ClearIncludeDirectories ()
+	bool ShaderManager::ClearIncludeDirectories ()
 	{
-		CHECK_ERR( not _copilationInProgress, void() );
+		CHECK_ERR( not _copilationInProgress );
 
 		_includeDirs.Clear();
+		return true;
 	}
 	
 /*
@@ -182,7 +183,7 @@ namespace Graphics
 		CHECK_ERR( SubSystems()->Get< FileManager >()->IsDirectoryExist( dir ) );
 		
 		String str = dir;
-		FileAddressUtils::FormatPath( str );
+		FileAddress::FormatPath( str );
 		
 		ASSERT( not _importDirs.IsExist( str ) );
 
@@ -205,7 +206,7 @@ namespace Graphics
 			CHECK_ERR( fm->IsDirectoryExist( dirs[i] ) );
 			
 			str = dirs[i];
-			FileAddressUtils::FormatPath( str );
+			FileAddress::FormatPath( str );
 			
 			ASSERT( not _importDirs.IsExist( str ) );
 
@@ -219,11 +220,12 @@ namespace Graphics
 	ClearImportDirectories
 =================================================
 */
-	void ShaderManager::ClearImportDirectories ()
+	bool ShaderManager::ClearImportDirectories ()
 	{
-		CHECK_ERR( not _copilationInProgress, void() );
+		CHECK_ERR( not _copilationInProgress );
 
 		_importDirs.Clear();
+		return true;
 	}
 	
 /*
@@ -306,7 +308,7 @@ namespace Graphics
 		ShaderParsingData		parsing_data;
 		RFilePtr				file;
 
-		parsing_data.sources.PushBack( ShaderSource() );
+		parsing_data.sources.PushBack( ShaderSource( StringCRef(), filename, false ) );
 		parsing_data.activeShaders		= activeShaders;
 		parsing_data.compilationFlags	= compilationFlags;
 		parsing_data.vertexAttribs		= input;
@@ -315,12 +317,12 @@ namespace Graphics
 		// read file
 		CHECK_ERR( fm->OpenForRead( filename, OUT file ) );
 		{
-			Bytes<usize>	len = file->RemainingSize();
+			const usize		len = (usize) file->RemainingSize();
 			String &		src = parsing_data.SrcBack();
 
 			src.Reserve( len+1 );
 
-			CHECK_ERR( file->Read( src.ptr(), len ) );
+			CHECK_ERR( file->Read( src.ptr(), BytesU(len) ) );
 			src.SetLength( len );
 		}
 
@@ -332,7 +334,7 @@ namespace Graphics
 
 		FOR( i, loaded )
 		{
-			if ( not loaded[i].IsDefined() )
+			if ( not loaded[i] )
 				continue;
 
 			shaders << loaded[i].Get().shader;
@@ -342,7 +344,7 @@ namespace Graphics
 		// link program
 		CHECK_ERR( _LinkProgram( OUT program, shaders, activeShaders, input, output ) );
 
-		DEBUG_ONLY( _DumpProgramResources( program ); )
+		DEBUG_ONLY( _DumpProgramResources( program, filename ); )
 		return true;
 	}
 	
@@ -367,7 +369,7 @@ namespace Graphics
 		LoadedActiveShaders_t	loaded;
 		ShaderParsingData		parsing_data;
 
-		parsing_data.sources.PushBack( ShaderSource( source, false ) );
+		parsing_data.sources.PushBack( ShaderSource( source, StringCRef(), false ) );
 		parsing_data.activeShaders		= activeShaders;
 		parsing_data.compilationFlags	= compilationFlags;
 		parsing_data.vertexAttribs		= input;
@@ -381,7 +383,7 @@ namespace Graphics
 
 		FOR( i, loaded )
 		{
-			if ( not loaded[i].IsDefined() )
+			if ( not loaded[i] )
 				continue;
 
 			shaders << loaded[i].Get().shader;
@@ -393,7 +395,7 @@ namespace Graphics
 		// link program
 		CHECK_ERR( _LinkProgram( OUT program, shaders, activeShaders, input, output ) );
 
-		DEBUG_ONLY( _DumpProgramResources( program ); )
+		DEBUG_ONLY( _DumpProgramResources( program, "" ); )
 		return true;
 	}
 	
@@ -420,19 +422,19 @@ namespace Graphics
 		ShaderParsingData		parsing_data;
 		RFilePtr				file;
 		
-		parsing_data.sources.PushBack( ShaderSource() );
+		parsing_data.sources.PushBack( ShaderSource( StringCRef(), filename, false ) );
 		parsing_data.activeShaders		= ShaderBits_t().Set( shaderType );;
 		parsing_data.compilationFlags	= compilationFlags;
 		
 		// read file
 		CHECK_ERR( fm->OpenForRead( filename, OUT file ) );
 		{
-			Bytes<usize>	len = file->RemainingSize();
+			const usize		len = (usize)file->RemainingSize();
 			String &		src = parsing_data.SrcBack();
 
 			src.Reserve( len+1 );
 
-			CHECK_ERR( file->Read( src.ptr(), len ) );
+			CHECK_ERR( file->Read( src.ptr(), BytesU(len) ) );
 			src.SetLength( len );
 		}
 		
@@ -442,7 +444,7 @@ namespace Graphics
 
 		FOR( i, loaded )
 		{
-			if ( not loaded[i].IsDefined() )
+			if ( not loaded[i] )
 				continue;
 
 			if ( header.Empty() )
@@ -477,7 +479,7 @@ namespace Graphics
 		LoadedActiveShaders_t	loaded;
 		ShaderParsingData		parsing_data;
 		
-		parsing_data.sources.PushBack( ShaderSource( source, false ) );
+		parsing_data.sources.PushBack( ShaderSource( source, StringCRef(), false ) );
 		parsing_data.activeShaders		= ShaderBits_t().Set( shaderType );
 		parsing_data.compilationFlags	= compilationFlags;
 
@@ -487,7 +489,7 @@ namespace Graphics
 
 		FOR( i, loaded )
 		{
-			if ( not loaded[i].IsDefined() )
+			if ( not loaded[i] )
 				continue;
 
 			if ( header.Empty() )
@@ -506,12 +508,12 @@ namespace Graphics
 	ClearShaderCache
 =================================================
 */
-	void ShaderManager::ClearShaderCache ()
+	bool ShaderManager::ClearShaderCache ()
 	{
-		CHECK_ERR( not _copilationInProgress, void() );
+		CHECK_ERR( not _copilationInProgress );
 
 		if ( _loadedShaders.Empty() )
-			return;
+			return true;
 
 		Ptr< GraphicsContext >	context = SubSystems()->Get< GraphicsEngine >()->GetContext();
 
@@ -521,6 +523,7 @@ namespace Graphics
 		}
 
 		_loadedShaders.Clear();
+		return true;
 	}
 	
 /*
@@ -545,12 +548,16 @@ namespace Graphics
 
 		for (usize pos = 0; source.Find( headerKey, OUT pos, pos ); ++pos, ++num_headers)
 		{
-			tmp_tags << Tag( sourceIdx, pos, EParsingTag::Header );
+			usize	lines = StringParser::CalculateNumberOfLines( source.SubString( 0, pos ) );		// TODO: optimize
+
+			tmp_tags << Tag( sourceIdx, pos, lines, EParsingTag::Header );
 		}
 
 		for (usize pos = 0; source.Find( sourceKey, OUT pos, pos ); ++pos, ++num_sources)
 		{
-			tmp_tags << Tag( sourceIdx, pos, EParsingTag::Source );
+			usize	lines = StringParser::CalculateNumberOfLines( source.SubString( 0, pos ) );
+
+			tmp_tags << Tag( sourceIdx, pos, lines, EParsingTag::Source );
 		}
 		
 		for (usize pos = 0; source.Find( importKey, OUT pos, pos ); ++pos)
@@ -568,7 +575,9 @@ namespace Graphics
 				 tokens[1] == importKey	and
 				 tokens[2] == "\"" )
 			{
-				tmp_tags << Tag( sourceIdx, pos, EParsingTag::Import );
+				usize	lines = StringParser::CalculateNumberOfLines( source.SubString( 0, pos ) );
+
+				tmp_tags << Tag( sourceIdx, pos, lines, EParsingTag::Import );
 			}
 		}
 		
@@ -587,7 +596,9 @@ namespace Graphics
 				 tokens[1] == includeKey and
 				 tokens[2] == "\"" )
 			{
-				tmp_tags << Tag( sourceIdx, pos, EParsingTag::Include );
+				usize	lines = StringParser::CalculateNumberOfLines( source.SubString( 0, pos ) );
+
+				tmp_tags << Tag( sourceIdx, pos, lines, EParsingTag::Include );
 			}
 		}
 
@@ -597,13 +608,13 @@ namespace Graphics
 
 		if ( tmp_tags.Empty() )
 		{
-			tags.Insert( Tag( sourceIdx, 0, EParsingTag::SourceWithoutTag ), insertTo );
+			tags.Insert( Tag( sourceIdx, 0, 0, EParsingTag::SourceWithoutTag ), insertTo );
 			return true;
 		}
 
 		// if no [HEADER] or [SOURCE] tag
 		if ( num_headers == 0 and num_sources == 0 )
-			tmp_tags << Tag( sourceIdx, 0, EParsingTag::SourceWithoutTag );
+			tmp_tags << Tag( sourceIdx, 0, 0, EParsingTag::SourceWithoutTag );
 
 		// sort tags buy position in text
 		Sort( tmp_tags );
@@ -655,7 +666,7 @@ namespace Graphics
 				case EParsingTag::HeaderWithoutTag :
 				{
 					global_in_header = true;
-					data.headerRef << usize2( src_idx, pos );
+					data.headerRef << usize3( src_idx, pos, tag.line+1 );
 					break;
 				}
 
@@ -663,7 +674,7 @@ namespace Graphics
 				case EParsingTag::SourceWithoutTag :
 				{
 					global_in_header = false;
-					data.sourceRef << usize2( src_idx, pos );
+					data.sourceRef << usize3( src_idx, pos, tag.line+1 );
 					break;
 				}
 
@@ -681,7 +692,7 @@ namespace Graphics
 					
 					if ( not temp_src.Empty() )
 					{
-						data.sources.PushBack( ShaderSource( RVREF( temp_src ), in_header ) );
+						data.sources.PushBack( ShaderSource( RVREF( temp_src ), RVREF( tmp_str ), in_header ) );
 
 						CHECK_ERR( _ParseShaderSource( data.SrcBack(), data.sources.LastIndex(), i, INOUT tags ) );
 					}
@@ -707,7 +718,7 @@ namespace Graphics
 
 					if ( not header.Empty() )
 					{
-						data.sources.PushBack( ShaderSource( header, in_header ) );
+						data.sources.PushBack( ShaderSource( header, tmp_str, in_header ) );
 					
 						CHECK_ERR( _ParseShaderSource( data.SrcBack(), data.sources.LastIndex(), i, INOUT tags ) );
 					}
@@ -745,7 +756,7 @@ namespace Graphics
 */
 	bool ShaderManager::_ParseAndCompileShader (OUT LoadedActiveShaders_t &result, INOUT ShaderParsingData &parsingData, StringCRef filename)
 	{
-		Array< const char *>	src;
+		Array< SourceInfo >		src;
 		String					header;
 		String					attribs_and_fragout;
 		
@@ -772,25 +783,38 @@ namespace Graphics
 			_AddOutputs( OUT attribs_and_fragout, parsingData.fragmentOutput );
 
 			if ( not attribs_and_fragout.Empty() )
-				src << attribs_and_fragout.cstr();
+			{
+				src << SourceInfo( attribs_and_fragout,
+								   "generated attribs",
+								   usize2( 0, StringParser::CalculateNumberOfLines( attribs_and_fragout ) ).To<uint2>()
+				);
+			}
 		}
 
 		// build header and source
 		FOR( i, parsingData.headerRef )
 		{
-			usize2 const& c = parsingData.headerRef[i];
+			usize3 const& c = parsingData.headerRef[i];
 
-			const char * str = parsingData.Src( c.x ).SubString( c.y ).cstr();
+			StringCRef	str = parsingData.Src( c.x ).SubString( c.y ).cstr();
 
-			src << str;
 			header << str << '\n';
+			src << SourceInfo( str,
+							   parsingData.Filename( c.x ),
+							   usize2( c.z, StringParser::CalculateNumberOfLines( str ) ).To<uint2>()
+			);
 		}
 		
 		FOR( i, parsingData.sourceRef )
 		{
-			usize2 const& c = parsingData.sourceRef[i];
-
-			src << parsingData.Src( c.x ).SubString( c.y ).cstr();
+			usize3 const& c = parsingData.sourceRef[i];
+			
+			StringCRef	str = parsingData.Src( c.x ).SubString( c.y ).cstr();
+			
+			src << SourceInfo( str,
+							   parsingData.Filename( c.x ),
+							   usize2( c.z, StringParser::CalculateNumberOfLines( str ) ).To<uint2>()
+			);
 		}
 
 		CHECK( _WriteDebugOutput( src ) );
@@ -826,19 +850,19 @@ namespace Graphics
 	_SearchShaderInclude
 =================================================
 */
-	bool ShaderManager::_SearchShaderInclude (OUT String &source, INOUT HashSet<String> &includedFiles, StringCRef include) const
+	bool ShaderManager::_SearchShaderInclude (OUT String &source, INOUT HashSet<String> &includedFiles, StringCRef filename) const
 	{
 		String				fname;
 		Ptr< FileManager >	fm	= SubSystems()->Get< FileManager >();
 
 		FOR( i, _includeDirs )
 		{
-			fname = include;
-			FileAddressUtils::AddBaseDirectoryToPath( INOUT fname, _includeDirs[i] );
+			fname = filename;
+			FileAddress::AddBaseDirectoryToPath( INOUT fname, _includeDirs[i] );
 
 			if ( fm->IsFileExist( fname ) )
 			{
-				FileAddressUtils::FormatPath( INOUT fname );
+				FileAddress::FormatPath( INOUT fname );
 
 				if ( includedFiles.IsExist( fname ) )
 				{
@@ -848,21 +872,21 @@ namespace Graphics
 				
 				includedFiles.Add( fname );
 
-				RFilePtr		file;
+				RFilePtr	file;
 
 				CHECK_ERR( fm->OpenForRead( fname, OUT file ) );
 				
-				Bytes<usize>	len = file->RemainingSize();
+				const usize		len = (usize)file->RemainingSize();
 
 				source.Reserve( len+1 );
 
-				CHECK_ERR( file->Read( source.ptr(), len ) );
+				CHECK_ERR( file->Read( source.ptr(), BytesU(len) ) );
 				source.SetLength( len );
 
 				return true;
 			}
 		}
-		RETURN_ERR( "Can't open shader source file!" );
+		RETURN_ERR( "Can't open shader source file: \"" << filename << "\"" );
 	}
 	
 /*
@@ -883,12 +907,12 @@ namespace Graphics
 		FOR( i, _importDirs )
 		{
 			fname = filename;
-			FileAddressUtils::AddBaseDirectoryToPath( INOUT fname, _importDirs[i] );
+			FileAddress::AddBaseDirectoryToPath( INOUT fname, _importDirs[i] );
 
 			// is file exist?
 			if ( fm->IsFileExist( fname ) )
 			{
-				FileAddressUtils::FormatPath( INOUT fname );
+				FileAddress::FormatPath( INOUT fname );
 
 				if ( importedFiles.IsExist( fname ) )
 				{
@@ -932,18 +956,18 @@ namespace Graphics
 
 				CHECK_ERR( fm->OpenForRead( fname, OUT file ) );
 
-				parsing_data.sources.PushBack( ShaderSource( StringCRef(), true ) );
+				parsing_data.sources.PushBack( ShaderSource( StringCRef(), filename, true ) );
 				parsing_data.activeShaders		= activeShaders;
 				parsing_data.compilationFlags	= compilationFlags;
 
 				// read file
 				{
-					Bytes<usize>	len = file->RemainingSize();
-					String &		src = parsing_data.Src( 0 );
+					const usize	len = (usize)file->RemainingSize();
+					String &	src = parsing_data.Src( 0 );
 
 					src.Reserve( len+1 );
 
-					CHECK_ERR( file->Read( src.ptr(), len ) );
+					CHECK_ERR( file->Read( src.ptr(), BytesU(len) ) );
 					src.SetLength( len );
 				}
 
@@ -951,7 +975,7 @@ namespace Graphics
 					
 				FOR( j, loaded )
 				{
-					if ( not loaded[j].IsDefined() )
+					if ( not loaded[j] )
 						continue;
 
 					usize	idx = _loadedShaders.Add( loaded[j].Get() );
@@ -965,7 +989,7 @@ namespace Graphics
 				return true;
 			}
 		}
-		RETURN_ERR( "Can't open shader source file!" );
+		RETURN_ERR( "Can't open shader source file: \"" << filename << "\"" );
 	}
 	
 /*
@@ -973,7 +997,7 @@ namespace Graphics
 	_WriteDebugOutput
 =================================================
 */
-	bool ShaderManager::_WriteDebugOutput (Buffer<const char*> source)
+	bool ShaderManager::_WriteDebugOutput (Buffer<SourceInfo> sources)
 	{
 		if ( _debugOutputFolder.Empty() )
 			return true;	// debug output disabled
@@ -983,19 +1007,20 @@ namespace Graphics
 		String				fname;
 		StaticString<64>	unique_name;	unique_name << "shader_" << _debugOutputNumber << ".glsl";
 
-		FileAddressUtils::BuildPath( OUT fname, _debugOutputFolder, unique_name );
+		FileAddress::BuildPath( OUT fname, _debugOutputFolder, unique_name );
 
 		CHECK_ERR( fm->CreateFile( fname, OUT file ) );
 
 		String &	separator = fname;
 
-		FOR( i, source )
+		FOR( i, sources )
 		{
 			separator.Clear();
-			separator << "/* part " << i << " */\n";	// it breakes line numeration 
+			separator << "/* part " << i << ", file \"" << sources[i].filename
+					  << "\", line " << sources[i].FirstLine() << " */\n";	// it breakes line numeration 
 
 			file->Write( StringCRef( separator ) );
-			file->Write( StringCRef( source[i] ) );
+			file->Write( StringCRef( sources[i].source ) );
 		}
 
 		++_debugOutputNumber;

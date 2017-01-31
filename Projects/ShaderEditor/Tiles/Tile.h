@@ -1,9 +1,9 @@
-// Copyright © 2017  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
-#include "../Core/Common.h"
-#include "../Shaders/IShader.h"
+#include "Projects/ShaderEditor/Core/Common.h"
+#include "Projects/ShaderEditor/Core/IShader.h"
 
 namespace ShaderEditor
 {

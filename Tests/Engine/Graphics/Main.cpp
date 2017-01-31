@@ -1,4 +1,4 @@
-// Copyright © 2014-2015  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "Engine/Graphics/Engine.Graphics.h"
 
@@ -33,7 +33,7 @@ public:
 
 
 	// GameApplication //
-	void _Update (Time<double> dt, bool forceRedraw)
+	void _Update (TimeD dt, bool forceRedraw)
 	{
 		//CPUTIME_PROFILER("1");
 		//GPUTIME_PROFILER("");

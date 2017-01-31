@@ -1,10 +1,10 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
-#include "STL/ux_stl.h"
-#include "Engine/Base/Config/Config.h"
-#include "Engine/Base/Config/Version.h"
+#include "Engine/STL/Engine.STL.h"
+#include "Engine/Config/Engine.Config.h"
+#include "Engine/Config/Engine.Version.h"
 
 
 namespace Engine

@@ -1,6 +1,6 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
-#include "STL/ux_stl.h"
+#include "Engine/STL/Engine.STL.h"
 
 using namespace GX_STL;
 using namespace GX_STL::GXTypes;
@@ -26,6 +26,7 @@ static void StringParser_ToEndOfLine ()
 	ASSERT( pos == 4 );
 }
 
+
 static void StringParser_ToBeginOfLine ()
 {
 	usize	pos = 7;
@@ -36,6 +37,7 @@ static void StringParser_ToBeginOfLine ()
 	StringParser::ToBeginOfLine( "11\r\n222\r\n33", pos );
 	ASSERT( pos == 4 );
 }
+
 
 static void StringParser_ToNextLine ()
 {
@@ -48,12 +50,14 @@ static void StringParser_ToNextLine ()
 	ASSERT( pos == 11 );
 }
 
+
 static void StringParser_ToPrevLine ()
 {
 	usize	pos = 7;
 	StringParser::ToPrevLine( "1111\n2222\n3333333", pos );
 	ASSERT( pos == 4 );
 }
+
 
 static void StringParser_Tokenize_1 ()
 {
@@ -68,6 +72,7 @@ static void StringParser_Tokenize_1 ()
 	ASSERT( tokens[4] == "55" );
 }
 
+
 static void StringParser_Tokenize_2 ()
 {
 	Array< StringCRef >	tokens;
@@ -80,6 +85,7 @@ static void StringParser_Tokenize_2 ()
 	ASSERT( tokens[3] == "4" );
 	ASSERT( tokens[4] == "" );
 }
+
 
 static void StringParser_CStyleDivideString ()
 {
@@ -106,6 +112,7 @@ static void StringParser_CStyleDivideString ()
 	ASSERT( tokens[16] == "->" );
 }
 
+
 static void StringParser_ReadLine ()
 {
 	StringCRef	str = "01234\r\n5678";
@@ -118,6 +125,7 @@ static void StringParser_ReadLine ()
 	ASSERT( pos == 7 );
 }
 
+
 static void StringParser_ReadString ()
 {
 	usize			pos = 0;
@@ -128,6 +136,7 @@ static void StringParser_ReadString ()
 	ASSERT( result == "123456" );
 }
 
+
 static void StringParser_ParseCStyleString ()
 {
 	String	result;
@@ -137,11 +146,13 @@ static void StringParser_ParseCStyleString ()
 	ASSERT( result == "test\n And as\t\t34 \x0D\x0A asd" );
 }
 
+
 static void StringParser_CalculateNumberOfLines ()
 {
 	usize	lines = StringParser::CalculateNumberOfLines( "1\n2\n3\r\n4\r\n5\n6\n7\r8\n9\n10" );
 	ASSERT( lines == 10 );
 }
+
 
 static void StringParser_IncreaceIndent ()
 {
@@ -152,6 +163,7 @@ static void StringParser_IncreaceIndent ()
 	StringParser::IncreaceIndent( dst, "\t" );
 	ASSERT( dst == cmp );
 }
+
 
 static void StringParser_DecreaceIndent ()
 {
@@ -166,6 +178,7 @@ static void StringParser_DecreaceIndent ()
 	StringParser::DecreaceIndent( dst, "\t" );
 	ASSERT( dst == cmp2 );
 }
+
 
 extern void Test_Types_StringParser ()
 {

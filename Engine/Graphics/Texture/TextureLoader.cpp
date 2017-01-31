@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 /*
 	Texture File Format:
 
@@ -48,7 +48,7 @@ namespace Graphics
 */
 	bool TextureLoader::Load (OUT ResourcePtr &resource, PackFileID fileID, const RFilePtr &file)
 	{
-		CHECK_ERR( file.IsNotNull() );
+		CHECK_ERR( file );
 
 		// load header
 		TextureHeader	header;
@@ -118,7 +118,7 @@ namespace Graphics
 			CHECK_ERR( tex->GenerateMipmaps() );
 		}
 
-		tex->_SetLoadState( Resource::ELoadState::LoadedAndLocked );
+		tex->_SetResourceStatus( EResourceStatus::LoadedAndLocked );
 
 		resource = tex;
 		return true;
@@ -145,7 +145,7 @@ namespace Graphics
 
 				for (uint j = 0; j < tex->NumLayers(); ++j)
 				{
-					rt->SetViewport( tex->LevelDimension( MipmapLevel( i ) ).xy().To<int2>() );
+					rt->SetViewport( tex->LevelDimension( MipmapLevel( i ) ).xy() );
 					CHECK_ERR( rt->AttachLayer( tex, ERenderTarget::Color0, j, i ) );
 					rt->SetClearColor( ERenderTarget::Color0, color );
 
@@ -161,7 +161,7 @@ namespace Graphics
 			{
 				const float4	color( ColorUtils::RainbowRGB( float(i) / levels ), 1.0f );
 
-				rt->SetViewport( tex->LevelDimension( MipmapLevel( i ) ).xy().To<int2>() );
+				rt->SetViewport( tex->LevelDimension( MipmapLevel( i ) ).xy() );
 				CHECK_ERR( rt->Attach( tex, ERenderTarget::Color0, i ) );
 				rt->SetClearColor( ERenderTarget::Color0, color );
 
@@ -171,7 +171,7 @@ namespace Graphics
 			}
 		}
 
-		tex->_SetLoadState( Resource::ELoadState::LoadedAndLocked );
+		tex->_SetResourceStatus( EResourceStatus::LoadedAndLocked );
 		return true;
 	}
 

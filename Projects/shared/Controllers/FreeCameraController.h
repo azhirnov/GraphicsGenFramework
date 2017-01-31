@@ -14,7 +14,7 @@ namespace Shared
 	class FreeCameraController : public IController
 	{
 	// types
-	private:
+	public:
 		typedef PerspectiveCamera<real>		Camera_t;
 		typedef Camera_t::transform_t		Transform_t;
 		typedef Camera_t::mat4_t			mat4_t;
@@ -22,6 +22,7 @@ namespace Shared
 		typedef Camera_t::vec3_t			vec3_t;
 		typedef Camera_t::quat_t			quat_t;
 		typedef Camera_t::radians3_t		radians3_t;
+		typedef Camera_t::frustum_t			Frustum_t;
 
 
 	// variables
@@ -29,7 +30,7 @@ namespace Shared
 		Camera_t	_camera;
 		mat4_t		_mvp;
 		mat4_t		_mv;
-		int2		_size;
+		uint2		_size;
 
 
 	// methods
@@ -46,6 +47,8 @@ namespace Shared
 		mat4_t const &	GetViewMatrix ()			const	{ return _camera.ViewMatrix(); }
 		mat4_t const &	GetProjMatrix ()			const	{ return _camera.ProjMatrix(); }
 		mat4_t const	GetModelMatrix ()			const	{ return _camera.GetModelMatrix(); }
+		Frustum_t const&	GetFrustum ()					{ return _camera.Frustum(); }
+		Transform_t const&	GetTransform ()					{ return _camera.Transform(); }
 		
 		vec3_t			GetPosition ()				const	{ return _camera.Position(); }
 		radians3_t		GetRotation ()				const	{ return _camera.Rotation(); }
@@ -54,7 +57,7 @@ namespace Shared
 		vec2_t			GetScale ()					const	{ return vec2_t( _camera.GetZoom() ); }
 		vec2_t const&	GetClipPlanes ()			const	{ return _camera.ClipPlanes(); }
 
-		void Reset (const Transform_t &transform = Uninitialized())
+		void Reset (const Transform_t &transform = Uninitialized)
 		{
 			_camera.Create( transform, _CameraFOV(), 1.0f, real2( 0.1f, 100.0f ) );
 
@@ -64,7 +67,7 @@ namespace Shared
 
 		void Update (Time<double> dt) override
 		{
-			const real2		scale		= real2( 1.0f, -1.0f ) * 100.0f;
+			const real2		m_sens		= real2( 1.0f, -1.0f ) * 200.0f;
 			const real		zoom		= 0.2f;
 			const real3		move_factor	= real3( 1.0f, 0.5f, 0.5f );
 			const real		velocity	= 1.0f;
@@ -89,7 +92,7 @@ namespace Shared
 
 			// rotation
 			if ( input->GetTouch(id).IsPressed() )
-				rotation = input->GetTouch(id).delta.To<real2>() / _size.To<real2>() * scale;
+				rotation = real2(input->GetTouch(id).delta) / real2(_size) * m_sens;
 
 			if ( input->IsKeyPressed( EKey::LEFT ) )		rotation.x -= rot_step;
 			if ( input->IsKeyPressed( EKey::RIGHT ) )		rotation.x += rot_step;

@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -28,11 +28,9 @@ namespace Base
 
 		virtual void Run () = 0;
 
-		operator RValueRef< ParallelOp >::type ()
+		operator ParallelOp ()
 		{
-			ParallelOp	op;
-			FunctionBuilder::Create( op.func, RunnablePtr(this), &Runnable::Run );
-			return RVREF( op );
+			return ParallelOp( FunctionBuilder( RunnablePtr(this), &Runnable::Run ) );
 		}
 	};
 

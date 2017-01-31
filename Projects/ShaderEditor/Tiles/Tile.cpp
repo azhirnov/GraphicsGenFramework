@@ -1,4 +1,4 @@
-// Copyright © 2017  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "Tile.h"
 
@@ -63,12 +63,12 @@ namespace ShaderEditor
 		Matrix_t	model_mat;	_transform.GetModelMatrix( cameraPos, OUT model_mat );
 		Matrix_t	mvp_mat = viewProjMat * model_mat;
 
-		_landscape.program->SetData( "mvp", VariantRef::From( mvp_mat ) );
+		_landscape.program->SetArg( "mvp", VariantRef::From( mvp_mat ) );
 
 		_landscape.program->SetTextures( _landscape.textures );
 		_landscape.program->Active();
 
-		if ( _landscape.indices.IsNotNull() )
+		if ( _landscape.indices )
 			_landscape.vertices->DrawIndexed( _landscape.indices );
 		else
 			_landscape.vertices->Draw();

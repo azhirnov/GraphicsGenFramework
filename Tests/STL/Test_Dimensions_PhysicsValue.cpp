@@ -1,18 +1,14 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
-#include "STL/ux_stl.h"
+#include "Engine/STL/Engine.STL.h"
 
 using namespace GX_STL;
 using namespace GX_STL::GXTypes;
 using namespace GX_STL::GXMath;
 
 
-
-STATIC_ASSERT( sizeof(Bytes<uint>) == sizeof(uint) );
-STATIC_ASSERT( sizeof(Bits<uint>) == sizeof(uint) );
-
-
-extern void Test_Dimensions_PhysicsValue ()
+#ifdef GX_PHYSICS_DIMENSIONS_ENABLED
+static void TestPhysicsValue ()
 {
 	typedef DefaultPhysicsValues< float >::Seconds					Sec;
 	typedef DefaultPhysicsValues< float >::Meters					M;
@@ -73,4 +69,20 @@ extern void Test_Dimensions_PhysicsValue ()
 	auto n = G(1) * (SM(1) * SM(2)) / AU(1).Square();
 
 	WARNING( n.ToDebugString().cstr() );*/
+}
+
+#else
+
+static void TestPhysicsValue ()
+{
+}
+#endif	// GX_PHYSICS_DIMENSIONS_ENABLED
+
+
+extern void Test_Dimensions_PhysicsValue ()
+{
+	STATIC_ASSERT( sizeof(Bytes<uint>) == sizeof(uint) );
+	STATIC_ASSERT( sizeof(Bits<uint>) == sizeof(uint) );
+
+	TestPhysicsValue();
 }

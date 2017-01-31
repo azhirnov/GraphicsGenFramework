@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -29,15 +29,15 @@ namespace Compute
 		~GL4ComputeBuffer ();
 
 	public:
-		bool Create (Bytes<usize> size, EMemoryAccess::type flags = EMemoryAccess::ReadWrite);
+		bool Create (BytesU size, EMemoryAccess::type flags = EMemoryAccess::ReadWrite);
 		bool Create (BinaryBuffer data, EMemoryAccess::type flags = EMemoryAccess::ReadWrite);
 		bool Create (const MemoryBufferPtr &shared, EMemoryAccess::type flags = EMemoryAccess::ReadWrite);
 		
-		bool Read (Buffer<ubyte> data, Bytes<usize> offset = Uninitialized()) const;
-		bool Write (BinaryBuffer data, Bytes<usize> offset = Uninitialized());
+		bool Read (OUT Buffer<ubyte> data, BytesU offset = Uninitialized) const;
+		bool Write (BinaryBuffer data, BytesU offset = Uninitialized);
 
-		bool Copy (const ComputeImagePtr &src, const uint4 &srcOffset, Bytes<usize> dstOffset, const uint4 &size);
-		bool Copy (const ComputeBufferPtr &src, Bytes<usize> srcOffset, Bytes<usize> dstOffset, Bytes<usize> size);
+		bool Copy (const ComputeImagePtr &src, const uint4 &srcOffset, BytesU dstOffset, const uint4 &size);
+		bool Copy (const ComputeBufferPtr &src, BytesU srcOffset, BytesU dstOffset, BytesU size);
 
 		template <typename T>
 		void Clear (const T &value);
@@ -50,9 +50,9 @@ namespace Compute
 		
 		EMemoryAccess::type		MemoryAccess ()		const	{ return _flags; }
 
-		Bytes<usize>			Size ()				const	{ return Bytes<usize>( _shared.IsNull() ? 0 : _shared->Size() ); }
+		BytesU					Size ()				const	{ return _shared ? _shared->Size() : 0_b; }
 		bool					IsCreated ()		const	{ return Id().IsValid(); }
-		BufferID				Id ()				const	{ return _shared.IsNull() ? BufferID() : _shared->GetBufferID(); }
+		BufferID				Id ()				const	{ return _shared ? _shared->GetBufferID() : BufferID(); }
 
 		static ComputeBufferPtr  New (const SubSystemsRef ss);
 		static ComputeBufferPtr  New (const MemoryBufferPtr &shared, EMemoryAccess::type flags = EMemoryAccess::ReadWrite);
@@ -71,7 +71,7 @@ namespace Compute
 	template <typename T>
 	inline void GL4ComputeBuffer::Clear (const T &value)
 	{
-		_shared->ClearSubData( value, Bytes<usize>(0), Size() );
+		_shared->ClearSubData( value, 0_b, Size() );
 	}
 	
 	inline void GL4ComputeBuffer::Clear ()

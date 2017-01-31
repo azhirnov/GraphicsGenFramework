@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "GL4ComputeImage.h"
 
@@ -16,7 +16,7 @@ namespace Compute
 */
 	GL4ComputeImage::GL4ComputeImage (const SubSystemsRef ss) :
 		BaseObject( ss ),
-		_flags( EMemoryAccess::type(0) )
+		_flags( EMemoryAccess::Unknown )
 	{
 	}
 	
@@ -38,7 +38,7 @@ namespace Compute
 	void GL4ComputeImage::_Destroy ()
 	{
 		_shared	= null;
-		_flags	= EMemoryAccess::type(0);
+		_flags	= EMemoryAccess::Unknown;
 		_level	= MipmapLevel();
 		_layer	= TexArrLayer();
 	}
@@ -63,13 +63,13 @@ namespace Compute
 */
 	bool GL4ComputeImage::Create (const uint4 &dim, ETexture::type imageType, EPixelFormat::type format,
 								  EMemoryAccess::type flags, BinaryBuffer data,
-								  Bytes<usize> xAlign, Bytes<usize> xyAlign)
+								  BytesU xAlign, BytesU xyAlign)
 	{
 		//_Destroy();
 
 		CHECK_ERR( _IsSupportedForImage( format ) );
 
-		if ( _shared.IsNull() or
+		if ( not _shared or
 			 _shared->TextureType() != imageType )
 		{
 			_shared = Texture::New( SubSystems(), PackFileID(), imageType );
@@ -97,7 +97,7 @@ namespace Compute
 	{
 		_Destroy();
 
-		CHECK_ERR( texture.IsNotNull() );
+		CHECK_ERR( texture );
 		CHECK_ERR( texture->HasLevel( level ) );
 		CHECK_ERR( _IsSupportedForImage( texture->PixelFormat() ) );
 
@@ -115,9 +115,9 @@ namespace Compute
 =================================================
 */
 	bool GL4ComputeImage::SetImage (BinaryBuffer data, const uint3 &size, const uint4 &offset,
-									Bytes<usize> xAlign, Bytes<usize> xyAlign)
+									BytesU xAlign, BytesU xyAlign)
 	{
-		CHECK_ERR( _shared.IsNotNull() );
+		CHECK_ERR( _shared );
 
 		CHECK_ERR( _shared->AddImage( offset, _level, size, PixelFormat(), data, xAlign, xyAlign ) );
 		return true;
@@ -129,9 +129,9 @@ namespace Compute
 =================================================
 */
 	bool GL4ComputeImage::GetImage (OUT Buffer<ubyte> data, const uint3 &size, const uint4 &offset,
-									Bytes<usize> xAlign, Bytes<usize> xyAlign)
+									BytesU xAlign, BytesU xyAlign)
 	{
-		CHECK_ERR( _shared.IsNotNull() );
+		CHECK_ERR( _shared );
 		CHECK_ERR( All( size == Texture::Utils::ConvertSize( ImageType(), Dimension() ) ) );
 		CHECK_ERR( IsZero( offset ) );
 
@@ -144,7 +144,7 @@ namespace Compute
 	Copy
 =================================================
 */
-	bool GL4ComputeImage::Copy (const ComputeBufferPtr &src, Bytes<usize> srcOffset, const uint4 &dstOffset, const uint4 &size)
+	bool GL4ComputeImage::Copy (const ComputeBufferPtr &src, BytesU srcOffset, const uint4 &dstOffset, const uint4 &size)
 	{
 		TODO( "" );
 		return false;
@@ -166,7 +166,7 @@ namespace Compute
 	CopyTo
 =================================================
 */
-	bool GL4ComputeImage::CopyTo (const ComputeBufferPtr &dst, const uint4 &srcOffset, Bytes<usize> dstOffset, const uint4 &size)
+	bool GL4ComputeImage::CopyTo (const ComputeBufferPtr &dst, const uint4 &srcOffset, BytesU dstOffset, const uint4 &size)
 	{
 		TODO( "" );
 		return false;
@@ -189,11 +189,11 @@ namespace Compute
 */
 	ComputeImagePtr GL4ComputeImage::New (const TexturePtr &texture, EMemoryAccess::type flags, MipmapLevel level)
 	{
-		CHECK_ERR( texture.IsNotNull(), null );
+		CHECK_ERR( texture );
 
 		ComputeImagePtr img = ComputeImage::New( texture->SubSystems() );
 
-		CHECK_ERR( img->Create( texture, flags, level ), null );
+		CHECK_ERR( img->Create( texture, flags, level ) );
 
 		return img;
 	}

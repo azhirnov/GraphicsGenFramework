@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -22,7 +22,7 @@ namespace Base
 	{
 	// variables
 	private:
-		CurrentThread		_thread;
+		OS::CurrentThread	_thread;
 		ThreadMessageQueue	_messageQueue;
 
 

@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "CL2ComputeEngine.h"
 
@@ -176,7 +176,6 @@ namespace Compute
 */
 # if defined( PLATFORM_WINDOWS ) and defined( GRAPHICS_API_OPENGL )
 	
-	using namespace GX_STL::winapi;
 #	include "External/opengl/wglext.h"
 
 	bool CL2ComputeEngine::_CreateContext ()
@@ -299,7 +298,7 @@ namespace Compute
 		_maxComputeUnits = value32;
 
 		CL_CALL( clGetDeviceInfo( _device, CL_DEVICE_LOCAL_MEM_SIZE, sizeof(value64), &value64, null ) );
-		log << "\nLocal Mem:      " << StringUtils::BytesToString( Bytes<ulong>().FromBytes( value64 ) );
+		log << "\nLocal Mem:      " << ToString( Bytes<ulong>::FromBytes( value64 ) );
 
 		CL_CALL( clGetDeviceInfo( _device, CL_DEVICE_MAX_WORK_GROUP_SIZE, sizeof(size), &size, null ) );
 		log << "\nWork Group:     " << size;
@@ -308,20 +307,20 @@ namespace Compute
 		log << "\nWork items:     ( " << _maxWorkGroupSize.ToString() << " )";
 
 		CL_CALL( clGetDeviceInfo( _device, CL_DEVICE_GLOBAL_MEM_CACHE_SIZE, sizeof(value64), &value64, null ) );
-		log << "\nGlobal Cache:   " << StringUtils::BytesToString( Bytes<ulong>().FromBytes( value64 ) );		// L1 cache
+		log << "\nGlobal Cache:   " << ToString( Bytes<ulong>::FromBytes( value64 ) );		// L1 cache
 
 		CL_CALL( clGetDeviceInfo( _device, CL_DEVICE_GLOBAL_MEM_SIZE, sizeof(value64), &value64, null ) );
-		log << "\nGlobal Mem:     " << StringUtils::BytesToString( Bytes<ulong>().FromBytes( value64 ) );
-		_totalMemory.FromBytes( value64 );
+		log << "\nGlobal Mem:     " << ToString( Bytes<ulong>::FromBytes( value64 ) );
+		_totalMemory.SetBytes( value64 );
 		
 		CL_CALL( clGetDeviceInfo( _device, CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE, sizeof(value64), &value64, null ) );
-		log << "\nConst Buffer:   " << StringUtils::BytesToString( Bytes<ulong>().FromBytes( value64 ) );
+		log << "\nConst Buffer:   " << ToString( Bytes<ulong>::FromBytes( value64 ) );
 		
 		CL_CALL( clGetDeviceInfo( _device, CL_DEVICE_ADDRESS_BITS, sizeof(value32), &value32, null ) );
 		log << "\nAddress bits:   " << value32;
 
 		CL_CALL( clGetDeviceInfo( _device, CL_DEVICE_MAX_MEM_ALLOC_SIZE, sizeof(value64), &value64, null ) );
-		log << "\nMax alloc size: " << StringUtils::BytesToString( Bytes<ulong>().FromBytes( value64 ) );
+		log << "\nMax alloc size: " << ToString( Bytes<ulong>::FromBytes( value64 ) );
 		
 		CL_CALL( clGetDeviceInfo( _device, CL_DEVICE_MAX_CONSTANT_ARGS, sizeof(value32), &value32, null ) );
 		log << "\nConst args:     " << value32;
@@ -330,7 +329,7 @@ namespace Compute
 		log << "\nEncoding:       " << ( valueb ? "Little endian" : "Big endian");
 		
 		CL_CALL( clGetDeviceInfo( _device, CL_DEVICE_MEM_BASE_ADDR_ALIGN, sizeof(value32), &value32, null ) );
-		log << "\nMem align:      " << StringUtils::BitsToString( Bits<uint>( value32 ) );
+		log << "\nMem align:      " << ToString( Bits<uint>( value32 ) );
 
 		CL_CALL( clGetDeviceInfo( _device, CL_DEVICE_IMAGE2D_MAX_WIDTH, sizeof(size), &size, null ) );
 		log << "\nImage2D width:  " << size << " px";
@@ -364,7 +363,7 @@ namespace Compute
 		CL_CALL( clGetDeviceInfo( _device, CL_DEVICE_EXTENSIONS, info.Capacity(), info.ptr(), null ) );
 		log << "\nExtensions:     " << info.cstr();
 		
-		LOG( log.cstr(), ELog::Debug | ELog::OpenSpoilerFlag );
+		LOG( log.cstr(), ELog::Debug | ELog::SpoilerFlag );
 	}
 
 /*

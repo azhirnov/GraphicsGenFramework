@@ -1,0 +1,36 @@
+/*
+	Particle emitter shapes.
+
+	TODO: refactoring
+*/
+
+[HEADER]
+
+
+real2 Emitter_Plane (real unormValue);
+real3 Emitter_Sphere (real unormValue);
+
+
+//-----------------------------------------------------------------------------
+[SOURCE]
+
+#import "Core/Common/GlobalIndex.glcs"
+#import "Core/Math/Math.glcs"
+
+
+real2 Emitter_Plane (real unormValue)
+{
+	real side	= Sqrt( real(GetGlobalIndexSize()) );
+	real val	= unormValue * side * side;
+
+	return ToSNorm( real2( Mod( val, side ) / side, Floor( val / side ) / side ) );
+}
+
+real3 Emitter_Sphere (real unormValue)
+{
+	real2	angle	= Emitter_Plane( unormValue ) * Pi * 2.0;
+	real2	theta	= SinCos( angle.x );
+	real2	phi		= SinCos( angle.y );
+
+	return real3( theta.x * phi.y, theta.x * phi.x, theta.y );
+}

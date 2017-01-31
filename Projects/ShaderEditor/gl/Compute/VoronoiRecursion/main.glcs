@@ -1,0 +1,143 @@
+
+#include "Common.glcs"
+
+DECL_IMAGE( image2D, rgba8, writeonly, outImage );
+
+uniform float	unGlobalTime;
+
+
+#define ANIMATE		0.5		// animation speed
+//#define COLORED
+
+
+float2 Hash22 (float2 p)
+{
+    float2 q = float2( dot( p, float2(127.1,311.7) ), 
+						dot( p, float2(269.5,183.3) ) );
+    
+	return fract( sin(q) * 43758.5453 );
+}
+
+float Hash21 (float2 p)
+{
+    return fract( sin( p.x + p.y * 64.0 ) * 104003.9);
+}
+
+float2 Hash12 (float f)
+{
+    return fract( cos(f) * float2(10003.579, 37049.7) );
+}
+
+float Hash11 (float a)
+{
+   	return Hash21( float2( fract(a * 2.0), fract(a * 4.0) ) );
+    //return fract( sin(a) * 54833.56 );
+}
+
+
+// from https://www.shadertoy.com/view/ldl3W8
+float4 voronoi (in float2 x)
+{
+    float2 n = floor(x);
+    float2 f = fract(x);
+
+    //----------------------------------
+    // first pass: regular voronoi
+    //----------------------------------
+	float2 mg, mr;
+
+    float md = 8.0;
+    for( int j=-1; j<=1; j++ )
+    for( int i=-1; i<=1; i++ )
+    {
+        float2 g = float2(float(i),float(j));
+		float2 o = Hash22( n + g );
+		#ifdef ANIMATE
+        o = 0.5 + 0.5*sin( unGlobalTime * ANIMATE + 6.2831*o );
+        #endif	
+        float2 r = g + o - f;
+        float d = dot(r,r);
+
+        if( d<md )
+        {
+            md = d;
+            mr = r;
+            mg = g;
+        }
+    }
+
+    //----------------------------------
+    // second pass: distance to borders
+    //----------------------------------
+    md = 8.0;
+    for( int j=-2; j<=2; j++ )
+    for( int i=-2; i<=2; i++ )
+    {
+        float2 g = mg + float2(float(i),float(j));
+		float2 o = Hash22( n + g );
+		#ifdef ANIMATE
+        o = 0.5 + 0.5*sin( unGlobalTime * ANIMATE + 6.2831*o );
+        #endif	
+        float2 r = g + o - f;
+
+        if( dot(mr-r,mr-r)>0.00001 )
+        	md = min( md, dot( 0.5*(mr+r), normalize(r-mr) ) );
+    }
+
+    return float4( x - (n + mr + f), md, Hash21( mg + n ) );
+}
+
+
+float3 Rainbow (float color, float dist)
+{
+    dist = pow( dist, 8.0 );
+    return mix( float3(1.0), HSVtoRGB( float3( color, 1.0, 1.0 ) ), 1.0 - dist );
+}
+
+
+float3 VoronoiFactal (in float2 coord, float time)
+{
+    const float freq = 4.0;
+    const float freq2 = 6.0;
+    const int iterations = 4;
+    
+    float2 uv = coord * freq;
+    
+    float3 color = float3(0.0);
+    float alpha = 0.0;
+    float value = 0.0;
+    
+    for (int i = 0; i < iterations; ++i)
+    {
+    	float4 v = voronoi( uv );
+    	
+        uv = ( v.xy * 0.5 + 0.5 ) * freq2 + Hash12( v.w );
+        
+        float f = pow( 0.01 * float(iterations - i), 3.0 );
+        float a = 1.0 - smoothstep( 0.0, 0.08 + f, v.z );
+        
+        float3 c = Rainbow( Hash11( float(i+1) / float(iterations) + value * 1.341 ), i > 1 ? 0.0 : a );
+        
+        color = color * alpha + c * a;
+        alpha = max( alpha, a );
+        value = v.w;
+    }
+    
+    #ifdef COLORED
+    	return color;
+    #else
+    	return float3( alpha ) * Rainbow( 0.06, alpha );
+    #endif
+}
+
+
+void main ()
+{
+	int2	img_coord	= GetGlobalCoord().xy;
+	float2	coord		= GetGlobalCoordUNormCorrected();
+	float4	color		= float4(0.0);
+
+    color.xyz = VoronoiFactal( coord, unGlobalTime );
+
+	imageStore( outImage, img_coord, color );
+}

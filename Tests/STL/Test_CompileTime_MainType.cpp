@@ -1,16 +1,10 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
-#include "STL/ux_stl.h"
+#include "Engine/STL/Engine.STL.h"
 
 using namespace GX_STL;
 using namespace GX_STL::GXTypes;
 using namespace GX_STL::CompileTime;
-
-
-template <typename T>
-const char * TypeNameOf (const T&) {
-	return TypeDescriptor::template GetTypeInfo<T>::Name();
-}
 
 
 extern void Test_CompileTime_MainType ()
@@ -26,6 +20,7 @@ extern void Test_CompileTime_MainType ()
 	STATIC_ASSERT( (IsSameTypes< double,	MainTypeStd< double, byte > >) );
 	STATIC_ASSERT( (IsSameTypes< double,	MainTypeStd< float, double > >) );
 	STATIC_ASSERT( (IsSameTypes< double,	MainTypeStd< double, float > >) );
+	STATIC_ASSERT( (IsSameTypes< float,		MainTypeStd< ulong, float > >) );
 	STATIC_ASSERT( (IsSameTypes< uint,		MainTypeStd< int, uint > >) );
 	STATIC_ASSERT( (IsSameTypes< ulong,		MainTypeStd< ulong, ilong > >) );
 
@@ -43,27 +38,49 @@ extern void Test_CompileTime_MainType ()
 	STATIC_ASSERT( (IsSameTypes< ulong,		MainType< ilong, ulong > >) );
 	STATIC_ASSERT( (IsSameTypes< double,	MainType< float, double > >) );
 	STATIC_ASSERT( (IsSameTypes< double,	MainType< double, float > >) );
-	STATIC_ASSERT( (IsSameTypes< float,		MainType< Fixed16_t, int > >) );
+	STATIC_ASSERT( (IsSameTypes< float,		MainType< ulong, float > >) );
 	STATIC_ASSERT( (IsSameTypes< float,		MainType< half, byte > >) );
-	STATIC_ASSERT( (IsSameTypes< double,	MainType< half, Fixed64_t > >) );
+	//STATIC_ASSERT( (IsSameTypes< float,	MainType< Fixed16_t, int > >) );
+	//STATIC_ASSERT( (IsSameTypes< double,	MainType< half, Fixed64_t > >) );
+	
+	// to check C++ spec
+	auto a = int(1) * uint(2);		STATIC_ASSERT(( IsSameTypes< decltype(a),	MainTypeStd< int, uint > > ));
+	auto b = float(1) * ilong(2);	STATIC_ASSERT(( IsSameTypes< decltype(b),	MainTypeStd< float, ilong > > ));
+	auto c = ulong(1) * float(2);	STATIC_ASSERT(( IsSameTypes< decltype(c),	MainTypeStd< ulong, float > > ));
+	auto d = ilong(1) * ubyte(2);	STATIC_ASSERT(( IsSameTypes< decltype(d),	MainTypeStd< ilong, ubyte > > ));
+	auto e = byte(1) * ubyte(2);	STATIC_ASSERT(( IsSameTypes< decltype(e),	MainTypeStd< byte, ubyte > > ));
+	auto f = byte(1) * byte(2);		STATIC_ASSERT(( IsSameTypes< decltype(f),	MainTypeStd< byte, byte > > ));
 
-	/* to check C++ spec
-	auto a = int(1) * uint(2);
-	auto b = float(1) * ilong(2);
-	auto c = ulong(1) * float(2);
-	auto d = ilong(1) * ubyte(2);
-	auto e = byte(1) * ubyte(2);
-	auto f = byte(1) * byte(2);
 
-	String str;
+	STATIC_ASSERT(( IsSameTypes< GXMath::Radians<float>,	MainType< GXMath::Radians<float>, float > > ));
+	STATIC_ASSERT(( IsSameTypes< GXMath::Radians<float>,	MainType< float, GXMath::Radians<float> > > ));
 
-	str << "int * uint = " << TypeNameOf(a) << '\n';
-	str << "float * ilong = " << TypeNameOf(b) << '\n';
-	str << "ulong * float = " << TypeNameOf(c) << '\n';
-	str << "ilong * ubyte = " << TypeNameOf(d) << '\n';
-	str << "byte * ubyte = " << TypeNameOf(e) << '\n';
-	str << "byte * byte = " << TypeNameOf(f) << '\n';
+	STATIC_ASSERT(( IsSameTypes< GXMath::Radians<double>,	MainType< double, GXMath::Radians<float> > > ));
+	STATIC_ASSERT(( IsSameTypes< GXMath::Radians<double>,	MainType< double, GXMath::Radians<float> > > ));
 
-	WARNING( str.cstr() );
-	//*/
+	STATIC_ASSERT(( IsSameTypes< GXMath::float3,	MainType< GXMath::float3, float > > ));
+	STATIC_ASSERT(( IsSameTypes< GXMath::float3,	MainType< float, GXMath::float3 > > ));
+
+
+	STATIC_ASSERT(( IsSameTypes< GXMath::float4,	MainType< GXMath::uint4, GXMath::float3 > > ));
+	STATIC_ASSERT(( IsSameTypes< GXMath::float4,	MainType< GXMath::uint4, float > > ));
+	STATIC_ASSERT(( IsSameTypes< GXMath::ulong4,	MainType< GXMath::uint4, ulong > > ));
+
+	STATIC_ASSERT(( IsSameTypes< GXTypes::Bytes<uint>,	MainType< GXTypes::Bytes<uint>, uint > > ));
+	STATIC_ASSERT(( IsSameTypes< GXTypes::Bytes<uint>,	MainType< uint,  GXTypes::Bytes<uint> > > ));
+	STATIC_ASSERT(( IsSameTypes< GXTypes::Bytes<uint>,	MainType< int,   GXTypes::Bytes<uint> > > ));
+	STATIC_ASSERT(( IsSameTypes< GXTypes::Bytes<ulong>,	MainType< ulong, GXTypes::Bytes<uint> > > ));
+
+	STATIC_ASSERT(( IsSameTypes< GXMath::Radians<float>,	MainType< GXMath::Radians<float>, GXTypes::Bytes<uint>   > > ));
+	STATIC_ASSERT(( IsSameTypes< GXMath::Radians<float>,	MainType< GXTypes::Bytes<uint>,   GXMath::Radians<float> > > ));
+
+
+	STATIC_ASSERT( not IsWrapper<float> );
+	STATIC_ASSERT( IsWrapper< GXMath::Radians<float> > );
+	STATIC_ASSERT( IsScalar< float > );
+	STATIC_ASSERT( not IsVector< float > );
+	STATIC_ASSERT( IsVector< GXMath::float3 > );
+	STATIC_ASSERT( not IsScalar< GXMath::float3 > );
+	STATIC_ASSERT( IsArithmetic< float > );
+	STATIC_ASSERT( IsArithmetic< GXMath::float3 > );
 }

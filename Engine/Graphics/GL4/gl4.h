@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -120,7 +120,7 @@ namespace gl
 
 	// Warning: different behavior on Debug and Release!
 #	define GL_CHECK( ... ) \
-		__GL_CALL_R( AUXDEF_GET_FIRST( __VA_ARGS__ ), AUXDEF_GET_SECOND( __VA_ARGS__, false ) )
+		__GL_CALL_R( AUXDEF_GETARG_0( __VA_ARGS__ ), AUXDEF_GETARG_1( __VA_ARGS__, Uninitialized ) )
 
 # endif	// __GX_FAST__
 	

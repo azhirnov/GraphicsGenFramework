@@ -1,0 +1,116 @@
+
+[HEADER]
+
+// range [0;1]
+real ValueNoise_Uniform (in real2 point, in real time);
+real ValueNoise_Triangular (in real2 point, in real time);
+real ValueNoise_Gaussianish (in real2 point, in real time);
+real ValueNoise_MoarGaussianish (in real2 point, in real time);
+
+
+//-----------------------------------------------------------------------------
+[SOURCE]
+
+// TODO
+// https://www.shadertoy.com/view/4sGSDd
+//-----------------------------------------------------------------------------
+
+
+
+// from https://www.shadertoy.com/view/4ssXRX
+
+//note: uniformly distributed, normalized rand, [0;1[
+real nrand (real2 n)
+{
+	return fract( sin( dot( n.xy, real2(12.9898, 78.233) ) ) * 43758.5453 );
+}
+
+//note: remaps v to [0;1] in interval [a;b]
+real remap (real a, real b, real v)
+{
+	return clamp( (v-a) / (b-a), 0.0, 1.0 );
+}
+
+real n1rand (real2 n, real time)
+{
+	real t = fract( time );
+	real nrnd0 = nrand( n + 0.07*t );
+	return nrnd0;
+}
+
+real n2rand (real2 n, real time)
+{
+	real t = fract( time );
+	real nrnd0 = nrand( n + 0.07*t );
+	real nrnd1 = nrand( n + 0.11*t );
+	return (nrnd0+nrnd1) / 2.0;
+}
+
+real n3rand (real2 n, real time)
+{
+	real t = fract( time );
+	real nrnd0 = nrand( n + 0.07*t );
+	real nrnd1 = nrand( n + 0.11*t );
+	real nrnd2 = nrand( n + 0.13*t );
+	return (nrnd0+nrnd1+nrnd2) / 3.0;
+}
+
+real n4rand (real2 n, real time)
+{
+	real t = fract( time );
+	real nrnd0 = nrand( n + 0.07*t );
+	real nrnd1 = nrand( n + 0.11*t );	
+	real nrnd2 = nrand( n + 0.13*t );
+	real nrnd3 = nrand( n + 0.17*t );
+	return (nrnd0+nrnd1+nrnd2+nrnd3) / 4.0;
+}
+
+real n8rand (real2 n, real time)
+{
+	real t = fract( time );
+	real nrnd0 = nrand( n + 0.07*t );
+	real nrnd1 = nrand( n + 0.11*t );	
+	real nrnd2 = nrand( n + 0.13*t );
+	real nrnd3 = nrand( n + 0.17*t );
+    
+    real nrnd4 = nrand( n + 0.19*t );
+    real nrnd5 = nrand( n + 0.23*t );
+    real nrnd6 = nrand( n + 0.29*t );
+    real nrnd7 = nrand( n + 0.31*t );
+    
+	return (nrnd0 + nrnd1 + nrnd2 + nrnd3 + nrnd4 + nrnd5 + nrnd6 + nrnd7) / 8.0;
+}
+
+real n4rand_inv (real2 n, real time)
+{
+	real t = fract( time );
+	real nrnd0 = nrand( n + 0.07*t );
+	real nrnd1 = nrand( n + 0.11*t );	
+	real nrnd2 = nrand( n + 0.13*t );
+	real nrnd3 = nrand( n + 0.17*t );
+    real nrnd4 = nrand( n + 0.19*t );
+	real v1 = (nrnd0 + nrnd1 + nrnd2+nrnd3) / 4.0;
+    real v2 = 0.5 * remap( 0.0, 0.5, v1 ) + 0.5;
+    real v3 = 0.5 * remap( 0.5, 1.0, v1 );
+    return (nrnd4<0.5) ? v2 : v3;
+}
+
+real ValueNoise_Uniform (in real2 point, in real time)
+{
+	return n1rand( point, time );
+}
+
+real ValueNoise_Triangular (in real2 point, in real time)
+{
+	return n2rand( point, time );
+}
+
+real ValueNoise_Gaussianish (in real2 point, in real time)
+{
+	return n4rand( point, time );
+}
+
+real ValueNoise_MoarGaussianish (in real2 point, in real time)
+{
+	return n8rand( point, time );
+}

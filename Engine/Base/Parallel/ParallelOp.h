@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -10,46 +10,42 @@ namespace Base
 {
 	
 	//
-	// Parallel Operation interface
+	// Parallel Operation
 	//
 	
-	template <usize BufSize = GlobalConst::STL_FunctionInterfaceSize>
-	struct TParallelOp
+	struct ParallelOp
 	{
 	// types
 	public:
-		typedef TParallelOp< BufSize >		Self;
-		typedef Function< void, BufSize >	func_t;
+		typedef ParallelOp			Self;
+		typedef Function< void >	Func_t;
 
 
 	// variables
-	public:
-		func_t		func;
+	private:
+		Func_t		_func;
 
 
 	// methods
 	public:
-		TParallelOp (GX_DEFCTOR)
+		ParallelOp (GX_DEFCTOR) : _func()
 		{}
 
-		TParallelOp (const Self &other) : func( other.func )
-		{}
+		ParallelOp (Self &&) = default;
+		ParallelOp (const Self &) = default;
 
-		TParallelOp (Self &&other) : func( RVREF( other.func ) )
+		Self& operator = (Self &&) = default;
+		Self& operator = (const Self &) = default;
+
+		explicit
+		ParallelOp (Func_t &&func) : _func( RVREF( func ) )
 		{}
 
 		void Process () const
 		{
-			return func.Call();
-		}
-
-		void operator = (Self &other)
-		{
-			func.MoveTo( other.func );
+			return _func.Call();
 		}
 	};
-
-	typedef TParallelOp<>	ParallelOp;
 
 
 }	// Base

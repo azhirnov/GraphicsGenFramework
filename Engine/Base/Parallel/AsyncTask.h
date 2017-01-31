@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -25,8 +25,8 @@ namespace Base
 	private:
 		IParallelThreadPtr	_currentThread;
 		IParallelThreadPtr	_targetThread;
-		SyncEvent			_event;
-		//atomic_bool			_canceled;
+		OS::SyncEvent		_event;
+		//atomic_bool		_canceled;
 
 
 	// methods
@@ -34,8 +34,8 @@ namespace Base
 		AsyncTask (const IParallelThreadPtr &currentThread, const IParallelThreadPtr &targetThread) :
 			_currentThread(currentThread), _targetThread(targetThread) _event( SyncEvent::MANUAL_RESET )
 		{
-			ASSERT( _currentThread.IsNotNull() );
-			ASSERT( _targetThread.IsNotNull() );
+			ASSERT( _currentThread );
+			ASSERT( _targetThread );
 		}
 
 
@@ -51,14 +51,11 @@ namespace Base
 
 			PreExecute();
 			
-			ParallelOp	op;
-			FunctionBuilder::Create( op.func, AsyncTaskPtr(this), &AsyncTask::_Process );
-
-			_targetThread->Push( RVREF( op ) );
+			_targetThread->Push( ParallelOp( FunctionBuilder( AsyncTaskPtr(this), &AsyncTask::_Process ) ) );
 		}
 
 
-		void Wait (uint timeMillis = SyncEvent::MAX_WAIT_TIME)
+		void Wait (uint timeMillis = OS::SyncEvent::MAX_WAIT_TIME)
 		{
 			_event.Wait( timeMillis );
 		}
@@ -94,10 +91,7 @@ namespace Base
 		{
 			ASSERT( _targetThread->IsCurrent() );
 			
-			ParallelOp	op;
-			FunctionBuilder::Create( op.func, AsyncTaskPtr(this), &AsyncTask::_Process );
-
-			_currentThread->Push( RVREF( op ) );
+			_currentThread->Push( ParallelOp( FunctionBuilder( AsyncTaskPtr(this), &AsyncTask::_Process ) ) );
 		}
 
 
@@ -108,9 +102,7 @@ namespace Base
 
 			if ( not _currentThread->IsCurrent() )
 			{
-				ParallelOp	op;
-				FunctionBuilder::Create( op.func, AsyncTaskPtr(this), &AsyncTask::OnCanceled );
-				_currentThread->Push( RVREF( op ) );
+				_currentThread->Push( ParallelOp( FunctionBuilder( AsyncTaskPtr(this), &AsyncTask::OnCanceled ) ) );
 			}
 			else
 			{
@@ -139,10 +131,7 @@ namespace Base
 				return;
 			}*/
 			
-			ParallelOp	op;
-			FunctionBuilder::Create( op.func, AsyncTaskPtr(this), &AsyncTask::PostExecute );
-
-			_currentThread->Push( RVREF( op ) );
+			_currentThread->Push( ParallelOp( FunctionBuilder( AsyncTaskPtr(this), &AsyncTask::PostExecute ) ) );
 		}
 	};
 

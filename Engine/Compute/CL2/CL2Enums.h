@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -63,12 +63,12 @@ namespace Compute
 	PixelFormat
 =================================================
 */
-	inline bool CL2Enum (EPixelFormat::type value, OUT CL2ChannelOrder &order, OUT CL2ChannelDataType &type, OUT Bytes<usize> &bpp)
+	inline bool CL2Enum (EPixelFormat::type value, OUT CL2ChannelOrder &order, OUT CL2ChannelDataType &type, OUT BytesU &bpp)
 	{
 		const bool	norm = EnumEq( value, EValueTypeInfo::_NORM );
 		const bool	srgb = EnumEq( value, EValueTypeInfo::_SRGB );
 
-		bpp = Bytes<usize>( EPixelFormat::BitPerPixel( value ) );
+		bpp = BytesU( EPixelFormat::BitPerPixel( value ) );
 
 		switch ( value & (EValueTypeInfo::_TYPE_MASK | EValueTypeInfo::_UNSIGNED) )
 		{

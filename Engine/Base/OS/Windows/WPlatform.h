@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -45,7 +45,8 @@ namespace WinPlatform
 			ON_DESTROY	= 0x4,
 		};
 		
-		typedef StaticArray< String, EDirectory::_COUNT >	directories_t;
+		typedef StaticArray< String, EDirectory::_Count >	directories_t;
+		typedef OS::HiddenOSTypeFrom<void*>					Handle_t;
 
 
 	// variables
@@ -54,10 +55,10 @@ namespace WinPlatform
 
 		directories_t				_directories;
 
-		TimeProfiler<double>		_timer;
+		TimeProfilerD				_timer;
 		
-		winapi::HWND				_wnd;
-		winapi::HDC					_dc;
+		Handle_t					_wnd;	// HWND
+		Handle_t					_dc;	// HDC
 
 		Display						_display;
 
@@ -68,7 +69,7 @@ namespace WinPlatform
 		
 		uint						_pause;
 
-		SysEvent::time_t			_lastUpdateTime;
+		TimeD						_lastUpdateTime;
 
 		bool						_isLooping;
 		bool						_terminated;
@@ -87,7 +88,7 @@ namespace WinPlatform
 	public:
 		bool InitRender (const VideoSettings &vs) override;
 		bool InitWindow (const WindowDesc &window) override;
-		void InitDisplay (const Display &disp) override;
+		bool InitDisplay (const Display &disp) override;
 		void SetDisplayOrientation (EDisplayOrientation::type orientation) override;
 		void SwapBuffers () override;
 		
@@ -111,8 +112,8 @@ namespace WinPlatform
 	private:
 		bool  _RegisterClass ();
 		bool  _InitRawInput ();
-		void  _Resize (int2 size, bool alignCenter);
-		isize _ProcessMessage (UINT uMsg, WPARAM wParam, LPARAM lParam);
+		void  _Resize (uint2 size, bool alignCenter);
+		isize _ProcessMessage (uint uMsg, usize wParam, isize lParam);
 		void  _Destroy ();
 		bool  _EventLoop ();
 		void  _UpdateDisplayParams ();
@@ -127,27 +128,27 @@ namespace WinPlatform
 		void  _SurfaceCreated ();
 		void  _SurfaceDestroed ();
 		void  _VisibilityChanged (bool isVisible);
-		void  _OnResized (const int2 &newSize);
+		void  _OnResized (const uint2 &newSize);
 		void  _OnKey (EKey::type keyCode, bool down);
 		void  _OnTouch (uint id, bool down, const float2 &point);
 		void  _OnTouchMotion (uint id, const float2 &point);
 		void  _Update (bool redraw);
 
-		static LRESULT CALLBACK _MsgProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		//static LRESULT CALLBACK _MsgProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		
 		// winapi helpers //
-		static int2		_GetScreenResolution ();
+		static uint2	_GetScreenResolution ();
 		static float2	_ScreenPhysicalSize ();
 		static uint		_GetDisplayFrequency ();
-		static bool		_ChangeScreenResolution (const int2 &size, uint freq = 0);
+		static bool		_ChangeScreenResolution (const uint2 &size, uint freq = 0);
 		static bool		_ChangeToDefaultResolution ();
 		static bool		_GetLibraryPath (OUT String &path);
-		static int2		_GetWindowPos (HWND wnd);
-		static int2		_GetWindowSize (HWND wnd);
+		static int2		_GetWindowPos (const Handle_t &wnd);
+		static uint2	_GetWindowSize (const Handle_t &wnd);
 		static String	_GetClassName ();
-		static HMODULE	_GetInstance ();
+		static Handle_t	_GetInstance ();	// HMODULE
 
-		SysEvent::time_t	_GetTimestamp ()	{ return _timer.GetTimeDelta(); }
+		TimeD	_GetTimestamp ()	{ return _timer.GetTimeDelta(); }
 	};
 
 

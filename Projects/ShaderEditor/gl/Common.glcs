@@ -1,14 +1,26 @@
 
-#include "STL/Defines/Defines.glcs"
+#include "Core/Common/Defines.glcs"
+#import  "Core/Common/GlobalIndex.glcs"
 
-#import "STL/GlobalIndex.glcs"
+// Math //
+#import  "Core/Math/Color.glcs"
+#include "Core/Math/MathDef.glcs"
+#import  "Core/Math/Math.glcs"
+#import  "Core/Math/Matrix.glcs"
+#import  "Core/Math/Quaternion.glcs"
 
-#import "STL/Math/Color.glcs"
-#import "STL/Math/Math.glcs"
+// Noise //
+//#import "Core/Noise/Cellular.glcs"
+//#import "Core/Noise/Gabor.glcs"
+#import "Core/Noise/Perlin.glcs"
+//#import "Core/Noise/Simplex.glcs"
+#import "Core/Noise/ValueNoise.glcs"
+#import "Core/Noise/VoronoiNoise.glcs"
+#import "Core/Noise/Turbulence.glcs"
+#import "Core/Noise/Billow.glcs"
 
-#import "Noise/Cellular.glcs"
-//#import "Noise/Gabor.glcs"
-#import "Noise/Perlin.glcs"
-#import "Noise/Simplex.glcs"
-#import "Noise/ValueNoise.glcs"
-#import "Noise/VoronoiNoise.glcs"
+// Effects //
+#import "Core/Effects/Blur.glcs"
+
+// Particles /
+#import "Core/Particles/Emitters.glcs"

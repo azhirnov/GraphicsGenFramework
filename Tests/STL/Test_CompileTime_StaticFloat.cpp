@@ -1,6 +1,6 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
-#include "STL/ux_stl.h"
+#include "Engine/STL/Engine.STL.h"
 
 using namespace GX_STL;
 using namespace CompileTime;
@@ -8,6 +8,8 @@ using namespace CompileTime;
 
 extern void Test_CompileTime_StaticFloat ()
 {
+#ifdef GX_PHYSICS_DIMENSIONS_ENABLED
+
 	typedef StaticFloat< 1, 0 >		f0;
 	typedef StaticFloat< 2, 0 >		f1;
 
@@ -21,4 +23,6 @@ extern void Test_CompileTime_StaticFloat ()
 
 	typedef f1::Div< f0 >	f2;
 	STATIC_ASSERT( f2::Equal< f1 >::value );
+
+#endif	// GX_PHYSICS_DIMENSIONS_ENABLED
 }

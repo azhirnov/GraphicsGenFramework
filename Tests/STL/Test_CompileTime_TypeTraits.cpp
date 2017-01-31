@@ -1,11 +1,11 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
-#include "STL/ux_stl.h"
+#include "Engine/STL/Engine.STL.h"
 
 using namespace GX_STL;
 using namespace GX_STL::GXTypes;
 using namespace GX_STL::CompileTime;
-using namespace GX_STL::GXTypes::TypeTraits;
+using namespace GX_STL::TypeTraits;
 
 
 struct Test
@@ -18,7 +18,7 @@ struct Test
 	int MemberFunc2 (int i, float f)				{ return 0; }
 	int MemberFuncConst (int i, float f) const		{ return 0; }
 
-	virtual void VirtMemberFunc (double d) = 0;
+	virtual void VirtMemberFunc (double d)			{}
 };
 
 typedef int Test::*Test_memberVar;
@@ -32,6 +32,34 @@ typedef decltype(&Test::MemberFunc2) Test_MemberFunc4;
 typedef int (*Test_StaticFunc) (float, double);
 
 enum ETestEnum {};
+
+
+// EnableIf //
+template <typename T>
+static int Test1 (T a, CompileTime::EnableIf< (sizeof(T) > 2), int > dummy = 0)
+{
+	return 1;
+}
+
+template <typename T>
+static float Test1 (T b, CompileTime::EnableIf< (sizeof(T) <= 2), int > dummy = 0)
+{
+	return 2.0f;
+}
+
+
+// SwitchType //
+template <typename T>
+static int Test2 (CompileTime::SwitchType< (sizeof(T) > 2), T, void > a)
+{
+	return 1;
+}
+
+template <typename T>
+static float Test2 (CompileTime::SwitchType< (sizeof(T) <= 2), T, void > a)
+{
+	return 2.0f;
+}
 
 
 extern void Test_CompileTime_TypeTraits ()
@@ -48,11 +76,11 @@ extern void Test_CompileTime_TypeTraits ()
 
 
 	// IsBaseType //
-	STATIC_ASSERT( IsBaseType< int >() );
-	STATIC_ASSERT( IsBaseType< float >() );
-	STATIC_ASSERT( not IsBaseType< int * >() );
-	STATIC_ASSERT( not IsBaseType< const int >() );
-	STATIC_ASSERT( not IsBaseType< int ** const & >() );
+	STATIC_ASSERT( IsBaseType< int > );
+	STATIC_ASSERT( IsBaseType< float > );
+	STATIC_ASSERT( not IsBaseType< int * > );
+	STATIC_ASSERT( not IsBaseType< const int > );
+	STATIC_ASSERT( not IsBaseType< int ** const & > );
 
 
 	// GetBaseType //
@@ -233,4 +261,20 @@ extern void Test_CompileTime_TypeTraits ()
 	STATIC_ASSERT(( IsBaseOf< A1, A2 > ));
 	STATIC_ASSERT(( IsBaseOf< A, A2 > ));
 	STATIC_ASSERT(( not IsBaseOf< B, A2 > ));
+
+
+	// ResultOf //
+	//STATIC_ASSERT(( IsSameTypes< ResultOf< Test_memberVar >, int > ));
+	STATIC_ASSERT(( IsSameTypes< ResultOf< Test_MemberFunc1 >, float > ));
+	STATIC_ASSERT(( IsSameTypes< ResultOf< decltype(&Test::MemberFunc2)(Test, int, float) >, int > ));
+	STATIC_ASSERT(( IsSameTypes< std::result_of_t< decltype(&Test::MemberFunc2)(Test, int, float) >, int > ));
+	
+
+	int	param = 1;
+
+	// EnableIf //
+	int	a = Test1( param );
+
+	// SwitchType //
+	int	b = Test1( param );
 }

@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -45,7 +45,7 @@ namespace SdlPlatform
 			ON_DESTROY	= 0x4,
 		};
 		
-		typedef StaticArray< String, EDirectory::_COUNT >	directories_t;
+		typedef StaticArray< String, EDirectory::_Count >	directories_t;
 
 
 	// variables
@@ -54,7 +54,7 @@ namespace SdlPlatform
 
 		directories_t				_directories;
 
-		TimeProfiler<double>		_timer;
+		TimeProfilerD				_timer;
 		
 		SDL_Window	*				_wnd;
 
@@ -86,7 +86,7 @@ namespace SdlPlatform
 	public:
 		bool InitRender (const VideoSettings &vs) override;
 		bool InitWindow (const WindowDesc &window) override;
-		void InitDisplay (const Display &disp) override;
+		bool InitDisplay (const Display &disp) override;
 		void SetDisplayOrientation (EDisplayOrientation::type orientation) override;
 		void SwapBuffers () override;
 		
@@ -108,10 +108,10 @@ namespace SdlPlatform
 
 
 	private:
-		void  _Resize (int2 size, bool alignCenter);
+		void  _Resize (uint2 size, bool alignCenter);
 		void  _Destroy ();
 		bool  _EventLoop ();
-		void _ProcessEvents ();
+		void  _ProcessEvents ();
 		void  _UpdateDisplayParams ();
 		void  _UpdateWindowParams ();
 		
@@ -124,18 +124,18 @@ namespace SdlPlatform
 		void  _SurfaceCreated ();
 		void  _SurfaceDestroed ();
 		void  _VisibilityChanged (bool isVisible);
-		void  _OnResized (const int2 &newSize);
+		void  _OnResized (const uint2 &newSize);
 		void  _OnKey (EKey::type keyCode, bool down);
 		void  _OnTouch (uint id, bool down, const float2 &point);
 		void  _OnTouchMotion (uint id, const float2 &point);
 		void  _Update (bool redraw);
 		
 		// winapi helpers //
-		static int2		_GetScreenResolution ();
+		static uint2	_GetScreenResolution ();
 		static float	_ScreenDPI ();
 		static uint		_GetDisplayFrequency ();
 		static int2		_GetWindowPos (SDL_Window *wnd);
-		static int2		_GetWindowSize (SDL_Window *wnd);
+		static uint2	_GetWindowSize (SDL_Window *wnd);
 
 		SysEvent::time_t	_GetTimestamp ()	{ return _timer.GetTimeDelta(); }
 	};

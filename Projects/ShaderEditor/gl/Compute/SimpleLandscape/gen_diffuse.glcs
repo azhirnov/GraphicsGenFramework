@@ -1,0 +1,46 @@
+
+#include "Common.glcs"
+
+DECL_IMAGE( image2D, rgba8, writeonly, outDiffuseImage );
+
+DECL_TEXTURE( sampler2D, inHeightTexture );
+DECL_TEXTURE( sampler2D, inNormalsTexture );
+
+//uniform float2	unPosition;
+//uniform float2	unScale;
+
+uniform float4	unTextureScaleBias;
+
+
+float3 Rainbow (float h, float s, float v)
+{
+	h = (1.0 - h) * 0.65;
+	return HSVtoRGB( float3(h, s, v) );
+}
+
+
+void main ()
+{
+	const int2	border	= int2(1);
+
+	int2	img_coord	= GetGlobalCoord().xy;
+	int2	img_size	= GetGlobalSize().xy;
+
+	float2	texcoord	= GetGlobalCoordUNorm().xy * unTextureScaleBias.xy + unTextureScaleBias.zw;
+	float4	color		= float4( 0.0, 1.0, 0.0, 1.0 );
+
+	float	height		= texture( inHeightTexture, texcoord ).r;
+	float3	normal		= texture( inNormalsTexture, texcoord ).rgb;
+
+	if ( AnyLess( img_coord, border ) or
+		 AnyGreater( img_coord, img_size - border -1 ) )
+	{
+		color = float4( 1.0 );
+	}
+	else
+	{
+		color = float4( Rainbow( ToUNorm(height), 1.0, 1.0 ), normal.x );
+	}
+
+	imageStore( outDiffuseImage, img_coord, color );
+}

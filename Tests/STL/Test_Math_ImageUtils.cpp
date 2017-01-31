@@ -1,6 +1,6 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
-#include "STL/ux_stl.h"
+#include "Engine/STL/Engine.STL.h"
 
 using namespace GX_STL;
 using namespace GX_STL::GXTypes;
@@ -10,21 +10,21 @@ using namespace GX_STL::GXMath::ColorFormat;
 
 static void Test_AlignedImageSize ()
 {
-	Bytes<usize>	size;
+	BytesU	size;
 	
-	size = AlignedImageDataSize( uint3( 2, 2, 1 ), Bits<usize>(8).ToBytes(), Bytes<usize>(1) );
+	size = ImageUtils::AlignedDataSize( uint3( 2, 2, 1 ), BitsU(8).ToBytes(), BytesU(1) );
 	ASSERT( size == 2*2 );
 
-	size = AlignedImageDataSize( uint3( 2, 2, 1 ), Bits<usize>(8).ToBytes(), Bytes<usize>(4) );
+	size = ImageUtils::AlignedDataSize( uint3( 2, 2, 1 ), BitsU(8).ToBytes(), BytesU(4) );
 	ASSERT( size == 4*2 );
 	
-	size = AlignedImageDataSize( uint3( 4, 2, 1 ), Bits<usize>(8).ToBytes(), Bytes<usize>(4) );
+	size = ImageUtils::AlignedDataSize( uint3( 4, 2, 1 ), BitsU(8).ToBytes(), BytesU(4) );
 	ASSERT( size == 4*2 );
 	
-	size = AlignedImageDataSize( uint3( 2, 4, 1 ), Bits<usize>(8).ToBytes(), Bytes<usize>(4) );
+	size = ImageUtils::AlignedDataSize( uint3( 2, 4, 1 ), BitsU(8).ToBytes(), BytesU(4) );
 	ASSERT( size == 4*4 );
 	
-	size = AlignedImageDataSize( uint3( 3, 2, 1 ), Bits<usize>(8*3).ToBytes(), Bytes<usize>(4) );
+	size = ImageUtils::AlignedDataSize( uint3( 3, 2, 1 ), BitsU(8*3).ToBytes(), BytesU(4) );
 	ASSERT( size == 4*2*3 );
 
 	// assert:

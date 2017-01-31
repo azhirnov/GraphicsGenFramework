@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -333,6 +333,7 @@ namespace Base
 		}
 		
 
+#		ifdef GX_PHYSICS_DIMENSIONS_ENABLED
 		template <typename V, typename D, typename S>
 		void _Load (PhysicsValue<V,D,S> &value) const
 		{
@@ -345,7 +346,8 @@ namespace Base
 		{
 			return _LoadVector( value );
 		}
-		
+#		endif	// GX_PHYSICS_DIMENSIONS_ENABLED
+
 
 		template <typename T>
 		void _Load (Radians<T> &value) const
@@ -398,7 +400,7 @@ namespace Base
 			_file->Read( id );
 
 			value = _objFactory->Create( id, _baseObj ).To< CRefCounter<T,B,S> >();
-			CHECK( value.IsNotNull() );
+			CHECK( value );
 
 			_Load( *value );
 		}

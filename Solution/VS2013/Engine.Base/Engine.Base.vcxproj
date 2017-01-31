@@ -22,8 +22,6 @@
     <ClInclude Include="..\..\..\Engine\Base\Common\BaseObject.h" />
     <ClInclude Include="..\..\..\Engine\Base\Common\Common.h" />
     <ClInclude Include="..\..\..\Engine\Base\Common\EngineSubSystems.h" />
-    <ClInclude Include="..\..\..\Engine\Base\Config\Config.h" />
-    <ClInclude Include="..\..\..\Engine\Base\Config\Version.h" />
     <ClInclude Include="..\..\..\Engine\Base\Engine.Base.h" />
     <ClInclude Include="..\..\..\Engine\Base\Events\EventSystem.h" />
     <ClInclude Include="..\..\..\Engine\Base\Input\Input.h" />
@@ -80,11 +78,6 @@
     <ClInclude Include="..\..\..\Engine\Base\Utils\Profiling\FunctionCpuProfiler.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\STL\STL.vcxproj">
-      <Project>{c8e74af8-726b-4a6c-b58d-32bdd2ce9e82}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="..\..\..\Engine\Base\Input\Input.cpp" />
     <ClCompile Include="..\..\..\Engine\Base\Locale\IsoLocale.cpp" />
     <ClCompile Include="..\..\..\Engine\Base\Locale\LocaleManager.cpp" />
@@ -97,6 +90,11 @@
     <ClCompile Include="..\..\..\Engine\Base\Parallel\ThreadManager.cpp" />
     <ClCompile Include="..\..\..\Engine\Base\Resources\ResourceManager.cpp" />
     <ClCompile Include="..\..\..\Engine\Base\Serializing\SerializableObjectFactory.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Engine.STL\Engine.STL.vcxproj">
+      <Project>{c8e74af8-726b-4a6c-b58d-32bdd2ce9e82}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4D750B1B-CE81-4C92-8BFE-40F2ACE23A14}</ProjectGuid>
@@ -221,13 +219,13 @@
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__GX_NO_EXCEPTIONS__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>false</TreatWarningAsError>
       <CompileAsManaged>false</CompileAsManaged>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <StringPooling>true</StringPooling>
-      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
@@ -238,6 +236,8 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <ControlFlowGuard>false</ControlFlowGuard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -255,13 +255,13 @@
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__GX_NO_EXCEPTIONS__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>false</TreatWarningAsError>
       <CompileAsManaged>false</CompileAsManaged>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <StringPooling>true</StringPooling>
-      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
@@ -272,6 +272,8 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <ControlFlowGuard>false</ControlFlowGuard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

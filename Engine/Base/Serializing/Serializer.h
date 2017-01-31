@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 /*
 	Serializable object format:
 
@@ -290,6 +290,7 @@ namespace Base
 		}
 		
 
+#		ifdef GX_PHYSICS_DIMENSIONS_ENABLED
 		template <typename V, typename D, typename S>
 		void _Save (const PhysicsValue<V,D,S> &value) const
 		{
@@ -302,6 +303,7 @@ namespace Base
 		{
 			return _SaveVector( value );
 		}
+#		endif	// GX_PHYSICS_DIMENSIONS_ENABLED
 		
 
 		template <typename T>

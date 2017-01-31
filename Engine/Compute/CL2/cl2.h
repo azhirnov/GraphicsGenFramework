@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -80,7 +80,7 @@ namespace cl
 	}
 
 #	define CL_CHECK( ... ) \
-		__CL_CALL_R( AUXDEF_GET_FIRST( __VA_ARGS__ ), AUXDEF_GET_SECOND( __VA_ARGS__, false ) )
+		__CL_CALL_R( AUXDEF_GETARG_0( __VA_ARGS__ ), AUXDEF_GETARG_1( __VA_ARGS__, Uninitialized ) )
 
 #endif
 

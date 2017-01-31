@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -68,12 +68,17 @@ namespace Base
 
 		struct PackFileHeader : public CompileTime::PODStruct
 		{
-			CompileTime::Signature4::value_t	signature;
-			uint								numFiles;
-			uint								packSize;
-
+		// types
+			typedef CompileTime::Signature<uint>	Signature_t;
+			
+		// variables
+			Signature_t::value_t	signature;
+			uint					numFiles;
+			uint					packSize;
+			
+		// methods
 			PackFileHeader (uint numFiles, uint packSize) :
-				signature( CompileTime::Signature4::Pack< 'P', 'A', 'C', 'K' >::value ),
+				signature( Signature_t::Pack< 'P', 'A', 'C', 'K' >::value ),
 				numFiles( numFiles ),
 				packSize( packSize )
 			{}
@@ -109,7 +114,7 @@ namespace Base
 		FileSet_t		_fileSet;
 		MappedFiles_t	_mappedFiles;
 
-		Mutex			_lock;
+		OS::Mutex		_lock;
 
 
 	// methods
@@ -199,8 +204,8 @@ namespace Base
 
 		MappedFile const &	mapped_file = _mappedFiles[ file_result->pack ];
 
-		file = File::SubRFile::New( mapped_file.file, Bytes<usize>( file_result->offset ), Bytes<usize>( file_result->size ) );
-		CHECK_ERR( file.IsNotNull() );
+		file = File::SubRFile::New( mapped_file.file, BytesU( file_result->offset ), BytesU( file_result->size ) );
+		CHECK_ERR( file );
 
 		return true;
 	}

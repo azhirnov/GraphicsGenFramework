@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -292,7 +292,7 @@ namespace Base
 			M_WHEEL_DOWN	= 306,		//	MOUSE WHEEL DOWN
 			// mouse -------------------
 
-			_COUNT
+			_Count
 		};
 	};
 

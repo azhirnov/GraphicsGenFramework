@@ -1,0 +1,16 @@
+
+#include "Common.glcs"
+
+DECL_TEXTURE( sampler2D, inTexture );
+
+DECL_IMAGE( image2D, rgba8, writeonly, outImage );
+
+
+void main ()
+{
+	int2	img_coord	= GetGlobalCoord().xy;
+	float2	coord		= GetGlobalCoordUNorm().xy;
+	float4	color		= SimpleBlur( inTexture, coord, 2, 1.75 );
+
+	imageStore( outImage, img_coord, color );
+}

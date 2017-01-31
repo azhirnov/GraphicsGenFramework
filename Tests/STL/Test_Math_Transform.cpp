@@ -1,6 +1,6 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
-#include "STL/ux_stl.h"
+#include "Engine/STL/Engine.STL.h"
 
 using namespace GX_STL;
 using namespace GX_STL::GXTypes;
@@ -57,7 +57,7 @@ static void Transform_MulVec ()
 
 static void Transform_MulVec2 ()
 {
-	const quat			rotation = quat().RotationX( Degrees<real>( -90.0f ).ToRadians() );
+	const quat			rotation = quat().RotationX( -90.0_deg.ToRadians() );
 	
 	const transform_t	tr( real3(-32.0f, -32.0f, 0.0f), rotation, real3(32.0f, 32.0f, 1.0f) );
 	

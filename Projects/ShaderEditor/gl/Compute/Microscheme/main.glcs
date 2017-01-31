@@ -1,0 +1,104 @@
+
+#include "Common.glcs"
+
+DECL_IMAGE( uimage2D, rgba8ui, readonly, inGridDataImage );
+DECL_IMAGE( image2D, rgba8, writeonly, outImage );
+
+uniform uint2	unCellSize;
+uniform float	unGlobalTime;
+
+
+const float2x2	pointRotationMat = float2x2( float2(  Cos(Pi * 0.25), Sin(Pi * 0.25) ),
+											 float2( -Sin(Pi * 0.25), Cos(Pi * 0.25) ) );
+
+const float4	cellColor	= float4( 1.0, 0.2, 0.1, 1.0 );
+const float4	animColor	= float4( 0.0, 0.8, 1.0, 1.0 );
+const float4	anim2Color	= float4( 0.0, 0.2, 0.8, 1.0 );
+const float4	borderColor	= float4( 0.0 );
+
+
+float4 BorderColor (float4 color0, float4 color1, float2 border, float2 alpha)
+{
+	float d = Pow( SmoothStep( 0.0, border.x, alpha.y ), 2.0 );
+
+	return mix( mix( float4(1.0), color0, d ), color1, alpha.x );
+}
+
+
+float4 MainCell (float2 point, float2 border, float2 center, float radius)
+{
+	float2	cell_size		= float2(unCellSize);
+	int2	iglobal			= int2( Floor( point ) );
+	float2	local			= Mod( point, cell_size );
+	float4	rect			= float4( imageLoad( inGridDataImage, iglobal ) );
+
+	// animation
+	float2	near_border		= ClampOut( local, rect.xy, rect.zw );
+	float2	dist_to_border	= Abs( near_border - local );
+	float2	new_point		= point;
+	float2	max_border		= border * 2.0;
+	float2	rot_point		= pointRotationMat * (new_point - center);
+	float2	anim_dist		= Abs( Abs(rot_point) - radius );
+	bool	animated		= AllLess( Abs(rot_point), float2(radius) );
+
+	float2	alpha			= float2(1.0, 1.0e18);
+
+	if ( animated )
+	{
+		//return animColor;
+
+		alpha = float2( SmoothStep( 0.0, 2.0, Min( anim_dist.x, anim_dist.y ) ),
+						Min( dist_to_border.x, dist_to_border.y ) );
+	}
+
+	// border
+	float2	local_snorm		= ToSNorm( (local - rect.xy) / (rect.zw - rect.xy) );
+	float2	global_snorm	= ToSNorm( local / cell_size );
+	float2	local_border	= 1.0 - 2.0 * border / (rect.zw - rect.xy);
+	float2	global_border	= 1.0 - 4.0 * border / cell_size;
+
+	// cell border
+	if ( animated and AnyGreater( Abs( global_snorm ), global_border ) )
+		return BorderColor( animColor, borderColor, border * 2.0, alpha );
+
+	// subcell border
+	if ( animated and AnyGreater( Abs( local_snorm ), local_border ) )
+		return BorderColor( anim2Color, borderColor, border, alpha );
+	
+	return cellColor;
+}
+
+
+float4 Microscheme (float2 point, float2 border,
+					float2 center, float radius)	// for animation
+{
+	return MainCell( point, border, center, radius );
+}
+
+
+void main ()
+{
+	int2	img_coord	= GetGlobalCoord().xy;
+	float2	coord		= GetGlobalCoordUNorm().xy;
+	float4	color;
+
+#if 1
+	float2	scale_to_pix	= float2(GetGlobalSize().xy - 1);
+	float	freq			= 8.0 * float(Max( unCellSize.x, unCellSize.y ));
+	float2	border			= 2.0 / scale_to_pix;
+	float	radius			= 0.01 * unGlobalTime;
+
+	color = Microscheme( coord * freq, border * freq, float2(0.5) * freq, radius * freq );
+
+#else
+	// test grid
+	const int	scale = 1;
+
+	color = float4( 
+		float2( imageLoad( inGridDataImage, (img_coord * scale) / int2(unCellSize) ).rg ) / float2(unCellSize),
+		0, 0
+	);
+#endif
+
+	imageStore( outImage, img_coord, color );
+}

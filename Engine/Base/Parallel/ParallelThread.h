@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -22,7 +22,7 @@ namespace Base
 	{
 	// variables
 	private:
-		Thread				_thread;
+		OS::Thread			_thread;
 		ThreadMessageQueue	_messageQueue;
 		bool				_quit;
 
@@ -39,7 +39,7 @@ namespace Base
 			{
 				if ( not pthis->_messageQueue.Process() )
 				{
-					Thread::Yield();
+					OS::Thread::Yield();
 				}
 			}
 		}
@@ -117,9 +117,7 @@ namespace Base
 
 		void Quit () override
 		{
-			ParallelOp	op;
-			FunctionBuilder::Create( op.func, ParallelThreadPtr(this), &ParallelThread::_QuitMessage );
-			Push( RVREF( op ) );
+			Push( ParallelOp( FunctionBuilder( ParallelThreadPtr(this), &ParallelThread::_QuitMessage ) ) );
 
 			FlushMessages();
 

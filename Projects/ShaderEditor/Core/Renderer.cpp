@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -38,7 +38,7 @@ namespace ShaderEditor
 */
 	bool Renderer::Reload ()
 	{
-		_viewImageShader		= Uninitialized();
+		_viewImageShader		= Uninitialized;
 		_viewImageShader.prog	= ShaderProgram::New( SubSystems() );
 
 		CHECK( _viewImageShader.prog->Load(
@@ -52,7 +52,7 @@ namespace ShaderEditor
 		CHECK( _viewImageShader.texture.Create( _viewImageShader.prog, "unTexture" ) );
 		
 		
-		_viewImageShaderI		= Uninitialized();
+		_viewImageShaderI		= Uninitialized;
 		_viewImageShaderI.prog	= ShaderProgram::New( SubSystems() );
 
 		CHECK( _viewImageShaderI.prog->Load(
@@ -66,7 +66,7 @@ namespace ShaderEditor
 		CHECK( _viewImageShaderI.texture.Create( _viewImageShaderI.prog, "unTexture" ) );
 		
 		
-		_viewImageShaderU		= Uninitialized();
+		_viewImageShaderU		= Uninitialized;
 		_viewImageShaderU.prog	= ShaderProgram::New( SubSystems() );
 
 		CHECK( _viewImageShaderU.prog->Load(
@@ -89,10 +89,10 @@ namespace ShaderEditor
 */
 	void Renderer::Deinitialize ()
 	{
-		_quadMesh			= Uninitialized();
-		_viewImageShader	= Uninitialized();
-		_viewImageShaderI	= Uninitialized();
-		_viewImageShaderU	= Uninitialized();
+		_quadMesh			= Uninitialized;
+		_viewImageShader	= Uninitialized;
+		_viewImageShaderI	= Uninitialized;
+		_viewImageShaderU	= Uninitialized;
 	}
 	
 /*
@@ -103,7 +103,7 @@ namespace ShaderEditor
 	void Renderer::DrawImage (const Shared::ScaleBiasController &controller, const ComputeImagePtr &image, EImageViewMode::type mode)
 	{
 		float2	size	= float2(SubSystems()->Get< GraphicsEngine >()->GetRenderTargetManager()->GetCurrent()->GetViewport().Size());
-		float2	aspect	= ResCorrectionAspect( size );
+		float2	aspect	= ImageUtils::ResCorrectionAspect( size );
 
 		return _DrawImage( image, controller.Scale() * aspect, controller.Bias() * aspect, mode );
 	}

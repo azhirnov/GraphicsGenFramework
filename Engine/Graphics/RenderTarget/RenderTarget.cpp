@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "RenderTarget.h"
 #include "Engine/Graphics/Engine/GraphicsEngine.h"
@@ -84,7 +84,7 @@ namespace Graphics
 */
 	void RenderTarget::Destroy ()
 	{
-		if ( SubSystems()->Get< GraphicsEngine >().IsNotNull() )
+		if ( SubSystems()->Get< GraphicsEngine >() )
 			SubSystems()->Get< GraphicsEngine >()->GetContext()->DeleteRenderTarget( _rt );
 
 		_targets.Clear();
@@ -162,18 +162,22 @@ namespace Graphics
 	Detach
 =================================================
 */
-	void RenderTarget::Detach (const TexturePtr &texture)
+	bool RenderTarget::Detach (const TexturePtr &texture)
 	{
-		CHECK_ERR( not _isSystemRT, void() );
-		CHECK_ERR( texture.IsNotNull(), void() );
+		CHECK_ERR( not _isSystemRT );
+		CHECK_ERR( texture );
 		
 		_changed = true;
 
 		FOR( i, _targets )
 		{
 			if ( texture == _targets[i].texture )
-				return Detach( ERenderTarget::type(i) );
+			{
+				Detach( ERenderTarget::type(i) );
+				break;
+			}
 		}
+		return true;
 	}
 	
 /*
@@ -203,9 +207,9 @@ namespace Graphics
 */
 	void RenderTarget::_OnAttached (ERenderTarget::type target)
 	{
-		if ( target >= ERenderTarget::Color0		and
-			 _targets[ target ].IsEnabled()			and
-			 _targets[ target ].texture.IsNotNull() )
+		if ( target >= ERenderTarget::Color0	and
+			 _targets[ target ].IsEnabled()		and
+			 _targets[ target ].texture )
 		{
 			_fragmentOut.Set(
 				EFragOutput::From( _targets[ target ].texture->PixelFormat() ),
@@ -223,7 +227,7 @@ namespace Graphics
 	{
 		if ( target >= ERenderTarget::Color0 )
 		{
-			_fragmentOut.Set( EFragOutput::None, target );
+			_fragmentOut.Set( EFragOutput::Unknown, target );
 		}
 	}
 
@@ -358,12 +362,12 @@ namespace Graphics
 	SetViewport
 =================================================
 */
-	void RenderTarget::SetViewport (const int2 &size)
+	void RenderTarget::SetViewport (const uint2 &size)
 	{
-		SetViewport( RectI( 0, 0, size.x, size.y ) );
+		SetViewport( RectU( 0, 0, size.x, size.y ) );
 	}
 
-	void RenderTarget::SetViewport (const RectI &viewport)
+	void RenderTarget::SetViewport (const RectU &viewport)
 	{
 		_viewports.Resize( 1 );
 		_viewports[0] = viewport;
@@ -374,18 +378,18 @@ namespace Graphics
 	SetViewports
 =================================================
 */
-	void RenderTarget::SetViewports (Buffer<const int2> sizes)
+	void RenderTarget::SetViewports (Buffer<const uint2> sizes)
 	{
 		CHECK( _viewports.MaxCapacity() >= sizes.Count() );
 
 		_viewports.Resize( Min( _viewports.MaxCapacity(), sizes.Count() ) );
 
 		FOR( i, _viewports ) {
-			_viewports[i] = RectI( 0, 0, sizes[i].x, sizes[i].y );
+			_viewports[i] = RectU( 0, 0, sizes[i].x, sizes[i].y );
 		}
 	}
 
-	void RenderTarget::SetViewports (Buffer<const RectI> viewports)
+	void RenderTarget::SetViewports (Buffer<const RectU> viewports)
 	{
 		CHECK( _viewports.MaxCapacity() >= viewports.Count() );
 
@@ -408,7 +412,7 @@ namespace Graphics
 
 		FOR( i, _targets )
 		{
-			if ( _targets[i].IsEnabled() and _targets[i].texture.IsNotNull() )
+			if ( _targets[i].IsEnabled() and _targets[i].texture )
 			{
 				size = Min( size, _targets[i].texture->Dimension().xy() );
 				++num_active;
@@ -416,7 +420,7 @@ namespace Graphics
 		}
 
 		if ( num_active > 0 )
-			SetViewport( size.To<int2>() );
+			SetViewport( size );
 	}
 
 /*
@@ -426,11 +430,11 @@ namespace Graphics
 */
 	EPixelFormat::type RenderTarget::GetFormat (ERenderTarget::type target) const
 	{
-		CHECK_ERR( HasTarget( target ), EPixelFormat::type(0) );
+		CHECK_ERR( HasTarget( target ) );
 
 		TexturePtr const &	tex = GetTexture( target );
 
-		if ( tex.IsNotNull() )
+		if ( tex )
 			return tex->PixelFormat();
 
 		if ( IsSystemRenderTarget() )
@@ -467,7 +471,7 @@ namespace Graphics
 			}
 		}
 
-		RETURN_ERR( "no pixel format for target!", EPixelFormat::type(0) );
+		RETURN_ERR( "no pixel format for target!" );
 	}
 	
 /*
@@ -481,10 +485,10 @@ namespace Graphics
 	{
 		// all active viewports must not be zero size!
 
-		Buffer< const RectI >	vp = _viewports;
+		Buffer< const RectU >	vp = _viewports;
 
 		FOR( i, vp ) {
-			ASSERT( All( vp[i].Size() > int2( 0 ) ) );
+			ASSERT( All( vp[i].Size() > uint2( 0 ) ) );
 		}
 	}
 

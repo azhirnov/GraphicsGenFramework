@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "Engine/Graphics/Shader/ShaderProgram.h"
 #include "Engine/Graphics/Engine/GraphicsEngine.h"
@@ -22,7 +22,7 @@ namespace Graphics
 	String ShaderProgram::FormatUniformBlockSource (StringCRef source)
 	{
 		Array< StringCRef >	parts;
-		String					str;
+		String				str;
 
 		StringParser::DivideString_CPP( source, parts );
 

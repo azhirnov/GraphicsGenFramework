@@ -1,4 +1,4 @@
-// Copyright © 2017  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -20,17 +20,17 @@ namespace Profiler
 	// variables
 	private:
 		// TODO: add other queries
-		GraphicsQueryPtr		_gpuTimeQuery;
-		String					_name;
-		const Time<double>		_limit;		// normal time for function, if real time is greather, then log message marked as warning
-		const char *			_file;
-		const int				_line;
+		GraphicsQueryPtr	_gpuTimeQuery;
+		String				_name;
+		const TimeD			_limit;		// normal time for function, if real time is greather, then log message marked as warning
+		const char *		_file;
+		const int			_line;
 
 
 	// methods
 	public:
 		explicit
-		FunctionGpuProfiler (const SubSystemsRef ss, const char *name, Time<double> limitSec) :
+		FunctionGpuProfiler (const SubSystemsRef ss, const char *name, TimeD limitSec) :
 			_name(name), _limit(limitSec), _file(null), _line(0)
 		{
 			_gpuTimeQuery = GraphicsQuery::New( ss );
@@ -38,7 +38,7 @@ namespace Profiler
 			_gpuTimeQuery->Begin( EQuery::TimeElapsed, 0 );
 		}
 
-		FunctionGpuProfiler (const SubSystemsRef ss, const char *name, const char *func, const char *file, int line, Time<double> limitSec) :
+		FunctionGpuProfiler (const SubSystemsRef ss, const char *name, const char *func, const char *file, int line, TimeD limitSec) :
 			_file(file), _line(line), _limit(limitSec)
 		{
 			_gpuTimeQuery = GraphicsQuery::New( ss );
@@ -52,35 +52,34 @@ namespace Profiler
 		{
 			_gpuTimeQuery->End();
 
-			const Time<double>	dt = Time<double>().FromNanoSeconds( (double)_gpuTimeQuery->GetResult() );
+			const TimeD	dt = TimeD::FromNanoSeconds( (double)_gpuTimeQuery->GetResult() );
 			
-			_name << "; TIME: ";
-			StringUtils::TimeToStr( _name, dt.Seconds() );
+			_name << "; TIME: " << ToString( dt );
 			
-			LOG_EXT( _name.cstr(), dt < _limit ? ELog::Debug : ELog::Warning, _file, _line );
+			LOG( _name.cstr(), dt < _limit ? ELog::Debug : ELog::Warning, _file, _line );
 		}
 	};
 
 
-# ifdef OP_ENABLE_PROFILING
+# ifdef GX_ENABLE_PROFILING
 	
 	// name, limit
 #	define GPUTIME_PROFILER( ... ) \
 		Engine::Profiler::FunctionGpuProfiler \
 				AUXDEF_UNITE_RAW( __funcGpuProf, __COUNTER__ ) ( \
 					SubSystems(), \
-					AUXDEF_GETRAW( AUXDEF_GET_FIRST( __VA_ARGS__, unknown ) ), \
+					AUXDEF_GETRAW( AUXDEF_GETARG_0( __VA_ARGS__, unknown ) ), \
 					GX_FUNCTION_NAME, \
 					__FILE__, \
 					__LINE__, \
-					Time<double>( AUXDEF_GETRAW( AUXDEF_GET_SECOND( __VA__ARGS__, 1.0e30 ) ) ) \
+					TimeD( AUXDEF_GETRAW( AUXDEF_GETARG_1( __VA__ARGS__, 1.0e30 ) ) ) \
 				)
 
 # else
 
 #	define GPUTIME_PROFILER( ... )
 
-# endif	// OP_ENABLE_PROFILING
+# endif	// GX_ENABLE_PROFILING
 
 
 }	// Profiler

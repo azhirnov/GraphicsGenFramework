@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -24,7 +24,6 @@ namespace Base
 		ThreadManager				_threadManager;
 		SerializableObjectFactory	_objFactory;
 		ResourceManager				_resManager;
-		Logger						_logger;
 		EventSystemPtr				_eventSys;
 
 
@@ -47,16 +46,8 @@ namespace Base
 		~Application ()
 		{
 			_eventSys->Clear();
-			_logger.Close();
 
 			SubSystems()->GetSetter< Application >().Set( null );
-		}
-
-
-		Logger *	GetLogger ()
-		{
-			ASSERT( IsCurrentThread() );
-			return &_logger;
 		}
 
 

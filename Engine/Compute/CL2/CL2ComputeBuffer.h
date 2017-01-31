@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -31,15 +31,15 @@ namespace Compute
 		~CL2ComputeBuffer ();
 
 	public:
-		bool Create (Bytes<usize> size, EMemoryAccess::type flags = EMemoryAccess::ReadWrite);
+		bool Create (BytesU size, EMemoryAccess::type flags = EMemoryAccess::ReadWrite);
 		bool Create (BinaryBuffer data, EMemoryAccess::type flags = EMemoryAccess::ReadWrite);
 		bool Create (const MemoryBufferPtr &shared, EMemoryAccess::type flags = EMemoryAccess::ReadWrite);
 		
-		bool Read (Buffer<ubyte> data, Bytes<usize> offset = Uninitialized()) const;
-		bool Write (BinaryBuffer data, Bytes<usize> offset = Uninitialized());
+		bool Read (Buffer<ubyte> data, BytesU offset = Uninitialized) const;
+		bool Write (BinaryBuffer data, BytesU offset = Uninitialized);
 
-		bool Copy (const ComputeImagePtr &src, const uint4 &srcOffset, Bytes<usize> dstOffset, const uint4 &size);
-		bool Copy (const ComputeBufferPtr &src, Bytes<usize> srcOffset, Bytes<usize> dstOffset, Bytes<usize> size);
+		bool Copy (const ComputeImagePtr &src, const uint4 &srcOffset, BytesU dstOffset, const uint4 &size);
+		bool Copy (const ComputeBufferPtr &src, BytesU srcOffset, BytesU dstOffset, BytesU size);
 
 		template <typename T>
 		void Clear (const T &value);
@@ -50,7 +50,7 @@ namespace Compute
 		
 		EMemoryAccess::type		MemoryAccess ()		const	{ return _flags; }
 
-		Bytes<usize>			Size ()				const	{ return Bytes<usize>( _size ); }
+		BytesU					Size ()				const	{ return BytesU( _size ); }
 		bool					IsCreated ()		const	{ return _id != null; }
 		cl::cl_mem				Id ()				const	{ return _id; }
 
@@ -58,7 +58,7 @@ namespace Compute
 
 
 	private:
-		void _FillBuffer (usize offset, usize size, BinaryBuffer pattern);
+		bool _FillBuffer (usize offset, usize size, BinaryBuffer pattern);
 
 		void _Destroy ();
 	};

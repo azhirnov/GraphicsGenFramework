@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -70,16 +70,16 @@ namespace Graphics
 		// sampler type
 		switch ( tex )
 		{
-			case ETexture::Tex1D :				result |= EValueTypeInfo::_SAMP_1D;		break;
-			case ETexture::Tex2D :				result |= (is_shadow ? EValueTypeInfo::_SAMP_2D : EValueTypeInfo::_SAMP_2DS);	break;
-			case ETexture::Tex2DArray :			result |= (is_shadow ? EValueTypeInfo::_SAMP_2DA : EValueTypeInfo::_SAMP_2DAS);	break;
-			case ETexture::Tex2DMS :			result |= EValueTypeInfo::_SAMP_2DMS;	break;
-			case ETexture::Tex2DMSArray :		result |= EValueTypeInfo::_SAMP_2DAMS;	break;
-			case ETexture::TexCube :			result |= (is_shadow ? EValueTypeInfo::_SAMP_CUBE : EValueTypeInfo::_SAMP_CUBES);	break;
-			case ETexture::TexCubeArray :		result |= EValueTypeInfo::_SAMP_CUBEA;	break;
-			case ETexture::Tex3D :				result |= EValueTypeInfo::_SAMP_3D;		break;
+			case ETexture::Tex1D :			result |= EValueTypeInfo::_SAMP_1D;		break;
+			case ETexture::Tex2D :			result |= (is_shadow ? EValueTypeInfo::_SAMP_2D : EValueTypeInfo::_SAMP_2DS);	break;
+			case ETexture::Tex2DArray :		result |= (is_shadow ? EValueTypeInfo::_SAMP_2DA : EValueTypeInfo::_SAMP_2DAS);	break;
+			case ETexture::Tex2DMS :		result |= EValueTypeInfo::_SAMP_2DMS;	break;
+			case ETexture::Tex2DMSArray :	result |= EValueTypeInfo::_SAMP_2DAMS;	break;
+			case ETexture::TexCube :		result |= (is_shadow ? EValueTypeInfo::_SAMP_CUBE : EValueTypeInfo::_SAMP_CUBES);	break;
+			case ETexture::TexCubeArray :	result |= EValueTypeInfo::_SAMP_CUBEA;	break;
+			case ETexture::Tex3D :			result |= EValueTypeInfo::_SAMP_3D;		break;
 			case ETexture::Buffer :			result |= EValueTypeInfo::_SAMP_BUF;	break;
-			default :							RETURN_ERR( "invalid texture type", type() );
+			default :						RETURN_ERR( "invalid texture type" );
 		}
 
 		return type( result );
@@ -92,7 +92,7 @@ namespace Graphics
 
 	inline EFragOutput::type  EFragOutput::From (EPixelFormat::type fmt)
 	{
-		CHECK_ERR( EPixelFormat::Format::IsColor( fmt ), EFragOutput::type(0) );
+		CHECK_ERR( EPixelFormat::Format::IsColor( fmt ), EFragOutput::Unknown );
 
 		if ( EPixelFormat::ValueType::IsSignedInteger( fmt ) )
 			return EFragOutput::Int4;
@@ -103,7 +103,7 @@ namespace Graphics
 		if ( EPixelFormat::ValueType::IsFloat( fmt ) )
 			return EFragOutput::Float4;
 
-		RETURN_ERR( "invalid pixel format", EFragOutput::type(0) );
+		RETURN_ERR( "invalid pixel format" );
 	}
 
 
@@ -173,16 +173,16 @@ namespace Graphics
 //-----------------------------------------------------------------------------//
 // EIndex
 
-	inline Bytes<usize> EIndex::SizeOf (type value)
+	inline BytesU EIndex::SizeOf (type value)
 	{
 		switch ( value )
 		{
-			case UByte	:	return Bytes<usize>( CompileTime::SizeOf<ubyte>::bytes );
-			case UShort	:	return Bytes<usize>( CompileTime::SizeOf<ushort>::bytes );
-			case UInt	:	return Bytes<usize>( CompileTime::SizeOf<uint>::bytes );
+			case UByte	:	return BytesU( CompileTime::SizeOf<ubyte>::bytes );
+			case UShort	:	return BytesU( CompileTime::SizeOf<ushort>::bytes );
+			case UInt	:	return BytesU( CompileTime::SizeOf<uint>::bytes );
 		}
 
-		RETURN_ERR( "invalid index type", Bytes<usize>() );
+		RETURN_ERR( "invalid index type" );
 	}
 
 
@@ -201,11 +201,11 @@ namespace Graphics
 		return num >= EValueTypeInfo::_R and num <= EValueTypeInfo::_RGBA ? ( num >> EValueTypeInfo::_COL_OFF ): 0;
 	}
 	
-	inline Bits<usize> EPixelFormat::BitPerPixel (type value)
+	inline BitsU EPixelFormat::BitPerPixel (type value)
 	{
 		if ( IsCompressed( value ) ) {
 			TODO( "" );
-			return Bits<usize>( 1 );
+			return BitsU( 1 );
 		}
 		
 		uint	val_size = 0;
@@ -228,14 +228,14 @@ namespace Graphics
 			case EValueTypeInfo::_INT24 :						val_size = 24;		break;
 			case EValueTypeInfo::_DEPTH_24_STENCIL_8 :			val_size = 24+8;	break;
 			case EValueTypeInfo::_FLOAT_DEPTH_32_STENCIL_8 :	val_size = 32+8;	break;
-			default :											RETURN_ERR( "unknown type!", Bits<usize>(0) );
+			default :											RETURN_ERR( "unknown type!" );
 		}
 
 		const uint	comp_count	= (value & EValueTypeInfo::_COL_MASK) >> EValueTypeInfo::_COL_OFF;
 
-		return Bits<usize>( val_size * comp_count );
+		return BitsU( val_size * comp_count );
 	}
-	
+
 	template <typename T>
 	inline EPixelFormat::type EPixelFormat::FromType (const T&, bool normalized)
 	{

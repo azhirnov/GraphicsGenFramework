@@ -1,6 +1,6 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
-#include "STL/ux_stl.h"
+#include "Engine/STL/Engine.STL.h"
 #include "Debug.h"
 
 using namespace GX_STL;
@@ -14,7 +14,7 @@ typedef Queue< Elem_t >			Queue_t;
 typedef std::vector< VElem_t >	Vector_t;
 
 
-void Queue_Test1 ()
+static void Queue_Test1 ()
 {
 	Queue_t		q;
 
@@ -29,7 +29,8 @@ void Queue_Test1 ()
 	q.PopFront();
 }
 
-void Queue_Test2 ()
+
+static void Queue_Test2 ()
 {
 	Queue_t		q;
 	q.Resize( 12 );
@@ -43,7 +44,8 @@ void Queue_Test2 ()
 	q << Buffer<const Elem_t>();
 }
 
-void Queue_Test3 ()
+
+static void Queue_Test3 ()
 {
 	VElem_t::ClearStatistic();
 
@@ -63,7 +65,8 @@ void Queue_Test3 ()
 	ASSERT( (q == Buffer<Elem_t>( (Elem_t *)&vec[0], vec.size() )) );
 }
 
-void Queue_Test4 ()
+
+static void Queue_Test4 ()
 {
 	Queue<int>			q;
 	std::vector<int>	v;
@@ -71,30 +74,31 @@ void Queue_Test4 ()
 
 	for (usize i = 0; i < count; ++i)
 	{
-		q.PushBack( i + 1000 );
-		v.push_back( i + 1000 );
+		q.PushBack( int(i) + 1000 );
+		v.push_back( int(i) + 1000 );
 	}
 	
 	for (usize i = 0; i < count; ++i)
 	{
-		q.PushFront( i + 2000 );
-		v.insert( v.begin(), i + 2000 );
+		q.PushFront( int(i) + 2000 );
+		v.insert( v.begin(), int(i) + 2000 );
 	}
 
 	for (usize i = 0; i < count; ++i)
 	{
-		q.PushBack( i + 3000 );
-		v.push_back( i + 3000 );
+		q.PushBack( int(i) + 3000 );
+		v.push_back( int(i) + 3000 );
 	}
 	
 	for (usize i = 0; i < count; ++i)
 	{
-		q.PushFront( i + 4000 );
-		v.insert( v.begin(), i + 4000 );
+		q.PushFront( int(i) + 4000 );
+		v.insert( v.begin(), int(i) + 4000 );
 	}
 
 	ASSERT( (q == Buffer<int>( &v[0], v.size() )) );
 }
+
 
 extern void Test_Containers_Queue ()
 {

@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 /*
 	VirtualThread is wrapper for parallel thread
 */
@@ -95,7 +95,7 @@ namespace Base
 
 		static VirtualThreadPtr New (const IParallelThreadPtr &target)
 		{
-			CHECK_ERR( target.IsNotNull() );
+			CHECK_ERR( target );
 			return BaseObject::_New( new VirtualThread( target ) );
 		}
 
@@ -103,7 +103,7 @@ namespace Base
 	private:
 		void _SetTargetThread (const IParallelThreadPtr &target)
 		{
-			CHECK( _targetThread.IsNull() );
+			CHECK( not _targetThread );
 			CHECK( target != this );
 			
 			_targetThread = target;

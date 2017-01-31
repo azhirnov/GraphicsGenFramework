@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 /*
 	Shaders support #include and #import directives.
 	#include - attach source code
@@ -22,7 +22,7 @@ namespace Graphics
 	{
 	// types
 	public:
-		typedef Bitfield< EShader::_COUNT >		ShaderBits_t;
+		typedef Bitfield< EShader::_Count >		ShaderBits_t;
 
 	private:
 		struct EParsingTag
@@ -45,11 +45,17 @@ namespace Graphics
 		// variables
 			usize				sourceIdx;
 			usize				offset;
+			usize				line;
 			EParsingTag::type	tag;
 
 		// methods
-			Tag () : sourceIdx(-1), offset(0), tag(EParsingTag::None) {}
-			Tag (usize sourceIdx, usize offset, EParsingTag::type tag) : sourceIdx(sourceIdx), offset(offset), tag(tag) {}
+			Tag () :
+				sourceIdx(-1), offset(0), line(0), tag(EParsingTag::None)
+			{}
+
+			Tag (usize sourceIdx, usize offset, usize line, EParsingTag::type tag) :
+				sourceIdx(sourceIdx), offset(offset), line(line), tag(tag)
+			{}
 
 			// for sorting
 			bool operator > (const Tag &right) const	{ return offset > right.offset; }
@@ -60,12 +66,21 @@ namespace Graphics
 		{
 		// variables
 			String		sourceStr;
+			String		filename;		// TODO: use StringCRef if it is safe
 			bool		isInHeader;		// if attachment in header then header attached to header, otherwise attachet to source
 			
 		// methods
-			ShaderSource () : isInHeader(false) {}
-			ShaderSource (StringCRef src, bool inHeader) : sourceStr(src), isInHeader(inHeader) {}
-			ShaderSource (String &&src, bool inHeader) : sourceStr( RVREF(src) ), isInHeader(inHeader) {}
+			ShaderSource () :
+				isInHeader(false)
+			{}
+
+			ShaderSource (StringCRef src, StringCRef fname, bool inHeader) :
+				sourceStr(src), filename(fname), isInHeader(inHeader)
+			{}
+
+			ShaderSource (String &&src, String && fname, bool inHeader) :
+				sourceStr(RVREF(src)), filename(RVREF(fname)), isInHeader(inHeader)
+			{}
 		};
 
 
@@ -73,8 +88,8 @@ namespace Graphics
 		{
 		// variables
 			Array< ShaderSource >			sources;
-			Array< usize2 >					headerRef;		// {source index, offset}
-			Array< usize2 >					sourceRef;		// {source index, offset}
+			Array< usize3 >					headerRef;		// {source index, offset, line}
+			Array< usize3 >					sourceRef;		// {source index, offset, line}
 			HashSet< String >				includedFiles;
 			HashSet< String >				importedFiles;
 			Array< ShaderID >				dependentShaders;
@@ -87,8 +102,9 @@ namespace Graphics
 			ShaderParsingData () : compilationFlags( EShaderCompilationFlags::None )
 			{}
 
-			String &	Src (usize i)	{ return sources[i].sourceStr; }
-			String &	SrcBack ()		{ return sources.Back().sourceStr; }
+			String &	Src (usize i)		{ return sources[i].sourceStr; }
+			StringCRef	Filename (usize i)	{ return sources[i].filename; }
+			String &	SrcBack ()			{ return sources.Back().sourceStr; }
 		};
 
 
@@ -114,8 +130,55 @@ namespace Graphics
 			bool operator == (const LoadedShader &right) const;
 		};
 
-		typedef Set< LoadedShader >											LoadedShaders_t;
-		typedef StaticArray< Optional< LoadedShader >, EShader::_COUNT >	LoadedActiveShaders_t;
+
+		struct LoadedShaderHash
+		{
+			typedef LoadedShader				key_t;
+			typedef Hash< String >::result_t	result_t;
+
+			result_t operator () (const key_t &value) const
+			{
+				return	(Hash< String >()( value.address ) << 1) ^
+						(Hash< EShader::type >()( value.shaderType ) << 2) ^
+						(Hash< EShaderCompilationFlags::type >()( value.flags ) >> 1);
+			}
+		};
+
+
+		/*struct HeaderInfo
+		{
+		// variables
+			String		source;
+			ushort2		linesRange;		// offset, count
+
+		// methods
+			HeaderInfo () : linesRange(0) {}
+			HeaderInfo (String &&source, uint firstLine, uint count) : source(source), linesRange(uint2(firstLine, count)) {}
+
+			uint FirstLine ()	const	{ return linesRange.x; }
+			uint NumLines ()	const	{ return linesRange.y; }
+		};*/
+
+
+		struct SourceInfo
+		{
+		// variables
+			StringCRef	source;
+			StringCRef	filename;
+			ushort2		linesRange;		// offset, count
+			
+		// methods
+			SourceInfo () : linesRange(0) {}
+			SourceInfo (StringCRef source, StringCRef filename, uint2 linesRange) : source(source), filename(filename), linesRange(linesRange) {}
+			
+			uint FirstLine ()	const	{ return linesRange.x; }
+			uint NumLines ()	const	{ return linesRange.y; }
+		};
+
+
+		typedef HashSet< LoadedShader, LoadedShaderHash >					LoadedShaders_t;
+		//typedef HashMap< String, HeaderInfo >								UniqueHeaders_t;
+		typedef StaticArray< Optional< LoadedShader >, EShader::_Count >	LoadedActiveShaders_t;
 
 
 	// variables
@@ -123,6 +186,7 @@ namespace Graphics
 		Array< String >		_includeDirs;
 		Array< String >		_importDirs;
 		LoadedShaders_t		_loadedShaders;			// cache for searching import shaders
+		//UniqueHeaders_t		_headers;
 		String				_debugOutputFolder;
 		uint				_debugOutputNumber;
 		bool				_copilationInProgress;
@@ -138,28 +202,28 @@ namespace Graphics
 
 		bool AddIncludeDirectory (StringCRef dir);
 		bool AddIncludeDirectories (Buffer<StringCRef> dirs);
-		void ClearIncludeDirectories ();
+		bool ClearIncludeDirectories ();
 
 		bool AddImportDirectory (StringCRef dir);
 		bool AddImportDirectories (Buffer<StringCRef> dirs);
-		void ClearImportDirectories ();
+		bool ClearImportDirectories ();
 		
-		void ClearShaderCache ();
+		bool ClearShaderCache ();
 
 		bool LoadProgram (OUT ProgramID &program,
 						  StringCRef filename,
 						  ShaderBits_t activeShaders,
 						  EShaderCompilationFlags::type compilationFlags,
-						  const VertexAttribsState &input = Uninitialized(),
-						  const FragmentOutputState &output = Uninitialized());
+						  const VertexAttribsState &input = Uninitialized,
+						  const FragmentOutputState &output = Uninitialized);
 		
 		bool CompileProgram (OUT ProgramID &program,
 							 StringCRef source,
 							 Buffer<ShaderID> shaders,
 							 ShaderBits_t activeShaders,
 							 EShaderCompilationFlags::type compilationFlags,
-							 const VertexAttribsState &input = Uninitialized(),
-							 const FragmentOutputState &output = Uninitialized());
+							 const VertexAttribsState &input = Uninitialized,
+							 const FragmentOutputState &output = Uninitialized);
 
 		bool LoadShader (OUT Array<ShaderID> &shaders,
 						 OUT String &header,
@@ -188,7 +252,7 @@ namespace Graphics
 
 		bool _RecursiveParseShaders (INOUT ShaderParsingData& data);
 
-		bool _WriteDebugOutput (Buffer<const char*> source);
+		bool _WriteDebugOutput (Buffer<SourceInfo> source);
 
 		void _ValidateIncludeAndImportDirs ();
 
@@ -199,18 +263,18 @@ namespace Graphics
 
 	// api specific methods
 	private:
-		bool _CompileShader (INOUT LoadedShader &data, Buffer<const char*> source) const;
+		bool _CompileShader (INOUT LoadedShader &data, Buffer<SourceInfo> source) const;
 	
 		bool _LinkProgram (OUT ProgramID &prog, Buffer<ShaderID> shaders, ShaderBits_t activeShaders,
 							const VertexAttribsState &input, const FragmentOutputState &output) const;
 
-		void _ParseCompilationErrors (Buffer<const char*> source, EShader::type shaderType, StringCRef log, bool compiled) const;
+		void _ParseCompilationErrors (Buffer<SourceInfo> source, EShader::type shaderType, StringCRef log, bool compiled) const;
 		void _ParseLinkingErrors (StringCRef log, bool linked) const;
 		
 		static void _AddAttribs (OUT String &str, const VertexAttribsState &state);
 		static void _AddOutputs (OUT String &str, const FragmentOutputState &frag);
 
-		static void _DumpProgramResources (ProgramID prog);
+		static void _DumpProgramResources (ProgramID prog, StringCRef filename);
 		static void _DumpUniformBlocksInfo (ProgramID prog, INOUT String &str);
 		static void _DumpBufferBlockInfo (ProgramID prog, INOUT String &str);
 		static void _DumpUniformsInfo (ProgramID prog, INOUT String &str);

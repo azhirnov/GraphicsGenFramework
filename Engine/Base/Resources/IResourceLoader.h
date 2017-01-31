@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -20,14 +20,16 @@ namespace Base
 
 		struct ResourceFileHeader : public CompileTime::PODStruct
 		{
+			typedef CompileTime::Signature<uint>	Signature_t;
+
 		// variables
 		private:
-			CompileTime::Signature4::value_t	signature;
-			uint								version;
+			Signature_t::value_t	signature;
+			uint					version;
 
 		// methods
 		public:
-			ResourceFileHeader (CompileTime::Signature4::value_t signature, uint version) :
+			ResourceFileHeader (Signature_t::value_t signature, uint version) :
 				signature( signature ),
 				version( _engine_hidden_::BuildResourceVersion( ENGINE_VERSION, version ) )
 			{}

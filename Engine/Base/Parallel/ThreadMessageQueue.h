@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -116,8 +116,8 @@ namespace Base
 	};
 
 
-	typedef TThreadMessageQueue< MultiThreadQueue< CircularQueue< ParallelOp > > >			ThreadMessageQueue;
-	typedef TThreadMessageQueue< MultiThreadShortQueue< CircularQueue< ParallelOp > > >		ThreadMessageQueue2;
+	typedef TThreadMessageQueue< MtQueue< CircularQueue< ParallelOp > > >			ThreadMessageQueue;
+	typedef TThreadMessageQueue< MtShortQueue< CircularQueue< ParallelOp > > >		ThreadMessageQueue2;
 
 
 }	// Base

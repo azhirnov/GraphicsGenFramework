@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "IsoLocale.h"
 
@@ -90,7 +90,7 @@ namespace Base
 	Load
 =================================================
 */
-	IsoLocale::IsoLocale (Uninitialized)
+	IsoLocale::IsoLocale (UninitializedType)
 	{
 		iso_pair_array_t &	arr = _isoPairs;
 		uint				i	= 0;

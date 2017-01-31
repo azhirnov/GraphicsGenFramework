@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "GL4ComputeEngine.h"
 
@@ -59,13 +59,13 @@ namespace Compute
 		String log;
 
 		log	<< "OpenGL Compute info\n---------------"
-			<< "\nTotal memory:    " << StringUtils::BytesToString( _totalMemory )
-			<< "\nFree memory:     " << StringUtils::BytesToString( GetAvailableMemory() )
-			<< "\nMax groups:      " << _maxWorkGroupCount.ToString()
-			<< "\nMax group size:  " << _maxLocalGroupSize.ToString()
+			<< "\nTotal memory:    " << ToString( _totalMemory )
+			<< "\nFree memory:     " << ToString( GetAvailableMemory() )
+			<< "\nMax groups:      " << ToString( _maxWorkGroupCount )
+			<< "\nMax group size:  " << ToString( _maxLocalGroupSize )
 			<< "\nMax invocations: " << _maxInvocations;
 			
-		LOG( log.cstr(), ELog::Debug | ELog::OpenSpoilerFlag );
+		LOG( log.cstr(), ELog::Debug | ELog::SpoilerFlag );
 	}
 
 /*
@@ -86,10 +86,11 @@ namespace Compute
 				GLint total_mem_kb = 0;
 				GL_CALL( glGetIntegerv( GL_GPU_MEM_INFO_TOTAL_AVAILABLE_MEM_NVX, &total_mem_kb ) );
 
-				_totalMemory.FromKb( total_mem_kb );
+				_totalMemory.SetKb( total_mem_kb );
 				break;
 			}
 
+#			if 0 //defined(PLATFORM_WINDOWS) and not defined(PLATFORM_SDL)
 			case EVideoCardVendor::AMD :
 			{
 				using namespace WinPlatform;
@@ -106,10 +107,11 @@ namespace Compute
 					wglGetGPUIDsAMD( 1, ids );
 					wglGetGPUInfoAMD( ids[0], WGL_GPU_RAM_AMD, GL_UNSIGNED_INT, sizeof(size_t), &total_mem_mb );
 
-					_totalMemory.FromMb( total_mem_mb );
+					_totalMemory.SetMb( total_mem_mb );
 					break;
 				}
 			}
+#			endif	// PLATFORM_WINDOWS and not PLATFORM_SDL
 
 			default:
 			{
@@ -176,7 +178,7 @@ namespace Compute
 				GLint cur_avail_mem_kb = 0;
 				GL_CALL( glGetIntegerv( GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX, &cur_avail_mem_kb ) );
 
-				return Bytes<ulong>().FromKb( cur_avail_mem_kb );
+				return Bytes<ulong>::FromKb( cur_avail_mem_kb );
 			}
 
 			case EVideoCardVendor::AMD :
@@ -190,7 +192,7 @@ namespace Compute
 				GLint	free_mem[4] = {0};
 				GL_CALL( glGetIntegerv( GL_TEXTURE_FREE_MEMORY_ATI, free_mem ) );
 			
-				return Bytes<ulong>().FromKb( free_mem[0] );
+				return Bytes<ulong>::FromKb( free_mem[0] );
 			}
 		}
 		return Bytes<ulong>();

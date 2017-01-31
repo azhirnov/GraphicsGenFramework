@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #include "ThreadManager.h"
 
@@ -52,7 +52,7 @@ namespace Base
 	{
 		IParallelThreadPtr	thread = GetCurrent();
 
-		if ( thread.IsNull() )
+		if ( not thread )
 		{
 			WARNING( "current thread not found" );
 
@@ -67,15 +67,17 @@ namespace Base
 	AddThread
 =================================================
 */
-	void ThreadManager::AddThread (const IParallelThreadPtr &thread)
+	bool ThreadManager::AddThread (const IParallelThreadPtr &thread)
 	{
-		CHECK_ERR( thread.IsNotNull(), void() );
+		CHECK_ERR( thread );
 			
 		if ( thread->IsVirtualThread() )
 			return AddThread( thread->GetTragetThread() );
 
 		SCOPELOCK( _lockThreads );
 		_threads.Add( thread->GetThreadId(), thread );
+
+		return true;
 	}
 	
 /*
@@ -130,7 +132,7 @@ namespace Base
 
 		threads_t::const_iterator	iter;
 
-		if ( _threads.Find( CurrentThread::GetCurrentThreadId(), iter ) )
+		if ( _threads.Find( OS::CurrentThread::GetCurrentThreadId(), iter ) )
 			return iter->second;
 
 		return null;
@@ -143,16 +145,12 @@ namespace Base
 */
 	void ThreadManager::Iterate (const IParallelThreadPtr &current, const IParallelThreadPtr &other)
 	{
-		CHECK( current.IsNotNull() and other.IsNotNull() );
+		CHECK( current and other );
 
-		SyncEvent	ev( SyncEvent::AUTO_RESET );
+		OS::SyncEvent	ev( OS::SyncEvent::AUTO_RESET );
 
 		other->EnqueueFlushCommand( current );
-
-		ParallelOp	op;
-		FunctionBuilder::Create( op.func, &_Signal, &ev );
-			
-		other->Push( RVREF( op ) );
+		other->Push( ParallelOp( FunctionBuilder( &_Signal, &ev ) ) );
 		other->FlushMessages();
 			
 		current->ProcessMessages();

@@ -1,4 +1,4 @@
-// Copyright © 2014-2016  Zhirnov Andrey. All rights reserved.
+// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
 
 #pragma once
 
@@ -35,8 +35,8 @@ namespace Graphics
 			void Detach ()						{ texture = null;  enabled = false; }
 		};
 
-		typedef StaticArray< _Target, ERenderTarget::_COUNT >				Targets_t;
-		typedef FixedSizeArray< RectI, GlobalConst::Graphics_MaxViewports >	Viewports_t;
+		typedef StaticArray< _Target, ERenderTarget::_Count >				Targets_t;
+		typedef FixedSizeArray< RectU, GlobalConst::Graphics_MaxViewports >	Viewports_t;
 
 
 	// variables
@@ -66,7 +66,7 @@ namespace Graphics
 		bool Attach (const TexturePtr &texture, ERenderTarget::type target, uint level);
 		bool AttachLayer (const TexturePtr &texture, ERenderTarget::type target, uint layer, uint level);
 
-		void Detach (const TexturePtr &texture);
+		bool Detach (const TexturePtr &texture);
 		void Detach (ERenderTarget::type target);
 		void DetachAll ();
 
@@ -81,11 +81,11 @@ namespace Graphics
 		void Clear ();
 		void ClearOnly (ERenderTarget::type target);
 
-		void SetViewport (const int2 &size);
-		void SetViewport (const RectI &viewport);
+		void SetViewport (const uint2 &size);
+		void SetViewport (const RectU &viewport);
 
-		void SetViewports (Buffer<const int2> sizes);
-		void SetViewports (Buffer<const RectI> viewports);
+		void SetViewports (Buffer<const uint2> sizes);
+		void SetViewports (Buffer<const RectU> viewports);
 
 		void ComputeViewport ();
 
@@ -94,13 +94,13 @@ namespace Graphics
 		bool HasStencil () const;
 		bool HasColor () const;
 
-		bool GetImage (OUT Buffer<ubyte> &data, EPixelFormat::type format, const RectI &region,
+		bool GetImage (OUT Buffer<ubyte> &data, EPixelFormat::type format, const RectU &region,
 						ERenderTarget::type target = ERenderTarget::Color0,
-						Bytes<usize> align = Bytes<usize>(1)) const;
+						BytesU align = 1_b) const;
 
 		FragmentOutputState const&	GetFragmentOutput ()					const	{ return _fragmentOut; }
-		RectI						GetViewport (usize index = 0)			const	{ return _viewports[ index ]; }
-		Buffer< const RectI >		GetViewports ()							const	{ return _viewports; }
+		RectU						GetViewport (usize index = 0)			const	{ return _viewports[ index ]; }
+		Buffer< const RectU >		GetViewports ()							const	{ return _viewports; }
 		TexturePtr const &			GetTexture (ERenderTarget::type target)	const	{ return _targets[ target ].texture; }
 		EPixelFormat::type			GetFormat (ERenderTarget::type target)	const;
 		bool						IsSystemRenderTarget ()					const	{ return _isSystemRT; }
