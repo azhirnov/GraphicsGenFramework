@@ -90,15 +90,8 @@
     <ClInclude Include="..\..\..\Engine\STL\Dimensions\PhysicsValueVec.h" />
     <ClInclude Include="..\..\..\Engine\STL\Dimensions\PhysicsValueVecI.h" />
     <ClInclude Include="..\..\..\Engine\STL\Dimensions\RadiansAndDegrees.h" />
-    <ClInclude Include="..\..\..\Engine\STL\Experimental\AlignedType.h" />
-    <ClInclude Include="..\..\..\Engine\STL\Experimental\ArgHelpers.h" />
-    <ClInclude Include="..\..\..\Engine\STL\Experimental\ChunkArray.h" />
     <ClInclude Include="..\..\..\Engine\STL\Experimental\FastMath.h" />
-    <ClInclude Include="..\..\..\Engine\STL\Experimental\Fixed.h" />
-    <ClInclude Include="..\..\..\Engine\STL\Experimental\Float.h" />
     <ClInclude Include="..\..\..\Engine\STL\Experimental\ScopeSetter.h" />
-    <ClInclude Include="..\..\..\Engine\STL\Experimental\Tuple.h" />
-    <ClInclude Include="..\..\..\Engine\STL\Experimental\UFloat.h" />
     <ClInclude Include="..\..\..\Engine\STL\Experimental\Unroll.h" />
     <ClInclude Include="..\..\..\Engine\STL\Files\BaseFile.h" />
     <ClInclude Include="..\..\..\Engine\STL\Files\CryptFile.h" />
@@ -175,7 +168,7 @@
     <ClInclude Include="..\..\..\Engine\STL\OS\Base\ReadWriteSyncEmulation.h" />
     <ClInclude Include="..\..\..\Engine\STL\OS\Base\SemaphoreEmulator.h" />
     <ClInclude Include="..\..\..\Engine\STL\OS\Base\SyncEventEmulation.h" />
-    <ClInclude Include="..\..\..\Engine\STL\OS\Base\SyncPrimitives.h" />
+    <ClInclude Include="..\..\..\Engine\STL\OS\Base\ScopeLock.h" />
     <ClInclude Include="..\..\..\Engine\STL\OS\OSLowLevel.h" />
     <ClInclude Include="..\..\..\Engine\STL\OS\Posix\AtomicOp.h" />
     <ClInclude Include="..\..\..\Engine\STL\OS\Posix\FileSystem.h" />
@@ -213,7 +206,6 @@
     <ClInclude Include="..\..\..\Engine\STL\ThreadSafe\AtomicPtr.h" />
     <ClInclude Include="..\..\..\Engine\STL\ThreadSafe\MtFile.h" />
     <ClInclude Include="..\..\..\Engine\STL\ThreadSafe\MtQueue.h" />
-    <ClInclude Include="..\..\..\Engine\STL\ThreadSafe\Referenced.h" />
     <ClInclude Include="..\..\..\Engine\STL\ThreadSafe\Singleton.h" />
     <ClInclude Include="..\..\..\Engine\STL\Time\FloatTimeImpl.h" />
     <ClInclude Include="..\..\..\Engine\STL\Time\IntTimeImpl.h" />
@@ -227,7 +219,10 @@
     <ClInclude Include="..\..\..\Engine\STL\Types\Noninstancable.h" />
     <ClInclude Include="..\..\..\Engine\STL\Types\Optional.h" />
     <ClInclude Include="..\..\..\Engine\STL\Types\Ptr.h" />
+    <ClInclude Include="..\..\..\Engine\STL\Types\RefCountedObject.h" />
+    <ClInclude Include="..\..\..\Engine\STL\Types\ReferenceCounter.h" />
     <ClInclude Include="..\..\..\Engine\STL\Types\StaticLimit.h" />
+    <ClInclude Include="..\..\..\Engine\STL\Types\StaticRefCountedObject.h" />
     <ClInclude Include="..\..\..\Engine\STL\Types\Union.h" />
     <ClInclude Include="..\..\..\Engine\STL\Types\UniquePtr.h" />
     <ClInclude Include="..\..\..\Engine\STL\Types\VariantRef.h" />

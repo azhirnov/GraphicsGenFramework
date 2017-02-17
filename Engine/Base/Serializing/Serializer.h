@@ -344,7 +344,7 @@ namespace Base
 
 		
 		template <typename T, typename B, typename S>
-		void _Save (CRefCounter<T,B,S> const &value) const
+		void _Save (ReferenceCounter<T,B,S> const &value) const
 		{
 			_file->Write( _GetTypeOf( value ) );
 			

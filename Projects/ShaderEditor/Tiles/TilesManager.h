@@ -30,8 +30,8 @@ namespace ShaderEditor
 			static void GetAttribs (OUT VertexAttribsDesc &desc);
 		};
 
-		typedef Shared::FreeCameraController	CameraController_t;
-		//typedef Shared::FlightCameraController	CameraController_t;
+		typedef FreeCameraController	CameraController_t;
+		//typedef FlightCameraController	CameraController_t;
 
 	public:
 		typedef CameraController_t::Camera_t	Camera_t;

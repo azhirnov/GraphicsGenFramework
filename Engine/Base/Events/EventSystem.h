@@ -29,7 +29,7 @@ namespace Base
 		//
 		// Event Listener interface
 		//
-		class IEventListener : public Referenced
+		class IEventListener : public RefCountedObject
 		{
 		// interface
 		public:
@@ -79,7 +79,7 @@ namespace Base
 			}
 		};
 
-		typedef Map< TypeId_t, IEventListenerPtr >	EventsMap_t;
+		typedef Map< TypeId, IEventListenerPtr >	EventsMap_t;
 
 		typedef Set< EventSystemPtr >				EventSystems_t;
 
@@ -133,12 +133,6 @@ namespace Base
 		
 		template <typename C, typename Class, typename T>
 		bool Unsubscribe (const C &ptr, void (Class:: *fn) (const T&) const);
-
-
-		static EventSystemPtr	New (const SubSystemsRef ss)
-		{
-			return BaseObject::_New( new EventSystem( ss ) );
-		}
 	};
 	
 	
@@ -167,7 +161,7 @@ namespace Base
 			return;
 		}
 
-		const TypeId_t	id	= TypeId<T>();
+		const TypeId			id	= TypeIdOf<T>();
 
 		EventsMap_t::iterator	iter;
 
@@ -255,7 +249,7 @@ namespace Base
 	{
 		ASSERT( IsCurrentThread() );
 
-		const TypeId_t	id	= TypeId<T>();
+		const TypeId	id	= TypeIdOf<T>();
 		usize			index;
 
 		if ( not _events.FindIndex( id, OUT index ) )
@@ -295,7 +289,7 @@ namespace Base
 	{
 		ASSERT( IsCurrentThread() );
 
-		const TypeId_t	id	= TypeId<T>();
+		const TypeId			id	= TypeIdOf<T>();
 
 		EventsMap_t::iterator	iter;
 

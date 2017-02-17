@@ -113,11 +113,10 @@ namespace GXTypes
 		template <typename E>
 		bool		IsExist (const E &value) const;
 
+		bool		Intersects (const Self &other) const;
 
 		Self			SubArray (usize first, usize count = usize(-1));
 		Buffer<const T>	SubArray (usize first, usize count = usize(-1)) const;
-
-		bool		Intersects (const Self &other) const;
 
 
 		typedef	T *			iterator;
@@ -145,17 +144,15 @@ namespace GXTypes
 		static Self From (const Array<B,S,MC> &arr);
 
 		static Self FromVoid (void_ptr_t ptr, BytesU size);
-
-		template <typename B>
-		static Self FromType (B &ref);
-
+		
 		template <typename B, usize I>
 		static Self From (const B (&arr)[I]);
-
-		static Self From (const T &value);
 		
 		template <typename B>
 		static Self FromStd (const std::vector<B> &vec);
+		
+		template <typename B>
+		static Self FromValue (B &ref);
 
 		static constexpr bool	IsLinearMemory ()	{ return true; }
 	};
@@ -165,12 +162,21 @@ namespace GXTypes
 
 
 	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T>
 	inline Buffer<T>::Buffer (UninitializedType) :
 		_memory(null), _count(0)
 	{}
-
-
+	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T>
 	inline Buffer<T>::Buffer (void_ptr_t begin, void_ptr_t end) :
 		_memory( static_cast<T*>( begin ) ),
@@ -179,15 +185,23 @@ namespace GXTypes
 		ASSERT( _count == 0 or _memory != null );
 		ASSERT( begin <= end );
 	}
-
-
+	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T>
 	inline Buffer<T>::Buffer (T *arrayPtr, usize count) : _memory(arrayPtr), _count(count)
 	{
 		ASSERT( _count == 0 or _memory != null );
 	}
 	
-
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T>
 	template <usize I>
 	inline Buffer<T>::Buffer (const C (&arr)[I]) :
@@ -196,7 +210,11 @@ namespace GXTypes
 		ASSERT( _count == 0 or _memory != null );
 	}
 	
-
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T>
 	inline Buffer<T>::Buffer (std::initializer_list<C> list) :
 		_memory( list.begin() ), _count( list.size() )
@@ -204,7 +222,11 @@ namespace GXTypes
 		ASSERT( _count == 0 or _memory != null );
 	}
 	
-	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T>
 	template <template <typename ...> class LinearMemoryContainerType, typename ...Types>
 	inline Buffer<T>::Buffer (LinearMemoryContainerType< C, Types... > &container) :
@@ -224,14 +246,22 @@ namespace GXTypes
 			_memory = container.ptr();
 	}
 	
-
+/*
+=================================================
+	ToStdVector
+=================================================
+*/
 	template <typename T>
 	inline std::vector< typename Buffer<T>::C >  Buffer<T>::ToStdVector () const
 	{
 		return std::vector<C>( ptr(), Count() );
 	}
-
 	
+/*
+=================================================
+	From
+=================================================
+*/
 	template <typename T>
 	template <typename B>
 	inline Buffer<T>  Buffer<T>::From (Buffer<B> arr)
@@ -250,14 +280,11 @@ namespace GXTypes
 		return From( Buffer<const B>( arr ) );
 	}
 	
-
-	template <typename T>
-	inline Buffer<T>  Buffer<T>::From (const T &value)
-	{
-		return Buffer<T>( &value, 1 );
-	}
-	
-	
+/*
+=================================================
+	FromStd
+=================================================
+*/
 	template <typename T>
 	template <typename B>
 	static Buffer<T>  Buffer<T>::FromStd (const std::vector<B> &vec)
@@ -267,8 +294,12 @@ namespace GXTypes
 		else
 			return Buffer<T>();
 	}
-
-
+	
+/*
+=================================================
+	FromVoid
+=================================================
+*/
 	template <typename T>
 	inline Buffer<T>  Buffer<T>::FromVoid (void_ptr_t ptr, BytesU size)
 	{
@@ -277,17 +308,25 @@ namespace GXTypes
 		else
 			return Buffer<T>();
 	}
-
 	
+/*
+=================================================
+	FromValue
+=================================================
+*/
 	template <typename T>
 	template <typename B>
-	inline Buffer<T>  Buffer<T>::FromType (B &ref)
+	inline Buffer<T>  Buffer<T>::FromValue (B &ref)
 	{
 		STATIC_ASSERT( sizeof(B) % sizeof(T) == 0 );
-		return FromVoid( static_cast< void_ptr_t >( &ref ), SizeOf<B>() );
+		return Buffer<T>( PointerCast<T>( &ref ), sizeof(B) / sizeof(T) );
 	}
-
-
+	
+/*
+=================================================
+	ptr
+=================================================
+*/
 	template <typename T>
 	inline T * Buffer<T>::ptr ()
 	{
@@ -295,15 +334,18 @@ namespace GXTypes
 		return _memory;
 	}
 	
-
 	template <typename T>
 	inline T const * Buffer<T>::ptr () const
 	{
 		ASSUME( _memory != null );
 		return _memory;
 	}
-
 	
+/*
+=================================================
+	operator []
+=================================================
+*/
 	template <typename T>
 	inline T & Buffer<T>::operator [] (usize i)
 	{
@@ -311,29 +353,35 @@ namespace GXTypes
 		return _memory[i];
 	}
 
-	
 	template <typename T>
 	inline T const & Buffer<T>::operator [] (usize i) const
 	{
 		ASSUME( i < _count );
 		return _memory[i];
 	}
-		
-	
+
+/*
+=================================================
+	operator ==
+=================================================
+*/
 	template <typename T>
 	inline bool Buffer<T>::operator == (const Self &other) const
 	{
 		return Equals( other, _CompareElements() );
 	}
 
-	
 	template <typename T>
 	inline bool Buffer<T>::operator != (const Self &other) const
 	{
 		return not ( *this == other );
 	}
 	
-
+/*
+=================================================
+	Equals
+=================================================
+*/
 	template <typename T>
 	template <typename Cmp>
 	inline bool Buffer<T>::Equals (const Self &other, Cmp sCmp) const
@@ -355,8 +403,12 @@ namespace GXTypes
 
 		return true;
 	}
-
-
+	
+/*
+=================================================
+	GetIndex
+=================================================
+*/
 	template <typename T>
 	inline usize Buffer<T>::GetIndex (const T &valueRef) const
 	{
@@ -364,14 +416,22 @@ namespace GXTypes
 		return usize( &valueRef - Begin() );
 	}
 	
-	
+/*
+=================================================
+	IsInArray
+=================================================
+*/
 	template <typename T>
 	inline bool Buffer<T>::IsInArray (const T &valueRef) const
 	{
 		return ( &valueRef >= Begin() and &valueRef < End() );
 	}
 	
-	
+/*
+=================================================
+	Find
+=================================================
+*/
 	template <typename T>
 	template <typename E>
 	inline bool Buffer<T>::Find (OUT usize &index, const E &value, usize start) const
@@ -388,8 +448,12 @@ namespace GXTypes
 		}
 		return false;
 	}
-
 	
+/*
+=================================================
+	IsExist
+=================================================
+*/
 	template <typename T>
 	template <typename E>
 	inline bool Buffer<T>::IsExist (const E &value) const
@@ -397,40 +461,52 @@ namespace GXTypes
 		usize	idx;
 		return Find( idx, value, 0 );
 	}
-
-
+	
+/*
+=================================================
+	SubArray
+=================================================
+*/
 	template <typename T>
 	inline Buffer<T>  Buffer<T>::SubArray (usize first, usize count)
 	{
-		ASSERT( first < Count() and first + count <= Count() );
+		ASSERT( first <= Count() and (count == usize(-1) or first + count <= Count()) );
 		
 		if ( first >= Count() )
 			return Buffer<T>();
 		
-		// count can be usize(-1)
-		if ( count >= Count() or count + first >= Count() )
+		// 'count' can be usize(-1)
+		if ( count == usize(-1) or count + first > Count() )
 			count = Count() - first;
 
 		return ( Buffer<T>( ptr() + first, count ) );
 	}
-
 	
+/*
+=================================================
+	SubArray
+=================================================
+*/
 	template <typename T>
 	inline Buffer<const T>  Buffer<T>::SubArray (usize first, usize count) const
 	{
-		ASSERT( first < Count() and first + count <= Count() );
+		ASSERT( first <= Count() and (count == usize(-1) or first + count <= Count()) );
 		
 		if ( first >= Count() )
 			return Buffer<const T>();
 
-		// count can be usize(-1)
-		if ( count >= Count() or count + first >= Count() )
+		// 'count' can be usize(-1)
+		if ( count == usize(-1) or count + first > Count() )
 			count = Count() - first;
 
 		return ( Buffer<const T>( ptr() + first, count ) );
 	}
 	
-
+/*
+=================================================
+	Intersects
+=================================================
+*/
 	template <typename T>
 	inline bool  Buffer<T>::Intersects (const Self &other) const
 	{
@@ -438,31 +514,47 @@ namespace GXTypes
 		ASSERT( other.Begin() <= other.End() );
 		return Begin() > other.End() or End() < other.Begin();
 	}
-
 	
+/*
+=================================================
+	GetIter
+=================================================
+*/
 	template <typename T>
 	inline T * Buffer<T>::GetIter (usize i)
 	{
 		ASSUME( i < _count );
 		return & _memory[i];
 	}
-
 	
+/*
+=================================================
+	GetIter
+=================================================
+*/
 	template <typename T>
 	inline const T * Buffer<T>::GetIter (usize i) const
 	{
 		ASSUME( i < _count );
 		return & _memory[i];
 	}
-
 	
+/*
+=================================================
+	IsBegin
+=================================================
+*/
 	template <typename T>
 	inline bool Buffer<T>::IsBegin (const_iterator iter) const
 	{
 		return Begin() == iter;
 	}
-
 	
+/*
+=================================================
+	IsEnd
+=================================================
+*/
 	template <typename T>
 	inline bool Buffer<T>::IsEnd (const_iterator iter) const
 	{
@@ -470,7 +562,12 @@ namespace GXTypes
 	}
 
 	
-
+	
+/*
+=================================================
+	Hash
+=================================================
+*/
 	template <typename T>
 	struct Hash< Buffer<T> > : private Hash<T>
 	{
@@ -484,14 +581,14 @@ namespace GXTypes
 
 			if ( CompileTime::IsPOD<T> )
 			{
-				value ^= _types_hidden_::HashForMemoryBlock( (const ubyte *)x.RawPtr(), (usize)x.Size() );
+				value += _types_hidden_::HashForMemoryBlock( (const ubyte *)x.RawPtr(), (usize)x.Size() );
 			}
 			else
 			{
 				base_t	hasher;
 
 				FOR( i, x ) {
-					value ^= ( hasher( x[i] ) << (i&3) ) >> ((i+1) & 1);
+					value += hasher( x[i] );
 				}
 			}
 			return value;
@@ -531,7 +628,7 @@ namespace GXTypes
 		STATIC_ASSERT( CompileTime::IsPOD<C> );
 		ASSERT( buf.Size() >= SizeOf<T>() );
 
-		return UnsafeMem::PlacementNew<T>( buf.ptr(), args... );
+		return UnsafeMem::PlacementNew<T>( buf.ptr(), FW<Types>(args)... );
 	}
 	
 /*
@@ -560,9 +657,9 @@ namespace GXTypes
 	{
 		STATIC_ASSERT( not TypeTraits::IsConst<T0> );
 		STATIC_ASSERT( CompileTime::IsPOD<T0> and CompileTime::IsPOD<T1> );
-		ASSERT( dst.Size() == src.Size() );
+		ASSERT( dst.Size() >= src.Size() );
 
-		UnsafeMem::MemCopy( dst.ptr(), src.ptr(), Min( dst.Size(), src.Size() ) );
+		UnsafeMem::MemCopy( dst.ptr(), src.ptr(), GXMath::Min( dst.Size(), src.Size() ) );
 	}
 	
 /*
@@ -577,7 +674,7 @@ namespace GXTypes
 	{
 		STATIC_ASSERT( not TypeTraits::IsConst<T0> );
 		STATIC_ASSERT( CompileTime::IsPOD<T0> and CompileTime::IsPOD<T1> );
-		ASSERT( dst.Size() == src.Size() );
+		ASSERT( dst.Size() >= src.Size() );
 
 		UnsafeMem::MemMove( dst.ptr(), src.ptr(), Min( dst.Size(), src.Size() ) );
 	}

@@ -15,7 +15,9 @@ namespace Compute
 =================================================
 */
 	GL4ComputeEngine::GL4ComputeEngine (const SubSystemsRef ss) :
-		BaseObject( ss )
+		BaseObject( ss ),
+		_maxInvocations( 0 ),
+		_variableGroupSizeSupported( 0 )
 	{
 	}
 	
@@ -44,6 +46,7 @@ namespace Compute
 		_CalcTotalMemory();
 		_GetMaxWorkGroups();
 		_GetLocalGroupSize();
+		_CheckIsVariableGroupSizeSupported();
 		
 		_PrintInfo ();
 		return true;
@@ -59,11 +62,11 @@ namespace Compute
 		String log;
 
 		log	<< "OpenGL Compute info\n---------------"
-			<< "\nTotal memory:    " << ToString( _totalMemory )
-			<< "\nFree memory:     " << ToString( GetAvailableMemory() )
-			<< "\nMax groups:      " << ToString( _maxWorkGroupCount )
-			<< "\nMax group size:  " << ToString( _maxLocalGroupSize )
-			<< "\nMax invocations: " << _maxInvocations;
+			<< "\nTotal memory:     " << ToString( _totalMemory )
+			<< "\nFree memory:      " << ToString( GetAvailableMemory() )
+			<< "\nMax groups:       " << ToString( _maxWorkGroupCount )
+			<< "\nMax local groups: " << ToString( _maxLocalGroupSize )
+			<< "\nMax invocations:  " << _maxInvocations;
 			
 		LOG( log.cstr(), ELog::Debug | ELog::SpoilerFlag );
 	}
@@ -138,7 +141,7 @@ namespace Compute
 		GL_CALL( glGetIntegeri_v( GL_MAX_COMPUTE_VARIABLE_GROUP_SIZE_ARB, 2, &group_size[2] ) );
 		GL_CALL( glGetIntegerv( GL_MAX_COMPUTE_VARIABLE_GROUP_INVOCATIONS_ARB, &invocations ) );
 
-		_maxLocalGroupSize	= uint3( group_size[0], group_size[1], group_size[2] );
+		_maxLocalGroupSize	= ulong3( group_size[0], group_size[1], group_size[2] );
 		_maxInvocations		= invocations;
 	}
 	
@@ -157,7 +160,18 @@ namespace Compute
 		GL_CALL( glGetIntegeri_v( GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, &max_groups[1] ) );
 		GL_CALL( glGetIntegeri_v( GL_MAX_COMPUTE_WORK_GROUP_COUNT, 2, &max_groups[2] ) );
 
-		_maxWorkGroupCount	= uint3( max_groups[0], max_groups[1], max_groups[2] );
+		_maxWorkGroupCount	= ulong3( max_groups[0], max_groups[1], max_groups[2] );
+	}
+	
+/*
+=================================================
+	_CheckIsVariableGroupSizeSupported
+=================================================
+*/
+	void GL4ComputeEngine::_CheckIsVariableGroupSizeSupported ()
+	{
+		_variableGroupSizeSupported = SubSystems()->Get< GraphicsEngine >()->
+										GetContext()->IsExtensionSupported( "GL_ARB_compute_variable_group_size" );
 	}
 
 /*
@@ -214,9 +228,7 @@ namespace Compute
 */
 	void GL4ComputeEngine::Synchronize ()
 	{
-		using namespace gl;
-
-		GL_CALL( glFinish() );
+		SubSystems()->Get< GraphicsEngine >()->GetStateManager()->Synchronize();
 	}
 	
 /*
@@ -226,9 +238,11 @@ namespace Compute
 */
 	void GL4ComputeEngine::Barrier ()
 	{
-		using namespace gl;
+		Ptr<StateManager>	sm = SubSystems()->Get< GraphicsEngine >()->GetStateManager();
+		MemoryBarrierObj	barrier;
 
-		GL_CALL( glMemoryBarrier( GL_ALL_BARRIER_BITS ) );
+		sm->CreateBarrier( OUT barrier );
+		sm->MemoryBarrier( barrier, EMemoryBarrier::All );
 	}
 
 

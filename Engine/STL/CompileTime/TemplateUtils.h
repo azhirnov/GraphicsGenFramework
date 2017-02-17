@@ -187,7 +187,7 @@ namespace CompileTime
 	
 	template <typename Base, typename Derived>
 	static constexpr bool IsBaseOf	= _ctime_hidden_::_IsBaseOf< Base, Derived,
-										TypeTraits::IsReference<Base> or TypeTraits::IsReference<Derived> >::value;
+										TypeTraits::IsLValueReference<Base> or TypeTraits::IsLValueReference<Derived> >::value;
 
 
 

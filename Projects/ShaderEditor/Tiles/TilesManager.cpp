@@ -251,7 +251,7 @@ namespace ShaderEditor
 					// increase detail level
 					FOR( j, base_tile->_nodes )
 					{
-						TilePtr						tile 	= Tile::New( base_tile->SubSystems() );
+						TilePtr						tile 	= New<Tile>( base_tile->SubSystems() );
 						Transformation<real> const&	base_tr	= base_tile->_transform;
 						int2						index	= usize2( j & 1, j >> 1 ).To<int2>();
 
@@ -314,7 +314,7 @@ namespace ShaderEditor
 
 			FOR( i, _tiles )
 			{
-				TilePtr	tile 	= Tile::New( SubSystems() );
+				TilePtr	tile 	= New<Tile>( SubSystems() );
 				int2	index	= usize2( i % rect_size.x, i / rect_size.x ).To<int2>() + _tilesRect.LeftBottom();
 
 				ASSERT( All( index >= _tilesRect.LeftBottom() ) and
@@ -344,7 +344,7 @@ namespace ShaderEditor
 			{
 				Transformation<real> const&	tr = _tiles[i]->_transform;
 
-				TilePtr	tile 	= Tile::New( SubSystems() );
+				TilePtr	tile 	= New<Tile>( SubSystems() );
 				int2	index	= Wrap( _tiles[i]->_index, new_rect.LeftBottom(), new_rect.RightTop()-1 );
 
 				ASSERT( All( index >= new_rect.LeftBottom() ) and
@@ -505,7 +505,7 @@ namespace ShaderEditor
 		VertexAttribsDesc	attr;
 		MeshVertex::GetAttribs( attr );
 		
-		MeshGenerator::Mesh	mesh( VertexBuffer::New( ss ), IndexBuffer::New( ss ) );
+		MeshGenerator::Mesh	mesh( New<VertexBuffer>( ss ), New<IndexBuffer>( ss ) );
 
 		CHECK( mesh.vertexBuffer->Create() );
 		CHECK( mesh.vertexBuffer->SetData( BinaryBuffer::From( vertices ), EBufferUsage::Static ) );

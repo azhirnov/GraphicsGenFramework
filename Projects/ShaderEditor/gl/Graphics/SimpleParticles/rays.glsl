@@ -4,6 +4,7 @@ layout(std140)
 uniform ShaderUB {
 	float4x4		proj;
 	float4x4		mv;
+	float4x4		mvp;
 	float2			screenSize;
 } UB;
 
@@ -32,10 +33,12 @@ TGeomData_t { \
 
 	void main ()
 	{
-		Output.startPos	= UB.mv * float4( ATTRIB_0.xyz, 1.0 );
-		Output.endPos	= UB.mv * float4( ATTRIB_1.xyz, 1.0 );
+		Output.endPos	= UB.mv * float4( ATTRIB_0.xyz, 1.0 );
 		Output.color	= ATTRIB_2.rgba;
-		Output.size		= ATTRIB_3 / Max( UB.screenSize.x, UB.screenSize.y );
+		Output.size		= ATTRIB_3 * 2.0 / Max( UB.screenSize.x, UB.screenSize.y );
+
+		float3	v		= Normalize(ATTRIB_1.xyz) * Min( Length(ATTRIB_1.xyz), Output.size * 25.0 );
+		Output.startPos	= UB.mv * float4( ATTRIB_0.xyz - v * 0.5, 1.0 );
 	}
 
 #endif	// SH_VERTEX

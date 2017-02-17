@@ -52,7 +52,7 @@ namespace GXTypes
 		forceinline T * PlacementNew (void *ptr, Types&&... args) noexcept
 		{
 			ASSERT( _types_hidden_::IsAlignedMem<T>( ptr ) );
-			return ( new(ptr) T( RVREF(args)... ) );
+			return ( new(ptr) T( FW<Types>(args)... ) );
 		}
 
 	}	// UnsafeMem

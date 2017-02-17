@@ -77,17 +77,17 @@ namespace File
 
 		virtual bool SeekSet (BytesU offset) override
 		{
-			return fseek( _file, usize(offset), SEEK_SET ) == 0;
+			return fseek( _file, (long) isize(offset), SEEK_SET ) == 0;
 		}
 
 		virtual bool SeekCur (BytesI offset) override
 		{
-			return fseek( _file, isize(offset), SEEK_CUR ) == 0;
+			return fseek( _file, (long) isize(offset), SEEK_CUR ) == 0;
 		}
 
 		virtual bool SeekEnd (BytesU offset) override
 		{
-			return fseek( _file, usize(offset), SEEK_END ) == 0;
+			return fseek( _file, (long) isize(offset), SEEK_END ) == 0;
 		}
 		
 		virtual BytesU RemainingSize () const override
@@ -250,17 +250,17 @@ namespace File
 
 		virtual bool SeekSet (BytesU offset) override
 		{
-			return fseek( _file, usize(offset), SEEK_SET ) == 0;
+			return fseek( _file, (long) isize(offset), SEEK_SET ) == 0;
 		}
 
 		virtual bool SeekCur (BytesI offset) override
 		{
-			return fseek( _file, isize(offset), SEEK_CUR ) == 0;
+			return fseek( _file, (long) isize(offset), SEEK_CUR ) == 0;
 		}
 
 		virtual bool SeekEnd (BytesU offset) override
 		{
-			return fseek( _file, usize(offset), SEEK_END ) == 0;
+			return fseek( _file, (long) isize(offset), SEEK_END ) == 0;
 		}
 		
 		virtual BytesU RemainingSize () const override

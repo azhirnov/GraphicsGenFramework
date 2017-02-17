@@ -11,12 +11,12 @@ namespace ShaderEditor
 	private:
 		ComputeFunction		_initFunc;
 		ComputeFunction		_updateFunc;
-		TimeD				_prevGlobalTime;
 
 		// input/output
 		VertexBufferPtr		_inBuffer;
 		VertexBufferPtr		_outBuffer;
 		TimeD				_globalTime;
+		TimeD				_timeDelta;
 		uint				_count;
 		bool				_initialize;
 
@@ -24,7 +24,9 @@ namespace ShaderEditor
 	// methods
 	public:
 		SimpleParticlesGenerator (const SubSystemsRef ss) :
-			IGenerator( ss ), _count(0), _initialize(false)
+			IGenerator( ss ),
+			_initFunc( SubSystems() ),	_updateFunc( SubSystems() ),
+			_count(0), _initialize(false)
 		{}
 
 		bool SetArg (StringCRef name, const VariantRef &arg) override;
@@ -42,7 +44,7 @@ namespace ShaderEditor
 */
 	IGeneratorPtr  IGenerator::Create_SimpleParticles (const SubSystemsRef ss)
 	{
-		return BaseObject::_New( new SimpleParticlesGenerator( ss ) );
+		return New<SimpleParticlesGenerator>( ss );
 	}
 
 /*
@@ -70,6 +72,12 @@ namespace ShaderEditor
 			return true;
 		}
 
+		if ( name == "timeDelta" and arg.IsType<TimeD>() )
+		{
+			_timeDelta = arg.Get<TimeD>();
+			return true;
+		}
+
 		if ( name == "initialize" and arg.IsType<bool>() )
 		{
 			_initialize = arg.Get<bool>();
@@ -92,8 +100,8 @@ namespace ShaderEditor
 */
 	bool SimpleParticlesGenerator::Compile ()
 	{
-		CHECK_ERR( _initFunc.Load( SubSystems(), "gl/Compute/SimpleParticles/init.glcs", EShaderCompilationFlags::DefaultCompute ) );
-		CHECK_ERR( _updateFunc.Load( SubSystems(), "gl/Compute/SimpleParticles/update.glcs", EShaderCompilationFlags::DefaultCompute ) );
+		CHECK_ERR( _initFunc.Load( "gl/Compute/SimpleParticles/init.glcs", EShaderCompilationFlags::DefaultCompute ) );
+		CHECK_ERR( _updateFunc.Load( "gl/Compute/SimpleParticles/update.glcs", EShaderCompilationFlags::DefaultCompute ) );
 		
 		_count		= 0;
 		_initialize	= true;
@@ -110,29 +118,21 @@ namespace ShaderEditor
 		CHECK( _inBuffer and _outBuffer );
 		CHECK( _count > 0 );
 
-
 		if ( _initialize )
 		{
-			_initFunc.SetArg( "outBuffer",	_outBuffer );
+			_initFunc.SetArg( "outBuffer",		_outBuffer );
+			_initFunc.SetArg( "unGlobalTime",	(float)_globalTime.Seconds() );
 
 			_initFunc.Run( uint3(_count, 0, 0) );
 
-			_initialize		= false;
-			_prevGlobalTime = _globalTime;
+			_initialize = false;
 			return;
 		}
 
-		
-		TimeD	dt = _globalTime - _prevGlobalTime;
-
-		_prevGlobalTime = _globalTime;
-
-		if ( dt.IsZero() )
-			return;
-
 		_updateFunc.SetArg( "inBuffer",		_inBuffer );
 		_updateFunc.SetArg( "outBuffer",	_outBuffer );
-		_updateFunc.SetArg( "unTimeDelta",	(float)dt.Seconds() );
+		_updateFunc.SetArg( "unTimeDelta",	(float)_timeDelta.Seconds() );
+		_updateFunc.SetArg( "unGlobalTime",	(float)_globalTime.Seconds() );
 
 		_updateFunc.Run( uint3(_count, 0, 0) );
 	}

@@ -36,10 +36,11 @@ namespace GXMath
 
 
 	
-	//
-	// operator *
-	//
-
+/*
+=================================================
+	operator *
+=================================================
+*/
 	template <typename ValueType,
 			  typename Dimensions,
 			  typename ValueScale,
@@ -53,7 +54,11 @@ namespace GXMath
 		return ret;
 	}
 	
-
+/*
+=================================================
+	operator *
+=================================================
+*/
 	template <typename ValueType,
 			  typename Dimensions,
 			  typename ValueScale,
@@ -67,12 +72,11 @@ namespace GXMath
 		return ret;
 	}
 	
-
-
-	//
-	// operator /
-	//
-
+/*
+=================================================
+	operator /
+=================================================
+*/
 	template <typename ValueType,
 			  typename Dimensions,
 			  typename ValueScale,
@@ -86,7 +90,11 @@ namespace GXMath
 		return ret;
 	}
 	
-
+/*
+=================================================
+	operator /
+=================================================
+*/
 	template <typename ValueType,
 			  typename Dimensions,
 			  typename ValueScale,
@@ -100,12 +108,11 @@ namespace GXMath
 		return ret;
 	}
 	
-
-
-	//
-	// Equals
-	//
-	
+/*
+=================================================
+	Equals
+=================================================
+*/
 	template <typename ValueType,
 			  typename Dimensions,
 			  typename ValueScale
@@ -115,8 +122,12 @@ namespace GXMath
 	{
 		return Equals( a.ref(), b.ref() );
 	}
-
 	
+/*
+=================================================
+	Equals
+=================================================
+*/
 	template <typename ValueType,
 			  typename Dimensions,
 			  typename ValueScale,
@@ -129,8 +140,12 @@ namespace GXMath
 		FOR( i, ret )	ret[i] = Equals( a[i], b[i] );
 		return ret;
 	}
-
 	
+/*
+=================================================
+	Equals
+=================================================
+*/
 	template <typename ValueType,
 			  typename Dimensions,
 			  typename ValueScale
@@ -141,8 +156,12 @@ namespace GXMath
 	{
 		return Equals( a.ref(), b.ref(), accuracy );
 	}
-
 	
+/*
+=================================================
+	Equals
+=================================================
+*/
 	template <typename ValueType,
 			  typename Dimensions,
 			  typename ValueScale,

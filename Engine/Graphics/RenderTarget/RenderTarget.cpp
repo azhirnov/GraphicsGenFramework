@@ -84,7 +84,7 @@ namespace Graphics
 */
 	void RenderTarget::Destroy ()
 	{
-		if ( SubSystems()->Get< GraphicsEngine >() )
+		if ( not _isSystemRT and SubSystems()->Get< GraphicsEngine >() )
 			SubSystems()->Get< GraphicsEngine >()->GetContext()->DeleteRenderTarget( _rt );
 
 		_targets.Clear();
@@ -494,17 +494,12 @@ namespace Graphics
 
 /*
 =================================================
-	New
+	NewSystemRT
 =================================================
 */
-	RenderTargetPtr  RenderTarget::New (const SubSystemsRef ss)
-	{
-		return BaseObject::_New( new RenderTarget( false, ss ) );
-	}
-
 	RenderTargetPtr  RenderTarget::NewSystemRT (const SubSystemsRef ss)
 	{
-		return BaseObject::_New( new RenderTarget( true, ss ) );
+		return New<RenderTarget>( RenderTarget( true, ss ) );
 	}
 
 

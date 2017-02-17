@@ -35,7 +35,10 @@ namespace Compute
 
 		String					_buildOptions;
 
-		usize3					_maxWorkGroupSize;
+		ulong3					_maxThreads;
+		ulong3					_maxLocalGroupSize;
+		ulong					_maxInvocations;
+
 		usize					_maxComputeUnits;
 
 		Bytes<ulong>			_totalMemory;
@@ -57,20 +60,24 @@ namespace Compute
 
 		void SetProgramBuildOptions (StringCRef options);
 
-		String const&			GetBuildOptions ()		const	{ return _buildOptions; }
-		bool					IsShared ()				const	{ return _isShared; }
-		uint					GetVersion ()			const	{ return _version; }
+		String const&			GetBuildOptions ()				const	{ return _buildOptions; }
+		bool					IsShared ()						const	{ return _isShared; }
+		uint					GetVersion ()					const	{ return _version; }
+		
+		ulong3 const&			GetMaxThreads ()				const	{ return _maxThreads; }
+		ulong3					GetMaxWorkGroupCount ()			const	{ return GetMaxThreads() / GetMaxLocalGroupSize(); }
+		ulong3 const&			GetMaxLocalGroupSize ()			const	{ return _maxLocalGroupSize; }
+		ulong					GetMaxLocalGroupInvocations ()	const	{ return _maxInvocations; }
 
-		usize3 const&			GetMaxWorkGroupSize ()	const	{ return _maxWorkGroupSize; }
-		usize					GetComputeUnitsCount ()	const	{ return _maxComputeUnits; }
+		usize					GetComputeUnitsCount ()			const	{ return _maxComputeUnits; }
 
-		Bytes<ulong>			GetTotalMemory ()		const	{ return _totalMemory; }
-		Bytes<ulong>			GetAvailableMemory ()	const;
+		Bytes<ulong>			GetTotalMemory ()				const	{ return _totalMemory; }
+		Bytes<ulong>			GetAvailableMemory ()			const;
 
-		cl::cl_platform_id		GetPlatform ()			const	{ return _platform; }
-		cl::cl_device_id		GetDevice ()			const	{ return _device; }
-		cl::cl_context			GetContext ()			const	{ return _context; }
-		cl::cl_command_queue	GetCommandQueue ()		const	{ return _queue; }
+		cl::cl_platform_id		GetPlatform ()					const	{ return _platform; }
+		cl::cl_device_id		GetDevice ()					const	{ return _device; }
+		cl::cl_context			GetContext ()					const	{ return _context; }
+		cl::cl_command_queue	GetCommandQueue ()				const	{ return _queue; }
 
 
 	private:

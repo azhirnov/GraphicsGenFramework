@@ -201,7 +201,7 @@ namespace File
 					case SEEK_SET :		file->SeekSet( offset );	break;
 					case SEEK_CUR :		file->SeekCur( offset );	break;
 					case SEEK_END :		file->SeekEnd( offset );	break;
-					default :			RETURN_ERR( "invalid seek falg", Uninitialized );
+					default :			RETURN_ERR( "invalid seek falg" );
 				}
 
 				return 0;

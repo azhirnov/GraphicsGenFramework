@@ -17,7 +17,8 @@ namespace Compute
 =================================================
 */
 	CL2ComputeProgram::CL2ComputeProgram (const SubSystemsRef ss) :
-		BaseObject( ss ), _id( null )
+		BaseObject( ss ),
+		_id( null ),	_flags( EProgramUnitFlags::Unknown )
 	{
 	}
 
@@ -36,7 +37,7 @@ namespace Compute
 	Create
 =================================================
 */
-	bool CL2ComputeProgram::Create (StringCRef filename, EProgramUnitFlags::type compilationFlags)
+	bool CL2ComputeProgram::Create (StringCRef filename, EProgramUnitFlags::type flags)
 	{
 		_Delete();
 
@@ -49,31 +50,20 @@ namespace Compute
 		if ( not SubSystems()->Get< FileManager >()->IsFileExist( fname ) )
 			fname << '.' << _DefaultExtension();
 
-		if ( EnumEq( compilationFlags, EProgramUnitFlags::FP_32 ) )
+		if ( EnumEq( flags, EProgramUnitFlags::FP_32 ) )
 			source << "#define COMPUTE_FP 32\n";
 		else
-		if ( EnumEq( compilationFlags, EProgramUnitFlags::FP_64 ) )
+		if ( EnumEq( flags, EProgramUnitFlags::FP_64 ) )
 			source << "#define COMPUTE_FP 64\n";
 
 		temp_src.Reserve( 256 );
 
 		CHECK_ERR( _Load( fname, temp_src, source ) );
-		
 		CHECK_ERR( _SetSource( source ) );
-		
 		CHECK_ERR( _Compile() );
 
+		_flags = flags;
 		return true;
-	}
-
-/*
-=================================================
-	New
-=================================================
-*/
-	ComputeProgramPtr CL2ComputeProgram::New (const SubSystemsRef ss)
-	{
-		return BaseObject::_New( new CL2ComputeProgram( ss ) );
 	}
 	
 /*
@@ -84,6 +74,8 @@ namespace Compute
 	void CL2ComputeProgram::_Delete ()
 	{
 		using namespace cl;
+
+		_flags = EProgramUnitFlags::Unknown;
 
 		if ( _id == null )
 			return;
@@ -129,7 +121,7 @@ namespace Compute
 		cl_int				cl_err		= 0;
 		StringCRef			options		= SubSystems()->Get< ComputeEngine >()->GetBuildOptions();
 
-		( (cl_err = clBuildProgram( _id, CountOf(devices), devices, options.cstr(), null, null )) );
+		( (cl_err = clBuildProgram( _id, (cl_uint)CountOf(devices), devices, options.cstr(), null, null )) );
 		const bool compiled = (cl_err == CL_SUCCESS);
 
 		CL_CALL( clGetProgramBuildInfo( _id, devices[0], CL_PROGRAM_BUILD_LOG, 0, null, &log_size ) );
@@ -293,12 +285,12 @@ namespace Compute
 		RFilePtr	file;
 		CHECK_ERR( SubSystems()->Get< FileManager >()->OpenForRead( filename, file ) );
 
-		const BytesU	size = file->RemainingSize();
+		const usize	size = (usize)file->RemainingSize();
 
 		src << "#line 1 \"" << FileAddress::GetNameAndExt( filename ) << "\"\n";
 		src.Reserve( size + 2 + src.Length() );
 
-		CHECK_ERR( file->Read( src.End(), size ) );
+		CHECK_ERR( file->Read( src.End(), BytesU(size) ) );
 		
 		src.SetLength( src.Length() + size );
 		src << '\n';

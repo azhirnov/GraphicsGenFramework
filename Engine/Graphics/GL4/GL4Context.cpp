@@ -302,17 +302,17 @@ namespace Graphics
 
 			if ( EAttribute::ValueType::IsDouble( desc[i].ToVSInputType() ) )
 			{
-				GL_CALL( glVertexArrayAttribLFormat( id, index, size, type, GLsizei(desc[i].offset) ) );
+				GL_CALL( glVertexArrayAttribLFormat( id, index, size, type, (GLsizei) isize(desc[i].offset) ) );
 			}
 			else
 			if ( EAttribute::ValueType::IsInteger( desc[i].ToVSInputType() ) )
 			{
-				GL_CALL( glVertexArrayAttribIFormat( id, index, size, type, GLsizei(desc[i].offset) ) );
+				GL_CALL( glVertexArrayAttribIFormat( id, index, size, type, (GLsizei) isize(desc[i].offset) ) );
 			}
 			else
 			{
 				CHECK( EAttribute::ValueType::IsFloat( desc[i].ToVSInputType() ) );
-				GL_CALL( glVertexArrayAttribFormat( id, index, size, type, norm, GLsizei(desc[i].offset) ) );
+				GL_CALL( glVertexArrayAttribFormat( id, index, size, type, norm, (GLsizei) isize(desc[i].offset) ) );
 			}
 		}
 

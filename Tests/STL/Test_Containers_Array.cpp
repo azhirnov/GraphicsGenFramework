@@ -111,8 +111,19 @@ static void Array_Test4 ()
 		vec.push_back( VElemStr_t(str) );
 	}
 
-	QuickSort( arr, LAMBDA()(const auto &x, const auto &y) -> bool { return x.secondVal > y.secondVal; } );
-	std::sort( vec.begin(), vec.end(), LAMBDA()(const auto &x, const auto &y) -> bool { return x.secondVal < y.secondVal; } );
+	QuickSort(	arr,
+				LAMBDA()(const auto &x, const auto &y) -> bool
+				{{
+					return x.secondVal > y.secondVal;
+				}}
+	);
+
+	std::sort(	vec.begin(), vec.end(),
+				LAMBDA()(const auto &x, const auto &y) -> bool
+				{{
+					return x.secondVal < y.secondVal;
+				}}
+	);
 
 	ASSERT(( arr == Buffer<ElemStr_t>( (ElemStr_t *)&vec[0], vec.size() ) ));
 }

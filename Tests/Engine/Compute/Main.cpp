@@ -9,11 +9,6 @@ using namespace Engine::Compute;
 
 class TestApplication : public GameUtils::GameApplication
 {
-// types
-private:
-	SHARED_POINTER( TestApplication );
-
-
 // variables
 public:
 	GraphicsEngine	_graphicsEngine;
@@ -32,11 +27,6 @@ public:
 	}
 
 
-	~TestApplication ()
-	{
-	}
-
-
 	// GameApplication //
 	void _Update (TimeD dt, bool forceRedraw)
 	{
@@ -45,7 +35,7 @@ public:
 	void _OnInit ()
 	{
 		CHECK( SubSystems()->Get< Platform >()->
-			InitWindow( Platform::WindowDesc( "Test", int2(800, 600), MinValue<int2>(), false, true ) ) );
+			InitWindow( Platform::WindowDesc( "Test", uint2(800, 600), MinValue<int2>(), false, true ) ) );
 		
 		CHECK( SubSystems()->Get< Platform >()->
 			InitRender( VideoSettings() ) );
@@ -55,21 +45,36 @@ public:
 	{
 		CHECK( SubSystems()->Get< GraphicsEngine >()->Initialize() );
 		CHECK( SubSystems()->Get< ComputeEngine >()->Initialize() );
+		
+		// setup shader manager
+		{
+			Ptr< ShaderManager >	sm = SubSystems()->Get< GraphicsEngine >()->GetShaderManager();
 
-		ComputeProgramPtr	program = ComputeProgram::New( SubSystems() );
-		ComputeFunction		kernel;
-		ComputeImagePtr		image	= ComputeImage::New( SubSystems() );
+			sm->AddIncludeDirectory( "" );
+			sm->AddImportDirectory( "" );
+			sm->SetDebugOutputFolder( "_DebugOutput" );
+		}
+
+		ComputeFunctionPtr	kernel	= New<ComputeFunction>( SubSystems() );
+
+		kernel->Load( "prog.glcs", EShaderCompilationFlags::DefaultCompute );
+
+		kernel->Run( uint3(1) );
+
+		/*ComputeProgramPtr	program = New<ComputeProgram>( SubSystems() );
+		ComputeFunctionPtr	kernel	= New<ComputeFunction>( SubSystems() );
+		ComputeImagePtr		image	= New<ComputeImage>( SubSystems() );
 		const uint2			dim		= uint2( 1024 );
 
 		CHECK( program->Create( "prog", EProgramUnitFlags::Default ) );
 
 		CHECK( image->Create( uint4( dim ), ETexture::Tex2D, EPixelFormat::RGBA8_UNorm ) );
 
-		kernel.Create( program, "Main" );
+		kernel->Create( program, "Main" );
 
-		//kernel.SetArg( "outImage", image );
+		kernel->SetArg( "outImage", image );
 
-		kernel.Run( uint3( dim ) );
+		kernel->Run( uint3( dim ) );*/
 	}
 
 	void _OnExit ()

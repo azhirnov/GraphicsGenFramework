@@ -39,7 +39,7 @@ namespace ShaderEditor
 	bool Renderer::Reload ()
 	{
 		_viewImageShader		= Uninitialized;
-		_viewImageShader.prog	= ShaderProgram::New( SubSystems() );
+		_viewImageShader.prog	= New<ShaderProgram>( SubSystems() );
 
 		CHECK( _viewImageShader.prog->Load(
 			"gl/Shaders/textureView.glsl",
@@ -53,7 +53,7 @@ namespace ShaderEditor
 		
 		
 		_viewImageShaderI		= Uninitialized;
-		_viewImageShaderI.prog	= ShaderProgram::New( SubSystems() );
+		_viewImageShaderI.prog	= New<ShaderProgram>( SubSystems() );
 
 		CHECK( _viewImageShaderI.prog->Load(
 			"gl/Shaders/textureViewI.glsl",
@@ -67,7 +67,7 @@ namespace ShaderEditor
 		
 		
 		_viewImageShaderU		= Uninitialized;
-		_viewImageShaderU.prog	= ShaderProgram::New( SubSystems() );
+		_viewImageShaderU.prog	= New<ShaderProgram>( SubSystems() );
 
 		CHECK( _viewImageShaderU.prog->Load(
 			"gl/Shaders/textureViewU.glsl",
@@ -100,7 +100,7 @@ namespace ShaderEditor
 	DrawImage
 =================================================
 */
-	void Renderer::DrawImage (const Shared::ScaleBiasController &controller, const ComputeImagePtr &image, EImageViewMode::type mode)
+	void Renderer::DrawImage (const ScaleBiasController &controller, const ComputeImagePtr &image, EImageViewMode::type mode)
 	{
 		float2	size	= float2(SubSystems()->Get< GraphicsEngine >()->GetRenderTargetManager()->GetCurrent()->GetViewport().Size());
 		float2	aspect	= ImageUtils::ResCorrectionAspect( size );

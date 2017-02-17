@@ -16,7 +16,8 @@ namespace Compute
 	constructor
 =================================================
 */
-	CL2ComputeFunction::CL2ComputeFunction () :
+	CL2ComputeFunction::CL2ComputeFunction (const SubSystemsRef ss) :
+		BaseObject( ss ),
 		_id( null ), _preferredMultipleOfWorkGroupSize( 1 )
 	{
 	}
@@ -46,16 +47,40 @@ namespace Compute
 		
 /*
 =================================================
+	Load
+=================================================
+*/
+	bool CL2ComputeFunction::Load (StringCRef filename, EProgramUnitFlags::type flags)
+	{
+		ComputeProgramPtr	prog = New<ComputeProgram>( SubSystems() );
+
+		CHECK_ERR( prog->Create( filename, flags ) );
+		CHECK_ERR( Create( prog, "main" ) );
+
+		return true;
+	}
+
+/*
+=================================================
 	Destroy
 =================================================
 */
 	void CL2ComputeFunction::Destroy ()
 	{
-		_program	= null;
-		_id			= null;
+		using namespace cl;
+
+		_preferredMultipleOfWorkGroupSize = 0;
+
+		_program = null;
 
 		_args.Clear();
 		_objs.Clear();
+
+		if ( _id == null )
+			return;
+
+		CL_CALL( clReleaseKernel( _id ) );
+		_id = null;
 	}
 
 /*
@@ -63,18 +88,23 @@ namespace Compute
 	Run
 =================================================
 */
-	void CL2ComputeFunction::Run (const uint3 &size, const uint3 &localSize)
+	void CL2ComputeFunction::Run (const ulong3 &size, const ulong3 &localSize)
 	{
 		using namespace cl;
 		
 		CHECK( IsCreated() );
 
-		const cl_uint	work_dim	= Max( (size[0] > 1 ? 1 : 0), (size[1] > 1 ? 2 : 0), (size[2] > 1 ? 3 : 0) );
+		Ptr< ComputeEngine >	comp_eng	= SubSystems()->Get< ComputeEngine >();
+
+		CHECK( All( localSize <= comp_eng->GetMaxLocalGroupSize() ) );
+		CHECK( All( size <= comp_eng->GetMaxThreads() ) );
+
+		const cl_uint	work_dim	= Max( (size[0] > 1 ? 1 : 0), (size[1] > 1 ? 2 : 0), (size[2] > 1 ? 3 : 0), 1 );
 
 		const usize3	global_size	= Max( size.To<usize3>(), usize3(1) );
 		const usize3	local_size	= Max( localSize.To<usize3>(), usize3(1) );
 
-		Ptr< ComputeEngine >	engine = _program->SubSystems()->Get< ComputeEngine >();
+		Ptr< ComputeEngine >	engine = SubSystems()->Get< ComputeEngine >();
 
 		CHECK( All( global_size % local_size == usize3(0) ) );
 
@@ -96,6 +126,11 @@ namespace Compute
 
 		if ( not _ReleaseObjects( engine->GetCommandQueue() ) )
 			engine->Barrier();
+	}
+
+	void CL2ComputeFunction::Run (const uint3 &size, const uint3 &localSize)
+	{
+		return Run( ulong3(size), ulong3(localSize) );
 	}
 
 /*
@@ -155,7 +190,7 @@ namespace Compute
 	{
 		using namespace cl;
 		
-		Ptr< ComputeEngine >	engine = _program->SubSystems()->Get< ComputeEngine >();
+		Ptr< ComputeEngine >	engine = SubSystems()->Get< ComputeEngine >();
 
 		usize3		group_size;
 		cl_ulong	local_mem	= 0;
@@ -192,13 +227,13 @@ namespace Compute
 
 		String	log;
 
-		log << "Kernel \"" << name << "\" info:"
-			<< "\nKernel work group:    " << group_size.ToString()
+		log << "Kernel \"" << name << "\" info\n---------------"
+			<< "\nKernel work group:    " << ToString( group_size )
 			<< "\nPreferred work group: " << pref_size
 			<< "\nKernel local mem:     " << ToString( Bytes<ulong>( local_mem ) )
 			<< "\nKernel private mem:   " << ToString( Bytes<ulong>( priv_mem ) );
 
-		LOG( log.cstr(), ELog::Debug );
+		LOG( log.cstr(), ELog::Debug | ELog::SpoilerFlag );
 
 		_preferredMultipleOfWorkGroupSize = pref_size;
 	}

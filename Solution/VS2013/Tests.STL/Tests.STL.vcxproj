@@ -35,6 +35,7 @@
     <ClCompile Include="..\..\..\Tests\STL\Test_Containers_Queue.cpp" />
     <ClCompile Include="..\..\..\Tests\STL\Test_Containers_Set.cpp" />
     <ClCompile Include="..\..\..\Tests\STL\Test_Containers_String.cpp" />
+    <ClCompile Include="..\..\..\Tests\STL\Test_Math_Abs.cpp" />
     <ClCompile Include="..\..\..\Tests\STL\Test_Math_Bit.cpp" />
     <ClCompile Include="..\..\..\Tests\STL\Test_Math_Clamp_Wrap.cpp" />
     <ClCompile Include="..\..\..\Tests\STL\Test_Math_Color.cpp" />
@@ -58,6 +59,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\External\angelscript\angelscript\projects\msvc2013\angelscript.vcxproj">
       <Project>{39e6af97-6ba3-4a72-8c61-bcebf214ebfd}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Engine.STL\Engine.STL.vcxproj">
+      <Project>{c8e74af8-726b-4a6c-b58d-32bdd2ce9e82}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

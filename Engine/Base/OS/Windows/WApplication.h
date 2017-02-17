@@ -55,8 +55,6 @@ namespace WinPlatform
 			_platform.Exit();
 
 			GetEventSystem()->Send( SysEvent::Application( SysEvent::Application::DESTROY ) );
-
-			delete this;
 		}
 	};
 

@@ -1,0 +1,25 @@
+/*
+	Other math functions
+*/
+
+[HEADER]
+
+
+real2 SphericalCorrection (const in real2 snormCoord);
+
+
+//-----------------------------------------------------------------------------
+[SOURCE]
+
+#import "Core/Math/Math.glcs"
+
+
+real2 SphericalCorrection (const in real2 snormCoord)
+{
+	real2	c = snormCoord;
+	real	h = 1.0 - Abs( c.y );
+	real	R = 1.0;
+	real	r = Sqrt( 2.0 * h * R - h*h );
+
+	return ( c * real2( r / R, 1.0 ) );
+}

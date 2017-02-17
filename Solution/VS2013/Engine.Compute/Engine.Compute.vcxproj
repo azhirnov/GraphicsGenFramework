@@ -44,6 +44,7 @@
     <ClCompile Include="..\..\..\Engine\Compute\CL2\cl2.cpp" />
     <ClCompile Include="..\..\..\Engine\Compute\CL2\CL2ComputeBuffer.cpp" />
     <ClCompile Include="..\..\..\Engine\Compute\CL2\CL2ComputeEngine.cpp" />
+    <ClCompile Include="..\..\..\Engine\Compute\CL2\CL2ComputeEngineSharing.cpp" />
     <ClCompile Include="..\..\..\Engine\Compute\CL2\CL2ComputeFunction.cpp" />
     <ClCompile Include="..\..\..\Engine\Compute\CL2\CL2ComputeImage.cpp" />
     <ClCompile Include="..\..\..\Engine\Compute\CL2\CL2ComputeProgram.cpp" />

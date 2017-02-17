@@ -1,4 +1,8 @@
 ﻿// Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
+/*
+	STL is my vision of C++ code and programming style for
+	more readable, more safely code on C++.
+*/
 
 #pragma once
 
@@ -9,7 +13,6 @@
 
 
 // Compile Time //
-#include "CompileTime/CompileTimeDebug.h"
 #include "CompileTime/NearType.h"
 #include "CompileTime/StaticFloat.h"
 #include "CompileTime/StaticFractional.h"
@@ -80,6 +83,9 @@
 #include "Types/Noninstancable.h"
 #include "Types/Limit.h"
 #include "Types/StaticLimit.h"
+#include "Types/RefCountedObject.h"
+#include "Types/ReferenceCounter.h"
+#include "Types/StaticRefCountedObject.h"
 
 
 // Dimensions //
@@ -92,7 +98,6 @@
 
 
 // ThreadSafe //
-#include "ThreadSafe/Referenced.h"
 #include "ThreadSafe/MtQueue.h"
 #include "ThreadSafe/Atomic.h"
 #include "ThreadSafe/MtFile.h"
@@ -201,3 +206,8 @@
 // Experimental //
 #include "Experimental/Unroll.h"
 #include "Experimental/ScopeSetter.h"
+#include "Experimental/FastMath.h"
+
+
+// Debug //
+#include "CompileTime/CompileTimeDebug.h"

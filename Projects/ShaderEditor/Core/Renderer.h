@@ -4,6 +4,10 @@
 
 #include "Common.h"
 
+#include "Projects/ShaderEditor/Controllers/ScaleBiasController.h"
+#include "Projects/ShaderEditor/Controllers/FlightCameraController.h"
+#include "Projects/ShaderEditor/Controllers/FreeCameraController.h"
+
 namespace ShaderEditor
 {
 
@@ -51,7 +55,7 @@ namespace ShaderEditor
 			UniformBlock< TextureViewerData >	ub;
 			TextureUniform						texture;
 
-			TextureViewShader (GX_DEFCTOR) : texture(IsInt)
+			TextureViewShader (GX_DEFCTOR) : ub(), texture(IsInt)
 			{}
 		};
 
@@ -72,7 +76,7 @@ namespace ShaderEditor
 		void Deinitialize ();
 		bool Reload ();
 
-		void DrawImage (const Shared::ScaleBiasController &controller, const ComputeImagePtr &image, EImageViewMode::type mode);
+		void DrawImage (const ScaleBiasController &controller, const ComputeImagePtr &image, EImageViewMode::type mode);
 		void DrawImage (const ComputeImagePtr &image, const RectF &region, EImageViewMode::type mode);
 
 

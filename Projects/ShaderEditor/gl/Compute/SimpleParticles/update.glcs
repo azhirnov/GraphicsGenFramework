@@ -1,27 +1,16 @@
 
-#include "Common.glcs"
-#include "Compute/SimpleParticles/vertex.glcs"
+#import  "Compute/SimpleParticles/shared.glcs"
 
-DECL_BUFFER( std140, ParticleVertex, readonly,  inBuffer );
-DECL_BUFFER( std140, ParticleVertex, writeonly, outBuffer );
+DECL_BUFFER( std140, Particle, readonly,  inBuffer );
+DECL_BUFFER( std140, Particle, writeonly, outBuffer );
 
 uniform float unTimeDelta;
-
-
-void UpdateParticle (inout ParticleVertex particle)
-{
-	particle.prevPos	= particle.position - particle.velocity * 3.0;
-	particle.position	= particle.position + particle.velocity * unTimeDelta;
-}
+uniform float unGlobalTime;
 
 
 void main ()
 {
 	int		index = GetGlobalIndex();
 
-	ParticleVertex	particle = inBuffer[ index ];
-
-	UpdateParticle( particle );
-
-	outBuffer[ index ] = particle;
+	UpdateParticle( inBuffer[index], OUT outBuffer[index], unTimeDelta, unGlobalTime, 0.001 );
 }

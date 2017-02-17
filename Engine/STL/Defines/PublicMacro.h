@@ -24,14 +24,6 @@
 #	error GX_FUNCTION_NAME
 #endif
 
-#ifndef GX_ALIGN
-#	error GX_ALIGN
-#endif
-
-#ifndef GX_ALIGN_OF
-#	error GX_ALIGN_OF
-#endif
-
 #ifndef GX_FORCE_INLINE
 #	error GX_FORCE_INLINE
 #endif
@@ -62,10 +54,6 @@
 
 #ifndef GX_RESTRICT_PTR
 #	error GX_RESTRICT_PTR
-#endif
-
-#ifndef GX_THREAD_LOCAL
-#	error GX_THREAD_LOCAL
 #endif
 
 #ifndef GX_NO_RETURN

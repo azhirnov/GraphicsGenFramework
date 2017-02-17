@@ -12,12 +12,19 @@ namespace Engine
 {
 namespace Compute
 {
+	
+	class   GL4ComputeFunction;
+	typedef GL4ComputeFunction		ComputeFunction;
+
+	SHARED_POINTER( ComputeFunction );
+
+
 
 	//
 	// Compute Function
 	//
 
-	class GL4ComputeFunction : public Noncopyable
+	class GL4ComputeFunction : public BaseObject
 	{
 	// types
 	public:
@@ -47,7 +54,7 @@ namespace Compute
 				Uniform,
 				Image,
 				Texture,
-				AtomicCounterBuffer,
+				//AtomicCounterBuffer,
 				StorageBuffer,
 				UniformBuffer,
 				_Count
@@ -57,13 +64,16 @@ namespace Compute
 			ArgValue_t		value;
 			uint			index;
 			EType			type;
+			uint			dataSize;
 			bool			writeAccess;
 
 		// methods
-			Arg () : index(0), type(Unknown), writeAccess(false)
+			Arg () :
+				index(0), type(Unknown), dataSize(0), writeAccess(false)
 			{}
 
-			Arg (uint index, EType type, bool writeAccess = false) : index(index), type(type), writeAccess(writeAccess)
+			Arg (uint index, EType type, uint dataSize = 0, bool writeAccess = false) :
+				index(index), type(type), dataSize(dataSize), writeAccess(writeAccess)
 			{}
 		};
 
@@ -73,24 +83,28 @@ namespace Compute
 
 	// variables
 	private:
-		ComputeProgramPtr	_program;
-		Arguments_t			_args;
-		ProgramID			_progID;
-		uint3				_fixedGroupSize;
+		//ComputeProgramPtr	_program;
+		Arguments_t						_args;
+		ProgramID						_progID;
+		uint3							_fixedGroupSize;
+		EShaderCompilationFlags::type	_flags;
 
 
 	// methods
 	public:
-		GL4ComputeFunction ();
+		explicit
+		GL4ComputeFunction (const SubSystemsRef ss);
 		~GL4ComputeFunction ();
 
 		// for OpenCL compatibility
 		bool Create (const ComputeProgramPtr &program, StringCRef name);
 		void Destroy ();
 
-		bool Load (const SubSystemsRef ss, StringCRef filename, EShaderCompilationFlags::type flags);
+		bool Create (StringCRef source, EShaderCompilationFlags::type flags);
+		bool Load (StringCRef filename, EShaderCompilationFlags::type flags);
 
 		void Run (const uint3 &size, const uint3 &localSize = Uninitialized);
+		void Run (const ulong3 &size, const ulong3 &localSize = Uninitialized);
 
 
 		template <typename T>
@@ -109,13 +123,15 @@ namespace Compute
 		void ResetArgs ();
 
 
-		bool	IsCreated ()	const	{ return _program and _progID.IsValid(); }
+		bool	IsCreated ()	const	{ return _progID.IsValid(); }
 		usize	NumArgs ()		const	{ return _args.Count(); }
 
 
 	private:
-		void _RunFixedGroupSize (const uint3 &size);
-		void _RunVariableGroupSize (const uint3 &size, const uint3 &localSize);
+		void _RunFixedGroupSize (const ulong3 &size);
+		void _RunVariableGroupSize (const ulong3 &size, const ulong3 &localSize);
+
+		void _GetFixedGroupSize ();
 
 		void _InitArgs ();
 		void _SetArgs ();
@@ -131,22 +147,6 @@ namespace Compute
 	inline bool GL4ComputeFunction::HasArg (StringCRef name) const
 	{
 		return _args.IsExist( name );
-	}
-	
-/*
-=================================================
-	GetArgNames
-=================================================
-*/
-	inline void GL4ComputeFunction::GetArgNames (OUT Array<StringCRef> &names) const
-	{
-		names.Clear();
-		names.Reserve( _args.Count() );
-
-		FOR( i, _args )
-		{
-			names.PushBack( _args[i].first );
-		}
 	}
 
 /*

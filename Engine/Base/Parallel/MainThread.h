@@ -79,12 +79,6 @@ namespace Base
 		void Quit () override
 		{
 		}
-
-
-		static MainThreadPtr  New (const SubSystemsRef ss)
-		{
-			return BaseObject::_New( new MainThread( ss ) );
-		}
 	};
 
 

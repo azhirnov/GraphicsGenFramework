@@ -278,16 +278,6 @@ namespace Graphics
 	{
 		return _IsResourceLoaded() and GetBufferID().IsValid();
 	}
-
-/*
-=================================================
-	New
-=================================================
-*/
-	MemoryBufferPtr  MemoryBuffer::New (const SubSystemsRef ss)
-	{
-		return BaseObject::_New( new MemoryBuffer( ss ) );
-	}
 	
 	
 
@@ -351,16 +341,6 @@ namespace Graphics
 	bool IndexBuffer::IsValid () const
 	{
 		return MemoryBuffer::IsValid() and _indexType != EIndex::Unknown;
-	}
-
-/*
-=================================================
-	New
-=================================================
-*/
-	IndexBufferPtr  IndexBuffer::New (const SubSystemsRef ss)
-	{
-		return BaseObject::_New( new IndexBuffer( ss ) );
 	}
 
 
@@ -531,16 +511,6 @@ namespace Graphics
 	bool VertexBuffer::IsValid () const
 	{
 		return MemoryBuffer::IsValid() and _attribs != null and _primitive != EPrimitive::Unknown;
-	}
-
-/*
-=================================================
-	New
-=================================================
-*/
-	VertexBufferPtr  VertexBuffer::New (const SubSystemsRef ss)
-	{
-		return BaseObject::_New( new VertexBuffer( ss ) );
 	}
 
 

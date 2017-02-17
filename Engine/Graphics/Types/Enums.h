@@ -57,6 +57,9 @@ namespace Graphics
 			ConstAlpha,					// cc.a
 			OneMinusConstAlpha,			// 1 - cc.a
 			SrcAlphaSaturate,			// rgb * min( src.a, dst.a ), a * 1
+			
+			_Count,
+			Unknown	= uint(-1),
 		};
 
 		inline static StringCRef ToString (type value);
@@ -73,6 +76,9 @@ namespace Graphics
 			RevSub,			// D-S
 			Min,			// min(S,D)
 			Max,			// max(S,D)
+			
+			_Count,
+			Unknown	= uint(-1),
 		};
 
 		// TODO: add from https://www.opengl.org/registry/specs/KHR/blend_equation_advanced.txt
@@ -94,6 +100,9 @@ namespace Graphics
 			NotEqual,		// !=
 			GEqual,			// >=
 			Always,			// true
+			
+			_Count,
+			Unknown	= uint(-1),
 		};
 
 		inline static StringCRef ToString (type value);
@@ -112,6 +121,9 @@ namespace Graphics
 			Decr,			// max( --s, 0 )
 			DecrWrap,		// --s & maxvalue
 			Invert,			// ~s
+			
+			_Count,
+			Unknown	= uint(-1),
 		};
 
 		inline static StringCRef ToString (type value);
@@ -124,7 +136,10 @@ namespace Graphics
 		{
 			Point = 0,
 			Line,
-			Fill
+			Fill,
+
+			_Count,
+			Unknown	= uint(-1),
 		};
 
 		inline static StringCRef ToString (type value);
@@ -139,6 +154,9 @@ namespace Graphics
 			Repeat,
 			MirroredRepeat,
 			MirroredClamp,
+
+			_Count,
+			Unknown	= uint(-1),
 		};
 
 		inline static StringCRef ToString (type value);
@@ -149,6 +167,8 @@ namespace Graphics
 	{
 		enum type : uint
 		{
+			Unknown				= 0,
+
 			_MIN_NEAREST		= 0x00100,
 			_MIN_LINEAR			= 0x00200,
 			_MAG_NEAREST		= 0x01000,
@@ -229,6 +249,9 @@ namespace Graphics
 			NegativeY,
 			PositiveZ,
 			NegativeZ,
+
+			_Count,
+			Unknown		= uint(-1),
 		};
 	};
 
@@ -1027,7 +1050,7 @@ namespace Graphics
 		enum type : uint
 		{
 			Vertex = 0,			// ArrayBuffer
-			AtomicCounter,
+			AtomicCounter,		// TODO: use SSBO or image instead of AtomicCounter becouse there are no difference
 			CopyRead,
 			CopyWrite,
 			DispatchIndirect,
@@ -1040,7 +1063,9 @@ namespace Graphics
 			Texture,
 			TransformFeedback,
 			Uniform,
-			_Count
+
+			_Count,
+			Unknown		= uint(-1),
 		};
 	};
 
@@ -1104,8 +1129,11 @@ namespace Graphics
 	{
 		enum type : uint
 		{
-			UpperLeft = 0,
+			UpperLeft	= 0,
 			LowerLeft,
+
+			_Count,
+			Unknown		= uint(-1),
 		};
 
 		inline static StringCRef ToString (type value);
@@ -1128,7 +1156,7 @@ namespace Graphics
 	{
 		enum type : uint
 		{
-			None						= 0,
+			Unknown						= 0,
 
 			FP_32						= 1 << 0,	// real - float
 			FP_64						= 1 << 1,	// real - double

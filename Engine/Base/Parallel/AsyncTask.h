@@ -14,7 +14,7 @@ namespace Base
 	//
 
 	template <typename Param, typename Progress, typename Result>
-	class AsyncTask : public Referenced
+	class AsyncTask : public RefCountedObject
 	{
 	// types
 	public:

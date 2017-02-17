@@ -2,8 +2,11 @@
 [HEADER]
 
 // range [-1; 1]
-real PerlinNoise2D (real2 point, real frequency, real lacunarity, real persistence, int octaveCount, int seed);
-real PerlinNoise3D (real3 point, real frequency, real lacunarity, real persistence, int octaveCount, int seed);
+real PerlinNoise2D (in real2 point, const real frequency, const real lacunarity,
+					const real persistence, const int octaveCount, const int seed);
+
+real PerlinNoise3D (in real3 point, const real frequency, const real lacunarity,
+					const real persistence, const int octaveCount, const int seed);
 
 
 //-----------------------------------------------------------------------------
@@ -21,7 +24,8 @@ real PerlinNoise3D (real3 point, real frequency, real lacunarity, real persisten
 
 #import "Core/Noise/_NoiseUtils.glcs"
 
-real PerlinNoise2D (real2 point, real frequency, real lacunarity, real persistence, int octaveCount, int seed)
+real PerlinNoise2D (in real2 point, const real frequency, const real lacunarity,
+					const real persistence, const int octaveCount, const int seed)
 {
 	real	value	= 0.0;
 	real	pers	= 1.0;
@@ -30,9 +34,9 @@ real PerlinNoise2D (real2 point, real frequency, real lacunarity, real persisten
 	
 	for (int octave = 0; octave < octaveCount; octave++)
 	{
-		real2	n = MakeInt32Range( point );
-		int		oseed = (seed + octave) & 0xffffffff;
-		real	signal = GradientCoherentNoise2D( n, oseed );
+		const real2	n		= MakeInt32Range( point );
+		const int	oseed	= (seed + octave) & 0xffffffff;
+		const real	signal	= GradientCoherentNoise2D( n, oseed );
 
 		value += signal * pers;
 		point *= lacunarity;
@@ -41,7 +45,8 @@ real PerlinNoise2D (real2 point, real frequency, real lacunarity, real persisten
 	return value;
 }
 
-real PerlinNoise3D (real3 point, real frequency, real lacunarity, real persistence, int octaveCount, int seed)
+real PerlinNoise3D (in real3 point, const real frequency, const real lacunarity,
+					const real persistence, const int octaveCount, const int seed)
 {
 	real	value	= 0.0;
 	real	pers	= 1.0;
@@ -50,9 +55,9 @@ real PerlinNoise3D (real3 point, real frequency, real lacunarity, real persisten
 	
 	for (int octave = 0; octave < octaveCount; octave++)
 	{
-		real3	n = MakeInt32Range( point );
-		int		oseed = (seed + octave) & 0xffffffff;
-		real	signal = GradientCoherentNoise3D( n, oseed );
+		const real3	n		= MakeInt32Range( point );
+		const int	oseed	= (seed + octave) & 0xffffffff;
+		const real	signal	= GradientCoherentNoise3D( n, oseed );
 
 		value += signal * pers;
 		point *= lacunarity;

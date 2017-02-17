@@ -242,10 +242,10 @@ namespace TypeTraits
 
 		
 	//--------- Reference Utils --------//
-
-	// IsReference
+	
+	// IsLValueReference
 	template <typename T>
-	constexpr bool IsReference			= _ttraits_hidden_::_TypeQualifierInfo< RemoveConstVolatile<T> >::is_reference;
+	constexpr bool IsLValueReference	= _ttraits_hidden_::_TypeQualifierInfo< RemoveConstVolatile<T> >::is_reference;
 
 	// IsRValueReference
 	template <typename T>
@@ -253,7 +253,7 @@ namespace TypeTraits
 
 	// IsAnyReference
 	template <typename T>
-	constexpr bool IsAnyReference		= IsReference<T> or IsRValueReference<T>;
+	constexpr bool IsAnyReference		= IsLValueReference<T> or IsRValueReference<T>;
 
 
 	namespace _ttraits_hidden_
@@ -262,7 +262,7 @@ namespace TypeTraits
 		struct _RemoveReference {
 			typedef _TypeQualifierInfo<T>				_qinfo;
 
-			typedef typename CompileTime::SwitchType< not IsReference<T>,
+			typedef typename CompileTime::SwitchType< not IsLValueReference<T>,
 						T,
 						typename CompileTime::SwitchType< _qinfo::is_reference,
 								typename _qinfo::type,
@@ -357,7 +357,7 @@ namespace TypeTraits
 
 		template <typename FromType, typename ToType>
 		struct _CopyConstToReference {
-			STATIC_ASSERT( IsReference< ToType > );
+			STATIC_ASSERT( IsLValueReference< ToType > );
 
 			static const bool	_is_const	= _TypeQualifierInfo< FromType >::is_const;
 			
@@ -538,12 +538,6 @@ namespace TypeTraits
 	using ResultOf	= typename _ttraits_hidden_::_ResultOfFunction< Types... >::type;
 
 
-}	// TypeTraits
-
-
-namespace GXTypes
-{
-
 /*
 =================================================
 	RValueRef
@@ -552,18 +546,36 @@ namespace GXTypes
 	template <typename T>
 	struct RValueRef
 	{
-		typedef typename TypeTraits::RemoveAnyReference<T> &&		type;
-		STATIC_ASSERT( not TypeTraits::IsReference< type > );
-		STATIC_ASSERT( not TypeTraits::IsConstOrVolatile< type > );
-		STATIC_ASSERT( TypeTraits::IsRValueReference< type > );
+		typedef typename RemoveAnyReference<T> &&		type;
+		STATIC_ASSERT( not IsLValueReference< type > );
+		STATIC_ASSERT( not IsConstOrVolatile< type > );
+		STATIC_ASSERT( IsRValueReference< type > );
 	};
 
 	// std::move
 	template <typename T>
-	forceinline typename RValueRef<T>::type  ToRValueRef (T&& arg)
+	forceinline constexpr typename RValueRef<T>::type  ToRValueRef (T&& arg) noexcept
 	{
 		return static_cast< typename RValueRef<T>::type >( arg );
 	}
+
+/*
+=================================================
+	Forward
+=================================================
+*/
+	// std::forward
+	template <typename T>
+	forceinline constexpr T&&  Forward (typename RemoveAnyReference<T>& arg) noexcept
+	{
+		return static_cast< T&& >( arg );
+	}
 	
-}	// GXTypes
+	template <typename T>
+	forceinline constexpr T&&  Forward (typename RemoveAnyReference<T>&& arg) noexcept
+	{
+		return static_cast< T&& >( arg );
+	}
+	
+}	// TypeTraits
 }	// GX_STL

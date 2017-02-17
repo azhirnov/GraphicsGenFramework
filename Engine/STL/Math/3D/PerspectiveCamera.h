@@ -117,7 +117,7 @@ namespace GXMath
 		void Resize (radians_t fovY, T viewAspect);
 		void Resize (const vec2_t &viewSize, T distanceInMeters);
 
-		void Increase (T fZoom = T(1));
+		void Increase (T newZoom = T(1));
 
 		void LimitRotation (bool enabled, const radians3_t &minAngle = radians3_t(), const radians3_t &maxAngle = radians3_t());
 		void LimitRotation (bool enabled, const degrees3_t &minAngle = degrees3_t(), const degrees3_t &maxAngle = degrees3_t());
@@ -150,7 +150,12 @@ namespace GXMath
 
 	
 
-
+	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T>
 	inline PerspectiveCamera<T>::PerspectiveCamera (UninitializedType):
 		_transform(), _projMatrix(), _fovY( T(0.5) ), _viewAspect( T(1) ),
@@ -162,15 +167,23 @@ namespace GXMath
 		_viewMatrix		= mat4_t::Identity();
 		_cachedViewProj	= mat4_t::Identity();
 	}
-
-
+	
+/*
+=================================================
+	GetModelMatrix
+=================================================
+*/
 	template <typename T>
 	inline Matrix<T,4,4> const PerspectiveCamera<T>::GetModelMatrix () const
 	{
 		return mat4_t::Translate( -Position() );
 	}
-
-
+	
+/*
+=================================================
+	Frustum
+=================================================
+*/
 	template <typename T>
 	inline Frustum<T> const &  PerspectiveCamera<T>::Frustum ()
 	{
@@ -182,8 +195,12 @@ namespace GXMath
 
 		return _frustum;
 	}
-
 	
+/*
+=================================================
+	ViewProjMatrix
+=================================================
+*/
 	template <typename T>
 	inline const Matrix<T,4,4> & PerspectiveCamera<T>::ViewProjMatrix ()
 	{
@@ -195,8 +212,12 @@ namespace GXMath
 
 		return _cachedViewProj;
 	}
-
 	
+/*
+=================================================
+	Create
+=================================================
+*/
 	template <typename T>
 	inline void PerspectiveCamera<T>::Create (const transform_t &transform, radians_t fovY, T viewAspect, const vec2_t &clipPlanes)
 	{
@@ -206,8 +227,12 @@ namespace GXMath
 		_viewMatrix	= mat4_t::FromQuat( transform.Orientation() );
 		Resize( fovY, viewAspect );
 	}
-
 	
+/*
+=================================================
+	Create
+=================================================
+*/
 	template <typename T>
 	inline void PerspectiveCamera<T>::Create (const transform_t &transform, const vec2_t &viewSize, T distanceInMeters, const vec2_t &clipPlanes)
 	{
@@ -218,7 +243,11 @@ namespace GXMath
 		Resize( viewSize, distanceInMeters );
 	}
 	
-	
+/*
+=================================================
+	SetClipPlanes
+=================================================
+*/
 	template <typename T>
 	inline void PerspectiveCamera<T>::SetClipPlanes (const vec2_t &clipPlanes)
 	{
@@ -228,14 +257,22 @@ namespace GXMath
 		Recalculate();
 	}
 	
-	
+/*
+=================================================
+	Recalculate
+=================================================
+*/
 	template <typename T>
 	inline void PerspectiveCamera<T>::Recalculate ()
 	{
 		_projMatrix = mat4_t::BuildPerspective( Clamp( _fovY / _zoom, T(0.1), T(170) ), _viewAspect, _clipPlanes );
 	}
-
-
+	
+/*
+=================================================
+	Resize
+=================================================
+*/
 	template <typename T>
 	inline void PerspectiveCamera<T>::Resize (radians_t fovY, T viewAspect)
 	{
@@ -246,7 +283,11 @@ namespace GXMath
 		Recalculate();
 	}
 	
-
+/*
+=================================================
+	Resize
+=================================================
+*/
 	template <typename T>
 	inline void PerspectiveCamera<T>::Resize (const vec2_t &viewSize, T distanceInMeters)
 	{
@@ -256,21 +297,29 @@ namespace GXMath
 		_changed.SetAll();
 		Recalculate();
 	}
-
 	
+/*
+=================================================
+	Increase
+=================================================
+*/
 	template <typename T>
-	inline void PerspectiveCamera<T>::Increase (T fZoom)
+	inline void PerspectiveCamera<T>::Increase (T newZoom)
 	{
-		if ( not Equals( fZoom, _zoom ) )
+		if ( not Equals( newZoom, _zoom ) )
 		{
-			_zoom = fZoom;
+			_zoom = newZoom;
 
 			_changed.SetAll();
 			Recalculate();
 		}
 	}
 	
-
+/*
+=================================================
+	LimitRotation
+=================================================
+*/
 	template <typename T>
 	inline void PerspectiveCamera<T>::LimitRotation (bool enabled, const radians3_t &minAngle, const radians3_t &maxAngle)
 	{
@@ -280,14 +329,17 @@ namespace GXMath
 		_rotationLimitMask		= minAngle == maxAngle;
 	}
 	
-
 	template <typename T>
 	inline void PerspectiveCamera<T>::LimitRotation (bool enabled, const degrees3_t &minAngle, const degrees3_t &maxAngle)
 	{
 		LimitRotation( enabled, minAngle.To< radians3_t >(), maxAngle.To< radians3_t >() );
 	}
 	
-
+/*
+=================================================
+	_LimitRotation
+=================================================
+*/
 	template <typename T>
 	inline void PerspectiveCamera<T>::_LimitRotation (OUT radians3_t &rotation) const
 	{
@@ -300,8 +352,12 @@ namespace GXMath
 			if ( _rotationLimitMask.z ) rotation.z = Clamp( last_rot.z, _rotationMinAngle.z, _rotationMaxAngle.z ) - _rotation.z;
 		}
 	}
-
-
+	
+/*
+=================================================
+	_Rotate
+=================================================
+*/
 	template <typename T>
 	inline void PerspectiveCamera<T>::_Rotate (const radians3_t &rotation)
 	{
@@ -311,14 +367,18 @@ namespace GXMath
 		if ( Abs( _rotation.y ) > radians_t::Pi() )	_rotation.y -= CopySign( _rotation.y, radians_t::Pi() );
 		if ( Abs( _rotation.z ) > radians_t::Pi() )	_rotation.z -= CopySign( _rotation.z, radians_t::Pi() );
 	}
-
-		
+	
+/*
+=================================================
+	RotateFPS
+----
+	x - horizontal
+	y - vertical
+=================================================
+*/
 	template <typename T>
 	inline void PerspectiveCamera<T>::RotateFPS (const radians2_t &rotation)
 	{
-		// x - horizontal
-		// y - vertical
-		
 		if ( IsZero( rotation ) )
 			return;
 
@@ -347,64 +407,83 @@ namespace GXMath
 			_viewMatrix = mat4_t::FromQuat( q );
 		}
 	}
-
 	
 	template <typename T>
 	inline void PerspectiveCamera<T>::RotateFPS (const degrees2_t &rotation)
 	{
 		RotateFPS( rotation.To< radians2_t >() );
 	}
-
 	
+/*
+=================================================
+	TransformFPS
+----
+	x - forward/backward
+	y - side
+	z - up/down
+=================================================
+*/
 	template <typename T>
 	inline void PerspectiveCamera<T>::TransformFPS (const vec3_t &delta, vec3_t &pos)
 	{
-		// x - forward/backward
-		// y - side
-		// z - up/down
-
 		vec3_t const	forwards = Cross( UpDir(), GetAxisX() ).Normalized();
 		
 		pos += forwards   * delta.x;
 		pos += GetAxisX() * delta.y;
 		pos += UpDir()    * delta.z;
 	}
-
-
+	
+/*
+=================================================
+	MoveFPS
+=================================================
+*/
 	template <typename T>
 	inline void PerspectiveCamera<T>::MoveFPS (const vec3_t &delta)
 	{
 		TransformFPS( delta, _Position() );
 	}
-
-
+	
+/*
+=================================================
+	TransformFPSFree
+----
+	x - forward/backward
+	y - side
+	z - up/down
+=================================================
+*/
 	template <typename T>
 	inline void PerspectiveCamera<T>::TransformFPSFree (const vec3_t &delta, vec3_t &pos)
 	{
-		// x - forward/backward
-		// y - side
-		// z - up/down
-		
 		pos += GetAxisZ() * -delta.x;
 		pos += GetAxisX() *  delta.y;
 		pos += UpDir()    *  delta.z;
 	}
-
-		
+	
+/*
+=================================================
+	MoveFPSFree
+=================================================
+*/
 	template <typename T>
 	inline void PerspectiveCamera<T>::MoveFPSFree (const vec3_t &delta)
 	{
 		TransformFPSFree( delta, _Position() );
 	}
 	
-
+/*
+=================================================
+	RotateFlight
+----
+	x - roll
+	y - pitch
+	z - yaw
+=================================================
+*/
 	template <typename T>
 	inline void PerspectiveCamera<T>::RotateFlight (const radians3_t &rotation)
 	{
-		// x - roll
-		// y - pitch
-		// z - yaw
-
 		if ( IsZero( rotation ) )
 			return;
 		
@@ -420,35 +499,41 @@ namespace GXMath
 		q.Normalize();
 		_viewMatrix = mat4_t::FromQuat( q );
 	}
-
 	
 	template <typename T>
 	inline void PerspectiveCamera<T>::RotateFlight (const degrees3_t &rotation)
 	{
 		RotateFlight( rotation.To< radians3_t >() );
 	}
-
-
+	
+/*
+=================================================
+	TransformFlight
+----
+	x - forward/backward
+	y - side
+	z - up/down
+=================================================
+*/
 	template <typename T>
 	inline void PerspectiveCamera<T>::TransformFlight (const vec3_t &delta, vec3_t &pos)
 	{
-		// x - forward/backward
-		// y - side
-		// z - up/down
-
 		pos += GetAxisX() *  delta.y;
 		pos += UpDir()    *  delta.z;
 		pos += GetAxisZ() * -delta.x;
 	}
-
 	
 	template <typename T>
 	inline void PerspectiveCamera<T>::MoveFlight (const vec3_t &delta)
 	{
 		TransformFlight( delta, _Position() );
 	}
-
-
+	
+/*
+=================================================
+	MoveToPosition
+=================================================
+*/
 	template <typename T>
 	inline void PerspectiveCamera<T>::MoveToPosition (const vec3_t &pos)
 	{

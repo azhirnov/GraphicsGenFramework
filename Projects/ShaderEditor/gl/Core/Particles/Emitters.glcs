@@ -1,36 +1,71 @@
 /*
 	Particle emitter shapes.
-
-	TODO: refactoring
 */
 
 [HEADER]
 
 
-real2 Emitter_Plane (real unormValue);
-real3 Emitter_Sphere (real unormValue);
+real3 ParticleEmitter_Plane (const real pointIndex, const real pointsCount);
+real3 ParticleEmitter_Plane (const real pointIndex, const real pointsCount, const real ratio);
+
+real3 ParticleEmitter_Circle (const real pointIndex, const real pointsCount);
+real3 ParticleEmitter_FillCircle (const real pointIndex, const real pointsCount);
+
+real3 ParticleEmitter_Sphere (const real pointIndex, const real pointsCount);
+
+// this is not a cone shape, only direction
+real3 ParticleEmitter_ConeVector (const real pointIndex, const real pointsCount, const real zLength = 1.0);
 
 
 //-----------------------------------------------------------------------------
 [SOURCE]
 
-#import "Core/Common/GlobalIndex.glcs"
 #import "Core/Math/Math.glcs"
 
 
-real2 Emitter_Plane (real unormValue)
+real3 ParticleEmitter_Plane (const real pointIndex, const real pointsCount)
 {
-	real side	= Sqrt( real(GetGlobalIndexSize()) );
-	real val	= unormValue * side * side;
-
-	return ToSNorm( real2( Mod( val, side ) / side, Floor( val / side ) / side ) );
+	const real side = Sqrt( pointsCount );
+	return real3( ToSNorm( real2(Mod( pointIndex, side ), Floor( pointIndex / side )) / side ), 0.0 );
 }
 
-real3 Emitter_Sphere (real unormValue)
+
+real3 ParticleEmitter_Plane (const real pointIndex, const real pointsCount, const real ratio)
 {
-	real2	angle	= Emitter_Plane( unormValue ) * Pi * 2.0;
-	real2	theta	= SinCos( angle.x );
-	real2	phi		= SinCos( angle.y );
+	const real	side_x	 = Sqrt( pointsCount * ratio );
+	const real	side_y	 = pointsCount / side_x;
+	const real	max_side = Max( side_x, side_y );
+
+	return real3( (real2(Mod( pointIndex, side_x ), Floor( pointIndex / side_x )) * 2.0 - real2(side_x, side_y)) / max_side, 0.0 );
+}
+
+
+real3 ParticleEmitter_Circle (const real pointIndex, const real pointsCount)
+{
+	return real3( SinCos( Pi * 2.0 * pointIndex / (pointsCount - 1.0) ), 0.0 );
+}
+
+
+real3 ParticleEmitter_FillCircle (const real pointIndex, const real pointsCount)
+{
+	const real2	p = ParticleEmitter_Plane( pointIndex, pointsCount ).xy;
+	return real3( SinCos( Pi * 2.0 * p.x ) * p.y, 0.0 );
+}
+
+
+real3 ParticleEmitter_Sphere (const real pointIndex, const real pointsCount)
+{
+	const real2	angle	= ParticleEmitter_Plane( pointIndex, pointsCount, 0.5 ).yx * Pi;
+	const real2	theta	= SinCos( angle.x );
+	const real2	phi		= SinCos( angle.y );
 
 	return real3( theta.x * phi.y, theta.x * phi.x, theta.y );
+}
+
+
+real3 ParticleEmitter_ConeVector (const real pointIndex, const real pointsCount, const real zLength)
+{
+	const real2	p = ParticleEmitter_Plane( pointIndex, pointsCount ).xy;
+	const real2	c = SinCos( Pi * 2.0 * p.x ) * p.y;
+	return Normalize( real3( c, zLength ) );
 }

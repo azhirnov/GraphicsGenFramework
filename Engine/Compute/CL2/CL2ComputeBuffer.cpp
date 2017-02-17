@@ -43,13 +43,15 @@ namespace Compute
 		using namespace cl;
 
 		_Destroy();
+
+		CHECK_ERR( size > 0 );
 		
 		cl_int	cl_err = 0;
 
 		CL_CHECK( ((_id = clCreateBuffer(
 							SubSystems()->Get< ComputeEngine >()->GetContext(),
 							CL2Enum( flags ),
-							size,
+							(size_t)size,
 							null,
 							&cl_err )), cl_err) );
 
@@ -68,14 +70,16 @@ namespace Compute
 		using namespace cl;
 
 		_Destroy();
+
+		CHECK_ERR( not data.Empty() );
 		
 		cl_int	cl_err = 0;
 		
 		CL_CHECK( ((_id = clCreateBuffer(
 							SubSystems()->Get< ComputeEngine >()->GetContext(),
-							CL2Enum( flags ),
-							data.Size(),
-							data.Empty() ? null : (void *) data.ptr(),
+							CL2Enum( flags ) | CL_MEM_COPY_HOST_PTR,
+							(size_t)data.Size(),
+							(void *) data.ptr(),
 							&cl_err )), cl_err) );
 		
 		_size	= data.Size();
@@ -125,7 +129,7 @@ namespace Compute
 		using namespace cl;
 
 		_shared = null;
-		_size	= 0;
+		_size	= BytesU();
 		_flags	= EMemoryAccess::Unknown;
 
 		if ( _id == null )
@@ -154,9 +158,9 @@ namespace Compute
 		CL_CHECK( clEnqueueReadBuffer(
 					cmd_queue,
 					_id,
-					true,
-					offset,
-					data.Size(),
+					CL_TRUE,
+					(size_t)offset,
+					(size_t)data.Size(),
 					data.ptr(),
 					0, null,
 					null ) );
@@ -184,9 +188,9 @@ namespace Compute
 		CL_CHECK( clEnqueueWriteBuffer(
 					cmd_queue,
 					_id,
-					true,
-					offset,
-					data.Size(),
+					CL_TRUE,
+					(size_t)offset,
+					(size_t)data.Size(),
 					data.ptr(),
 					0, null,
 					null ) );
@@ -227,9 +231,9 @@ namespace Compute
 					cmd_queue,
 					src->_id,
 					this->Id(),
-					srcOffset,
-					dstOffset,
-					size,
+					(size_t)srcOffset,
+					(size_t)dstOffset,
+					(size_t)size,
 					0, null,
 					null ) );
 
@@ -256,7 +260,7 @@ namespace Compute
 					SubSystems()->Get< ComputeEngine >()->GetCommandQueue(),
 					_id,
 					pattern.ptr(),
-					pattern.Size(),
+					(size_t)pattern.Size(),
 					offset,
 					size,
 					0, null,
@@ -271,9 +275,14 @@ namespace Compute
 	New
 =================================================
 */
-	ComputeBufferPtr  CL2ComputeBuffer::New (const SubSystemsRef ss)
+	ComputeBufferPtr  CL2ComputeBuffer::New (const MemoryBufferPtr &shared, EMemoryAccess::type flags)
 	{
-		return BaseObject::_New( new CL2ComputeBuffer( ss ) );
+		CHECK_ERR( shared );
+
+		ComputeBufferPtr	ptr = GXTypes::New<CL2ComputeBuffer>( shared->SubSystems() );
+
+		CHECK_ERR( ptr->Create( shared, flags ) );
+		return ptr;
 	}
 
 

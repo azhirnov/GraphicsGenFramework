@@ -3,6 +3,18 @@
 	Shaders support #include and #import directives.
 	#include - attach source code
 	#import  - compile shader and attach header source only.
+
+	[HEADER] - source with this tag will be attached in #include or #import directives.
+	[SOURCE] - source with this tag will be attached in #include and will be hidden in #import directive.
+
+	Warning:
+	 -	#include, #import, [HEADER], [SOURCE] tags and directives always works inside preprocessor,
+		for example:
+		#if 0
+			#include "..."	// always works
+		#endif
+
+	 - relative path not supported (yet).
 */
 
 #pragma once
@@ -25,6 +37,8 @@ namespace Graphics
 		typedef Bitfield< EShader::_Count >		ShaderBits_t;
 
 	private:
+		static const uint	MAX_DEPENDENCIES = 32;
+
 		struct EParsingTag
 		{
 			enum type : ubyte
@@ -58,7 +72,11 @@ namespace Graphics
 			{}
 
 			// for sorting
-			bool operator > (const Tag &right) const	{ return offset > right.offset; }
+			bool operator > (const Tag &right) const
+			{
+				return offset != right.offset	?	offset	> right.offset :
+													tag		> right.tag;
+			}
 		};
 
 
@@ -99,7 +117,7 @@ namespace Graphics
 			FragmentOutputState				fragmentOutput;
 
 		// methods
-			ShaderParsingData () : compilationFlags( EShaderCompilationFlags::None )
+			ShaderParsingData () : compilationFlags( EShaderCompilationFlags::Unknown )
 			{}
 
 			String &	Src (usize i)		{ return sources[i].sourceStr; }
@@ -111,7 +129,7 @@ namespace Graphics
 		struct LoadedShader : CompileTime::FastCopyable
 		{
 		// types
-			typedef FixedSizeArray< ShaderID, 16 >	ShaderIDs_t;
+			typedef FixedSizeArray< ShaderID, MAX_DEPENDENCIES >	ShaderIDs_t;
 
 		// variables
 			String							address;		// used for search
@@ -138,9 +156,9 @@ namespace Graphics
 
 			result_t operator () (const key_t &value) const
 			{
-				return	(Hash< String >()( value.address ) << 1) ^
-						(Hash< EShader::type >()( value.shaderType ) << 2) ^
-						(Hash< EShaderCompilationFlags::type >()( value.flags ) >> 1);
+				return	Hash< String >()( value.address ) +
+						Hash< EShader::type >()( value.shaderType ) +
+						Hash< EShaderCompilationFlags::type >()( value.flags );
 			}
 		};
 
@@ -190,6 +208,7 @@ namespace Graphics
 		String				_debugOutputFolder;
 		uint				_debugOutputNumber;
 		bool				_copilationInProgress;
+		bool				_dumpProgramInfo;
 
 
 	// methods
@@ -239,7 +258,10 @@ namespace Graphics
 		
 		StringCRef GetDefaultShaderOptions () const;
 
-		void SetDebugOutputFolder (StringCRef dir);
+		bool SetDebugOutputFolder (StringCRef dir);
+
+		void EnableDumpProgramInfo (bool value)		{ _dumpProgramInfo = value; }
+		bool ProgramInfoDumpEnabled () const		{ return _dumpProgramInfo; }
 
 
 	private:
@@ -256,20 +278,29 @@ namespace Graphics
 
 		void _ValidateIncludeAndImportDirs ();
 
+		RFilePtr _SearchAndOpenFile (StringCRef filename) const;
+
 		static void _RemoveDuplicateShaders (INOUT Array<ShaderID> &shaders);
 
-		static bool _ParseShaderSource (StringCRef source, usize sourceIdx, usize insertTo, INOUT Array<Tag> &tags);
+		static bool _ParseShaderSource (StringCRef source, usize sourceIdx, usize insertTo, EParsingTag::type defaultTag,
+										INOUT Array<Tag> &tags);
+		
+		static const char *	_GraphicsShaderExtension ()		{ return "glsl"; }
+		static const char *	_ComputeShaderExtension ()		{ return "glcs"; }
 
 
 	// api specific methods
 	private:
-		bool _CompileShader (INOUT LoadedShader &data, Buffer<SourceInfo> source) const;
+		bool _CompileShader (INOUT LoadedShader &data, Buffer<SourceInfo> source, StringCRef filename) const;
 	
 		bool _LinkProgram (OUT ProgramID &prog, Buffer<ShaderID> shaders, ShaderBits_t activeShaders,
-							const VertexAttribsState &input, const FragmentOutputState &output) const;
+						   const VertexAttribsState &input, const FragmentOutputState &output,
+						   StringCRef filename) const;
 
-		void _ParseCompilationErrors (Buffer<SourceInfo> source, EShader::type shaderType, StringCRef log, bool compiled) const;
-		void _ParseLinkingErrors (StringCRef log, bool linked) const;
+		void _ParseCompilationErrors (Buffer<SourceInfo> source, EShader::type shaderType, StringCRef log,
+									  bool compiled, StringCRef filename) const;
+
+		void _ParseLinkingErrors (StringCRef log, bool linked, StringCRef filename) const;
 		
 		static void _AddAttribs (OUT String &str, const VertexAttribsState &state);
 		static void _AddOutputs (OUT String &str, const FragmentOutputState &frag);

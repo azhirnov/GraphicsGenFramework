@@ -719,7 +719,7 @@ namespace SdlPlatform
 		app->FlushMessages();
 		app->ProcessMessages();
 
-		const SysEvent::time_t	curr_time = _GetTimestamp();
+		const TimeD	curr_time = _GetTimestamp();
 
 		_SendEvent( SysEvent::Update( curr_time - _lastUpdateTime, redraw, _graphicsContext.IsCreated() ) );
 
@@ -762,23 +762,24 @@ namespace SdlPlatform
 	__AppEntryPoint
 =================================================
 */
-	int __AppEntryPoint (void (*createApp) (Base::IParallelThread *thread, OUT Base::Application *&))
+	int __AppEntryPoint (Base::ApplicationPtr (*createApp) (const Base::IParallelThreadPtr &))
 	{
 		GXMath::InitializeSTLMath();
 
 		CHECK_ERR( createApp != null );
 
-		SystemThread	sys;
+		int ret = 0;
+		{
+			SystemThread	sys;
+			ApplicationPtr	app = createApp( &sys );
 
-		Ptr< Application >	app;
-		createApp( &sys, app.ref() );
+			CHECK_ERR( app );
+			app->GetEventSystem()->Send( SysEvent::Application( SysEvent::Application::CREATED ) );
 
-		CHECK_ERR( app );
-		app->GetEventSystem()->Send( SysEvent::Application( SysEvent::Application::CREATED ) );
+			ret = app->SubSystems()->Get< Platform >().ToPtr< SDLPlatform >()->Loop();
+		}
 
-		int ret = app->SubSystems()->Get< Platform >().ToPtr< SDLPlatform >()->Loop();
-
-		DEBUG_ONLY( Referenced::s_ChenckNotReleasedObjects() );
+		DEBUG_ONLY( RefCountedObject::s_ChenckNotReleasedObjects() );
 
 		return ret;
 	}

@@ -91,16 +91,6 @@ namespace ShaderEditor
 	{
 		return false;
 	}
-
-/*
-=================================================
-	New
-=================================================
-*/
-	ISamplePtr  TessLandscapeSample::New (const SubSystemsRef ss)
-	{
-		return BaseObject::_New( new TessLandscapeSample( ss ) );
-	}
 	
 /*
 =================================================
@@ -150,7 +140,7 @@ namespace ShaderEditor
 	void TessLandscapeSample::TileInitializer::InitTile (const TilePtr &tile)
 	{
 		VertexBufferPtr	const&	in_vb	= _planeMesh.vertexBuffer;
-		VertexBufferPtr			out_vb	= VertexBuffer::New( SubSystems() );
+		VertexBufferPtr			out_vb	= New<VertexBuffer>( SubSystems() );
 		TexturePtr				out_tex	= Texture::NewTex2D( SubSystems(), uint2(512), EPixelFormat::RGBA8_UNorm );
 
 		CHECK( out_vb->Create() );

@@ -24,9 +24,10 @@ namespace Compute
 	// variables
 	private:
 		Bytes<ulong>	_totalMemory;
-		uint3			_maxWorkGroupCount;
-		uint3			_maxLocalGroupSize;
-		uint			_maxInvocations;
+		ulong3			_maxWorkGroupCount;
+		ulong3			_maxLocalGroupSize;
+		ulong			_maxInvocations;
+		bool			_variableGroupSizeSupported;
 
 
 	// methods
@@ -46,13 +47,19 @@ namespace Compute
 		Bytes<ulong>	GetTotalMemory ()				const	{ return _totalMemory; }
 		Bytes<ulong>	GetAvailableMemory ()			const;
 
-		uint3 const&	GetMaxWorkGroupSize ()			const	{ return _maxLocalGroupSize; }
-		uint			GetMaxWorkGroupInvocations ()	const	{ return _maxInvocations; }
+		bool			IsVariableGroupSizeSupported ()	const	{ return _variableGroupSizeSupported; }
+
+		ulong3			GetMaxThreads ()				const	{ return GetMaxWorkGroupCount() * GetMaxLocalGroupSize(); }
+		ulong3 const&	GetMaxWorkGroupCount ()			const	{ return _maxWorkGroupCount; }
+		ulong3 const&	GetMaxLocalGroupSize ()			const	{ return _maxLocalGroupSize; }
+		ulong			GetMaxLocalGroupInvocations ()	const	{ return _maxInvocations; }
 
 	private:
 		void _CalcTotalMemory ();
 		void _GetLocalGroupSize ();
 		void _GetMaxWorkGroups ();
+		void _CheckIsVariableGroupSizeSupported ();
+
 		void _PrintInfo ();
 	};
 

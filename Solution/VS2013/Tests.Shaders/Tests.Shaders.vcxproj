@@ -25,6 +25,11 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\Tests\Shaders\GLSL.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Engine.STL\Engine.STL.vcxproj">
+      <Project>{c8e74af8-726b-4a6c-b58d-32bdd2ce9e82}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FFD03A33-7753-47B5-B069-C910341F83AD}</ProjectGuid>
     <RootNamespace>GGE</RootNamespace>

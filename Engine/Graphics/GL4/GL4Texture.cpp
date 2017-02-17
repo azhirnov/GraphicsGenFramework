@@ -191,7 +191,7 @@ namespace Graphics
 		
 		SubSystems()->Get< GraphicsEngine >()->GetStateManager()->ActiveTexture( _tex );
 
-		GL_CALL( glPixelStorei( GL_UNPACK_ALIGNMENT, GLint(xAlign) ) );	// xyAlign not supported!
+		GL_CALL( glPixelStorei( GL_UNPACK_ALIGNMENT, (GLint) isize(xAlign) ) );	// xyAlign not supported!
 		
 		const uint4	level_size	= Utils::LevelDimension( TextureType(), Dimension(), level );
 		const uint4	img_size	= Utils::ConvertSize( TextureType(), size );
@@ -336,7 +336,7 @@ namespace Graphics
 		
 		SubSystems()->Get< GraphicsEngine >()->GetStateManager()->ActiveTexture( _tex );
 		
-		GL_CALL( glPixelStorei( GL_UNPACK_ALIGNMENT, GLint(xAlign) ) );	// xyAlign not supported!
+		GL_CALL( glPixelStorei( GL_UNPACK_ALIGNMENT, (GLint) isize(xAlign) ) );	// xyAlign not supported!
 		
 		const uint4	level_size	= Utils::LevelDimension( TextureType(), Dimension(), level );
 		const uint4	img_size	= Utils::ConvertSize( TextureType(), size );
@@ -365,7 +365,7 @@ namespace Graphics
 				if ( IsZero( offset.xy() ) and fullsize )
 				{
 					GL_CHECK( glCompressedTexImage2D( _tex.Target(), level, ifmt, img_size.x, img_size.y,
-													  0, GLsizei(data.Size()), data.ptr() ) );
+													  0, (GLsizei) isize(data.Size()), data.ptr() ) );
 					_levels.Set( level );
 					break;
 				}
@@ -378,7 +378,7 @@ namespace Graphics
 				}
 				
 				GL_CHECK( glCompressedTexSubImage2D( _tex.Target(), level, offset.x, offset.y, img_size.x, img_size.y,
-													 ifmt, GLsizei(data.Size()), data.ptr() ) );
+													 ifmt, (GLsizei) isize(data.Size()), data.ptr() ) );
 				break;
 			}
 
@@ -396,7 +396,7 @@ namespace Graphics
 				}
 
 				GL_CHECK( glCompressedTexSubImage3D( _tex.Target(), level, offset.x, offset.y, offset.w, img_size.x, img_size.y, 1,
-													 ifmt, GLsizei(data.Size()), data.ptr() ) );
+													 ifmt, (GLsizei) isize(data.Size()), data.ptr() ) );
 				break;
 			}
 
@@ -411,7 +411,7 @@ namespace Graphics
 				if ( IsZero( offset.xy() ) and fullsize )
 				{
 					GL_CHECK( glCompressedTexImage3D( _tex.Target(), level, ifmt, img_size.x, img_size.y, img_size.z,
-													  0, GLsizei(data.Size()), data.ptr() ) );
+													  0, (GLsizei) isize(data.Size()), data.ptr() ) );
 					_levels.Set( level );
 					break;
 				}
@@ -425,7 +425,7 @@ namespace Graphics
 				}
 
 				GL_CHECK( glCompressedTexSubImage3D( _tex.Target(), level, offset.x, offset.y, offset.z, img_size.x, img_size.y,
-													 img_size.z, ifmt, GLsizei(data.Size()), data.ptr() ) );
+													 img_size.z, ifmt, (GLsizei) isize(data.Size()), data.ptr() ) );
 				break;
 			}
 
@@ -446,7 +446,7 @@ namespace Graphics
 
 				GL_CHECK( glCompressedTexSubImage2D( gl::GL_TEXTURE_CUBE_MAP_POSITIVE_X + offset.z, level,
 													 offset.x, offset.y, img_size.x, img_size.y, ifmt,
-													 GLsizei(data.Size()), data.ptr() ) );
+													 (GLsizei) isize(data.Size()), data.ptr() ) );
 				break;
 			}
 			
@@ -464,7 +464,7 @@ namespace Graphics
 				}
 
 				GL_CHECK( glCompressedTexSubImage3D( _tex.Target(), level, offset.x, offset.y, offset.w * _dim.z + offset.z,
-													 img_size.x, img_size.y, 1, ifmt, GLsizei(data.Size()), data.ptr() ) );
+													 img_size.x, img_size.y, 1, ifmt, (GLsizei) isize(data.Size()), data.ptr() ) );
 				break;
 			}
 
@@ -568,9 +568,9 @@ namespace Graphics
 		
 		CHECK_ERR( GL4Enum( format, OUT ifmt, OUT fmt, OUT type ) );
 		
-		GL_CALL( glPixelStorei( GL_PACK_ALIGNMENT, GLint(xAlign) ) );	// xyAlign not supported
+		GL_CALL( glPixelStorei( GL_PACK_ALIGNMENT, (GLint) isize(xAlign) ) );	// xyAlign not supported
 
-		GL_CHECK( glGetImageFromTexture( _tex.Id(), _tex.Target(), level, fmt, type, GLsizei(data.Size()), data.ptr() ) );
+		GL_CHECK( glGetImageFromTexture( _tex.Id(), _tex.Target(), level, fmt, type, (GLsizei) isize(data.Size()), data.ptr() ) );
 
 		return true;
 	}
@@ -602,7 +602,7 @@ namespace Graphics
 		
 		CHECK_ERR( GL4Enum( format, OUT ifmt, OUT fmt, OUT type ) );
 		
-		GL_CALL( glPixelStorei( GL_PACK_ALIGNMENT, GLint(xAlign) ) );	// xyAlign not supported
+		GL_CALL( glPixelStorei( GL_PACK_ALIGNMENT, (GLint) isize(xAlign) ) );	// xyAlign not supported
 		
 		switch ( TextureType() )
 		{
@@ -614,7 +614,7 @@ namespace Graphics
 				GL_CHECK( glGetSubImageFromTexture( _tex.Id(), _tex.Target(), level,
 													offset.x, 0, 0,
 													img_size.x, 1, 1, fmt, type,
-													GLsizei(data.Size()), data.ptr() ) );
+													(GLsizei) isize(data.Size()), data.ptr() ) );
 				break;
 
 			case ETexture::Tex2D :
@@ -625,7 +625,7 @@ namespace Graphics
 				GL_CHECK( glGetSubImageFromTexture( _tex.Id(), _tex.Target(), level,
 													offset.x, offset.y, 0,
 													img_size.x, img_size.y, 1, fmt, type,
-													GLsizei(data.Size()), data.ptr() ) );
+													(GLsizei) isize(data.Size()), data.ptr() ) );
 				break;
 
 			case ETexture::Tex3D :
@@ -635,7 +635,7 @@ namespace Graphics
 				GL_CHECK( glGetSubImageFromTexture( _tex.Id(), _tex.Target(), level,
 													offset.x, offset.y, offset.z,
 													img_size.x, img_size.y, img_size.z, fmt, type,
-													GLsizei(data.Size()), data.ptr() ) );
+													(GLsizei) isize(data.Size()), data.ptr() ) );
 				break;
 
 			case ETexture::Tex2DArray :
@@ -646,7 +646,7 @@ namespace Graphics
 				GL_CHECK( glGetSubImageFromTexture( _tex.Id(), _tex.Target(), level,
 													offset.x, offset.y, offset.w,
 													img_size.x, img_size.y, img_size.w, fmt, type,
-													GLsizei(data.Size()), data.ptr() ) );
+													(GLsizei) isize(data.Size()), data.ptr() ) );
 				break;
 
 			case ETexture::TexCube :
@@ -657,7 +657,7 @@ namespace Graphics
 				GL_CHECK( glGetSubImageFromTexture( _tex.Id(), _tex.Target(), level,
 													offset.x, offset.y, offset.z,
 													img_size.x, img_size.y, img_size.z, fmt, type,
-													GLsizei(data.Size()), data.ptr() ) );
+													(GLsizei) isize(data.Size()), data.ptr() ) );
 				break;
 
 			/*case ETexture::TexCubeArray :

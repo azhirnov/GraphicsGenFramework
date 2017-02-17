@@ -1,21 +1,12 @@
 
-#include "Common.glcs"
-#include "Compute/SimpleParticles/vertex.glcs"
+#import  "Compute/SimpleParticles/shared.glcs"
 
-DECL_BUFFER( std140, ParticleVertex, writeonly, outBuffer );
+DECL_BUFFER( std140, Particle, writeonly, outBuffer );
 
+uniform float unGlobalTime;
 
-void InitParticle (out ParticleVertex particle)
-{
-	particle.prevPos	= float3( 0.0 );
-	particle.position	= float3( 0.0 );
-	particle.size		= 32.0;
-	particle.time		= 0.0;
-	particle.velocity	= Emitter_Sphere( GetGlobalIndexUNorm() ) * 0.1;
-	particle.color		= packUnorm4x8( float4( 1.0, 0.0, 0.0, 1.0 ) );
-}
 
 void main ()
 {
-	InitParticle( outBuffer[ GetGlobalIndex() ] );
+	InitParticle( outBuffer[ GetGlobalIndex() ], unGlobalTime );
 }

@@ -62,12 +62,6 @@
 //#pragma warning (disable: 4189)		// 'variable': local variable is initialized but not referenced
 
 
-// not all enums listed in switch block
-//#pragma warning (error: 4061)
-//#pragma warning (error: 4062)
-//#pragma warning (error: 4063)			// case 'number' is not a valid value for switch of enum 'type'
-
-
 // warning to errors
 #pragma warning (error: 4018)			// signed/unsigned mismatch
 #pragma warning (error: 4287)			// unsigned/negative constant mismatch
@@ -82,6 +76,9 @@
 #pragma warning (error: 4002)			// too many actual parameters for macro
 #pragma warning (error: 4244)			// 'initializing': conversion from '...' to '...', possible loss of data
 #pragma warning (error: 4239)			// nonstandard extension used: 'argument': conversion from 'type' to 'type &'
+#pragma warning (error: 4717)			// 'function' : recursive on all control paths, function will cause runtime stack overflow
+#pragma warning (error: 4456)			// declaration of 'identifier' hides previous local declaration
+#pragma warning (error: 4129)			// 'character': unrecognized character escape sequence
 
 
 // to check some errors
@@ -99,6 +96,11 @@
 #	pragma warning (error: 4365)		// signed/unsigned mismatch
 #	pragma warning (error: 4389)		// '==': signed/unsigned mismatch
 #	pragma warning (error: 4505)		// unreferenced local function has been removed
+
+	// not all enums listed in switch block
+#	pragma warning (error: 4061)
+#	pragma warning (error: 4062)
+#	pragma warning (error: 4063)		// case 'number' is not a valid value for switch of enum 'type'
 #endif
 
 
@@ -112,6 +114,7 @@
 #undef  _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
 
+#undef  _ALLOW_KEYWORD_MACROS
 #define _ALLOW_KEYWORD_MACROS
 
 //-------------------------------------------------------------------
@@ -122,20 +125,6 @@
 
 // function name as string
 #define	GX_FUNCTION_NAME			__FUNCTION__
-
-// set align of struct in bytes
-#if COMPILER_VERSION >= 1900
-#	define	GX_ALIGN( ... )			alignas( __VA_ARGS__ )
-#else
-#	define	GX_ALIGN( ... )			__declspec( align( __VA_ARGS__ ) )
-#endif
-
-// returns align of type in bytes
-#if COMPILER_VERSION >= 1900
-#define GX_ALIGN_OF( ... )			alignof( __VA_ARGS__ )
-#else
-#define GX_ALIGN_OF( ... )			__alignof( __VA_ARGS__ )
-#endif
 
 // always inline function
 #define	GX_FORCE_INLINE				__forceinline
@@ -167,14 +156,6 @@
 // Warning: no analogs for other compilers!
 #define	GX_RESTRICT_PTR				__restrict
 
-// declare variable is local variable for thread
-// in WinXP it is for static linking only!
-#if COMPILER_VERSION >= 1900
-#	define GX_THREAD_LOCAL			thread_local
-#else
-#	define GX_THREAD_LOCAL			__declspec( thread )
-#endif
-
 // function not returns any value
 // compilation warning for this function never generated
 #define GX_NO_RETURN				__declspec( noreturn )
@@ -201,12 +182,23 @@
 #	define GX_CONSTEXPR_SUPPORTED			1
 #endif
 
-// final, constexpr
+// final, constexpr, noexcept
 #if COMPILER_VERSION <= 1800
-//	supported: decltype, override
 #	define final
 #	define constexpr
 #	define noexcept							throw()
+#endif
+
+
+// alignas
+#if COMPILER_VERSION < 1900
+#	define	alignas( ... )					__declspec( align( __VA_ARGS__ ) )
+#endif
+
+
+// alignof
+#if COMPILER_VERSION < 1900
+#	define alignof( ... )					__alignof( __VA_ARGS__ )
 #endif
 
 
@@ -214,6 +206,13 @@
 #if COMPILER_VERSION <= 1500
 #	define override
 #	define decltype( _value_ )				STATIC_WARNING( "decltype not supported" )
+#endif
+
+
+// declare variable is local variable for thread
+// in WinXP it is for static linking only!
+#if COMPILER_VERSION < 1900
+#	define thread_local						__declspec( thread )
 #endif
 
 
@@ -275,7 +274,7 @@
 
 // deprecated attribute
 #if COMPILER_VERSION >= 2000
-#	define GX_DEPRECATED( _reason_ )	[[ deprecated(_reason_) ]]
+#	define GX_DEPRECATED( _reason_ )		[[ deprecated(_reason_) ]]
 #else
 #	define GX_DEPRECATED( _reason_ )
 #endif
@@ -283,13 +282,13 @@
 
 // literal operator
 #if COMPILER_VERSION >= 1900
-#	define	GX_LITERAL_OPERATOR_SUPPORTED	1
+#	define GX_LITERAL_OPERATOR_SUPPORTED	1
 #endif
 
 
 // notify compiler to generate error if function result unused
 #if COMPILER_VERSION >= 1700
-#	define GX_CHECK_RESULT		_Check_return_	// Compile with '/analize' key
+#	define GX_CHECK_RESULT					_Check_return_	// Compile with '/analize' key
 #endif
 
 //-------------------------------------------------------------------

@@ -14,7 +14,7 @@ namespace Graphics
 =================================================
 */
 	inline ShaderManager::LoadedShader::LoadedShader () :
-		flags( EShaderCompilationFlags::None ), shaderType( EShader::Unknown )
+		flags( EShaderCompilationFlags::Unknown ), shaderType( EShader::Unknown )
 	{}
 	
 /*
@@ -72,7 +72,8 @@ namespace Graphics
 	ShaderManager::ShaderManager (const SubSystemsRef ss) :
 		BaseObject( ss ),
 		_debugOutputNumber( 0 ),
-		_copilationInProgress( false )
+		_copilationInProgress( false ),
+		_dumpProgramInfo( true )
 	{
 		_loadedShaders.Reserve( 64 );
 	}
@@ -106,16 +107,17 @@ namespace Graphics
 	SetDebugOutputFolder
 =================================================
 */
-	void ShaderManager::SetDebugOutputFolder (StringCRef dir)
+	bool ShaderManager::SetDebugOutputFolder (StringCRef dir)
 	{
 		_debugOutputFolder = dir;
 
 		if ( not _debugOutputFolder.Empty() )
 		{
-			CHECK( SubSystems()->Get< FileManager >()->IsDirectoryExist( dir ) );
+			CHECK_ERR( SubSystems()->Get< FileManager >()->CreateDirectories( _debugOutputFolder ) );
 
 			FileAddress::FormatPath( INOUT _debugOutputFolder );
 		}
+		return true;
 	}
 
 /*
@@ -236,7 +238,7 @@ namespace Graphics
 	bool ShaderManager::CompileShader (OUT ShaderID &shader, EShader::type shaderType, StringCRef source,
 										EShaderCompilationFlags::type compilationFlags)
 	{
-		ScopeSetter<bool>	compilation_in_progress( _copilationInProgress = true, false );
+		SCOPE_SETTER( _copilationInProgress = true, false );
 
 		CHECK_ERR( EShaderCompilationFlags::IsValid( compilationFlags ) );
 
@@ -256,7 +258,7 @@ namespace Graphics
 	bool ShaderManager::LoadShader (OUT ShaderID &shader, EShader::type shaderType, StringCRef filename,
 									EShaderCompilationFlags::type compilationFlags)
 	{
-		ScopeSetter<bool>	compilation_in_progress( _copilationInProgress = true, false );
+		SCOPE_SETTER( _copilationInProgress = true, false );
 
 		CHECK_ERR( EShaderCompilationFlags::IsValid( compilationFlags ) );
 		
@@ -281,7 +283,7 @@ namespace Graphics
 									 const VertexAttribsState &input,
 									 const FragmentOutputState &output)
 	{
-		ScopeSetter<bool>	compilation_in_progress( _copilationInProgress = true, false );
+		SCOPE_SETTER( _copilationInProgress = true, false );
 
 		return false;
 	}
@@ -298,7 +300,7 @@ namespace Graphics
 									 const VertexAttribsState &input,
 									 const FragmentOutputState &output)
 	{
-		ScopeSetter<bool>	compilation_in_progress( _copilationInProgress = true, false );
+		SCOPE_SETTER( _copilationInProgress = true, false );
 
 		CHECK_ERR( not activeShaders.Empty() );
 		CHECK_ERR( EShaderCompilationFlags::IsValid( compilationFlags ) );
@@ -315,7 +317,7 @@ namespace Graphics
 		parsing_data.fragmentOutput		= output;
 
 		// read file
-		CHECK_ERR( fm->OpenForRead( filename, OUT file ) );
+		CHECK_ERR( file = _SearchAndOpenFile( filename ) );
 		{
 			const usize		len = (usize) file->RemainingSize();
 			String &		src = parsing_data.SrcBack();
@@ -342,9 +344,12 @@ namespace Graphics
 		}
 
 		// link program
-		CHECK_ERR( _LinkProgram( OUT program, shaders, activeShaders, input, output ) );
+		CHECK_ERR( _LinkProgram( OUT program, shaders, activeShaders, input, output, filename ) );
 
-		DEBUG_ONLY( _DumpProgramResources( program, filename ); )
+		if ( _dumpProgramInfo )
+		{
+			DEBUG_ONLY( _DumpProgramResources( program, filename ); )
+		}
 		return true;
 	}
 	
@@ -361,7 +366,7 @@ namespace Graphics
 										const VertexAttribsState &input,
 										const FragmentOutputState &output)
 	{
-		ScopeSetter<bool>		compilation_in_progress( _copilationInProgress = true, false );
+		SCOPE_SETTER( _copilationInProgress = true, false );
 
 		CHECK_ERR( not activeShaders.Empty() );
 		CHECK_ERR( EShaderCompilationFlags::IsValid( compilationFlags ) );
@@ -393,9 +398,12 @@ namespace Graphics
 		_RemoveDuplicateShaders( shaders );
 
 		// link program
-		CHECK_ERR( _LinkProgram( OUT program, shaders, activeShaders, input, output ) );
+		CHECK_ERR( _LinkProgram( OUT program, shaders, activeShaders, input, output, "" ) );
 
-		DEBUG_ONLY( _DumpProgramResources( program, "" ); )
+		if ( _dumpProgramInfo )
+		{
+			DEBUG_ONLY( _DumpProgramResources( program, "" ); )
+		}
 		return true;
 	}
 	
@@ -410,14 +418,13 @@ namespace Graphics
 									EShader::type shaderType,
 									EShaderCompilationFlags::type compilationFlags)
 	{
-		ScopeSetter<bool>		compilation_in_progress( _copilationInProgress = true, false );
+		SCOPE_SETTER( _copilationInProgress = true, false );
 		
 		shaders.Clear();
 		header.Clear();
 
 		CHECK_ERR( EShaderCompilationFlags::IsValid( compilationFlags ) );
 		
-		Ptr< FileManager >		fm	= SubSystems()->Get< FileManager >();
 		LoadedActiveShaders_t	loaded;
 		ShaderParsingData		parsing_data;
 		RFilePtr				file;
@@ -426,8 +433,9 @@ namespace Graphics
 		parsing_data.activeShaders		= ShaderBits_t().Set( shaderType );;
 		parsing_data.compilationFlags	= compilationFlags;
 		
+
 		// read file
-		CHECK_ERR( fm->OpenForRead( filename, OUT file ) );
+		CHECK_ERR( file = _SearchAndOpenFile( filename ) );
 		{
 			const usize		len = (usize)file->RemainingSize();
 			String &		src = parsing_data.SrcBack();
@@ -469,7 +477,7 @@ namespace Graphics
 									   EShader::type shaderType,
 									   EShaderCompilationFlags::type compilationFlags)
 	{
-		ScopeSetter<bool>		compilation_in_progress( _copilationInProgress = true, false );
+		SCOPE_SETTER( _copilationInProgress = true, false );
 		
 		shaders.Clear();
 		header.Clear();
@@ -528,12 +536,46 @@ namespace Graphics
 	
 /*
 =================================================
+	_SearchAndOpenFile
+=================================================
+*/
+	RFilePtr ShaderManager::_SearchAndOpenFile (StringCRef filename) const
+	{
+		RFilePtr			file;
+		String				fname	= filename;
+		Ptr< FileManager >	fm		= SubSystems()->Get< FileManager >();
+
+		// search file
+		if ( not fm->IsFileExist( fname ) )
+		{
+			fname = filename;
+			fname << '.' << _GraphicsShaderExtension();
+			
+			if ( not fm->IsFileExist( fname ) )
+			{
+				fname = filename;
+				fname << '.' << _ComputeShaderExtension();
+				
+				if ( not fm->IsFileExist( fname ) )
+				{
+					RETURN_ERR( "file \"" << filename << "\" not found" );
+				}
+			}
+		}
+
+		CHECK_ERR( fm->OpenForRead( fname, OUT file ) );
+		return file;
+	}
+
+/*
+=================================================
 	_ParseShaderSource
 ----
 	search blocks: [HEADER], [SOURCE], #include, #import
 =================================================
 */
-	bool ShaderManager::_ParseShaderSource (StringCRef source, usize sourceIdx, usize insertTo, INOUT Array<Tag> &tags)
+	bool ShaderManager::_ParseShaderSource (StringCRef source, usize sourceIdx, usize insertTo, EParsingTag::type defaultTag,
+											INOUT Array<Tag> &tags)
 	{
 		static const StringCRef		headerKey	= "[HEADER]";
 		static const StringCRef		sourceKey	= "[SOURCE]";
@@ -608,13 +650,13 @@ namespace Graphics
 
 		if ( tmp_tags.Empty() )
 		{
-			tags.Insert( Tag( sourceIdx, 0, 0, EParsingTag::SourceWithoutTag ), insertTo );
+			tags.Insert( Tag( sourceIdx, 0, 0, defaultTag ), insertTo );
 			return true;
 		}
 
 		// if no [HEADER] or [SOURCE] tag
 		if ( num_headers == 0 and num_sources == 0 )
-			tmp_tags << Tag( sourceIdx, 0, 0, EParsingTag::SourceWithoutTag );
+			tmp_tags << Tag( sourceIdx, 0, 0, defaultTag );
 
 		// sort tags buy position in text
 		Sort( tmp_tags );
@@ -645,7 +687,9 @@ namespace Graphics
 		String				tmp_str;
 		bool				global_in_header = true;
 		
-		CHECK_ERR( _ParseShaderSource( data.Src(0), 0, 0, INOUT tags ) );
+		CHECK_ERR( _ParseShaderSource( data.Src(0), 0, 0,
+									   data.sources[0].isInHeader ? EParsingTag::HeaderWithoutTag : EParsingTag::SourceWithoutTag,
+									   INOUT tags ) );
 
 		FOR( i, tags )
 		{
@@ -694,7 +738,9 @@ namespace Graphics
 					{
 						data.sources.PushBack( ShaderSource( RVREF( temp_src ), RVREF( tmp_str ), in_header ) );
 
-						CHECK_ERR( _ParseShaderSource( data.SrcBack(), data.sources.LastIndex(), i, INOUT tags ) );
+						CHECK_ERR( _ParseShaderSource( data.SrcBack(), data.sources.LastIndex(), i,
+													   in_header ? EParsingTag::HeaderWithoutTag : EParsingTag::SourceWithoutTag,
+													   INOUT tags ) );
 					}
 
 					--i;	// to first inserted tag
@@ -720,7 +766,9 @@ namespace Graphics
 					{
 						data.sources.PushBack( ShaderSource( header, tmp_str, in_header ) );
 					
-						CHECK_ERR( _ParseShaderSource( data.SrcBack(), data.sources.LastIndex(), i, INOUT tags ) );
+						CHECK_ERR( _ParseShaderSource( data.SrcBack(), data.sources.LastIndex(), i,
+													   in_header ? EParsingTag::HeaderWithoutTag : EParsingTag::SourceWithoutTag,
+													   INOUT tags ) );
 					}
 
 					--i;	// to first inserted tag
@@ -840,7 +888,7 @@ namespace Graphics
 					shader_data.dependencies << parsingData.dependentShaders[j];
 			}
 
-			CHECK_ERR( _CompileShader( INOUT shader_data, src ) );
+			CHECK_ERR( _CompileShader( INOUT shader_data, src, filename ) );
 		}
 		return true;
 	}
@@ -1049,8 +1097,12 @@ namespace Graphics
 	void ShaderManager::_RemoveDuplicateShaders (INOUT Array<ShaderID> &shaders)
 	{
 		// sort and remove duplicates
-		Sort( shaders,
-			  LAMBDA() (const ShaderID &left, const ShaderID &right) -> bool { return left.Id() > right.Id(); } );
+		Sort(	shaders,
+				LAMBDA() (const ShaderID &left, const ShaderID &right) -> bool
+				{{
+					return left.Id() > right.Id();
+				}}
+		);
 
 		for (usize i = 1; i < shaders.Count(); ++i)
 		{

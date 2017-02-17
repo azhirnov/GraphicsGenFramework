@@ -142,16 +142,6 @@ namespace Base
 		return true;
 	}
 
-/*
-=================================================
-	New
-=================================================
-*/
-	PackFileWritterPtr  PackFileWritter::New (const SubSystemsRef ss)
-	{
-		return BaseObject::_New( new PackFileWritter( ss ) );
-	}
-
 
 }	// Base
 }	// Engine

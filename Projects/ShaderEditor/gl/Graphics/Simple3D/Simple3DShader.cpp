@@ -67,7 +67,7 @@ namespace ShaderEditor
 
 		bool Load (StringCRef filename)
 		{
-			_program = ShaderProgram::New( SubSystems() );
+			_program = New<ShaderProgram>( SubSystems() );
 
 			CHECK_ERR( _program->Load(
 				filename,
@@ -95,7 +95,7 @@ namespace ShaderEditor
 */
 	IShaderPtr  IShader::Create_Simple3D (const SubSystemsRef ss)
 	{
-		SHARED_POINTER_TYPE( Simple3DShader )	ptr = BaseObject::_New( new Simple3DShader( ss ) );
+		auto	ptr = New<Simple3DShader>( ss );
 
 		CHECK_ERR( ptr->Load( "gl/Graphics/Simple3D/shader.glsl" ) );
 		return ptr;

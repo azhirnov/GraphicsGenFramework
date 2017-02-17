@@ -1,0 +1,523 @@
+/*
+	This is generated file, don't change anything!
+*/
+
+[HEADER]
+
+#define AllLess( _a_, _b_ )			All( Less( (_a_), (_b_) ) )
+#define AllLessEqual( _a_, _b_ )	All( LessEqual( (_a_), (_b_) ) )
+#define AllGreater( _a_, _b_ )		All( Greater( (_a_), (_b_) ) )
+#define AllGreaterEqual( _a_, _b_ )	All( GreaterEqual( (_a_), (_b_) ) )
+#define AnyLess( _a_, _b_ )			Any( Less( (_a_), (_b_) ) )
+#define AnyLessEqual( _a_, _b_ )	Any( LessEqual( (_a_), (_b_) ) )
+#define AnyGreater( _a_, _b_ )		Any( Greater( (_a_), (_b_) ) )
+#define AnyGreaterEqual( _a_, _b_ )	Any( GreaterEqual( (_a_), (_b_) ) )
+#define AllEqual( _a_, _b_ )		All( Equals( (_a_), (_b_) )
+
+
+// Less, Greater, LessEqual, GreaterEqual
+bool Less (const in float x, const in float y);
+bool Greater (const in float x, const in float y);
+bool LessEqual (const in float x, const in float y);
+bool GreaterEqual (const in float x, const in float y);
+bool2 Less (const in float2 x, const in float2 y);
+bool2 Greater (const in float2 x, const in float2 y);
+bool2 LessEqual (const in float2 x, const in float2 y);
+bool2 GreaterEqual (const in float2 x, const in float2 y);
+bool3 Less (const in float3 x, const in float3 y);
+bool3 Greater (const in float3 x, const in float3 y);
+bool3 LessEqual (const in float3 x, const in float3 y);
+bool3 GreaterEqual (const in float3 x, const in float3 y);
+bool4 Less (const in float4 x, const in float4 y);
+bool4 Greater (const in float4 x, const in float4 y);
+bool4 LessEqual (const in float4 x, const in float4 y);
+bool4 GreaterEqual (const in float4 x, const in float4 y);
+
+bool Less (const in double x, const in double y);
+bool Greater (const in double x, const in double y);
+bool LessEqual (const in double x, const in double y);
+bool GreaterEqual (const in double x, const in double y);
+bool2 Less (const in double2 x, const in double2 y);
+bool2 Greater (const in double2 x, const in double2 y);
+bool2 LessEqual (const in double2 x, const in double2 y);
+bool2 GreaterEqual (const in double2 x, const in double2 y);
+bool3 Less (const in double3 x, const in double3 y);
+bool3 Greater (const in double3 x, const in double3 y);
+bool3 LessEqual (const in double3 x, const in double3 y);
+bool3 GreaterEqual (const in double3 x, const in double3 y);
+bool4 Less (const in double4 x, const in double4 y);
+bool4 Greater (const in double4 x, const in double4 y);
+bool4 LessEqual (const in double4 x, const in double4 y);
+bool4 GreaterEqual (const in double4 x, const in double4 y);
+
+bool Less (const in int x, const in int y);
+bool Greater (const in int x, const in int y);
+bool LessEqual (const in int x, const in int y);
+bool GreaterEqual (const in int x, const in int y);
+bool2 Less (const in int2 x, const in int2 y);
+bool2 Greater (const in int2 x, const in int2 y);
+bool2 LessEqual (const in int2 x, const in int2 y);
+bool2 GreaterEqual (const in int2 x, const in int2 y);
+bool3 Less (const in int3 x, const in int3 y);
+bool3 Greater (const in int3 x, const in int3 y);
+bool3 LessEqual (const in int3 x, const in int3 y);
+bool3 GreaterEqual (const in int3 x, const in int3 y);
+bool4 Less (const in int4 x, const in int4 y);
+bool4 Greater (const in int4 x, const in int4 y);
+bool4 LessEqual (const in int4 x, const in int4 y);
+bool4 GreaterEqual (const in int4 x, const in int4 y);
+
+bool Less (const in uint x, const in uint y);
+bool Greater (const in uint x, const in uint y);
+bool LessEqual (const in uint x, const in uint y);
+bool GreaterEqual (const in uint x, const in uint y);
+bool2 Less (const in uint2 x, const in uint2 y);
+bool2 Greater (const in uint2 x, const in uint2 y);
+bool2 LessEqual (const in uint2 x, const in uint2 y);
+bool2 GreaterEqual (const in uint2 x, const in uint2 y);
+bool3 Less (const in uint3 x, const in uint3 y);
+bool3 Greater (const in uint3 x, const in uint3 y);
+bool3 LessEqual (const in uint3 x, const in uint3 y);
+bool3 GreaterEqual (const in uint3 x, const in uint3 y);
+bool4 Less (const in uint4 x, const in uint4 y);
+bool4 Greater (const in uint4 x, const in uint4 y);
+bool4 LessEqual (const in uint4 x, const in uint4 y);
+bool4 GreaterEqual (const in uint4 x, const in uint4 y);
+
+#ifdef GL_ARB_gpu_shader_int64
+bool Less (const in ilong x, const in ilong y);
+bool Greater (const in ilong x, const in ilong y);
+bool LessEqual (const in ilong x, const in ilong y);
+bool GreaterEqual (const in ilong x, const in ilong y);
+bool2 Less (const in ilong2 x, const in ilong2 y);
+bool2 Greater (const in ilong2 x, const in ilong2 y);
+bool2 LessEqual (const in ilong2 x, const in ilong2 y);
+bool2 GreaterEqual (const in ilong2 x, const in ilong2 y);
+bool3 Less (const in ilong3 x, const in ilong3 y);
+bool3 Greater (const in ilong3 x, const in ilong3 y);
+bool3 LessEqual (const in ilong3 x, const in ilong3 y);
+bool3 GreaterEqual (const in ilong3 x, const in ilong3 y);
+bool4 Less (const in ilong4 x, const in ilong4 y);
+bool4 Greater (const in ilong4 x, const in ilong4 y);
+bool4 LessEqual (const in ilong4 x, const in ilong4 y);
+bool4 GreaterEqual (const in ilong4 x, const in ilong4 y);
+#endif
+
+#ifdef GL_ARB_gpu_shader_int64
+bool Less (const in ulong x, const in ulong y);
+bool Greater (const in ulong x, const in ulong y);
+bool LessEqual (const in ulong x, const in ulong y);
+bool GreaterEqual (const in ulong x, const in ulong y);
+bool2 Less (const in ulong2 x, const in ulong2 y);
+bool2 Greater (const in ulong2 x, const in ulong2 y);
+bool2 LessEqual (const in ulong2 x, const in ulong2 y);
+bool2 GreaterEqual (const in ulong2 x, const in ulong2 y);
+bool3 Less (const in ulong3 x, const in ulong3 y);
+bool3 Greater (const in ulong3 x, const in ulong3 y);
+bool3 LessEqual (const in ulong3 x, const in ulong3 y);
+bool3 GreaterEqual (const in ulong3 x, const in ulong3 y);
+bool4 Less (const in ulong4 x, const in ulong4 y);
+bool4 Greater (const in ulong4 x, const in ulong4 y);
+bool4 LessEqual (const in ulong4 x, const in ulong4 y);
+bool4 GreaterEqual (const in ulong4 x, const in ulong4 y);
+#endif
+
+
+// IsZero, Equals (with error)
+float  EpsilonF ();
+double EpsilonD ();
+real   Epsilon ();
+
+bool IsZero (const in float x);
+bool2 IsZero (const in float2 x);
+bool3 IsZero (const in float3 x);
+bool4 IsZero (const in float4 x);
+
+bool IsZero (const in double x);
+bool2 IsZero (const in double2 x);
+bool3 IsZero (const in double3 x);
+bool4 IsZero (const in double4 x);
+
+bool IsZero (const in int x);
+bool2 IsZero (const in int2 x);
+bool3 IsZero (const in int3 x);
+bool4 IsZero (const in int4 x);
+
+bool IsZero (const in uint x);
+bool2 IsZero (const in uint2 x);
+bool3 IsZero (const in uint3 x);
+bool4 IsZero (const in uint4 x);
+
+bool IsZero (const in bool x);
+bool2 IsZero (const in bool2 x);
+bool3 IsZero (const in bool3 x);
+bool4 IsZero (const in bool4 x);
+
+#ifdef GL_ARB_gpu_shader_int64
+bool IsZero (const in ilong x);
+bool2 IsZero (const in ilong2 x);
+bool3 IsZero (const in ilong3 x);
+bool4 IsZero (const in ilong4 x);
+#endif
+
+#ifdef GL_ARB_gpu_shader_int64
+bool IsZero (const in ulong x);
+bool2 IsZero (const in ulong2 x);
+bool3 IsZero (const in ulong3 x);
+bool4 IsZero (const in ulong4 x);
+#endif
+
+bool Equals (const in float left, const in float right);
+bool2 Equals (const in float2 left, const in float2 right);
+bool3 Equals (const in float3 left, const in float3 right);
+bool4 Equals (const in float4 left, const in float4 right);
+
+bool Equals (const in double left, const in double right);
+bool2 Equals (const in double2 left, const in double2 right);
+bool3 Equals (const in double3 left, const in double3 right);
+bool4 Equals (const in double4 left, const in double4 right);
+
+bool Equals (const in int left, const in int right);
+bool2 Equals (const in int2 left, const in int2 right);
+bool3 Equals (const in int3 left, const in int3 right);
+bool4 Equals (const in int4 left, const in int4 right);
+
+bool Equals (const in uint left, const in uint right);
+bool2 Equals (const in uint2 left, const in uint2 right);
+bool3 Equals (const in uint3 left, const in uint3 right);
+bool4 Equals (const in uint4 left, const in uint4 right);
+
+bool Equals (const in bool left, const in bool right);
+bool2 Equals (const in bool2 left, const in bool2 right);
+bool3 Equals (const in bool3 left, const in bool3 right);
+bool4 Equals (const in bool4 left, const in bool4 right);
+
+#ifdef GL_ARB_gpu_shader_int64
+bool Equals (const in ilong left, const in ilong right);
+bool2 Equals (const in ilong2 left, const in ilong2 right);
+bool3 Equals (const in ilong3 left, const in ilong3 right);
+bool4 Equals (const in ilong4 left, const in ilong4 right);
+#endif
+
+#ifdef GL_ARB_gpu_shader_int64
+bool Equals (const in ulong left, const in ulong right);
+bool2 Equals (const in ulong2 left, const in ulong2 right);
+bool3 Equals (const in ulong3 left, const in ulong3 right);
+bool4 Equals (const in ulong4 left, const in ulong4 right);
+#endif
+
+bool Equals (const in float left, const in float right, const in uint accuracyInBits);
+bool2 Equals (const in float2 left, const in float2 right, const in uint accuracyInBits);
+bool3 Equals (const in float3 left, const in float3 right, const in uint accuracyInBits);
+bool4 Equals (const in float4 left, const in float4 right, const in uint accuracyInBits);
+
+#ifdef GL_ARB_gpu_shader_int64
+bool Equals (const in double left, const in double right, const in uint accuracyInBits);
+bool2 Equals (const in double2 left, const in double2 right, const in uint accuracyInBits);
+bool3 Equals (const in double3 left, const in double3 right, const in uint accuracyInBits);
+bool4 Equals (const in double4 left, const in double4 right, const in uint accuracyInBits);
+#endif
+
+
+// All, Any, Not
+bool All (const in bool x);
+bool Any (const in bool x);
+bool Not (const in bool x);
+bool All (const in bool2 x);
+bool Any (const in bool2 x);
+bool2 Not (const in bool2 x);
+bool All (const in bool3 x);
+bool Any (const in bool3 x);
+bool3 Not (const in bool3 x);
+bool All (const in bool4 x);
+bool Any (const in bool4 x);
+bool4 Not (const in bool4 x);
+
+
+//---------------------------------------------------------
+[SOURCE]
+
+
+// Less, Greater, LessEqual, GreaterEqual
+bool Less (const in float x, const in float y)  { return x < y; }
+bool Greater (const in float x, const in float y)  { return x > y; }
+bool LessEqual (const in float x, const in float y)  { return x <= y; }
+bool GreaterEqual (const in float x, const in float y)  { return x >= y; }
+bool2 Less (const in float2 x, const in float2 y)  { return lessThan( x, y ); }
+bool2 Greater (const in float2 x, const in float2 y)  { return greaterThan( x, y ); }
+bool2 LessEqual (const in float2 x, const in float2 y)  { return lessThanEqual( x, y ); }
+bool2 GreaterEqual (const in float2 x, const in float2 y)  { return greaterThanEqual( x, y ); }
+bool3 Less (const in float3 x, const in float3 y)  { return lessThan( x, y ); }
+bool3 Greater (const in float3 x, const in float3 y)  { return greaterThan( x, y ); }
+bool3 LessEqual (const in float3 x, const in float3 y)  { return lessThanEqual( x, y ); }
+bool3 GreaterEqual (const in float3 x, const in float3 y)  { return greaterThanEqual( x, y ); }
+bool4 Less (const in float4 x, const in float4 y)  { return lessThan( x, y ); }
+bool4 Greater (const in float4 x, const in float4 y)  { return greaterThan( x, y ); }
+bool4 LessEqual (const in float4 x, const in float4 y)  { return lessThanEqual( x, y ); }
+bool4 GreaterEqual (const in float4 x, const in float4 y)  { return greaterThanEqual( x, y ); }
+
+bool Less (const in double x, const in double y)  { return x < y; }
+bool Greater (const in double x, const in double y)  { return x > y; }
+bool LessEqual (const in double x, const in double y)  { return x <= y; }
+bool GreaterEqual (const in double x, const in double y)  { return x >= y; }
+bool2 Less (const in double2 x, const in double2 y)  { return lessThan( x, y ); }
+bool2 Greater (const in double2 x, const in double2 y)  { return greaterThan( x, y ); }
+bool2 LessEqual (const in double2 x, const in double2 y)  { return lessThanEqual( x, y ); }
+bool2 GreaterEqual (const in double2 x, const in double2 y)  { return greaterThanEqual( x, y ); }
+bool3 Less (const in double3 x, const in double3 y)  { return lessThan( x, y ); }
+bool3 Greater (const in double3 x, const in double3 y)  { return greaterThan( x, y ); }
+bool3 LessEqual (const in double3 x, const in double3 y)  { return lessThanEqual( x, y ); }
+bool3 GreaterEqual (const in double3 x, const in double3 y)  { return greaterThanEqual( x, y ); }
+bool4 Less (const in double4 x, const in double4 y)  { return lessThan( x, y ); }
+bool4 Greater (const in double4 x, const in double4 y)  { return greaterThan( x, y ); }
+bool4 LessEqual (const in double4 x, const in double4 y)  { return lessThanEqual( x, y ); }
+bool4 GreaterEqual (const in double4 x, const in double4 y)  { return greaterThanEqual( x, y ); }
+
+bool Less (const in int x, const in int y)  { return x < y; }
+bool Greater (const in int x, const in int y)  { return x > y; }
+bool LessEqual (const in int x, const in int y)  { return x <= y; }
+bool GreaterEqual (const in int x, const in int y)  { return x >= y; }
+bool2 Less (const in int2 x, const in int2 y)  { return lessThan( x, y ); }
+bool2 Greater (const in int2 x, const in int2 y)  { return greaterThan( x, y ); }
+bool2 LessEqual (const in int2 x, const in int2 y)  { return lessThanEqual( x, y ); }
+bool2 GreaterEqual (const in int2 x, const in int2 y)  { return greaterThanEqual( x, y ); }
+bool3 Less (const in int3 x, const in int3 y)  { return lessThan( x, y ); }
+bool3 Greater (const in int3 x, const in int3 y)  { return greaterThan( x, y ); }
+bool3 LessEqual (const in int3 x, const in int3 y)  { return lessThanEqual( x, y ); }
+bool3 GreaterEqual (const in int3 x, const in int3 y)  { return greaterThanEqual( x, y ); }
+bool4 Less (const in int4 x, const in int4 y)  { return lessThan( x, y ); }
+bool4 Greater (const in int4 x, const in int4 y)  { return greaterThan( x, y ); }
+bool4 LessEqual (const in int4 x, const in int4 y)  { return lessThanEqual( x, y ); }
+bool4 GreaterEqual (const in int4 x, const in int4 y)  { return greaterThanEqual( x, y ); }
+
+bool Less (const in uint x, const in uint y)  { return x < y; }
+bool Greater (const in uint x, const in uint y)  { return x > y; }
+bool LessEqual (const in uint x, const in uint y)  { return x <= y; }
+bool GreaterEqual (const in uint x, const in uint y)  { return x >= y; }
+bool2 Less (const in uint2 x, const in uint2 y)  { return lessThan( x, y ); }
+bool2 Greater (const in uint2 x, const in uint2 y)  { return greaterThan( x, y ); }
+bool2 LessEqual (const in uint2 x, const in uint2 y)  { return lessThanEqual( x, y ); }
+bool2 GreaterEqual (const in uint2 x, const in uint2 y)  { return greaterThanEqual( x, y ); }
+bool3 Less (const in uint3 x, const in uint3 y)  { return lessThan( x, y ); }
+bool3 Greater (const in uint3 x, const in uint3 y)  { return greaterThan( x, y ); }
+bool3 LessEqual (const in uint3 x, const in uint3 y)  { return lessThanEqual( x, y ); }
+bool3 GreaterEqual (const in uint3 x, const in uint3 y)  { return greaterThanEqual( x, y ); }
+bool4 Less (const in uint4 x, const in uint4 y)  { return lessThan( x, y ); }
+bool4 Greater (const in uint4 x, const in uint4 y)  { return greaterThan( x, y ); }
+bool4 LessEqual (const in uint4 x, const in uint4 y)  { return lessThanEqual( x, y ); }
+bool4 GreaterEqual (const in uint4 x, const in uint4 y)  { return greaterThanEqual( x, y ); }
+
+#ifdef GL_ARB_gpu_shader_int64
+bool Less (const in ilong x, const in ilong y)  { return x < y; }
+bool Greater (const in ilong x, const in ilong y)  { return x > y; }
+bool LessEqual (const in ilong x, const in ilong y)  { return x <= y; }
+bool GreaterEqual (const in ilong x, const in ilong y)  { return x >= y; }
+bool2 Less (const in ilong2 x, const in ilong2 y)  { return lessThan( x, y ); }
+bool2 Greater (const in ilong2 x, const in ilong2 y)  { return greaterThan( x, y ); }
+bool2 LessEqual (const in ilong2 x, const in ilong2 y)  { return lessThanEqual( x, y ); }
+bool2 GreaterEqual (const in ilong2 x, const in ilong2 y)  { return greaterThanEqual( x, y ); }
+bool3 Less (const in ilong3 x, const in ilong3 y)  { return lessThan( x, y ); }
+bool3 Greater (const in ilong3 x, const in ilong3 y)  { return greaterThan( x, y ); }
+bool3 LessEqual (const in ilong3 x, const in ilong3 y)  { return lessThanEqual( x, y ); }
+bool3 GreaterEqual (const in ilong3 x, const in ilong3 y)  { return greaterThanEqual( x, y ); }
+bool4 Less (const in ilong4 x, const in ilong4 y)  { return lessThan( x, y ); }
+bool4 Greater (const in ilong4 x, const in ilong4 y)  { return greaterThan( x, y ); }
+bool4 LessEqual (const in ilong4 x, const in ilong4 y)  { return lessThanEqual( x, y ); }
+bool4 GreaterEqual (const in ilong4 x, const in ilong4 y)  { return greaterThanEqual( x, y ); }
+#endif
+
+#ifdef GL_ARB_gpu_shader_int64
+bool Less (const in ulong x, const in ulong y)  { return x < y; }
+bool Greater (const in ulong x, const in ulong y)  { return x > y; }
+bool LessEqual (const in ulong x, const in ulong y)  { return x <= y; }
+bool GreaterEqual (const in ulong x, const in ulong y)  { return x >= y; }
+bool2 Less (const in ulong2 x, const in ulong2 y)  { return lessThan( x, y ); }
+bool2 Greater (const in ulong2 x, const in ulong2 y)  { return greaterThan( x, y ); }
+bool2 LessEqual (const in ulong2 x, const in ulong2 y)  { return lessThanEqual( x, y ); }
+bool2 GreaterEqual (const in ulong2 x, const in ulong2 y)  { return greaterThanEqual( x, y ); }
+bool3 Less (const in ulong3 x, const in ulong3 y)  { return lessThan( x, y ); }
+bool3 Greater (const in ulong3 x, const in ulong3 y)  { return greaterThan( x, y ); }
+bool3 LessEqual (const in ulong3 x, const in ulong3 y)  { return lessThanEqual( x, y ); }
+bool3 GreaterEqual (const in ulong3 x, const in ulong3 y)  { return greaterThanEqual( x, y ); }
+bool4 Less (const in ulong4 x, const in ulong4 y)  { return lessThan( x, y ); }
+bool4 Greater (const in ulong4 x, const in ulong4 y)  { return greaterThan( x, y ); }
+bool4 LessEqual (const in ulong4 x, const in ulong4 y)  { return lessThanEqual( x, y ); }
+bool4 GreaterEqual (const in ulong4 x, const in ulong4 y)  { return greaterThanEqual( x, y ); }
+#endif
+
+
+// IsZero, Equals (with error)
+float  EpsilonF ()  { return 1.0e-5; }
+double EpsilonD ()  { return 1.0e-7LF; }
+
+real   Epsilon ()
+{
+# ifdef GX_FP_32
+	return EpsilonF();
+# elif GX_FP_64
+	return EpsilonD();
+# endif
+}
+
+bool IsZero (const in float x)  { return abs(x) < 1.0e-5; }
+bool2 IsZero (const in float2 x)  { return bool2( IsZero(x[0]), IsZero(x[1]) ); }
+bool3 IsZero (const in float3 x)  { return bool3( IsZero(x[0]), IsZero(x[1]), IsZero(x[2]) ); }
+bool4 IsZero (const in float4 x)  { return bool4( IsZero(x[0]), IsZero(x[1]), IsZero(x[2]), IsZero(x[3]) ); }
+
+bool IsZero (const in double x)  { return abs(x) < 1.0e-7LF; }
+bool2 IsZero (const in double2 x)  { return bool2( IsZero(x[0]), IsZero(x[1]) ); }
+bool3 IsZero (const in double3 x)  { return bool3( IsZero(x[0]), IsZero(x[1]), IsZero(x[2]) ); }
+bool4 IsZero (const in double4 x)  { return bool4( IsZero(x[0]), IsZero(x[1]), IsZero(x[2]), IsZero(x[3]) ); }
+
+bool IsZero (const in int x)  { return Equals( x, int(0) ); }
+bool2 IsZero (const in int2 x)  { return Equals( x, int2(0) ); }
+bool3 IsZero (const in int3 x)  { return Equals( x, int3(0) ); }
+bool4 IsZero (const in int4 x)  { return Equals( x, int4(0) ); }
+
+bool IsZero (const in uint x)  { return Equals( x, uint(0) ); }
+bool2 IsZero (const in uint2 x)  { return Equals( x, uint2(0) ); }
+bool3 IsZero (const in uint3 x)  { return Equals( x, uint3(0) ); }
+bool4 IsZero (const in uint4 x)  { return Equals( x, uint4(0) ); }
+
+bool IsZero (const in bool x)  { return Equals( x, bool(0) ); }
+bool2 IsZero (const in bool2 x)  { return Equals( x, bool2(0) ); }
+bool3 IsZero (const in bool3 x)  { return Equals( x, bool3(0) ); }
+bool4 IsZero (const in bool4 x)  { return Equals( x, bool4(0) ); }
+
+#ifdef GL_ARB_gpu_shader_int64
+bool IsZero (const in ilong x)  { return Equals( x, ilong(0) ); }
+bool2 IsZero (const in ilong2 x)  { return Equals( x, ilong2(0) ); }
+bool3 IsZero (const in ilong3 x)  { return Equals( x, ilong3(0) ); }
+bool4 IsZero (const in ilong4 x)  { return Equals( x, ilong4(0) ); }
+#endif
+
+#ifdef GL_ARB_gpu_shader_int64
+bool IsZero (const in ulong x)  { return Equals( x, ulong(0) ); }
+bool2 IsZero (const in ulong2 x)  { return Equals( x, ulong2(0) ); }
+bool3 IsZero (const in ulong3 x)  { return Equals( x, ulong3(0) ); }
+bool4 IsZero (const in ulong4 x)  { return Equals( x, ulong4(0) ); }
+#endif
+
+bool Equals (const in float left, const in float right)  { return Equals( left, right, 10 ); }
+bool2 Equals (const in float2 left, const in float2 right)  { return Equals( left, right, 10 ); }
+bool3 Equals (const in float3 left, const in float3 right)  { return Equals( left, right, 10 ); }
+bool4 Equals (const in float4 left, const in float4 right)  { return Equals( left, right, 10 ); }
+
+bool Equals (const in double left, const in double right)  { return Equals( left, right, 42 ); }
+bool2 Equals (const in double2 left, const in double2 right)  { return Equals( left, right, 42 ); }
+bool3 Equals (const in double3 left, const in double3 right)  { return Equals( left, right, 42 ); }
+bool4 Equals (const in double4 left, const in double4 right)  { return Equals( left, right, 42 ); }
+
+bool Equals (const in int left, const in int right)  { return left == right; }
+bool2 Equals (const in int2 left, const in int2 right)  { return equal( left, right ); }
+bool3 Equals (const in int3 left, const in int3 right)  { return equal( left, right ); }
+bool4 Equals (const in int4 left, const in int4 right)  { return equal( left, right ); }
+
+bool Equals (const in uint left, const in uint right)  { return left == right; }
+bool2 Equals (const in uint2 left, const in uint2 right)  { return equal( left, right ); }
+bool3 Equals (const in uint3 left, const in uint3 right)  { return equal( left, right ); }
+bool4 Equals (const in uint4 left, const in uint4 right)  { return equal( left, right ); }
+
+bool Equals (const in bool left, const in bool right)  { return left == right; }
+bool2 Equals (const in bool2 left, const in bool2 right)  { return equal( left, right ); }
+bool3 Equals (const in bool3 left, const in bool3 right)  { return equal( left, right ); }
+bool4 Equals (const in bool4 left, const in bool4 right)  { return equal( left, right ); }
+
+#ifdef GL_ARB_gpu_shader_int64
+bool Equals (const in ilong left, const in ilong right)  { return left == right; }
+bool2 Equals (const in ilong2 left, const in ilong2 right)  { return equal( left, right ); }
+bool3 Equals (const in ilong3 left, const in ilong3 right)  { return equal( left, right ); }
+bool4 Equals (const in ilong4 left, const in ilong4 right)  { return equal( left, right ); }
+#endif
+
+#ifdef GL_ARB_gpu_shader_int64
+bool Equals (const in ulong left, const in ulong right)  { return left == right; }
+bool2 Equals (const in ulong2 left, const in ulong2 right)  { return equal( left, right ); }
+bool3 Equals (const in ulong3 left, const in ulong3 right)  { return equal( left, right ); }
+bool4 Equals (const in ulong4 left, const in ulong4 right)  { return equal( left, right ); }
+#endif
+
+bool Equals (const in float left, const in float right, const in uint accuracyInBits)
+{
+	int ileft = floatBitsToInt(left);
+	int iright = floatBitsToInt(right);
+	ileft = ileft < 0 ? (-2147483648 - ileft) : ileft;
+	iright = iright < 0 ? (-2147483648 - iright) : iright;
+	return abs( ileft - iright ) <= (1 << (accuracyInBits & 31));
+}
+
+bool2 Equals (const in float2 left, const in float2 right, const in uint accuracyInBits)
+{
+	return bool2(
+		Equals( left[0], right[0], accuracyInBits ),
+		Equals( left[1], right[1], accuracyInBits ) );
+}
+
+bool3 Equals (const in float3 left, const in float3 right, const in uint accuracyInBits)
+{
+	return bool3(
+		Equals( left[0], right[0], accuracyInBits ),
+		Equals( left[1], right[1], accuracyInBits ),
+		Equals( left[2], right[2], accuracyInBits ) );
+}
+
+bool4 Equals (const in float4 left, const in float4 right, const in uint accuracyInBits)
+{
+	return bool4(
+		Equals( left[0], right[0], accuracyInBits ),
+		Equals( left[1], right[1], accuracyInBits ),
+		Equals( left[2], right[2], accuracyInBits ),
+		Equals( left[3], right[3], accuracyInBits ) );
+}
+
+#ifdef GL_ARB_gpu_shader_int64
+bool Equals (const in double left, const in double right, const in uint accuracyInBits)
+{
+	ilong ileft = doubleBitsToInt64(left);
+	ilong iright = doubleBitsToInt64(right);
+	ileft = ileft < 0 ? (-9223372036854775808L - ileft) : ileft;
+	iright = iright < 0 ? (-9223372036854775808L - iright) : iright;
+	return abs( ileft - iright ) <= (1 << (accuracyInBits & 63));
+}
+
+bool2 Equals (const in double2 left, const in double2 right, const in uint accuracyInBits)
+{
+	return bool2(
+		Equals( left[0], right[0], accuracyInBits ),
+		Equals( left[1], right[1], accuracyInBits ) );
+}
+
+bool3 Equals (const in double3 left, const in double3 right, const in uint accuracyInBits)
+{
+	return bool3(
+		Equals( left[0], right[0], accuracyInBits ),
+		Equals( left[1], right[1], accuracyInBits ),
+		Equals( left[2], right[2], accuracyInBits ) );
+}
+
+bool4 Equals (const in double4 left, const in double4 right, const in uint accuracyInBits)
+{
+	return bool4(
+		Equals( left[0], right[0], accuracyInBits ),
+		Equals( left[1], right[1], accuracyInBits ),
+		Equals( left[2], right[2], accuracyInBits ),
+		Equals( left[3], right[3], accuracyInBits ) );
+}
+
+#endif
+
+// All, Any, Not
+#undef not
+
+bool All (const in bool x)  { return x; }
+bool Any (const in bool x)  { return x; }
+bool Not (const in bool x)  { return !x; }
+bool All (const in bool2 x)  { return all( x ); }
+bool Any (const in bool2 x)  { return any( x ); }
+bool2 Not (const in bool2 x)  { return not( x ); }
+bool All (const in bool3 x)  { return all( x ); }
+bool Any (const in bool3 x)  { return any( x ); }
+bool3 Not (const in bool3 x)  { return not( x ); }
+bool All (const in bool4 x)  { return all( x ); }
+bool Any (const in bool4 x)  { return any( x ); }
+bool4 Not (const in bool4 x)  { return not( x ); }

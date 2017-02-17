@@ -129,16 +129,6 @@ namespace Graphics
 		return _result;
 	}
 
-/*
-=================================================
-	New
-=================================================
-*/
-	GraphicsQueryPtr  GraphicsQuery::New (const SubSystemsRef ss)
-	{
-		return BaseObject::_New( new GraphicsQuery( ss ) );
-	}
-
 
 }	// Graphics
 }	// Engine

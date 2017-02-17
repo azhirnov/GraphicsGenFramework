@@ -75,7 +75,7 @@ namespace OS
 	bool OSFileSystem::IsDirectoryExist (StringCRef dirname)
 	{
 		if ( dirname.Empty() )
-			return false;
+			return true;
 
 		int i_code = ::GetFileAttributes( dirname.cstr() );
 		return (i_code != -1) and (FILE_ATTRIBUTE_DIRECTORY & i_code);
@@ -224,10 +224,12 @@ namespace OS
 	{
 		ASSERT( IsDirectoryExist( path ) );
 
+		fileNames.Clear();
+
 		String	dir( path );
 		
-		if ( dir.Back() == '\\' )	dir << '*';
-		else						dir << "\\*";
+		if ( dir.Empty() or dir.Back() == '\\' or dir.Back() == '/' )	dir << '*';
+		else															dir << "\\*";
 
 		WIN32_FIND_DATAA	s_wfd;
 		HANDLE				h_search = ::FindFirstFileA( dir.cstr(), &s_wfd );
@@ -255,7 +257,9 @@ namespace OS
 */
 	bool OSFileSystem::GetAllDirsInPath (StringCRef path, Array<String> &directories)
 	{
-		ASSERT( path.Empty() or IsDirectoryExist( path ) );
+		ASSERT( IsDirectoryExist( path ) );
+
+		directories.Clear();
 
 		String	dir( path );
 		
@@ -284,143 +288,6 @@ namespace OS
 		while ( ::FindNextFileA( h_search, &s_wfd ) );
 		
 		::FindClose( h_search );
-		return true;
-	}
-	
-/*
-=================================================
-	RecursiveFindFiles
-=================================================
-*
-	template <typename Filter>
-	bool OSFileSystem::RecursiveFindFiles (StringCRef dir, Filter filter, INOUT Array<String> &fileNames)
-	{
-		struct DirStackItem
-		{
-			HANDLE		search;
-			String		path;
-			///
-			DirStackItem () : search(null) {}
-			DirStackItem (HANDLE h, StringCRef dir) : search(h), path(dir) {}
-		};
-
-		typedef Array< DirStackItem >	dir_stack_t;
-
-		struct Util
-		{
-			static void AddPath (String &path, StringCRef add)
-			{
-				if ( add.Empty() )
-					return;
-
-				if ( not path.Empty() and ( path.Back() != '/' or path.Back() != '\\' ) ) {
-					path << '/';
-				}
-				path << add;
-			}
-
-			static bool CheckDirName (const char *dir)
-			{
-				return	not ( ( dir[0] == '.' and dir[1] == '\0' ) or					// "."
-							  ( dir[0] == '.' and dir[1] == '.' and dir[2] == '\0' ) );	// ".."
-			}
-
-			static bool FindFirst (String &fullPath, const String &path, WIN32_FIND_DATAA &wfd, dir_stack_t &dirstack)
-			{
-				HANDLE	h_search = null;
-
-				usize	len = fullPath.Length();
-
-				AddPath( fullPath, path );
-
-				if ( fullPath.Empty() )
-					return false;
-
-				if ( fullPath.Back() == '\\' or fullPath.Back() == '/' ) {
-					fullPath << '*';
-					len--;
-				} else {
-					fullPath << "\\*";
-				}
-				
-				h_search = ::FindFirstFileA( fullPath.cstr(), &wfd );
-		
-				fullPath.SetLength( len );
-
-				if ( h_search != INVALID_HANDLE_VALUE )
-				{
-					dirstack.PushBack( DirStackItem( h_search, path ) );
-					return true;
-				}
-
-				//CHECK_OS_ERROR();
-				return false;
-			}
-		};
-
-
-		CHECK_ERR( IsDirectoryExist( dir ) );
-
-		WIN32_FIND_DATAA	s_wfd;
-		dir_stack_t			search_stack;
-
-		Ptr< HANDLE >		search_ref;
-
-		Array<String>		files;
-
-		String				full_path = dir;
-		String				path;
-		String				fname;
-
-		bool				find_next = false;
-
-		CHECK_ERR( Util::FindFirst( full_path, path, s_wfd, search_stack ) );
-
-
-		while ( not search_stack.Empty() )
-		{
-			search_ref	= &search_stack.Back().search;
-			path		=  search_stack.Back().path;
-
-			while ( true )
-			{
-				if ( find_next and FindNextFile( *search_ref, &s_wfd ) == FALSE )
-					break;
-
-				if  ( s_wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY )
-				{
-					if ( Util::CheckDirName( s_wfd.cFileName ) )
-					{
-						Util::AddPath( path, s_wfd.cFileName );
-						Util::FindFirst( full_path, path, s_wfd, search_stack );
-
-						search_ref = &search_stack.Back().search;
-						find_next  = false;
-						continue;
-					}
-				}
-				else
-				{
-					StringCRef	filename( s_wfd.cFileName );
-
-					if ( filter( filename ) )
-					{
-						fname = path;
-						Util::AddPath( fname, filename );
-
-						fileNames.PushBack( fname );
-					}
-				}
-
-				find_next = true;
-			}
-
-			FindClose( *search_ref );
-			search_stack.PopBack();	// remove current search
-
-			find_next = true;
-		}
-
 		return true;
 	}
 	

@@ -25,6 +25,7 @@
 
 
 // Call function for each argument in variable template parameters
+// from http://stackoverflow.com/questions/17339789/how-to-call-a-function-on-all-variadic-template-args
 namespace GX_STL
 {
 	namespace _defines_hidden_
@@ -38,4 +39,7 @@ namespace GX_STL
 	}
 }
 
-#define GX_FOREACH_ARG( _pattern_ ) ::GX_STL::_defines_hidden_::__ExpandType{ 0, ((_pattern_), 0)... }
+// Example:
+// void function (T&& value);
+// GX_FOREACH_ARG( function( args ) );
+#define GX_FOREACH_ARG( _pattern_ ) ::GX_STL::_defines_hidden_::__ExpandType{ 0, ((_pattern_), void(), 0 )... }

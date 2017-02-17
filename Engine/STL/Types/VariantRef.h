@@ -20,7 +20,7 @@ namespace GXTypes
 	// variables
 	private:
 		mutable void *	_reference;
-		TypeId_t		_typeId;
+		TypeId			_typeId;
 
 
 	// methods
@@ -32,7 +32,7 @@ namespace GXTypes
 		template <typename T>
 		forceinline VariantRef (T &ref) :
 			_reference( static_cast<void *>( &ref ) ),
-			_typeId( TypeId< TypeTraits::RemoveConstVolatile<T> >() )
+			_typeId( TypeIdOf< TypeTraits::RemoveConstVolatile<T> >() )
 		{}
 
 
@@ -48,7 +48,7 @@ namespace GXTypes
 			return VariantRef( *const_cast<T *>( ptr ) );
 		}
 
-		forceinline static VariantRef  FromVoid (void *ptr, TypeId_t typeId)
+		forceinline static VariantRef  FromVoid (void *ptr, TypeId typeId)
 		{
 			VariantRef	ref;
 			ref._reference	= ptr;
@@ -67,19 +67,19 @@ namespace GXTypes
 
 
 		template <typename T>
-		forceinline bool IsType () const
+		forceinline bool		IsType () const
 		{
-			return TypeId< TypeTraits::RemoveConstVolatile<T> >() == _typeId;
+			return TypeIdOf< TypeTraits::RemoveConstVolatile<T> >() == _typeId;
 		}
 
 		template <typename T>
-		forceinline bool IsTypeAs (const T&) const
+		forceinline bool		IsTypeAs (const T&) const
 		{
 			return IsType<T>();
 		}
 
 
-		forceinline TypeId_t	GetValueTypeId () const
+		forceinline TypeId		GetValueTypeId () const
 		{
 			return _typeId;
 		}
@@ -98,21 +98,16 @@ namespace GXTypes
 			return static_cast<T *>( _reference );
 		}
 
-		/*void *		RawPtr () const
-		{
-			return _reference;
-		}*/
-
 
 		template <typename T>
-		forceinline void CopyTo (OUT T &value) const
+		forceinline void		CopyTo (OUT T &value) const
 		{
 			value = Get<T>();
 		}
 	};
 
 	
-	/*template <>
+	template <>
 	struct Hash< VariantRef > : private Hash< void* >
 	{
 		typedef VariantRef			key_t;
@@ -121,9 +116,13 @@ namespace GXTypes
 
 		result_t operator () (const key_t &x) const
 		{
-			return base_t::operator ()( x.RawPtr() );
+			// must be compilation error!
+
+			//STATIC_WARNING("hash not supported for variant reference type!");
+			//return result_t();
+			//return base_t::operator ()( x.RawPtr() );
 		}
-	};*/
+	};
 
 }	// GXTypes
 }	// GX_STL

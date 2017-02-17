@@ -20,14 +20,17 @@ namespace WinPlatform
 		typedef WindowsOpenGLContext		GraphicsApiContext;
 #	endif
 
+
 #	define MAIN_APPLICATION_ENTRY( _app_ ) \
+		\
+		namespace Engine { namespace WinPlatform { \
+			extern int __AppEntryPoint (::Engine::Base::ApplicationPtr (*) (const ::Engine::Base::IParallelThreadPtr &)); \
+		}} \
 		int main (int argc, char *argv[]) \
 		{ \
 			return ::Engine::WinPlatform::__AppEntryPoint( &::Engine::Base::Application::EntryPoint< _app_ > ); \
 		}
-
-	extern int __AppEntryPoint (void (*) (Base::IParallelThread *thread, OUT Base::Application *&));
-
+		
 
 
 	//

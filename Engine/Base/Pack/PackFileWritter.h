@@ -53,9 +53,7 @@ namespace Base
 		bool UpdatePackSize ();
 
 		ulong GetTotalPackSize ()	const		{ return _totalSize; }
-		ulong GetMaxPackSize ()	const		{ return _maxSize; }
-
-		static PackFileWritterPtr  New (const SubSystemsRef ss);
+		ulong GetMaxPackSize ()		const		{ return _maxSize; }
 	};
 	
 

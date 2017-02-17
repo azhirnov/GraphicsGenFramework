@@ -42,4 +42,14 @@ extern void Test_CompileTime_TypeInfo ()
 	//MustBeFloat<int>();
 	//MustBeInteger<float>();
 	//MustBeUnsignedInteger<int>();
+
+	// IsScalarOrEnum //
+	STATIC_ASSERT( IsScalarOrEnum<int> );
+	STATIC_ASSERT( IsScalarOrEnum<float> );
+	STATIC_ASSERT( not IsScalarOrEnum<GXMath::int2> );
+	STATIC_ASSERT( not IsScalarOrEnum<GXMath::float2> );
+
+	// IsVector //
+	STATIC_ASSERT( IsVector<GXMath::int3 > );
+	STATIC_ASSERT( not IsVector<float> );
 }

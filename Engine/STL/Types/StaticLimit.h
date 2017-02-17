@@ -149,6 +149,7 @@ namespace GXTypes
 
 		result_t operator () (const key_t &x) const
 		{
+			// TODO: is min and max limits needed here?
 			return base_t::operator ()( x.Value() );
 		}
 	};

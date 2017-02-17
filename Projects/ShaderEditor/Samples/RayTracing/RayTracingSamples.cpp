@@ -25,7 +25,7 @@ namespace ShaderEditor
 	void RayTracingSamples::Init ()
 	{
 		_imageGen	= _ChooseShader( _curShader );
-		_image		= ComputeImage::New( SubSystems() );
+		_image		= New<ComputeImage>( SubSystems() );
 
 		CHECK( _image->Create( uint2(1 << 12).xyoo(), ETexture::Tex2D, EPixelFormat::RGBA8_UNorm ) );
 
@@ -148,16 +148,6 @@ namespace ShaderEditor
 
 		_curShader = 0;
 		return false;
-	}
-
-/*
-=================================================
-	New
-=================================================
-*/
-	ISamplePtr  RayTracingSamples::New (const SubSystemsRef ss)
-	{
-		return BaseObject::_New( new RayTracingSamples( ss ) );
 	}
 
 

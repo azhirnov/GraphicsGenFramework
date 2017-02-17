@@ -12,21 +12,21 @@ struct quat
 
 quat  QIdentity ();
 
-quat  QNormalize (in quat q);
-quat  QInverse (in quat q);
+quat  QNormalize (const quat q);
+quat  QInverse (const quat q);
 
-quat  QMul (in quat left, in quat right);
-real3 QMul (in quat left, in real3 right);
+quat  QMul (const quat left, const quat right);
+real3 QMul (const quat left, const real3 right);
 
-real  QDot (in quat left, in quat right);
-quat  QSlerp (in quat qx, in quat qy, real factor);
+real  QDot (const quat left, const quat right);
+quat  QSlerp (const quat qx, const quat qy, const real factor);
 
-real3 QDirection (in quat q);
+real3 QDirection (const quat q);
 
-quat  QRotationX (real angleRad);
-quat  QRotationY (real angleRad);
-quat  QRotationZ (real angleRad);
-quat  QRotation (real3 anglesRad);
+quat  QRotationX (const real angleRad);
+quat  QRotationY (const real angleRad);
+quat  QRotationZ (const real angleRad);
+quat  QRotation (const real3 anglesRad);
 
 /*
 real3x3 QToMatrix3 (in quat q);
@@ -43,6 +43,7 @@ quat QRotationFromTo (in quat q, in real3 from, in real3 to);
 //-----------------------------------------------------------------------------
 [SOURCE]
 
+#import "Core/Common/Cmp.glcs"
 #import "Core/Math/Math.glcs"
 
 
@@ -54,7 +55,7 @@ quat QIdentity ()
 }
 
 
-quat QNormalize (in quat q)
+quat QNormalize (const quat q)
 {
 	quat	ret = q;
 	real	n	= Dot( q.data, q.data );
@@ -67,7 +68,7 @@ quat QNormalize (in quat q)
 }
 
 
-quat QInverse (in quat q)
+quat QInverse (const quat q)
 {
 	quat	ret;
 	ret.data.xyz = -q.data.xyz;
@@ -76,7 +77,7 @@ quat QInverse (in quat q)
 }
 
 
-quat QMul (in quat left, in quat right)
+quat QMul (const quat left, const quat right)
 {
 	quat	ret;
 
@@ -91,7 +92,7 @@ quat QMul (in quat left, in quat right)
 }
 
 
-real3 QMul (in quat left, in real3 right)
+real3 QMul (const quat left, const real3 right)
 {
 	real3	q	= left.data.xyz;
 	real3	uv	= Cross( q, right );
@@ -101,13 +102,13 @@ real3 QMul (in quat left, in real3 right)
 }
 
 
-real QDot (in quat left, in quat right)
+real QDot (const quat left, const quat right)
 {
 	return Dot( left.data, right.data );
 }
 
 
-quat QSlerp (in quat qx, in quat qy, real factor)
+quat QSlerp (const quat qx, const quat qy, const real factor)
 {
 	quat	ret;
 	real4	qz			= qy.data;
@@ -134,7 +135,7 @@ quat QSlerp (in quat qx, in quat qy, real factor)
 }
 
 
-real3 QDirection (in quat q)
+real3 QDirection (const quat q)
 {
 	return real3( 2.0 * q.data.x * q.data.z + 2.0 * q.data.y * q.data.w,
 				  2.0 * q.data.z * q.data.y - 2.0 * q.data.x * q.data.w,
@@ -142,7 +143,7 @@ real3 QDirection (in quat q)
 }
 
 
-quat QRotationX (real angleRad)
+quat QRotationX (const real angleRad)
 {
 	quat	q;
 	real	a = angleRad * 0.5;
@@ -152,7 +153,7 @@ quat QRotationX (real angleRad)
 }
 
 
-quat QRotationY (real angleRad)
+quat QRotationY (const real angleRad)
 {
 	quat	q;
 	real	a = angleRad * 0.5;
@@ -162,7 +163,7 @@ quat QRotationY (real angleRad)
 }
 
 
-quat QRotationZ (real angleRad)
+quat QRotationZ (const real angleRad)
 {
 	quat	q;
 	real	a = angleRad * 0.5;
@@ -172,7 +173,7 @@ quat QRotationZ (real angleRad)
 }
 
 
-quat QRotation (real3 anglesRad)
+quat QRotation (const real3 anglesRad)
 {
 	return QMul( QMul( QRotationX( anglesRad.x ), QRotationY( anglesRad.y ) ), QRotationZ( anglesRad.z ) );
 }

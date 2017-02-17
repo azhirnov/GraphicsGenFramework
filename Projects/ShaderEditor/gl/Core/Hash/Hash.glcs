@@ -1,0 +1,75 @@
+/*
+	Hash functions.
+*/
+
+[HEADER]
+
+// Weyl hash
+float  WeylHash (const int2 c);
+float  WeylHash (const float2 c);	// [0;1]
+double WeylHash (const double2 c);	// [0;1]
+
+// Mod hash
+float  ModHash (float2 uv);			// [0;1]
+double ModHash (double2 uv);		// [0;1]
+
+
+//---------------------------------------------------------
+[SOURCE]
+
+#import "Core/Math/Math.glcs"
+
+
+float WeylHash (const int2 c)
+{
+	// from https://www.shadertoy.com/view/MsV3z3
+
+	int x = 0x3504f333 * c.x * c.x + c.y;
+	int y = 0xf1bbcdcb * c.y * c.y + c.x;
+    
+	return float(x*y) * (2.0 / 8589934592.0) + 0.5;
+}
+
+
+float WeylHash (const float2 c)
+{
+	// from https://www.shadertoy.com/view/Xdy3Rc
+
+	// a pair of Weyl values with low star discrepancy
+	const float2 W = float2( 0.5545497, 0.308517 );
+
+	float2 v = c * Fract( c * W );
+	return Fract( v.x * v.y );
+}
+
+
+double WeylHash (const double2 c)
+{
+	// from https://www.shadertoy.com/view/Xdy3Rc
+	
+	// a pair of Weyl values with low star discrepancy
+	const double2 W = double2( 0.5545497, 0.308517 );
+
+	double2 v = c * Fract( c * W );
+	return Fract( v.x * v.y );
+}
+
+
+float ModHash (float2 uv)
+{
+	// from https://www.shadertoy.com/view/Xts3R7
+
+    uv = Abs( Mod( 10.0 * Fract( (uv + 1.1312) * 31.0 ), uv + 2.0 ) );
+    uv = Abs( Mod( uv.x * Fract( (uv + 1.721711) * 17.0 ), uv ) );
+    return Fract( 10.0 * (7.0 * uv.y + 31.0 * uv.x) );
+}
+
+
+double ModHash (double2 uv)
+{
+	// from https://www.shadertoy.com/view/Xts3R7
+
+    uv = Abs( Mod( 10.0 * Fract( (uv + 1.1312) * 31.0 ), uv + 2.0 ) );
+    uv = Abs( Mod( uv.x * Fract( (uv + 1.721711) * 17.0 ), uv ) );
+    return Fract( 10.0 * (7.0 * uv.y + 31.0 * uv.x) );
+}

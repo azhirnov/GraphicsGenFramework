@@ -16,6 +16,7 @@ namespace Graphics
 
 	class RenderTarget : public BaseObject
 	{
+
 	// types
 	private:
 		typedef Union< float4, int4, uint4, float, int >	ClearValue_t;
@@ -53,9 +54,12 @@ namespace Graphics
 	// methods
 	protected:
 		RenderTarget (bool isSystemRT, const SubSystemsRef ss);
-		~RenderTarget ();
 
 	public:
+		explicit
+		RenderTarget (const SubSystemsRef ss) : RenderTarget(false, ss) {}
+		~RenderTarget ();
+
 		bool Create ();
 		void Destroy ();
 
@@ -106,7 +110,6 @@ namespace Graphics
 		bool						IsSystemRenderTarget ()					const	{ return _isSystemRT; }
 		bool						IsSRGB ()								const	{ return _isSRGB; }
 
-		static RenderTargetPtr		New (const SubSystemsRef ss);
 		static RenderTargetPtr		NewSystemRT (const SubSystemsRef ss);
 		
 

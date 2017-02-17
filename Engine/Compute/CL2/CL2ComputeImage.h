@@ -45,25 +45,25 @@ namespace Compute
 
 
 	// methods
-	protected:
-		explicit CL2ComputeImage (const SubSystemsRef ss);
-		~CL2ComputeImage ();
-		
 	public:
+		explicit
+		CL2ComputeImage (const SubSystemsRef ss);
+		~CL2ComputeImage ();
+
 		bool Create (const uint4 &dim, ETexture::type imageType, EPixelFormat::type format,
 					 EMemoryAccess::type flags = EMemoryAccess::ReadWrite,
 					 BinaryBuffer data = Uninitialized,
-					 BytesU xAlign = BytesU(4),
-					 BytesU xyAlign = BytesU(4));
+					 BytesU xAlign = 4_b,
+					 BytesU xyAlign = 4_b);
 		
 		bool Create (const TexturePtr &texture, EMemoryAccess::type flags, MipmapLevel level = Uninitialized);
 		bool Create (const TexturePtr &texture, EMemoryAccess::type flags, ECubeMapFace::type face, MipmapLevel level = Uninitialized);
 
 		bool SetImage (BinaryBuffer data, const uint3 &size, const uint4 &offset = Uninitialized,
-						BytesU xAlign = 4_B, BytesU xyAlign = 4_B);
+						BytesU xAlign = 4_b, BytesU xyAlign = 4_b);
 
 		bool GetImage (OUT Buffer<ubyte> data, const uint3 &size, const uint4 &offset,
-						BytesU xAlign = 4_B, BytesU xyAlign = 4_B);
+						BytesU xAlign = 4_b, BytesU xyAlign = 4_b);
 		
 		bool Copy (const ComputeBufferPtr &src, BytesU srcOffset, const uint4 &dstOffset, const uint4 &size);
 		bool Copy (const ComputeImagePtr &src, const uint4 &srcOffset, const uint4 &dstOffset, const uint4 &size);
@@ -90,8 +90,7 @@ namespace Compute
 		bool					IsCreated ()		const	{ return _id != null; }
 		cl::cl_mem				Id ()				const	{ return _id; }
 
-		static ComputeImagePtr  New (const SubSystemsRef ss);
-		static ComputeImagePtr  New (const TexturePtr &texture, EMemoryAccess::type flags, MipmapLevel level = Uninitialized);
+		static ComputeImagePtr  New (const TexturePtr &texture, EMemoryAccess::type flags = EMemoryAccess::ReadWrite, MipmapLevel level = Uninitialized);
 
 
 	private:
@@ -110,7 +109,7 @@ namespace Compute
 	template <typename T>
 	inline void CL2ComputeImage::Clear (const T &value)
 	{
-		return _FillImage( BinaryBuffer::FromType( value ) );
+		_FillImage( BinaryBuffer::FromValue( value ) );
 	}
 
 	inline void CL2ComputeImage::Clear ()

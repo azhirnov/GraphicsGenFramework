@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Engine/STL/Common/Types.h"
+#include "Engine/STL/Types/Noncopyable.h"
 
 namespace GX_STL
 {
@@ -14,7 +14,7 @@ namespace GXTypes
 	//
 
 	template <typename T>
-	struct ScopeSetter
+	struct ScopeSetter : Noncopyable
 	{
 	// variables
 	private:
@@ -24,8 +24,7 @@ namespace GXTypes
 
 	// methods
 	public:
-		explicit
-		ScopeSetter (OUT T &ref, const T &value = T()) : _ref( ref ), _value( value )
+		ScopeSetter (INOUT T &ref, const T &value) : _ref( ref ), _value( value )
 		{}
 
 		~ScopeSetter ()
@@ -33,6 +32,9 @@ namespace GXTypes
 			_ref = _value;
 		}
 	};
+	
+#	define SCOPE_SETTER( _valueRef_, _newValue_ ) \
+		GX_STL::OS::ScopeSetter< TypeTraits::RemoveAnyReference< decltype(_valueRef_) > >	AUXDEF_UNITE_RAW( __scopeSetter, __COUNTER__ ) ( _valueRef_, _newValue_ )
 
 
 }	// GXTypes

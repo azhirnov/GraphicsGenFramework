@@ -15,20 +15,22 @@ namespace ShaderEditor
 	{
 	// variables
 	private:
-		IGeneratorPtr					_imageGen;
-		ComputeImagePtr					_image;
-		uint							_curShader;
+		IGeneratorPtr			_imageGen;
+		ComputeImagePtr			_image;
+		uint					_curShader;
 
-		Shared::ScaleBiasController		_controller;
+		ScaleBiasController		_controller;
 
 
 	// methods
 	private:
-		RayTracingSamples (const SubSystemsRef ss);
 
 		IGeneratorPtr _ChooseShader (uint index) const;
 
 	public:
+		explicit
+		RayTracingSamples (const SubSystemsRef ss);
+
 		void Init () override;
 		void Release () override;
 		void Reload () override;
@@ -37,8 +39,6 @@ namespace ShaderEditor
 		void Update (TimeD dt) override;
 		
 		bool Next () override;
-
-		static ISamplePtr  New (const SubSystemsRef ss);
 	};
 
 

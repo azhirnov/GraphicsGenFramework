@@ -49,7 +49,7 @@ namespace Graphics
 		desc.Add( VertexAttribsDesc::AttribIndex(0), EAttribute::Float2, BytesU(0) );
 		desc.Add( VertexAttribsDesc::AttribIndex(1), EAttribute::Float2, SizeOf<float2>() );
 		
-		Mesh	mesh( VertexBuffer::New( ss ) );
+		Mesh	mesh( New<VertexBuffer>( ss ) );
 
 		CHECK( mesh.vertexBuffer->Create() );
 		CHECK( mesh.vertexBuffer->SetData( BinaryBuffer::From( quad_verts ), EBufferUsage::Static ) );
@@ -104,7 +104,7 @@ namespace Graphics
 		VertexAttribsDesc	desc;
 		desc.Add( VertexAttribsDesc::AttribIndex(0), EAttribute::Float3, BytesU(0) );
 		
-		Mesh	mesh( VertexBuffer::New( ss ), IndexBuffer::New( ss ) );
+		Mesh	mesh( New<VertexBuffer>( ss ), New<IndexBuffer>( ss ) );
 
 		CHECK( mesh.vertexBuffer->Create() );
 		CHECK( mesh.vertexBuffer->SetData( BinaryBuffer::From( cube_verts ), EBufferUsage::Static ) );
@@ -205,7 +205,7 @@ namespace Graphics
 		VertexAttribsDesc	attr;
 		GridVertex::GetAttribs( attr );
 		
-		Mesh	mesh( VertexBuffer::New( ss ), IndexBuffer::New( ss ) );
+		Mesh	mesh( New<VertexBuffer>( ss ), New<IndexBuffer>( ss ) );
 
 		CHECK( mesh.vertexBuffer->Create() );
 		CHECK( mesh.vertexBuffer->SetData( BinaryBuffer::From( vertices ), EBufferUsage::Static ) );
@@ -283,7 +283,7 @@ namespace Graphics
 		VertexAttribsDesc	attr;
 		GridVertex::GetAttribs( attr );
 		
-		Mesh	mesh( VertexBuffer::New( ss ), IndexBuffer::New( ss ) );
+		Mesh	mesh( New<VertexBuffer>( ss ), New<IndexBuffer>( ss ) );
 
 		CHECK( mesh.vertexBuffer->Create() );
 		CHECK( mesh.vertexBuffer->SetData( BinaryBuffer::From( vertices ), EBufferUsage::Static ) );
@@ -358,7 +358,7 @@ namespace Graphics
 		VertexAttribsDesc	attr;
 		GridVertex::GetAttribs( attr );
 		
-		Mesh	mesh( VertexBuffer::New( ss ), IndexBuffer::New( ss ) );
+		Mesh	mesh( New<VertexBuffer>( ss ), New<IndexBuffer>( ss ) );
 
 		CHECK( mesh.vertexBuffer->Create() );
 		CHECK( mesh.vertexBuffer->SetData( BinaryBuffer::From( vertices ), EBufferUsage::Static ) );

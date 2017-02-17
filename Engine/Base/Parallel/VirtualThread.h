@@ -93,18 +93,12 @@ namespace Base
 			_targetThread = null;
 		}
 
-		static VirtualThreadPtr New (const IParallelThreadPtr &target)
-		{
-			CHECK_ERR( target );
-			return BaseObject::_New( new VirtualThread( target ) );
-		}
-
 
 	private:
 		void _SetTargetThread (const IParallelThreadPtr &target)
 		{
 			CHECK( not _targetThread );
-			CHECK( target != this );
+			CHECK( target and target != this );
 			
 			_targetThread = target;
 

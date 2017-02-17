@@ -148,7 +148,7 @@ namespace Base
 */
 	inline void PackFileIDManager::_FindNextFreeID ()
 	{
-		// TODO: check for looping
+		// TODO: check for infinite loop
 
 		for (; not _packManager.IsExist( PackFileID( _currId ) ); ++_currId)
 		{

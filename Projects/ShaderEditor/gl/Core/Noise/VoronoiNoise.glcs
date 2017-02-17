@@ -2,7 +2,7 @@
 [HEADER]
 
 // range [0;1]
-real VoronoiNoise (in real2 point, real cellCenterOffsetScale, real smoothFactor);
+real VoronoiNoise (const real2 point, const real cellCenterOffsetScale, const real smoothFactor);
 
 //real VoronoiNoise2 (in real2 point);
 
@@ -42,15 +42,15 @@ real VoronoiNoise (in real2 point, real cellCenterOffsetScale, real smoothFactor
 
 // More info here: http://iquilezles.org/www/articles/voronoise/voronoise.htm
 
-real3 hash3 (real2 p)
+real3 hash3 (const real2 p)
 {
-	real3 q = real3( dot( p, real2( 127.1, 311.7 )), 
-					 dot( p, real2( 269.5, 183.3 )), 
-					 dot( p, real2( 419.2, 371.9 )) );
+	const real3 q = real3(	dot( p, real2( 127.1, 311.7 )), 
+							dot( p, real2( 269.5, 183.3 )), 
+							dot( p, real2( 419.2, 371.9 )) );
 	return fract( sin(q) * 43758.5453 );
 }
 
-real iqnoise (in real2 x, real u, real v)
+real iqnoise (const real2 x, const real u, const real v)
 {
 	real2 p = floor(x);
 	real2 f = fract(x);
@@ -74,7 +74,7 @@ real iqnoise (in real2 x, real u, real v)
 	return va / wt;
 }
 
-real VoronoiNoise (in real2 point, real cellCenterOffsetScale, real smoothFactor)
+real VoronoiNoise (const real2 point, const real cellCenterOffsetScale, const real smoothFactor)
 {
 	return iqnoise( point, cellCenterOffsetScale, smoothFactor );
 }

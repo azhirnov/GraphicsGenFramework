@@ -58,7 +58,7 @@ namespace Graphics
 
 		Ptr< ResourceManager >	rm = SubSystems()->Get< ResourceManager >();
 
-		rm->RegisterLoader( TextureLoader::New( SubSystems() ) );
+		rm->RegisterLoader( New<TextureLoader>( SubSystems() ) );
 
 		_initialized = true;
 		return true;

@@ -43,11 +43,6 @@ namespace GameUtils
 		KeyBindingsEvents (const SubSystemsRef ss)
 		{}
 
-		static SelfPtr New (const SubSystemsRef ss)
-		{
-			return BaseObject::_New( new Self( ss ) );
-		}
-
 		void AddOnKeyDownAction (ActionType action, KeyPair_t first, KeyPair_t second)
 		{
 			_bindings.AddOnKeyDownAction( action, first, second );

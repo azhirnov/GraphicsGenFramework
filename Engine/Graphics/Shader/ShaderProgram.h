@@ -43,12 +43,13 @@ namespace Graphics
 
 	// methods
 	protected:
-		ShaderProgram (const SubSystemsRef ss);
-		~ShaderProgram ();
-
 		void _Destroy ();
 
 	public:
+		explicit
+		ShaderProgram (const SubSystemsRef ss);
+		~ShaderProgram ();
+
 		bool Compile (StringCRef source,
 					  ShaderBits_t activeShaders,
 					  EShaderCompilationFlags::type compilationFlags,
@@ -67,8 +68,6 @@ namespace Graphics
 		
 		template <typename T>
 		bool CreateUniformBlock (OUT UniformBlock<T> &ub, StringCRef name);
-
-		static ShaderProgramPtr New (const SubSystemsRef ss);
 		
 
 	// Resource //

@@ -41,7 +41,7 @@ namespace Base
 			MAP,
 			SET,
 			POINTER,
-			REFERENCED_PTR,
+			REFERENCE_COUNTER,
 			STRUCT,
 
 			_STRUCT_BEGIN = STRUCT,
@@ -76,8 +76,8 @@ namespace Base
 		}
 	
 		template <typename T, typename B, typename S>
-		static constexpr type GetValueTypeOf (CRefCounter<T,B,S> const&) {
-			return REFERENCED_PTR;
+		static constexpr type GetValueTypeOf (ReferenceCounter<T,B,S> const&) {
+			return REFERENCE_COUNTER;
 		}
 	
 		static constexpr type GetValueTypeOf (bool const&)			{ return BOOL; }

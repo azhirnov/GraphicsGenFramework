@@ -117,7 +117,7 @@ namespace Base
 
 
 	typedef TThreadMessageQueue< MtQueue< CircularQueue< ParallelOp > > >			ThreadMessageQueue;
-	typedef TThreadMessageQueue< MtShortQueue< CircularQueue< ParallelOp > > >		ThreadMessageQueue2;
+	typedef TThreadMessageQueue< MtShortQueue< CircularQueue< ParallelOp > > >		ThreadMessageQueue2;	// TODO: rename
 
 
 }	// Base

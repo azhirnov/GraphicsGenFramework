@@ -102,16 +102,6 @@ namespace Graphics
 
 		_onBindEvent();
 	}
-
-/*
-=================================================
-	New
-=================================================
-*/
-	ShaderProgramPtr ShaderProgram::New (const SubSystemsRef ss)
-	{
-		return BaseObject::_New( new ShaderProgram( ss ) );
-	}
 	
 /*
 =================================================

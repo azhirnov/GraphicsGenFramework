@@ -77,7 +77,12 @@ namespace GXMath
 	};
 	
 	
-
+	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T>
 	inline OrientedRectangle<T>::OrientedRectangle (
 						const vec2_t &leftBottom, const vec2_t &leftTop,
@@ -102,7 +107,11 @@ namespace GXMath
 		_extent.y = y_len * T(0.5);
 	}
 	
-
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T>
 	inline OrientedRectangle<T>::OrientedRectangle (Buffer<const vec2_t> points)
 	{
@@ -113,28 +122,44 @@ namespace GXMath
 		*this = _FromPoints< precised_t >( points );
 	}
 	
-
+/*
+=================================================
+	GetAxisAlignedRectangle
+=================================================
+*/
 	template <typename T>
 	inline Rectangle<T>  OrientedRectangle<T>::GetAxisAlignedRectangle () const
-	{=
+	{
 		return Rectangle<T>( StaticArrayBuilder::Create( Corner(0), Corner(1), Corner(2), Corner(3) ) );
 	}
-		
 
+/*
+=================================================
+	MaxRadius
+=================================================
+*/
 	template <typename T>
 	inline T  OrientedRectangle<T>::MaxRadius () const
 	{
 		return Max( _extent.x, _extent.y );
 	}
-
-
+	
+/*
+=================================================
+	MinRadius
+=================================================
+*/
 	template <typename T>
 	inline T  OrientedRectangle<T>::MinRadius () const
 	{
 		return Min( _extent.x, _extent.y );
 	}
 	
-
+/*
+=================================================
+	Corner
+=================================================
+*/
 	template <typename T>
 	inline Vec<T,2>  OrientedRectangle<T>::Corner (usize index) const
 	{
@@ -144,7 +169,11 @@ namespace GXMath
 			T(index & 2 ? 1 : -1) * (_extent[1] * _axis[1]);
 	}
 	
-
+/*
+=================================================
+	Intersects
+=================================================
+*/
 	template <typename T>
 	inline bool  OrientedRectangle<T>::Intersects (const Self &other) const
 	{
@@ -187,8 +216,12 @@ namespace GXMath
 
 		return true;
 	}
-
 	
+/*
+=================================================
+	Transform
+=================================================
+*/
 	template <typename T>
 	template <usize C, usize R>
 	inline OrientedRectangle<T>  OrientedRectangle<T>::Transform (const Matrix<T,C,R> &mat) const
@@ -197,8 +230,12 @@ namespace GXMath
 						(mat * Corner(0)).xy(), (mat * Corner(1)).xy(),
 						(mat * Corner(2)).xy(), (mat * Corner(3)).xy() ) );
 	}
-
 	
+/*
+=================================================
+	To
+=================================================
+*/
 	template <typename T>
 	template <typename B>
 	inline OrientedRectangle<B>  OrientedRectangle<T>::To () const
@@ -213,7 +250,11 @@ namespace GXMath
 		return result;
 	}
 	
-	
+/*
+=================================================
+	_FromPoints
+=================================================
+*/
 	template <typename T>
 	template <typename B>
 	inline void OrientedRectangle<T>::_FromPoints (Buffer<const vec2_t> points, OUT Self &result)
@@ -255,8 +296,12 @@ namespace GXMath
 
 		result = box.To< Self >();
 	}
-
-
+	
+/*
+=================================================
+	_ApprGaussian2Fit
+=================================================
+*/
 	template <typename T>
 	template <typename B>
 	inline bool OrientedRectangle<T>::_ApprGaussian2Fit (Buffer<const vec2_t> points, OUT OrientedRectangle<B> &box)
@@ -306,7 +351,11 @@ namespace GXMath
 		return false;
 	}
 	
-
+/*
+=================================================
+	_SymmetricEigensolver2x2
+=================================================
+*/
 	template <typename T>
 	template <typename B>
 	inline void OrientedRectangle<T>::_SymmetricEigensolver2x2 (B a00, B a01, B a11, int sortType,
@@ -384,10 +433,10 @@ namespace GXTypes
 
 		result_t operator () (const key_t &x) const
 		{
-			return	(base_t::operator ()( x.Center() )  << 1) ^
-					(base_t::operator ()( x.Extents() ) << 2) ^
-					(base_t::operator ()( x.Axis1() )   >> 1) ^
-					(base_t::operator ()( x.Axis2() )   >> 2);
+			return	base_t::operator ()( x.Center() )  +
+					base_t::operator ()( x.Extents() ) +
+					base_t::operator ()( x.Axis1() )   +
+					base_t::operator ()( x.Axis2() );
 		}
 	};
 

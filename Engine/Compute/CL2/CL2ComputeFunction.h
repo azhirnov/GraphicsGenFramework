@@ -15,6 +15,8 @@ namespace Compute
 
 	class   CL2ComputeFunction;
 	typedef CL2ComputeFunction		ComputeFunction;
+	
+	SHARED_POINTER( ComputeFunction );
 
 
 
@@ -22,7 +24,7 @@ namespace Compute
 	// Compute Function
 	//
 
-	class CL2ComputeFunction : public Noncopyable
+	class CL2ComputeFunction : public BaseObject
 	{
 	// types
 	public:
@@ -52,7 +54,6 @@ namespace Compute
 		};
 
 		typedef HashMap< StString_t, Arg >		Arguments_t;
-
 		typedef Array< cl::cl_mem >				GraphicsObjects_t;
 
 
@@ -67,14 +68,17 @@ namespace Compute
 
 	// methods
 	public:
-		CL2ComputeFunction ();
+		explicit
+		CL2ComputeFunction (const SubSystemsRef ss);
 		~CL2ComputeFunction ();
 
 
 		bool Create (const ComputeProgramPtr &program, StringCRef name);
+		bool Load (StringCRef filename, EProgramUnitFlags::type flags);
 		void Destroy ();
 
 		void Run (const uint3 &size, const uint3 &localSize = Uninitialized);
+		void Run (const ulong3 &size, const ulong3 &localSize = Uninitialized);
 
 
 		template <typename T>
@@ -92,6 +96,8 @@ namespace Compute
 		bool HasArg (StringCRef name) const;
 
 		void GetArgNames (OUT Array<StringCRef> &names) const;
+		
+		void ResetArgs ();
 
 
 		bool	IsCreated ()	const	{ return _program and _id != null; }
@@ -166,7 +172,7 @@ namespace Compute
 	template <typename T>
 	inline CL2ComputeFunction &  CL2ComputeFunction::SetArg (StringCRef name, const Quaternion<T> &value)
 	{
-		return SetArg( name, value.ToVec() );
+		return SetArg( name, value.xyzw() );
 	}
 	
 	template <typename T>

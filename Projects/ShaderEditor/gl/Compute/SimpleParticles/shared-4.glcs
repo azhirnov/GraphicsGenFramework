@@ -1,0 +1,86 @@
+/*
+	Shared source for initialization and updating particles.
+*/
+
+[HEADER]
+
+#include "Common.glcs"
+#import  "Compute/SimpleParticles/vertex.glcs"
+
+
+void InitParticle (out Particle particle, const float globalTime);
+
+void UpdateParticle (const Particle inParticle, out Particle outParticle,
+					 const float frameTime, const float globalTime, const float dt);
+
+
+//---------------------------------------------------------
+[SOURCE]
+
+struct MagneticObject
+{
+	float3	north;
+	float3	south;
+	float	induction;
+};
+
+const MagneticObject	MAGNETIC_OBJECTS[2] = {
+	{ float3( 0.0, 0.0, 0.9 ), float3( 0.0, 0.0,-0.9 ), 0.1 },
+	{ float3( 0.0, 0.9, 0.0 ), float3( 0.0,-0.9, 0.0 ), 0.3 }
+};
+
+const AABBox	BOX				= { float3(-10.0), float3(10.0) };
+const float		MAX_ITER		= 20.0;
+
+
+void RestartParticle (out Particle particle, const float globalTime)
+{
+	real	index	= real(GetGlobalIndex());
+	real	size	= real(GetGlobalIndexSize());
+	real	vel		= 0.05;
+	real	rnd		= DHash12(float2( index / size, globalTime + 2.28374 )) * size;
+
+	particle.position	= ParticleEmitter_Sphere( rnd, size ) * 1.0;
+	particle.size		= 8.0;
+	particle.color		= 0xFFFFFFFF;
+	particle.velocity	= Normalize( particle.position ) * vel;
+	particle.param.x	= Sign(ToSNorm( DHash12(float2( globalTime, index / size )) ));	// sign
+}
+
+
+void InitParticle (out Particle particle, const float globalTime)
+{
+	Particle_Create( particle );
+	RestartParticle( particle, globalTime + GetGlobalIndexUNorm() * 1.6334 );
+}
+
+
+void UpdateParticle (const Particle inParticle, out Particle outParticle,
+					 const float frameTime, const float globalTime, const float dt)
+{
+	outParticle = inParticle;
+
+	const float cnt = Clamp( Round( frameTime / dt ), 1.0, MAX_ITER );
+
+	for (float t = 0.0; t < cnt; ++t)
+	{
+		float3	accel	= float3( 0.0 );
+		float	sign	= outParticle.param.x;
+		
+		for (int i = 0; i < MAGNETIC_OBJECTS.length; ++i) {
+			accel += SphericalMagneticFieldAccel( outParticle.velocity, outParticle.position,
+												  MAGNETIC_OBJECTS[i].north, MAGNETIC_OBJECTS[i].south,
+												  MAGNETIC_OBJECTS[i].induction ) * sign;
+		}
+
+		outParticle.velocity += accel * dt;
+		outParticle.position += outParticle.velocity * dt;
+
+		if ( not AABBox_IsInside( BOX, outParticle.position ) )
+		{
+			RestartParticle( outParticle, globalTime );
+		}
+	}
+
+	outParticle.color = ParticleColor_FromNormalizedVelocity( outParticle.velocity );
+}

@@ -4,6 +4,7 @@ layout(std140)
 uniform ShaderUB {
 	float4x4		proj;
 	float4x4		mv;
+	float4x4		mvp;
 	float2			screenSize;
 } UB;
 
@@ -30,9 +31,9 @@ TGeomData_t { \
 
 	void main ()
 	{
-		gl_Position		= UB.mv * float4( ATTRIB_1.xyz, 1.0 );
+		gl_Position		= UB.mv * float4( ATTRIB_0.xyz, 1.0 );
 		Output.color	= ATTRIB_2.rgba;
-		Output.size		= ATTRIB_3 / Max( UB.screenSize.x, UB.screenSize.y );
+		Output.size		= ATTRIB_3 * 4.0 / Max( UB.screenSize.x, UB.screenSize.y );
 	}
 
 #endif	// SH_VERTEX
@@ -52,31 +53,33 @@ TGeomData_t { \
 		// Billboard
 		// from http://www.geeks3d.com/20140815/particle-billboarding-with-the-geometry-shader-glsl/
 
-		float4	pos = gl_in[0].gl_Position;
+		float4	pos		= gl_in[0].gl_Position;
+		float	size	= Input[0].size;
+
 
 		// a: left-bottom
-		float2	va	= pos.xy + float2(-0.5, -0.5) * Input[0].size;
+		float2	va	= pos.xy + float2(-0.5, -0.5) * size;
 		gl_Position	= UB.proj * float4(va, pos.zw);
 		Output.uv	= float2(0.0, 0.0);
 		Output.color= Input[0].color;
 		EmitVertex();
 
 		// b: left-top
-		float2	vb	= pos.xy + float2(-0.5, 0.5) * Input[0].size;
+		float2	vb	= pos.xy + float2(-0.5, 0.5) * size;
 		gl_Position	= UB.proj * float4(vb, pos.zw);
 		Output.uv	= float2(0.0, 1.0);
 		Output.color= Input[0].color;
 		EmitVertex();
 
 		// d: right-bottom
-		float2	vd	= pos.xy + float2(0.5, -0.5) * Input[0].size;
+		float2	vd	= pos.xy + float2(0.5, -0.5) * size;
 		gl_Position	= UB.proj * float4(vd, pos.zw);
 		Output.uv	= float2(1.0, 0.0);
 		Output.color= Input[0].color;
 		EmitVertex();
 
 		// c: right-top
-		float2	vc	= pos.xy + float2(0.5, 0.5) * Input[0].size;
+		float2	vc	= pos.xy + float2(0.5, 0.5) * size;
 		gl_Position	= UB.proj * float4(vc, pos.zw);
 		Output.uv	= float2(1.0, 1.0);
 		Output.color= Input[0].color;

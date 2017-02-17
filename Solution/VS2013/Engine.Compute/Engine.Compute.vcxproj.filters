@@ -123,5 +123,8 @@
     <ClCompile Include="..\..\..\Engine\Compute\GL4\GL4ComputeSyncEvent.cpp">
       <Filter>GL4</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Engine\Compute\CL2\CL2ComputeEngineSharing.cpp">
+      <Filter>CL2</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

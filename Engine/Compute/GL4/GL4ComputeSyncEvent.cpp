@@ -125,16 +125,6 @@ namespace Compute
 		return TimeL::FromNanoSeconds( time );;
 	}
 
-/*
-=================================================
-	New
-=================================================
-*/
-	ComputeSyncEventPtr  GL4ComputeSyncEvent::New (const SubSystemsRef ss)
-	{
-		return BaseObject::_New( new GL4ComputeSyncEvent( ss ) );
-	}
-
 
 }	// Compute
 }	// Engine

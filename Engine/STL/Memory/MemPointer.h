@@ -12,6 +12,11 @@ namespace GX_STL
 namespace GXTypes
 {
 	
+/*
+=================================================
+	helpers
+=================================================
+*/
 	namespace _types_hidden_
 	{
 		template <typename T, typename R>

@@ -25,7 +25,8 @@ namespace ShaderEditor
 	// methods
 	public:
 		MicroschemeShader (const SubSystemsRef ss) :
-			IGenerator( ss )
+			IGenerator( ss ),
+			_createGridFunc( SubSystems() ),	_mainFunc( SubSystems() )
 		{}
 
 		bool SetArg (StringCRef name, const VariantRef &arg) override;
@@ -45,7 +46,7 @@ namespace ShaderEditor
 */
 	IGeneratorPtr  IGenerator::Create_Microscheme (const SubSystemsRef ss)
 	{
-		return BaseObject::_New( new MicroschemeShader( ss ) );
+		return New<MicroschemeShader>( ss );
 	}
 
 /*
@@ -89,10 +90,10 @@ namespace ShaderEditor
 */
 	bool MicroschemeShader::Compile ()
 	{
-		CHECK_ERR( _createGridFunc.Load( SubSystems(), "gl/Compute/Microscheme/create_grid.glcs", EShaderCompilationFlags::DefaultCompute ) );
-		CHECK_ERR( _mainFunc.Load( SubSystems(), "gl/Compute/Microscheme/main.glcs", EShaderCompilationFlags::DefaultCompute ) );
+		CHECK_ERR( _createGridFunc.Load( "gl/Compute/Microscheme/create_grid.glcs", EShaderCompilationFlags::DefaultCompute ) );
+		CHECK_ERR( _mainFunc.Load( "gl/Compute/Microscheme/main.glcs", EShaderCompilationFlags::DefaultCompute ) );
 
-		_gridImage = ComputeImage::New( SubSystems() );
+		_gridImage = New<ComputeImage>( SubSystems() );
 		return true;
 	}
 	

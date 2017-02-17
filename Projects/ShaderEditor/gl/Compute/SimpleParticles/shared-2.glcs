@@ -1,0 +1,91 @@
+/*
+	Shared source for initialization and updating particles.
+*/
+
+[HEADER]
+
+#include "Common.glcs"
+#import  "Compute/SimpleParticles/vertex.glcs"
+
+
+void InitParticle (out Particle particle, const float globalTime);
+
+void UpdateParticle (const Particle inParticle, out Particle outParticle,
+					 const float frameTime, const float globalTime, const float timeScale);
+
+
+//---------------------------------------------------------
+[SOURCE]
+
+struct GravityObject
+{
+	float3	position;
+	float	gravity;
+	float	radius;
+};
+
+const GravityObject		GRAVITY_OBJECTS[1] = {
+	{ float3( 0.0 ), 0.1, 0.05 }
+};
+
+const float3	MAGNETIC_FIELD	= float3( 1.0, 0.0, 0.0 );
+const AABBox	BOX				= { float3(-10.0), float3(10.0) };
+const float		MAX_ITER		= 10.0;
+
+
+void RestartParticle (out Particle particle, const float globalTime)
+{
+	real	index	= real(GetGlobalIndex());
+	real	size	= real(GetGlobalIndexSize());
+	real	vel		= 0.5;
+
+	particle.position	= AABBox_GetPointInBox( BOX, float3( 0.1, 0.0, 0.0 ) );
+	particle.size		= 8.0;
+	particle.color		= 0xFFFFFFFF;
+	particle.velocity	= ParticleEmitter_ConeVector( index, size ) * vel;
+	particle.param.x	= Sign(ToSNorm( DHash12(float2( globalTime, index / size )) ));	// sign
+}
+
+
+void InitParticle (out Particle particle, const float globalTime)
+{
+	Particle_Create( particle );
+	RestartParticle( particle, globalTime );
+}
+
+
+void UpdateParticle (const Particle inParticle, out Particle outParticle,
+					 const float frameTime, const float globalTime, const float timeScale)
+{
+	outParticle = inParticle;
+	
+	const float cnt = Clamp( Round( frameTime / timeScale ), 1.0, MAX_ITER );
+
+	for (float t = 0.0; t < cnt; ++t)
+	{
+		float	dt			= timeScale;
+		float3	accel		= float3( 0.0 );
+		int		destroyed	= 0;
+		float	sign		= outParticle.param.x;
+		
+		for (int i = 0; i < GRAVITY_OBJECTS.length; ++i)
+		{
+			accel		+= GravityAccel( outParticle.position, GRAVITY_OBJECTS[i].position, GRAVITY_OBJECTS[i].gravity );
+			destroyed	+= int( Distance( outParticle.position, GRAVITY_OBJECTS[i].position ) < GRAVITY_OBJECTS[i].radius );
+		}
+
+		accel += LinearMagneticFieldAccel( outParticle.velocity, MAGNETIC_FIELD ) * sign;
+
+		outParticle.velocity += accel * dt;
+		outParticle.position += outParticle.velocity * dt;
+		outParticle.time	 += dt;
+		outParticle.param.y	  = globalTime;
+
+		if ( not AABBox_IsInside( BOX, outParticle.position ) or destroyed > 0 )
+		{
+			RestartParticle( outParticle, globalTime );
+		}
+	}
+
+	outParticle.color = ParticleColor_FromVelocityLength( outParticle.velocity );
+}

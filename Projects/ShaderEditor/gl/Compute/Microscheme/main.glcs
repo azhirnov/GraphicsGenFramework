@@ -19,7 +19,7 @@ const float4	borderColor	= float4( 0.0 );
 
 float4 BorderColor (float4 color0, float4 color1, float2 border, float2 alpha)
 {
-	float d = Pow( SmoothStep( 0.0, border.x, alpha.y ), 2.0 );
+	float d = Pow( SmoothStep( alpha.y, 0.0, border.x ), 2.0 );
 
 	return mix( mix( float4(1.0), color0, d ), color1, alpha.x );
 }
@@ -47,7 +47,7 @@ float4 MainCell (float2 point, float2 border, float2 center, float radius)
 	{
 		//return animColor;
 
-		alpha = float2( SmoothStep( 0.0, 2.0, Min( anim_dist.x, anim_dist.y ) ),
+		alpha = float2( SmoothStep( Min( anim_dist.x, anim_dist.y ), 0.0, 2.0 ),
 						Min( dist_to_border.x, dist_to_border.y ) );
 	}
 

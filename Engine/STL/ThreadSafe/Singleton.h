@@ -20,7 +20,7 @@ namespace GXTypes
 	{
 	public:
 		template <typename T>
-		forceinline static Ptr<T> Instance ()
+		static Ptr<T> Instance ()
 		{
 			static T inst;
 			return &inst;
@@ -35,7 +35,7 @@ namespace GXTypes
 		static OS::Mutex	_mutex;
 
 		template <typename T>
-		forceinline static T & _Instance ()
+		static T & _Instance ()
 		{
 			static T inst;
 			return inst;
@@ -44,7 +44,7 @@ namespace GXTypes
 
 	public:
 		template <typename T>
-		forceinline static Ptr<T> Instance ()
+		static Ptr<T> Instance ()
 		{
 			static T * volatile	inst;
 
@@ -75,30 +75,22 @@ namespace GXTypes
 	{
 	public:
 		template <typename T>
-		forceinline static Ptr<T> Instance ()
+		static Ptr<T> Instance ()
 		{
-			static GX_THREAD_LOCAL T  inst;
+			static thread_local T  inst;
 			return &inst;
 		}
 	};
 
 # else
 
-	template <typename T>
-	struct TSingletonLocalConstructor
-	{
-		forceinline static T *&	Get (T *&ptr)				{ return ( ptr != null ? ptr : (ptr = new T()) ); }
-		forceinline static void Set (T *&ptr, T *newPtr)	{ if (ptr != null) { delete ptr; }  ptr = newPtr; }
-	};
-
-
 	struct SingletonSingleThread
 	{
 	protected:
 		template <typename T>
-		forceinline static T *& _Instance()
+		static T *& _Instance()
 		{
-			static GX_THREAD_LOCAL T *	inst = null;
+			static thread_local T *	inst = null;
 			return inst;
 		}
 

@@ -10,12 +10,6 @@
     <Filter Include="gl\Shaders">
       <UniqueIdentifier>{a889e522-60ee-4c35-9745-2b1424e610cd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="gl\Shadertoy">
-      <UniqueIdentifier>{0a513742-e318-455e-b537-56bf4c835134}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="gl\Shadertoy\Terrain">
-      <UniqueIdentifier>{5759552c-7940-4b60-a053-03c27aca3ab8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Particles">
       <UniqueIdentifier>{60f22996-6053-4b0c-abbc-2e3b76a9fc0a}</UniqueIdentifier>
     </Filter>
@@ -91,6 +85,15 @@
     <Filter Include="gl\Core\Particles">
       <UniqueIdentifier>{16044567-acaf-4eec-938b-de8ea4dee4ee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Controllers">
+      <UniqueIdentifier>{1ee35630-cd74-4b93-9d0f-b5f92257cba8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gl\Core\Hash">
+      <UniqueIdentifier>{f114c982-ade1-4077-a65b-2f83de1ebe41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gl\Core\Physics">
+      <UniqueIdentifier>{c9ada00b-775e-4b60-8431-e40845d7e44a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Projects\ShaderEditor\Core\ShaderEditor.h">
@@ -134,6 +137,18 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Projects\ShaderEditor\Samples\Particles\ParticlesSample.h">
       <Filter>Samples\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Projects\ShaderEditor\Controllers\FlightCameraController.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Projects\ShaderEditor\Controllers\FreeCameraController.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Projects\ShaderEditor\Controllers\IController.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Projects\ShaderEditor\Controllers\ScaleBiasController.h">
+      <Filter>Controllers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -206,19 +221,10 @@
     <None Include="..\..\..\Projects\ShaderEditor\gl\Shaders\textureView.glsl">
       <Filter>gl\Shaders</Filter>
     </None>
-    <None Include="..\..\..\Projects\ShaderEditor\gl\_Shadertoy\Terrain\MysteryMountains.glcs">
-      <Filter>gl\Shadertoy\Terrain</Filter>
-    </None>
     <None Include="..\..\..\Projects\ShaderEditor\gl\Shaders\textureViewI.glsl">
       <Filter>gl\Shaders</Filter>
     </None>
     <None Include="..\..\..\Projects\ShaderEditor\gl\Shaders\textureViewU.glsl">
-      <Filter>gl\Shaders</Filter>
-    </None>
-    <None Include="..\..\..\Projects\ShaderEditor\gl\Shaders\landscape.glsl">
-      <Filter>gl\Shaders</Filter>
-    </None>
-    <None Include="..\..\..\Projects\ShaderEditor\gl\Shaders\simple3d.glsl">
       <Filter>gl\Shaders</Filter>
     </None>
     <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Common\Defines.glcs">
@@ -239,9 +245,6 @@
     <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Math\Quaternion.glcs">
       <Filter>gl\Core\Math</Filter>
     </None>
-    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Noise\Cellular.glcs">
-      <Filter>gl\Core\Noise</Filter>
-    </None>
     <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Noise\FBM.glcs">
       <Filter>gl\Core\Noise</Filter>
     </None>
@@ -251,19 +254,7 @@
     <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Noise\Perlin.glcs">
       <Filter>gl\Core\Noise</Filter>
     </None>
-    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Noise\Simplex.glcs">
-      <Filter>gl\Core\Noise</Filter>
-    </None>
-    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Noise\ValueNoise.glcs">
-      <Filter>gl\Core\Noise</Filter>
-    </None>
-    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Noise\Voronoi.glcs">
-      <Filter>gl\Core\Noise</Filter>
-    </None>
     <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Noise\VoronoiNoise.glcs">
-      <Filter>gl\Core\Noise</Filter>
-    </None>
-    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Noise\Turbulence.glcs">
       <Filter>gl\Core\Noise</Filter>
     </None>
     <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Noise\Billow.glcs">
@@ -320,9 +311,6 @@
     <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\SimpleLandscape\vertex.glcs">
       <Filter>gl\Compute\SimpleLandscape</Filter>
     </None>
-    <None Include="..\..\..\Projects\ShaderEditor\gl\Graphics\SimpleParticles\shader.glsl">
-      <Filter>gl\Graphics\SimpleParticles</Filter>
-    </None>
     <None Include="..\..\..\Projects\ShaderEditor\gl\Graphics\TessLandscape\shader.glsl">
       <Filter>gl\Graphics\TessLandscape</Filter>
     </None>
@@ -349,6 +337,51 @@
     </None>
     <None Include="..\..\..\Projects\ShaderEditor\gl\Graphics\SimpleParticles\rays.glsl">
       <Filter>gl\Graphics\SimpleParticles</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Math\BitMath.glcs">
+      <Filter>gl\Core\Math</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Common\TypeInfo.glcs">
+      <Filter>gl\Core\Common</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Common\Cmp.glcs">
+      <Filter>gl\Core\Common</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Math\Utils.glcs">
+      <Filter>gl\Core\Math</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Particles\Colors.glcs">
+      <Filter>gl\Core\Particles</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\SimpleParticles\shared.glcs">
+      <Filter>gl\Compute\SimpleParticles</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Noise\Turbulence.glcs">
+      <Filter>gl\Core\Noise</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Hash\DHash.glcs">
+      <Filter>gl\Core\Hash</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Hash\Hash.glcs">
+      <Filter>gl\Core\Hash</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Hash\Hash2.glcs">
+      <Filter>gl\Core\Hash</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Physics\Gravity.glcs">
+      <Filter>gl\Core\Physics</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Physics\Magnetism.glcs">
+      <Filter>gl\Core\Physics</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Noise\VoronoiLines.glcs">
+      <Filter>gl\Core\Noise</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Graphics\SimpleParticles\point_sprites.glsl">
+      <Filter>gl\Graphics\SimpleParticles</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Math\AABBox.glcs">
+      <Filter>gl\Core\Math</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -203,14 +203,14 @@ namespace Graphics
 		// states
 		void SetRenderState (const RenderState &state);
 
-		bool IsTessellationEnabled ()				const		{ return _currentProgram._patchSize != 0; }
+		bool IsTessellationEnabled ()				const			{ return _currentProgram._patchSize != 0; }
 
 		void EnableFramebufferSRGB (bool enabled);
-		bool IsFramebufferSRGB ()					const		{ return _framebufferSRGB; }
+		bool IsFramebufferSRGB ()					const			{ return _framebufferSRGB; }
 
-		float2 const &		GetPointSizeRange ()	const		{ return _pointSizeRange; }
+		float2 const &		GetPointSizeRange ()	const			{ return _pointSizeRange; }
 
-		RenderState const &	GetRenderState ()		const		{ return _renderState; }
+		RenderState const &	GetRenderState ()		const			{ return _renderState; }
 
 
 		// viewport
@@ -234,8 +234,8 @@ namespace Graphics
 
 
 		// dispatch compute
-		void DispatchCompute (const uint3 &groupSize);
-		void DispatchCompute (const uint3 &groupSize, const uint3 &localSize);
+		void DispatchCompute (const ulong3 &groupSize);
+		void DispatchCompute (const ulong3 &groupSize, const ulong3 &localSize);
 
 
 		// query

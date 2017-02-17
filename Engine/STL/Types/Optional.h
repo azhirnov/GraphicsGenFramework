@@ -172,7 +172,7 @@ namespace GXTypes
 
 		result_t operator () (const key_t &x) const
 		{
-			return x ? base_t::operator ()( x.Get() ) : 0;
+			return x ? base_t::operator ()( x.Get() ) : result_t();
 		}
 	};
 

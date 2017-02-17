@@ -50,20 +50,6 @@
 #	define GX_FUNCTION_NAME			__func__
 #endif
 
-// set align of struct in bytes
-#if COMPILER_VERSION >= 480
-#	define	GX_ALIGN( ... )			alignas( __VA_ARGS__ )
-#else
-#	define	GX_ALIGN( ... )			__attribute__( packed, aligned( __VA_ARGS__ ) )
-#endif
-
-// returns align of type in bytes
-#if COMPILER_VERSION >= 450
-#define GX_ALIGN_OF( ... )			alignof( __VA_ARGS__ )
-#else
-#define GX_ALIGN_OF( ... )			__alignof( __VA_ARGS__ )	// or __alignof__
-#endif
-
 // always inline function
 #define	GX_FORCE_INLINE				__inline__ __attribute__((always_inline))
 
@@ -91,13 +77,6 @@
 
 // 
 #define	GX_RESTRICT_PTR				// TODO
-
-// 
-#if COMPILER_VERSION >= 480
-#	define GX_THREAD_LOCAL			thread_local
-#else
-#	define GX_THREAD_LOCAL			__thread
-#endif
 
 // null pointer
 #if COMPILER_VERSION >= 460
@@ -127,6 +106,7 @@
 #	define GX_CONSTEXPR_SUPPORTED			1
 #endif
 
+
 // final, override, constexpr, decltype
 #if COMPILER_VERSION < 470
 #	define final
@@ -134,6 +114,24 @@
 #	define constexpr
 #	define decltype							__typeof__
 #	define noexcept							throw()
+#endif
+
+
+// set align of struct in bytes
+#if COMPILER_VERSION < 480
+#	define	alignas( ... )					__attribute__( packed, aligned( __VA_ARGS__ ) )
+#endif
+
+
+// returns align of type in bytes
+#if COMPILER_VERSION < 450
+#	define alignof( ... )					__alignof( __VA_ARGS__ )	// or __alignof__
+#endif
+
+
+// thread_local
+#if COMPILER_VERSION < 480
+#	define thread_local						__thread
 #endif
 
 
@@ -194,14 +192,14 @@
 
 
 // literal operator
-#if COMPILER_VERSION >= 500		// TODO
+#if COMPILER_VERSION >= 500		// TODO: check version
 #	define	GX_LITERAL_OPERATOR_SUPPORTED	1
 #endif
 
 
 // notify compiler to generate error if function result unused
 #if COMPILER_VERSION >= 400
-#	define GX_CHECK_RESULT		__attribute__ ((warn_unused_result))
+#	define GX_CHECK_RESULT					__attribute__ ((warn_unused_result))
 #endif
 
 //-------------------------------------------------------------------

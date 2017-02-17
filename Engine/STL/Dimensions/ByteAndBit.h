@@ -80,13 +80,13 @@ namespace GXTypes
 		constexpr T		Gb ()	const				{ return _value >> 30; }
 		
 		template <typename B>
-		constexpr B		Kb ()	const				{ return B(_value) / (1 << 10); }
+		constexpr B		Kb ()	const				{ return B(_value) / (B(1) << 10); }
 
 		template <typename B>
-		constexpr B		Mb ()	const				{ return B(_value) / (1 << 20); }
+		constexpr B		Mb ()	const				{ return B(_value) / (B(1) << 20); }
 
 		template <typename B>
-		constexpr B		Gb ()	const				{ return B(_value) / (1 << 30); }
+		constexpr B		Gb ()	const				{ return B(_value) / (B(1) << 30); }
 
 		Self &	SetBytes (T value)					{ return (*this = FromBytes( value )); }
 		Self &	SetKb (T value)						{ return (*this = FromBytes( value )); }
@@ -103,6 +103,7 @@ namespace GXTypes
 		
 		template <typename B>
 		static constexpr Self	SizeOf (B value)	{ return Self( sizeof(B) ); }
+
 
 		_GX_DIM_ALL_INTEGER_OPERATORS_SELF( _value );
 		_GX_DIM_ALL_INTEGER_OPERATORS_TYPE( _value, value_t, );
@@ -161,13 +162,14 @@ namespace GXTypes
 		template <typename B>
 		static constexpr Self SizeOf (B value)		{ return Bytes<T>::SizeOf<B>().ToBits(); }
 
+
 		_GX_DIM_ALL_INTEGER_OPERATORS_SELF( _value );
 		_GX_DIM_ALL_INTEGER_OPERATORS_TYPE( _value, value_t, );
 	};
 
 
 
-	template <typename T>
+	/*template <typename T>
 	constexpr Bytes<T> ToBytes (T value)
 	{
 		return Bytes<T>( value );
@@ -177,7 +179,7 @@ namespace GXTypes
 	constexpr Bits<T> ToBits (T value)
 	{
 		return Bits<T>( value );
-	}
+	}*/
 	
 
 	template <typename T>
@@ -272,7 +274,12 @@ namespace GXTypes
 	constexpr BitsU  operator "" _bit (unsigned long long value)	{ return BitsU(usize(value)); }
 
 	
-
+	
+/*
+=================================================
+	TypeInfo
+=================================================
+*/
 	template <typename T>
 	struct ::GX_STL::CompileTime::TypeInfo< Bytes<T> >
 	{
@@ -317,6 +324,11 @@ namespace GXTypes
 	};
 
 	
+/*
+=================================================
+	Hash
+=================================================
+*/
 	template <typename T>
 	struct ::GX_STL::GXTypes::Hash< Bytes<T> > : private Hash<T>
 	{

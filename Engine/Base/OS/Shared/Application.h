@@ -13,6 +13,11 @@ namespace Engine
 namespace Base
 {
 
+	class Application;
+	SHARED_POINTER( Application );
+
+
+
 	//
 	// Base Application
 	//
@@ -28,7 +33,7 @@ namespace Base
 
 
 	// methods
-	public:
+	protected:
 		Application (const IParallelThreadPtr &thread) :
 			VirtualThread( thread ),
 			_threadManager( SubSystems() ),
@@ -39,7 +44,7 @@ namespace Base
 
 			_threadManager.AddThread( this );
 
-			_eventSys = EventSystem::New( SubSystems() );
+			_eventSys = New<EventSystem>( SubSystems() );
 		}
 
 
@@ -48,26 +53,25 @@ namespace Base
 			_eventSys->Clear();
 
 			SubSystems()->GetSetter< Application >().Set( null );
+			
+			Logger::GetInstance()->Close();
 		}
 
-
+		
+	public:
 		EventSystemPtr const & GetEventSystem ()
 		{
 			return _eventSys;
 		}
 
 
-		template <typename AppType>
-		static void EntryPoint (IParallelThread *thread, OUT Application *&app)
+		template <typename App>
+		static ApplicationPtr EntryPoint (const IParallelThreadPtr &thread)
 		{
-			app = new AppType( thread );
+			return New<App>( thread );
 		}
 
-		static void CreateInstance (void (*) (Base::IParallelThread *thread, OUT Base::Application *&));
 
-
-	// interface
-	public:
 		virtual void Destroy () = 0;
 	};
 

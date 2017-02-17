@@ -236,8 +236,12 @@ namespace GXMath
 		return Degrees<T>( deg + (arcmin / T(60.0)) + (arcsec / T(3600.0)) );
 	}
 
-
 	
+/*
+=================================================
+	TypeInfo
+=================================================
+*/
 	template <typename T>
 	struct ::GX_STL::CompileTime::TypeInfo< GXMath::Radians<T> >
 	{
@@ -285,7 +289,11 @@ namespace GXMath
 	};
 
 
-	
+/*
+=================================================
+	Hash
+=================================================
+*/
 	template <typename T>
 	struct ::GX_STL::GXTypes::Hash< GXMath::Radians<T> > : private Hash<T>
 	{
@@ -309,7 +317,7 @@ namespace GXMath
 
 		result_t operator () (const key_t &x) const
 		{
-			return base_t::operator ()( x );
+			return base_t::operator ()( x.ref() );
 		}
 	};
 

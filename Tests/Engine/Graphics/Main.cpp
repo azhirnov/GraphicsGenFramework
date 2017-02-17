@@ -35,8 +35,8 @@ public:
 	// GameApplication //
 	void _Update (TimeD dt, bool forceRedraw)
 	{
-		//CPUTIME_PROFILER("1");
-		//GPUTIME_PROFILER("");
+		CPUTIME_PROFILER();
+		GPUTIME_PROFILER();
 
 		program->Bind();
 
@@ -49,7 +49,7 @@ public:
 	void _OnInit ()
 	{
 		CHECK( SubSystems()->Get< Platform >()->
-			InitWindow( Platform::WindowDesc( "Test", int2(800, 600), int2(MinValue<int>()), false, true ) ) );
+			InitWindow( Platform::WindowDesc( "Test", uint2(800, 600), MinValue<int2>(), false, true ) ) );
 
 		CHECK( SubSystems()->Get< Platform >()->
 			InitRender( VideoSettings(	VideoSettings::RGBA8,
@@ -57,7 +57,7 @@ public:
 										VideoSettings::NO_STENCIL,
 										0,
 										VideoSettings::AUTO,
-										VideoSettings::CONTEXT_NO_ERROR,
+										VideoSettings::CONTEXT_DEBUG,
 										true,
 										false ) ) );
 	}
@@ -68,12 +68,10 @@ public:
 		graphics.Initialize();
 
 		graphics.GetShaderManager()->SetDebugOutputFolder( "debug_shader" );
-		
-		//bool no_error = graphics.GetContext()->IsExtensionSupported( "GL_KHR_no_error" );
 
 		quadMesh = MeshGenerator::CreateQuad( SubSystems(), RectF( -1.0f, -1.0f, 1.0f, 1.0f ), RectF( 0.0f, 0.0f, 1.0f, 1.0f ) );
 
-		program = ShaderProgram::New( SubSystems() );
+		program = New<ShaderProgram>( SubSystems() );
 
 		CHECK( program->Load( "prog.glsl",
 							  ShaderProgram::ShaderBits_t().Set( EShader::Vertex ).Set( EShader::Fragment ),

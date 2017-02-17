@@ -3,10 +3,7 @@
 #pragma once
 
 #include "Engine/Compute/Engine.Compute.h"
-#include "Projects/Shared/Controllers/ScaleBiasController.h"
-#include "Projects/Shared/Controllers/FreeCameraController.h"
-#include "Projects/Shared/Controllers/FlightCameraController.h"
-#include "Projects/Shared/Loaders/ImageLoader.h"
+//#include "Projects/Shared/Loaders/ImageLoader.h"
 
 #ifndef COMPUTE_API_OPENGL
 #	error Use OpenGL!

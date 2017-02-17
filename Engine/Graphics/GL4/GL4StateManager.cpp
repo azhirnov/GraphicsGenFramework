@@ -49,8 +49,8 @@ namespace Graphics
 			GL_CALL( glGetIntegerv( GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &max_units ) );
 			_textureUnits.Resize( Max( max_units, 16/*from specs*/ ), false );
 
-			const uint	max_textures = GlobalConst::Graphics_MaxMaterialTextures + GlobalConst::Graphics_MaxRenderPassTextures + 1;
-			CHECK( max_textures < max_units );
+			//const uint	max_textures = GlobalConst::Graphics_MaxMaterialTextures + GlobalConst::Graphics_MaxRenderPassTextures + 1;
+			//CHECK( max_textures < max_units );
 
 			GL_CALL( glGetIntegerv( GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, (GLint*) &_maxAnisotropy ) );
 		}
@@ -483,8 +483,8 @@ namespace Graphics
 			return;
 
 		buf.id      = vb.Id();
-		buf.offset  = (uint)offset;
-		buf.stride  = (uint)stride;
+		buf.offset  = (uint) usize(offset);
+		buf.stride  = (uint) usize(stride);
 		buf.divisor = divisor;
 
 		GL_CALL( glVertexArrayVertexBuffer( va._id, bind_idx, buf.id, buf.offset, buf.stride ) );
@@ -1456,11 +1456,13 @@ namespace Graphics
 	DispatchCompute
 =================================================
 */
-	void GL4StateManager::DispatchCompute (const uint3 &groupSize)
+	void GL4StateManager::DispatchCompute (const ulong3 &groupSize)
 	{
 		_SetMemoryBarrierBeforeDraw();
+		
+		ASSERT( All( groupSize < ulong3(MaxValue<uint>()) ) );
 
-		GL_CALL( glDispatchCompute( groupSize.x, groupSize.y, groupSize.z ) );
+		GL_CALL( glDispatchCompute( (GLuint)groupSize.x, (GLuint)groupSize.y, (GLuint)groupSize.z ) );
 	}
 	
 /*
@@ -1468,12 +1470,15 @@ namespace Graphics
 	DispatchCompute
 =================================================
 */
-	void GL4StateManager::DispatchCompute (const uint3 &groupSize, const uint3 &localSize)
+	void GL4StateManager::DispatchCompute (const ulong3 &groupSize, const ulong3 &localSize)
 	{
 		_SetMemoryBarrierBeforeDraw();
 
-		GL_CALL( glDispatchComputeGroupSizeARB( groupSize.x, groupSize.y, groupSize.z,
-												  localSize.x, localSize.y, localSize.z ) );
+		ASSERT( All( groupSize < ulong3(MaxValue<uint>()) ) );
+		ASSERT( All( localSize < ulong3(MaxValue<uint>()) ) );
+
+		GL_CALL( glDispatchComputeGroupSizeARB( (GLuint)groupSize.x, (GLuint)groupSize.y, (GLuint)groupSize.z,
+												  (GLuint)localSize.x, (GLuint)localSize.y, (GLuint)localSize.z ) );
 	}
 
 

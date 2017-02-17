@@ -29,12 +29,11 @@ namespace Compute
 
 
 	// methods
-	private:
+	public:
 		explicit
 		CL2ComputeSyncEvent (const SubSystemsRef ss);
 		~CL2ComputeSyncEvent ();
 
-	public:
 		bool IsCreated ()	const	{ return _id != null; }
 
 		bool EnqueueMarker ();
@@ -44,8 +43,6 @@ namespace Compute
 		
 		// GPU-side wait
 		bool EnqueueWait ();
-
-		static ComputeSyncEventPtr  New (const SubSystemsRef ss);
 
 	private:
 		void _Delete ();

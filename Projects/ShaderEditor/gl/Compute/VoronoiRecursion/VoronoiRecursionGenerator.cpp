@@ -19,7 +19,7 @@ namespace ShaderEditor
 	// methods
 	public:
 		VoronoiRecursionGenerator (const SubSystemsRef ss) :
-			IGenerator( ss )
+			IGenerator( ss ), _mainFunc( SubSystems() )
 		{}
 
 		bool SetArg (StringCRef name, const VariantRef &arg) override;
@@ -37,7 +37,7 @@ namespace ShaderEditor
 */
 	IGeneratorPtr  IGenerator::Create_VoronoiRecursion (const SubSystemsRef ss)
 	{
-		return BaseObject::_New( new VoronoiRecursionGenerator( ss ) );
+		return New<VoronoiRecursionGenerator>( ss );
 	}
 
 /*
@@ -69,7 +69,7 @@ namespace ShaderEditor
 */
 	bool VoronoiRecursionGenerator::Compile ()
 	{
-		CHECK_ERR( _mainFunc.Load( SubSystems(), "gl/Compute/VoronoiRecursion/main.glcs", EShaderCompilationFlags::DefaultCompute ) );
+		CHECK_ERR( _mainFunc.Load( "gl/Compute/VoronoiRecursion/main.glcs", EShaderCompilationFlags::DefaultCompute ) );
 
 		return true;
 	}

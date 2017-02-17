@@ -309,6 +309,32 @@ namespace CompileTime
 		};
 		
 
+		template <int I>
+		struct _TPowerStructUnsigned {
+			template <typename T>	forceinline static constexpr T power (const T& x)		{ return _TPowerStructUnsigned<I-1>::power( x ) * x; }
+		};
+			
+		template <>
+		struct _TPowerStructUnsigned<0> {
+			template <typename T>	forceinline static constexpr T power (const T&)			{ return 1; }
+		};
+
+		template <bool S>
+		struct _TPowerStruct {
+			template <typename T, int I> forceinline static constexpr T power (const T& x)	{ return _TPowerStructUnsigned<I>::power( x ); }
+		};
+
+		template <>
+		struct _TPowerStruct<true> {
+			template <typename T, int I> forceinline static constexpr T power (const T& x)	{ return T(1) / _TPowerStructUnsigned<-I>::power( x ); }
+		};
+
+		template <int I, typename T>
+		forceinline constexpr T StaticPow (const T& x)
+		{
+			return _TPowerStruct< (I<0) >::template power<T,I>( x );
+		}
+
 	}	// _ctime_hidden_
 
 
@@ -470,7 +496,7 @@ namespace CompileTime
 		template <typename FT>
 		static FT ToFloat ()
 		{
-			return FT(MANTISSA) * GXMath::_math_hidden_::StaticPow<EXPONENT>( FT(10) );
+			return FT(MANTISSA) * _ctime_hidden_::StaticPow<EXPONENT>( FT(10) );
 		};
 
 		static String ToString ()

@@ -36,7 +36,7 @@ namespace OS
 	// variables
 	protected:
 		alignas(Align)	char	_data[ Size ];
-		const TypeId_t			_typeid;
+		const TypeId			_typeid;
 		bool					_isDefined;
 
 
@@ -44,14 +44,14 @@ namespace OS
 	public:
 		template <typename T>
 		explicit
-		HiddenOSType (UninitializedT<T>) : _typeid( TypeId<T>() ), _isDefined(false)
+		HiddenOSType (UninitializedT<T>) : _typeid( TypeIdOf<T>() ), _isDefined(false)
 		{
 			_Create<T>();
 		}
 
 		template <typename T>
 		explicit
-		HiddenOSType (const T &value) : _typeid( TypeId<T>() ), _isDefined(false)
+		HiddenOSType (const T &value) : _typeid( TypeIdOf<T>() ), _isDefined(false)
 		{
 			_Create( value );
 		}
@@ -72,7 +72,7 @@ namespace OS
 		template <typename T>
 		forceinline Self& operator = (const T &value)
 		{
-			ASSERT( TypeId<T>() == _typeid );
+			ASSERT( TypeIdOf<T>() == _typeid );
 
 			// destructor not needed
 			_Create( value );
@@ -98,14 +98,14 @@ namespace OS
 		template <typename T>
 		forceinline T&  Get ()
 		{
-			ASSERT( IsDefined() and TypeId<T>() == _typeid );
+			ASSERT( IsDefined() and TypeIdOf<T>() == _typeid );
 			return ReferenceCast<T>( _data );
 		}
 
 		template <typename T>
 		forceinline T const&  Get () const
 		{
-			ASSERT( IsDefined() and TypeId<T>() == _typeid );
+			ASSERT( IsDefined() and TypeIdOf<T>() == _typeid );
 			return ReferenceCast<T>( _data );
 		}
 
@@ -124,13 +124,13 @@ namespace OS
 		template <typename T>
 		forceinline bool IsNotNull () const
 		{
-			ASSERT( TypeId<T>() == _typeid );
+			ASSERT( TypeIdOf<T>() == _typeid );
 			return IsDefined() and ReferenceCast<T>( _data ) != 0;
 		}
 
 
 	protected:
-		explicit HiddenOSType (TypeId_t typeId) : _typeid(typeId), _isDefined(false)
+		explicit HiddenOSType (TypeId typeId) : _typeid(typeId), _isDefined(false)
 		{}
 
 		template <typename T>
@@ -184,14 +184,14 @@ namespace OS
 	public:
 		template <typename T>
 		explicit
-		HiddenOSType (UninitializedT<T>) : Base_t( TypeId<T>() ), _destructor(null)
+		HiddenOSType (UninitializedT<T>) : Base_t( TypeIdOf<T>() ), _destructor(null)
 		{
 			_Create<T>();
 		}
 
 		template <typename T>
 		explicit
-		HiddenOSType (const T &value) : Base_t( TypeId<T>() ), _destructor(null)
+		HiddenOSType (const T &value) : Base_t( TypeIdOf<T>() ), _destructor(null)
 		{
 			_Create( value );
 		}
@@ -208,7 +208,7 @@ namespace OS
 		template <typename T>
 		forceinline Self& operator = (const T &value)
 		{
-			ASSERT( TypeId<T>() == _typeid );
+			ASSERT( TypeIdOf<T>() == _typeid );
 
 			_Destroy();
 			_Create( value );

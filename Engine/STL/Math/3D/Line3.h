@@ -64,24 +64,34 @@ namespace GXMath
 		Self	Reflection (const vec_t &normal) const;
 	};
 
-
 	
-	
-		
+/*
+=================================================
+	operator ==
+=================================================
+*/
 	template <typename T>
 	inline bool	Line3<T>::operator == (const Self &right) const
 	{
 		return All( Begin() == right.Begin() ) and All( End() == right.End() );
 	}
 	
-
+/*
+=================================================
+	operator !=
+=================================================
+*/
 	template <typename T>
 	inline bool	Line3<T>::operator != (const Self &right) const
 	{
 		return not ( (*this) == right );
 	}
-
-		
+	
+/*
+=================================================
+	Reflection
+=================================================
+*/
 	template <typename T>
 	inline Line3<T>  Line3<T>::Reflection (const vec_t &normal) const
 	{
@@ -97,7 +107,11 @@ namespace GXMath
 		return Self( End(), End() + Vector().Reflect( normal ).SetLength( Length() ) );
 	}
 	
-	
+/*
+=================================================
+	MinDistance
+=================================================
+*/
 	template <typename T>
 	inline T  Line3<T>::MinDistance (const vec_t &point) const
 	{
@@ -131,8 +145,8 @@ namespace GXTypes
 
 		result_t operator () (const key_t &x) const
 		{
-			return	(base_t::operator ()( x.Begin() ) << 1) ^
-					(base_t::operator ()( x.End() ) >> 1);
+			return	base_t::operator ()( x.Begin() ) +
+					base_t::operator ()( x.End() );
 		}
 	};
 

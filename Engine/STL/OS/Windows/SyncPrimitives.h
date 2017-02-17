@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Engine/STL/OS/Base/SyncPrimitives.h"
+#include "Engine/STL/OS/Base/ScopeLock.h"
 #include "OSWindows.h"
 
 #ifdef PLATFORM_WINDOWS_SHELL

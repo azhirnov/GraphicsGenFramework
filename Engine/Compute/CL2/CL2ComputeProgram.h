@@ -24,23 +24,20 @@ namespace Compute
 	{
 	// variables
 	private:
-		cl::cl_program		_id;
+		cl::cl_program				_id;
+		EProgramUnitFlags::type		_flags;
 
 
 	// methods
-	protected:
+	public:
 		explicit
 		CL2ComputeProgram (const SubSystemsRef ss);
 		~CL2ComputeProgram ();
 
-	public:
-		bool Create (StringCRef filename, EProgramUnitFlags::type compilationFlags);
+		bool Create (StringCRef filename, EProgramUnitFlags::type flags);
 
 		bool			IsCreated ()	const	{ return _id != null; }
 		cl::cl_program	Id ()			const	{ return _id; }
-
-
-		static ComputeProgramPtr New (const SubSystemsRef ss);
 
 
 	private:

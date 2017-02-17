@@ -72,7 +72,7 @@
 #if not defined(__GX_FAST__)
 #	define DEBUG_CONSOLE( _msg_ )		__debug_console_write( (_msg_), __FILE__, __LINE__ )
 #else
-#	define DEBUG_CONSOLE( _msg_ )		
+#	define DEBUG_CONSOLE( _msg_ )		{}
 #endif
 
 
@@ -81,10 +81,12 @@
 	static_assert(	AUXDEF_GETRAW( AUXDEF_GETARG_0( __VA_ARGS__ ) ), \
 					AUXDEF_GETRAW( AUXDEF_GETARG_1( __VA_ARGS__, TOSTRING(__VA_ARGS__) ) ) )
 
-#define TODO( _message_ )				ASSERT( false, _message_ )
 #define WARNING( _message_ )			ASSERT( false, _message_ )
 #define STATIC_WARNING( _message_ )		STATIC_ASSERT( false, _message_ )
 #define CONSOLE_OUTPUT( ... )			::printf( __VA_ARGS__ )
+
+// for deferred programming
+#define TODO( _message_ )				ASSERT( false, _message_ )
 
 
 // temporary code //
@@ -140,20 +142,26 @@
 
 
 // convert to right value reference
-#define RVREF(...)		::GX_STL::GXTypes::ToRValueRef( __VA_ARGS__ )
+#define RVREF(...)			::GX_STL::TypeTraits::ToRValueRef( __VA_ARGS__ )
+
+#define FW					::GX_STL::TypeTraits::Forward
 
 
 // to disable 'unreferenced formal parameter' compiler error
-#define GX_UNUSED(...)	(void)( __VA_ARGS__ )
+#define GX_UNUSED(...)		(void)( __VA_ARGS__ )
 
 
 // lambda
 // code style: LAMBDA(=) (args) {{ code }};
-#define LAMBDA(...)		[ __VA_ARGS__ ]
+#ifdef GX_LAMBDA_SUPPORTED
+#	define LAMBDA(...)		[ __VA_ARGS__ ]
+#else
+#	define LAMBDA(...)		STATIC_WARNING("lambda not supported!!!")
+#endif
 
 
 // default constructor arguments with Uninitialized
-#define GX_DEFCTOR		::GX_STL::GXTypes::UninitializedType = ::GX_STL::GXTypes::Uninitialized
+#define GX_DEFCTOR			::GX_STL::GXTypes::UninitializedType = ::GX_STL::GXTypes::Uninitialized
 
 
 // for each

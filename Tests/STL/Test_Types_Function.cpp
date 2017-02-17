@@ -118,7 +118,7 @@ struct Test4
 };
 
 
-class Test5 : public Referenced
+class Test5 : public RefCountedObject
 {
 public:
 	typedef Delegate< void (int, int) >		delegate_t;

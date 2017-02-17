@@ -43,7 +43,7 @@ namespace ShaderEditor
 		
 		FOR( i, _particleBuffers )
 		{
-			_particleBuffers[i] = VertexBuffer::New( SubSystems() );
+			_particleBuffers[i] = New<VertexBuffer>( SubSystems() );
 			
 			CHECK( _particleBuffers[i]->Create() );
 			CHECK( _particleBuffers[i]->Allocate( BytesU(_particlesCount) * vertexSize, EBufferUsage::Dynamic ) );
@@ -76,6 +76,7 @@ namespace ShaderEditor
 		_particlesCount		= 0;
 		_currBuffer			= 0;
 		_initialize			= false;
+		_prevGlobalTime		= Uninitialized;
 	}
 	
 /*
@@ -86,6 +87,13 @@ namespace ShaderEditor
 	bool ParticleEmitter::Update (TimeD globalTime)
 	{
 		CHECK_ERR( _particleProcessor );
+		
+		TimeD	dt = globalTime - _prevGlobalTime;
+
+		_prevGlobalTime = globalTime;
+
+		if ( dt.IsZero() and not _initialize )
+			return true;
 
 		uint	in_idx	= _currBuffer;
 		uint	out_idx	= ++_currBuffer;
@@ -93,6 +101,7 @@ namespace ShaderEditor
 		_particleProcessor->SetArg( "inBuffer",		_particleBuffers[in_idx] );
 		_particleProcessor->SetArg( "outBuffer",	_particleBuffers[out_idx] );
 		_particleProcessor->SetArg( "globalTime",	globalTime );
+		_particleProcessor->SetArg( "timeDelta",	dt );
 		_particleProcessor->SetArg( "count",		_particlesCount );
 		_particleProcessor->SetArg( "initialize",	_initialize );
 
@@ -120,18 +129,7 @@ namespace ShaderEditor
 		_particleRenderer->Active();
 
 		_particleBuffers[ _currBuffer ]->Draw();
-
 		return true;
-	}
-
-/*
-=================================================
-	New
-=================================================
-*/
-	ParticleEmitterPtr  ParticleEmitter::New (const SubSystemsRef ss)
-	{
-		return BaseObject::_New( new ParticleEmitter( ss ) );
 	}
 
 

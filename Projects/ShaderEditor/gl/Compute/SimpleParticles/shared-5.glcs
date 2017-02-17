@@ -1,0 +1,129 @@
+/*
+	Shared source for initialization and updating particles.
+*/
+
+[HEADER]
+
+#include "Common.glcs"
+#import  "Compute/SimpleParticles/vertex.glcs"
+
+
+void InitParticle (out Particle particle, const float globalTime);
+
+void UpdateParticle (const Particle inParticle, out Particle outParticle,
+					 const float frameTime, const float globalTime, const float dt);
+
+
+//---------------------------------------------------------
+[SOURCE]
+
+struct Emitter
+{
+	float3	position;
+	float	gravity;
+	float	radius;
+	float	induction;
+};
+
+const Emitter		EMITTERS[1] = {
+	{ float3( 0.0 ), 0.15, 0.05, 0.5 }
+};
+
+const float		PARTICLE_LIFE_TIME	= 30.0;
+const float		MAX_RADIUS			= 1000.0;
+const float3	MAGNETIC_FIELD_DIR	= normalize( float3( 1.0, 1.0, 0.0 ) );
+
+const AABBox	BOX					= { float3(-10.0), float3(10.0) };
+const float		MAX_ITER			= 20.0;
+
+
+float3 GetEmitterNorth (const Emitter e)
+{
+	return e.position + e.radius * MAGNETIC_FIELD_DIR;
+}
+
+float3 GetEmitterSouth (const Emitter e)
+{
+	return e.position - e.radius * MAGNETIC_FIELD_DIR;
+}
+
+
+void RestartParticle (inout Particle particle, const float globalTime)
+{
+	real		index		= real(GetGlobalIndex());
+	real		size		= real(GetGlobalIndexSize());
+	const real	max_dirs	= 1000.0;
+	real		rnd			= DHash12(real2( index / size, globalTime + 2.28374 ));
+	real3		dir			= ParticleEmitter_Sphere( rnd * max_dirs, max_dirs );
+	real		vel			= DHash13(real3( particle.position + globalTime )) + 1.5;
+
+	particle.position	= dir * EMITTERS[0].radius * 5.0 + EMITTERS[0].position;
+	particle.velocity	= dir * vel;
+	particle.size		= 8.0;
+	particle.param.x	= Sign(ToSNorm( DHash12(real2( globalTime, index / size )) ));	// sign
+	particle.param.z	= 0.0;
+}
+
+
+void InitParticle (out Particle particle, const float globalTime)
+{
+	Particle_Create( particle );
+	
+	real	index					= real(GetGlobalIndex());
+	real	size					= real(GetGlobalIndexSize());
+	real	particle_id				= index / real(EMITTERS.length);
+	real	particles_per_emitter	= size / real(EMITTERS.length);
+	real	life_time				= PARTICLE_LIFE_TIME + Fract( globalTime );
+
+	particle.position	= float3( 0.0 );
+	particle.velocity	= float3( 0.0 );
+	particle.size		= 0.0;
+	particle.color		= 0xFFFFFFFF;
+	particle.param.x	= life_time;
+	particle.param.z	= particle_id / particles_per_emitter * life_time;	// delay before show
+}
+
+
+void UpdateParticle (const Particle inParticle, out Particle outParticle,
+					 const float frameTime, const float globalTime, const float dt)
+{
+	outParticle = inParticle;
+
+	const float cnt = Clamp( Round( frameTime / dt ), 1.0, MAX_ITER );
+
+	for (float t = 0.0; t < cnt; ++t)
+	{
+		int		destroyed = 0;
+
+		if ( outParticle.size > 0.0 )
+		{
+			float3	accel	= float3( 0.0 );
+			float	sign	= outParticle.param.y;
+
+			for (int i = 0; i < EMITTERS.length; ++i)
+			{
+				accel		+= GravityAccel( outParticle.position, EMITTERS[i].position, EMITTERS[i].gravity );
+
+				accel		+= SphericalMagneticFieldAccel( outParticle.velocity, outParticle.position,
+										GetEmitterNorth( EMITTERS[i] ), GetEmitterSouth( EMITTERS[i] ),
+										EMITTERS[i].induction ) * sign;
+
+				float	dist = distance( outParticle.position, EMITTERS[i].position );
+
+				destroyed	+= int( dist < EMITTERS[i].radius or dist > MAX_RADIUS );
+			}
+			
+			outParticle.velocity += accel * dt;
+			outParticle.position += outParticle.velocity * dt;
+		}
+
+		outParticle.param.z += dt;
+		
+		if ( destroyed > 0 or outParticle.param.z > outParticle.param.x )
+		{
+			RestartParticle( outParticle, globalTime + t * dt );
+		}
+	}
+
+	outParticle.color = ParticleColor_FromNormalizedVelocity( outParticle.velocity );
+}

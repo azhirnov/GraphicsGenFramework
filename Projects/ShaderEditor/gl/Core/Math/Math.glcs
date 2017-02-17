@@ -1,463 +1,412 @@
 /*
-	This is generated file, dont change anything!
+	This is generated file, don't change anything!
 */
 
 [HEADER]
+
+#import  "Core/Common/Cmp.glcs"
 
 #include "Core/Math/MathDef.glcs"
 
 
 // Trigonometry
-float2  SinCos (in float x);
-float2  ASinCos (in float x);
-float2  SinCosH (in float x);
-float2  ASinCosH (in float x);
+float2  SinCos (const in float x);
+float2  ASinCos (const in float x);
+float2  SinCosH (const in float x);
+float2  ASinCosH (const in float x);
 
-float CoTan (in float x);
-float2 CoTan (in float2 x);
-float3 CoTan (in float3 x);
-float4 CoTan (in float4 x);
+float CoTan (const in float x);
+float2 CoTan (const in float2 x);
+float3 CoTan (const in float3 x);
+float4 CoTan (const in float4 x);
 
-float CoTanH (in float x);
-float2 CoTanH (in float2 x);
-float3 CoTanH (in float3 x);
-float4 CoTanH (in float4 x);
+float CoTanH (const in float x);
+float2 CoTanH (const in float2 x);
+float3 CoTanH (const in float3 x);
+float4 CoTanH (const in float4 x);
 
-float ACoTan (in float x);
-float2 ACoTan (in float2 x);
-float3 ACoTan (in float3 x);
-float4 ACoTan (in float4 x);
+float ACoTan (const in float x);
+float2 ACoTan (const in float2 x);
+float3 ACoTan (const in float3 x);
+float4 ACoTan (const in float4 x);
 
-float ACoTanH (in float x);
-float2 ACoTanH (in float2 x);
-float3 ACoTanH (in float3 x);
-float4 ACoTanH (in float4 x);
+float ACoTanH (const in float x);
+float2 ACoTanH (const in float2 x);
+float3 ACoTanH (const in float3 x);
+float4 ACoTanH (const in float4 x);
 
 
 // Sign (1 or -1)
-float Sign (in float x);
-float2 Sign (in float2 x);
-float3 Sign (in float3 x);
-float4 Sign (in float4 x);
+float Sign (const in float x);
+float2 Sign (const in float2 x);
+float3 Sign (const in float3 x);
+float4 Sign (const in float4 x);
 
-double Sign (in double x);
-double2 Sign (in double2 x);
-double3 Sign (in double3 x);
-double4 Sign (in double4 x);
+double Sign (const in double x);
+double2 Sign (const in double2 x);
+double3 Sign (const in double3 x);
+double4 Sign (const in double4 x);
 
-int Sign (in int x);
-int2 Sign (in int2 x);
-int3 Sign (in int3 x);
-int4 Sign (in int4 x);
-
-#ifdef GL_ARB_gpu_shader_int64
-ilong Sign (in ilong x);
-ilong2 Sign (in ilong2 x);
-ilong3 Sign (in ilong3 x);
-ilong4 Sign (in ilong4 x);
-#endif
+int Sign (const in int x);
+int2 Sign (const in int2 x);
+int3 Sign (const in int3 x);
+int4 Sign (const in int4 x);
 
 #ifdef GL_ARB_gpu_shader_int64
-ulong Sign (in ulong x);
-ulong2 Sign (in ulong2 x);
-ulong3 Sign (in ulong3 x);
-ulong4 Sign (in ulong4 x);
-#endif
-
-
-// IsZero, Equals (with error)
-float  EpsilonF ();
-double EpsilonD ();
-real   Epsilon ();
-
-bool IsZero (in float x);
-bool2 IsZero (in float2 x);
-bool3 IsZero (in float3 x);
-bool4 IsZero (in float4 x);
-
-bool IsZero (in double x);
-bool2 IsZero (in double2 x);
-bool3 IsZero (in double3 x);
-bool4 IsZero (in double4 x);
-
-bool IsZero (in int x);
-bool2 IsZero (in int2 x);
-bool3 IsZero (in int3 x);
-bool4 IsZero (in int4 x);
-
-bool IsZero (in uint x);
-bool2 IsZero (in uint2 x);
-bool3 IsZero (in uint3 x);
-bool4 IsZero (in uint4 x);
-
-bool IsZero (in bool x);
-bool2 IsZero (in bool2 x);
-bool3 IsZero (in bool3 x);
-bool4 IsZero (in bool4 x);
-
-#ifdef GL_ARB_gpu_shader_int64
-bool IsZero (in ilong x);
-bool2 IsZero (in ilong2 x);
-bool3 IsZero (in ilong3 x);
-bool4 IsZero (in ilong4 x);
-#endif
-
-#ifdef GL_ARB_gpu_shader_int64
-bool IsZero (in ulong x);
-bool2 IsZero (in ulong2 x);
-bool3 IsZero (in ulong3 x);
-bool4 IsZero (in ulong4 x);
-#endif
-
-bool Equals (in float left, in float right);
-bool2 Equals (in float2 left, in float2 right);
-bool3 Equals (in float3 left, in float3 right);
-bool4 Equals (in float4 left, in float4 right);
-
-bool Equals (in double left, in double right);
-bool2 Equals (in double2 left, in double2 right);
-bool3 Equals (in double3 left, in double3 right);
-bool4 Equals (in double4 left, in double4 right);
-
-bool Equals (in int left, in int right);
-bool2 Equals (in int2 left, in int2 right);
-bool3 Equals (in int3 left, in int3 right);
-bool4 Equals (in int4 left, in int4 right);
-
-bool Equals (in uint left, in uint right);
-bool2 Equals (in uint2 left, in uint2 right);
-bool3 Equals (in uint3 left, in uint3 right);
-bool4 Equals (in uint4 left, in uint4 right);
-
-bool Equals (in bool left, in bool right);
-bool2 Equals (in bool2 left, in bool2 right);
-bool3 Equals (in bool3 left, in bool3 right);
-bool4 Equals (in bool4 left, in bool4 right);
-
-#ifdef GL_ARB_gpu_shader_int64
-bool Equals (in ilong left, in ilong right);
-bool2 Equals (in ilong2 left, in ilong2 right);
-bool3 Equals (in ilong3 left, in ilong3 right);
-bool4 Equals (in ilong4 left, in ilong4 right);
-#endif
-
-#ifdef GL_ARB_gpu_shader_int64
-bool Equals (in ulong left, in ulong right);
-bool2 Equals (in ulong2 left, in ulong2 right);
-bool3 Equals (in ulong3 left, in ulong3 right);
-bool4 Equals (in ulong4 left, in ulong4 right);
-#endif
-
-bool Equals (in float left, in float right, in uint accuracyInBits);
-bool2 Equals (in float2 left, in float2 right, in uint accuracyInBits);
-bool3 Equals (in float3 left, in float3 right, in uint accuracyInBits);
-bool4 Equals (in float4 left, in float4 right, in uint accuracyInBits);
-
-#ifdef GL_ARB_gpu_shader_int64
-bool Equals (in double left, in double right, in uint accuracyInBits);
-bool2 Equals (in double2 left, in double2 right, in uint accuracyInBits);
-bool3 Equals (in double3 left, in double3 right, in uint accuracyInBits);
-bool4 Equals (in double4 left, in double4 right, in uint accuracyInBits);
+ilong Sign (const in ilong x);
+ilong2 Sign (const in ilong2 x);
+ilong3 Sign (const in ilong3 x);
+ilong4 Sign (const in ilong4 x);
 #endif
 
 
 // ClampOut
-float ClampOut (in float x, in float minVal, in float maxVal);
-float2 ClampOut (in float2 x, in float minVal, in float maxVal);
-float2 ClampOut (in float2 x, in float2 minVal, in float2 maxVal);
-float3 ClampOut (in float3 x, in float minVal, in float maxVal);
-float3 ClampOut (in float3 x, in float3 minVal, in float3 maxVal);
-float4 ClampOut (in float4 x, in float minVal, in float maxVal);
-float4 ClampOut (in float4 x, in float4 minVal, in float4 maxVal);
+float ClampOut (const in float x, const in float minVal, const in float maxVal);
+float2 ClampOut (const in float2 x, const in float minVal, const in float maxVal);
+float2 ClampOut (const in float2 x, const in float2 minVal, const in float2 maxVal);
+float3 ClampOut (const in float3 x, const in float minVal, const in float maxVal);
+float3 ClampOut (const in float3 x, const in float3 minVal, const in float3 maxVal);
+float4 ClampOut (const in float4 x, const in float minVal, const in float maxVal);
+float4 ClampOut (const in float4 x, const in float4 minVal, const in float4 maxVal);
 
-double ClampOut (in double x, in double minVal, in double maxVal);
-double2 ClampOut (in double2 x, in double minVal, in double maxVal);
-double2 ClampOut (in double2 x, in double2 minVal, in double2 maxVal);
-double3 ClampOut (in double3 x, in double minVal, in double maxVal);
-double3 ClampOut (in double3 x, in double3 minVal, in double3 maxVal);
-double4 ClampOut (in double4 x, in double minVal, in double maxVal);
-double4 ClampOut (in double4 x, in double4 minVal, in double4 maxVal);
+double ClampOut (const in double x, const in double minVal, const in double maxVal);
+double2 ClampOut (const in double2 x, const in double minVal, const in double maxVal);
+double2 ClampOut (const in double2 x, const in double2 minVal, const in double2 maxVal);
+double3 ClampOut (const in double3 x, const in double minVal, const in double maxVal);
+double3 ClampOut (const in double3 x, const in double3 minVal, const in double3 maxVal);
+double4 ClampOut (const in double4 x, const in double minVal, const in double maxVal);
+double4 ClampOut (const in double4 x, const in double4 minVal, const in double4 maxVal);
 
-int ClampOut (in int x, in int minVal, in int maxVal);
-int2 ClampOut (in int2 x, in int minVal, in int maxVal);
-int2 ClampOut (in int2 x, in int2 minVal, in int2 maxVal);
-int3 ClampOut (in int3 x, in int minVal, in int maxVal);
-int3 ClampOut (in int3 x, in int3 minVal, in int3 maxVal);
-int4 ClampOut (in int4 x, in int minVal, in int maxVal);
-int4 ClampOut (in int4 x, in int4 minVal, in int4 maxVal);
+int ClampOut (const in int x, const in int minVal, const in int maxVal);
+int2 ClampOut (const in int2 x, const in int minVal, const in int maxVal);
+int2 ClampOut (const in int2 x, const in int2 minVal, const in int2 maxVal);
+int3 ClampOut (const in int3 x, const in int minVal, const in int maxVal);
+int3 ClampOut (const in int3 x, const in int3 minVal, const in int3 maxVal);
+int4 ClampOut (const in int4 x, const in int minVal, const in int maxVal);
+int4 ClampOut (const in int4 x, const in int4 minVal, const in int4 maxVal);
 
-uint ClampOut (in uint x, in uint minVal, in uint maxVal);
-uint2 ClampOut (in uint2 x, in uint minVal, in uint maxVal);
-uint2 ClampOut (in uint2 x, in uint2 minVal, in uint2 maxVal);
-uint3 ClampOut (in uint3 x, in uint minVal, in uint maxVal);
-uint3 ClampOut (in uint3 x, in uint3 minVal, in uint3 maxVal);
-uint4 ClampOut (in uint4 x, in uint minVal, in uint maxVal);
-uint4 ClampOut (in uint4 x, in uint4 minVal, in uint4 maxVal);
+uint ClampOut (const in uint x, const in uint minVal, const in uint maxVal);
+uint2 ClampOut (const in uint2 x, const in uint minVal, const in uint maxVal);
+uint2 ClampOut (const in uint2 x, const in uint2 minVal, const in uint2 maxVal);
+uint3 ClampOut (const in uint3 x, const in uint minVal, const in uint maxVal);
+uint3 ClampOut (const in uint3 x, const in uint3 minVal, const in uint3 maxVal);
+uint4 ClampOut (const in uint4 x, const in uint minVal, const in uint maxVal);
+uint4 ClampOut (const in uint4 x, const in uint4 minVal, const in uint4 maxVal);
 
 #ifdef GL_ARB_gpu_shader_int64
-ilong ClampOut (in ilong x, in ilong minVal, in ilong maxVal);
-ilong2 ClampOut (in ilong2 x, in ilong minVal, in ilong maxVal);
-ilong2 ClampOut (in ilong2 x, in ilong2 minVal, in ilong2 maxVal);
-ilong3 ClampOut (in ilong3 x, in ilong minVal, in ilong maxVal);
-ilong3 ClampOut (in ilong3 x, in ilong3 minVal, in ilong3 maxVal);
-ilong4 ClampOut (in ilong4 x, in ilong minVal, in ilong maxVal);
-ilong4 ClampOut (in ilong4 x, in ilong4 minVal, in ilong4 maxVal);
+ilong ClampOut (const in ilong x, const in ilong minVal, const in ilong maxVal);
+ilong2 ClampOut (const in ilong2 x, const in ilong minVal, const in ilong maxVal);
+ilong2 ClampOut (const in ilong2 x, const in ilong2 minVal, const in ilong2 maxVal);
+ilong3 ClampOut (const in ilong3 x, const in ilong minVal, const in ilong maxVal);
+ilong3 ClampOut (const in ilong3 x, const in ilong3 minVal, const in ilong3 maxVal);
+ilong4 ClampOut (const in ilong4 x, const in ilong minVal, const in ilong maxVal);
+ilong4 ClampOut (const in ilong4 x, const in ilong4 minVal, const in ilong4 maxVal);
 #endif
 
 #ifdef GL_ARB_gpu_shader_int64
-ulong ClampOut (in ulong x, in ulong minVal, in ulong maxVal);
-ulong2 ClampOut (in ulong2 x, in ulong minVal, in ulong maxVal);
-ulong2 ClampOut (in ulong2 x, in ulong2 minVal, in ulong2 maxVal);
-ulong3 ClampOut (in ulong3 x, in ulong minVal, in ulong maxVal);
-ulong3 ClampOut (in ulong3 x, in ulong3 minVal, in ulong3 maxVal);
-ulong4 ClampOut (in ulong4 x, in ulong minVal, in ulong maxVal);
-ulong4 ClampOut (in ulong4 x, in ulong4 minVal, in ulong4 maxVal);
+ulong ClampOut (const in ulong x, const in ulong minVal, const in ulong maxVal);
+ulong2 ClampOut (const in ulong2 x, const in ulong minVal, const in ulong maxVal);
+ulong2 ClampOut (const in ulong2 x, const in ulong2 minVal, const in ulong2 maxVal);
+ulong3 ClampOut (const in ulong3 x, const in ulong minVal, const in ulong maxVal);
+ulong3 ClampOut (const in ulong3 x, const in ulong3 minVal, const in ulong3 maxVal);
+ulong4 ClampOut (const in ulong4 x, const in ulong minVal, const in ulong maxVal);
+ulong4 ClampOut (const in ulong4 x, const in ulong4 minVal, const in ulong4 maxVal);
 #endif
 
 
 // Wrap
-float Wrap (in float x, in float minVal, in float maxVal);
-float2 Wrap (in float2 x, in float2 minVal, in float2 maxVal);
-float2 Wrap (in float2 x, in float minVal, in float maxVal);
-float3 Wrap (in float3 x, in float3 minVal, in float3 maxVal);
-float3 Wrap (in float3 x, in float minVal, in float maxVal);
-float4 Wrap (in float4 x, in float4 minVal, in float4 maxVal);
-float4 Wrap (in float4 x, in float minVal, in float maxVal);
+float Wrap (const in float x, const in float minVal, const in float maxVal);
+float2 Wrap (const in float2 x, const in float2 minVal, const in float2 maxVal);
+float2 Wrap (const in float2 x, const in float minVal, const in float maxVal);
+float3 Wrap (const in float3 x, const in float3 minVal, const in float3 maxVal);
+float3 Wrap (const in float3 x, const in float minVal, const in float maxVal);
+float4 Wrap (const in float4 x, const in float4 minVal, const in float4 maxVal);
+float4 Wrap (const in float4 x, const in float minVal, const in float maxVal);
 
-double Wrap (in double x, in double minVal, in double maxVal);
-double2 Wrap (in double2 x, in double2 minVal, in double2 maxVal);
-double2 Wrap (in double2 x, in double minVal, in double maxVal);
-double3 Wrap (in double3 x, in double3 minVal, in double3 maxVal);
-double3 Wrap (in double3 x, in double minVal, in double maxVal);
-double4 Wrap (in double4 x, in double4 minVal, in double4 maxVal);
-double4 Wrap (in double4 x, in double minVal, in double maxVal);
+double Wrap (const in double x, const in double minVal, const in double maxVal);
+double2 Wrap (const in double2 x, const in double2 minVal, const in double2 maxVal);
+double2 Wrap (const in double2 x, const in double minVal, const in double maxVal);
+double3 Wrap (const in double3 x, const in double3 minVal, const in double3 maxVal);
+double3 Wrap (const in double3 x, const in double minVal, const in double maxVal);
+double4 Wrap (const in double4 x, const in double4 minVal, const in double4 maxVal);
+double4 Wrap (const in double4 x, const in double minVal, const in double maxVal);
 
-int Wrap (in int x, in int minVal, in int maxVal);
-int2 Wrap (in int2 x, in int2 minVal, in int2 maxVal);
-int2 Wrap (in int2 x, in int minVal, in int maxVal);
-int3 Wrap (in int3 x, in int3 minVal, in int3 maxVal);
-int3 Wrap (in int3 x, in int minVal, in int maxVal);
-int4 Wrap (in int4 x, in int4 minVal, in int4 maxVal);
-int4 Wrap (in int4 x, in int minVal, in int maxVal);
+int Wrap (const in int x, const in int minVal, const in int maxVal);
+int2 Wrap (const in int2 x, const in int2 minVal, const in int2 maxVal);
+int2 Wrap (const in int2 x, const in int minVal, const in int maxVal);
+int3 Wrap (const in int3 x, const in int3 minVal, const in int3 maxVal);
+int3 Wrap (const in int3 x, const in int minVal, const in int maxVal);
+int4 Wrap (const in int4 x, const in int4 minVal, const in int4 maxVal);
+int4 Wrap (const in int4 x, const in int minVal, const in int maxVal);
 
-uint Wrap (in uint x, in uint minVal, in uint maxVal);
-uint2 Wrap (in uint2 x, in uint2 minVal, in uint2 maxVal);
-uint2 Wrap (in uint2 x, in uint minVal, in uint maxVal);
-uint3 Wrap (in uint3 x, in uint3 minVal, in uint3 maxVal);
-uint3 Wrap (in uint3 x, in uint minVal, in uint maxVal);
-uint4 Wrap (in uint4 x, in uint4 minVal, in uint4 maxVal);
-uint4 Wrap (in uint4 x, in uint minVal, in uint maxVal);
+uint Wrap (const in uint x, const in uint minVal, const in uint maxVal);
+uint2 Wrap (const in uint2 x, const in uint2 minVal, const in uint2 maxVal);
+uint2 Wrap (const in uint2 x, const in uint minVal, const in uint maxVal);
+uint3 Wrap (const in uint3 x, const in uint3 minVal, const in uint3 maxVal);
+uint3 Wrap (const in uint3 x, const in uint minVal, const in uint maxVal);
+uint4 Wrap (const in uint4 x, const in uint4 minVal, const in uint4 maxVal);
+uint4 Wrap (const in uint4 x, const in uint minVal, const in uint maxVal);
 
 #ifdef GL_ARB_gpu_shader_int64
-ilong Wrap (in ilong x, in ilong minVal, in ilong maxVal);
-ilong2 Wrap (in ilong2 x, in ilong2 minVal, in ilong2 maxVal);
-ilong2 Wrap (in ilong2 x, in ilong minVal, in ilong maxVal);
-ilong3 Wrap (in ilong3 x, in ilong3 minVal, in ilong3 maxVal);
-ilong3 Wrap (in ilong3 x, in ilong minVal, in ilong maxVal);
-ilong4 Wrap (in ilong4 x, in ilong4 minVal, in ilong4 maxVal);
-ilong4 Wrap (in ilong4 x, in ilong minVal, in ilong maxVal);
+ilong Wrap (const in ilong x, const in ilong minVal, const in ilong maxVal);
+ilong2 Wrap (const in ilong2 x, const in ilong2 minVal, const in ilong2 maxVal);
+ilong2 Wrap (const in ilong2 x, const in ilong minVal, const in ilong maxVal);
+ilong3 Wrap (const in ilong3 x, const in ilong3 minVal, const in ilong3 maxVal);
+ilong3 Wrap (const in ilong3 x, const in ilong minVal, const in ilong maxVal);
+ilong4 Wrap (const in ilong4 x, const in ilong4 minVal, const in ilong4 maxVal);
+ilong4 Wrap (const in ilong4 x, const in ilong minVal, const in ilong maxVal);
 #endif
 
 #ifdef GL_ARB_gpu_shader_int64
-ulong Wrap (in ulong x, in ulong minVal, in ulong maxVal);
-ulong2 Wrap (in ulong2 x, in ulong2 minVal, in ulong2 maxVal);
-ulong2 Wrap (in ulong2 x, in ulong minVal, in ulong maxVal);
-ulong3 Wrap (in ulong3 x, in ulong3 minVal, in ulong3 maxVal);
-ulong3 Wrap (in ulong3 x, in ulong minVal, in ulong maxVal);
-ulong4 Wrap (in ulong4 x, in ulong4 minVal, in ulong4 maxVal);
-ulong4 Wrap (in ulong4 x, in ulong minVal, in ulong maxVal);
+ulong Wrap (const in ulong x, const in ulong minVal, const in ulong maxVal);
+ulong2 Wrap (const in ulong2 x, const in ulong2 minVal, const in ulong2 maxVal);
+ulong2 Wrap (const in ulong2 x, const in ulong minVal, const in ulong maxVal);
+ulong3 Wrap (const in ulong3 x, const in ulong3 minVal, const in ulong3 maxVal);
+ulong3 Wrap (const in ulong3 x, const in ulong minVal, const in ulong maxVal);
+ulong4 Wrap (const in ulong4 x, const in ulong4 minVal, const in ulong4 maxVal);
+ulong4 Wrap (const in ulong4 x, const in ulong minVal, const in ulong maxVal);
 #endif
 
 
 // Log, Log10, Exp10
-float Log (in float x, in float base);
-float2 Log (in float2 x, in float2 base);
-float3 Log (in float3 x, in float3 base);
-float4 Log (in float4 x, in float4 base);
+float Log (const in float x, const in float base);
+float2 Log (const in float2 x, const in float2 base);
+float3 Log (const in float3 x, const in float3 base);
+float4 Log (const in float4 x, const in float4 base);
 
-float Log10 (in float x);
-float2 Log10 (in float2 x);
-float3 Log10 (in float3 x);
-float4 Log10 (in float4 x);
+float Log10 (const in float x);
+float2 Log10 (const in float2 x);
+float3 Log10 (const in float3 x);
+float4 Log10 (const in float4 x);
 
-float Exp10 (in float x);
-float2 Exp10 (in float2 x);
-float3 Exp10 (in float3 x);
-float4 Exp10 (in float4 x);
+float Exp10 (const in float x);
+float2 Exp10 (const in float2 x);
+float3 Exp10 (const in float3 x);
+float4 Exp10 (const in float4 x);
 
 
 // Square
-float Square (in float x);
-float2 Square (in float2 x);
-float3 Square (in float3 x);
-float4 Square (in float4 x);
+float Square (const in float x);
+float2 Square (const in float2 x);
+float3 Square (const in float3 x);
+float4 Square (const in float4 x);
 
-double Square (in double x);
-double2 Square (in double2 x);
-double3 Square (in double3 x);
-double4 Square (in double4 x);
+double Square (const in double x);
+double2 Square (const in double2 x);
+double3 Square (const in double3 x);
+double4 Square (const in double4 x);
 
-int Square (in int x);
-int2 Square (in int2 x);
-int3 Square (in int3 x);
-int4 Square (in int4 x);
+int Square (const in int x);
+int2 Square (const in int2 x);
+int3 Square (const in int3 x);
+int4 Square (const in int4 x);
 
-uint Square (in uint x);
-uint2 Square (in uint2 x);
-uint3 Square (in uint3 x);
-uint4 Square (in uint4 x);
+uint Square (const in uint x);
+uint2 Square (const in uint2 x);
+uint3 Square (const in uint3 x);
+uint4 Square (const in uint4 x);
 
 #ifdef GL_ARB_gpu_shader_int64
-ilong Square (in ilong x);
-ilong2 Square (in ilong2 x);
-ilong3 Square (in ilong3 x);
-ilong4 Square (in ilong4 x);
+ilong Square (const in ilong x);
+ilong2 Square (const in ilong2 x);
+ilong3 Square (const in ilong3 x);
+ilong4 Square (const in ilong4 x);
 #endif
 
 #ifdef GL_ARB_gpu_shader_int64
-ulong Square (in ulong x);
-ulong2 Square (in ulong2 x);
-ulong3 Square (in ulong3 x);
-ulong4 Square (in ulong4 x);
+ulong Square (const in ulong x);
+ulong2 Square (const in ulong2 x);
+ulong3 Square (const in ulong3 x);
+ulong4 Square (const in ulong4 x);
 #endif
 
 
 // RoundToInt, RoundToUInt, RoundTo
-int RoundToInt (in float x);
-uint RoundToUInt (in float x);
-int2 RoundToInt (in float2 x);
-uint2 RoundToUInt (in float2 x);
-int3 RoundToInt (in float3 x);
-uint3 RoundToUInt (in float3 x);
-int4 RoundToInt (in float4 x);
-uint4 RoundToUInt (in float4 x);
+int RoundToInt (const in float x);
+uint RoundToUInt (const in float x);
+int2 RoundToInt (const in float2 x);
+uint2 RoundToUInt (const in float2 x);
+int3 RoundToInt (const in float3 x);
+uint3 RoundToUInt (const in float3 x);
+int4 RoundToInt (const in float4 x);
+uint4 RoundToUInt (const in float4 x);
 
 #ifdef GL_ARB_gpu_shader_int64
-ilong RoundToInt (in double x);
-ulong RoundToUInt (in double x);
-ilong2 RoundToInt (in double2 x);
-ulong2 RoundToUInt (in double2 x);
-ilong3 RoundToInt (in double3 x);
-ulong3 RoundToUInt (in double3 x);
-ilong4 RoundToInt (in double4 x);
-ulong4 RoundToUInt (in double4 x);
+ilong RoundToInt (const in double x);
+ulong RoundToUInt (const in double x);
+ilong2 RoundToInt (const in double2 x);
+ulong2 RoundToUInt (const in double2 x);
+ilong3 RoundToInt (const in double3 x);
+ulong3 RoundToUInt (const in double3 x);
+ilong4 RoundToInt (const in double4 x);
+ulong4 RoundToUInt (const in double4 x);
 #endif
 
-float RoundTo (in float x, in float base);
-float2 RoundTo (in float2 x, in float base);
-float3 RoundTo (in float3 x, in float base);
-float4 RoundTo (in float4 x, in float base);
+float RoundTo (const in float x, const in float base);
+float2 RoundTo (const in float2 x, const in float base);
+float3 RoundTo (const in float3 x, const in float base);
+float4 RoundTo (const in float4 x, const in float base);
 
-double RoundTo (in double x, in double base);
-double2 RoundTo (in double2 x, in double base);
-double3 RoundTo (in double3 x, in double base);
-double4 RoundTo (in double4 x, in double base);
+double RoundTo (const in double x, const in double base);
+double2 RoundTo (const in double2 x, const in double base);
+double3 RoundTo (const in double3 x, const in double base);
+double4 RoundTo (const in double4 x, const in double base);
 
 
 // SafeDiv
-float SafeDiv (in float left, in float right, in float defVal);
-float2 SafeDiv (in float2 left, in float2 right, in float defVal);
-float3 SafeDiv (in float3 left, in float3 right, in float defVal);
-float4 SafeDiv (in float4 left, in float4 right, in float defVal);
+float SafeDiv (const in float left, const in float right, const in float defVal);
+float2 SafeDiv (const in float2 left, const in float2 right, const in float defVal);
+float3 SafeDiv (const in float3 left, const in float3 right, const in float defVal);
+float4 SafeDiv (const in float4 left, const in float4 right, const in float defVal);
 
-double SafeDiv (in double left, in double right, in double defVal);
-double2 SafeDiv (in double2 left, in double2 right, in double defVal);
-double3 SafeDiv (in double3 left, in double3 right, in double defVal);
-double4 SafeDiv (in double4 left, in double4 right, in double defVal);
+double SafeDiv (const in double left, const in double right, const in double defVal);
+double2 SafeDiv (const in double2 left, const in double2 right, const in double defVal);
+double3 SafeDiv (const in double3 left, const in double3 right, const in double defVal);
+double4 SafeDiv (const in double4 left, const in double4 right, const in double defVal);
 
 
 // IsOdd, IsEven
-bool IsOdd (in int x);
-bool2 IsOdd (in int2 x);
-bool3 IsOdd (in int3 x);
-bool4 IsOdd (in int4 x);
+bool IsOdd (const in int x);
+bool2 IsOdd (const in int2 x);
+bool3 IsOdd (const in int3 x);
+bool4 IsOdd (const in int4 x);
 
-bool IsOdd (in uint x);
-bool2 IsOdd (in uint2 x);
-bool3 IsOdd (in uint3 x);
-bool4 IsOdd (in uint4 x);
+bool IsOdd (const in uint x);
+bool2 IsOdd (const in uint2 x);
+bool3 IsOdd (const in uint3 x);
+bool4 IsOdd (const in uint4 x);
 
 #ifdef GL_ARB_gpu_shader_int64
-bool IsOdd (in ilong x);
-bool2 IsOdd (in ilong2 x);
-bool3 IsOdd (in ilong3 x);
-bool4 IsOdd (in ilong4 x);
+bool IsOdd (const in ilong x);
+bool2 IsOdd (const in ilong2 x);
+bool3 IsOdd (const in ilong3 x);
+bool4 IsOdd (const in ilong4 x);
 #endif
 
 #ifdef GL_ARB_gpu_shader_int64
-bool IsOdd (in ulong x);
-bool2 IsOdd (in ulong2 x);
-bool3 IsOdd (in ulong3 x);
-bool4 IsOdd (in ulong4 x);
+bool IsOdd (const in ulong x);
+bool2 IsOdd (const in ulong2 x);
+bool3 IsOdd (const in ulong3 x);
+bool4 IsOdd (const in ulong4 x);
 #endif
 
-bool IsEven (in int x);
-bool2 IsEven (in int2 x);
-bool3 IsEven (in int3 x);
-bool4 IsEven (in int4 x);
+bool IsEven (const in int x);
+bool2 IsEven (const in int2 x);
+bool3 IsEven (const in int3 x);
+bool4 IsEven (const in int4 x);
 
-bool IsEven (in uint x);
-bool2 IsEven (in uint2 x);
-bool3 IsEven (in uint3 x);
-bool4 IsEven (in uint4 x);
+bool IsEven (const in uint x);
+bool2 IsEven (const in uint2 x);
+bool3 IsEven (const in uint3 x);
+bool4 IsEven (const in uint4 x);
 
 #ifdef GL_ARB_gpu_shader_int64
-bool IsEven (in ilong x);
-bool2 IsEven (in ilong2 x);
-bool3 IsEven (in ilong3 x);
-bool4 IsEven (in ilong4 x);
+bool IsEven (const in ilong x);
+bool2 IsEven (const in ilong2 x);
+bool3 IsEven (const in ilong3 x);
+bool4 IsEven (const in ilong4 x);
 #endif
 
 #ifdef GL_ARB_gpu_shader_int64
-bool IsEven (in ulong x);
-bool2 IsEven (in ulong2 x);
-bool3 IsEven (in ulong3 x);
-bool4 IsEven (in ulong4 x);
+bool IsEven (const in ulong x);
+bool2 IsEven (const in ulong2 x);
+bool3 IsEven (const in ulong3 x);
+bool4 IsEven (const in ulong4 x);
 #endif
 
 
 // ToUNorm, ToSNorm
-float ToUNorm (in float x);
-float2 ToUNorm (in float2 x);
-float3 ToUNorm (in float3 x);
-float4 ToUNorm (in float4 x);
+float ToUNorm (const in float x);
+float2 ToUNorm (const in float2 x);
+float3 ToUNorm (const in float3 x);
+float4 ToUNorm (const in float4 x);
 
-double ToUNorm (in double x);
-double2 ToUNorm (in double2 x);
-double3 ToUNorm (in double3 x);
-double4 ToUNorm (in double4 x);
+double ToUNorm (const in double x);
+double2 ToUNorm (const in double2 x);
+double3 ToUNorm (const in double3 x);
+double4 ToUNorm (const in double4 x);
 
-float ToSNorm (in float x);
-float2 ToSNorm (in float2 x);
-float3 ToSNorm (in float3 x);
-float4 ToSNorm (in float4 x);
+float ToSNorm (const in float x);
+float2 ToSNorm (const in float2 x);
+float3 ToSNorm (const in float3 x);
+float4 ToSNorm (const in float4 x);
 
-double ToSNorm (in double x);
-double2 ToSNorm (in double2 x);
-double3 ToSNorm (in double3 x);
-double4 ToSNorm (in double4 x);
+double ToSNorm (const in double x);
+double2 ToSNorm (const in double2 x);
+double3 ToSNorm (const in double3 x);
+double4 ToSNorm (const in double4 x);
 
 
 // InvLerp, BiLerp
-float InvLerp (in float x, in float y, in float interpolated);
-float2 InvLerp (in float2 x, in float2 y, in float interpolated);
-float3 InvLerp (in float3 x, in float3 y, in float interpolated);
-float4 InvLerp (in float4 x, in float4 y, in float interpolated);
+float InvLerp (const in float x, const in float y, const in float interpolated);
+float2 InvLerp (const in float2 x, const in float2 y, const in float interpolated);
+float3 InvLerp (const in float3 x, const in float3 y, const in float interpolated);
+float4 InvLerp (const in float4 x, const in float4 y, const in float interpolated);
 
-double InvLerp (in double x, in double y, in double interpolated);
-double2 InvLerp (in double2 x, in double2 y, in double interpolated);
-double3 InvLerp (in double3 x, in double3 y, in double interpolated);
-double4 InvLerp (in double4 x, in double4 y, in double interpolated);
+double InvLerp (const in double x, const in double y, const in double interpolated);
+double2 InvLerp (const in double2 x, const in double2 y, const in double interpolated);
+double3 InvLerp (const in double3 x, const in double3 y, const in double interpolated);
+double4 InvLerp (const in double4 x, const in double4 y, const in double interpolated);
 
-float BiLerp (in float v0, in float v1, in float v2, in float v3, in float2 factor);
-float2 BiLerp (in float2 v0, in float2 v1, in float2 v2, in float2 v3, in float2 factor);
-float3 BiLerp (in float3 v0, in float3 v1, in float3 v2, in float3 v3, in float2 factor);
-float4 BiLerp (in float4 v0, in float4 v1, in float4 v2, in float4 v3, in float2 factor);
+float BiLerp (const in float v0, const in float v1, const in float v2, const in float v3, const in float2 factor);
+float2 BiLerp (const in float2 v0, const in float2 v1, const in float2 v2, const in float2 v3, const in float2 factor);
+float3 BiLerp (const in float3 v0, const in float3 v1, const in float3 v2, const in float3 v3, const in float2 factor);
+float4 BiLerp (const in float4 v0, const in float4 v1, const in float4 v2, const in float4 v3, const in float2 factor);
 
-double BiLerp (in double v0, in double v1, in double v2, in double v3, in double2 factor);
-double2 BiLerp (in double2 v0, in double2 v1, in double2 v2, in double2 v3, in double2 factor);
-double3 BiLerp (in double3 v0, in double3 v1, in double3 v2, in double3 v3, in double2 factor);
-double4 BiLerp (in double4 v0, in double4 v1, in double4 v2, in double4 v3, in double2 factor);
+double BiLerp (const in double v0, const in double v1, const in double v2, const in double v3, const in double2 factor);
+double2 BiLerp (const in double2 v0, const in double2 v1, const in double2 v2, const in double2 v3, const in double2 factor);
+double3 BiLerp (const in double3 v0, const in double3 v1, const in double3 v2, const in double3 v3, const in double2 factor);
+double4 BiLerp (const in double4 v0, const in double4 v1, const in double4 v2, const in double4 v3, const in double2 factor);
+
+
+// LinearStep, BumpStep, SmoothBumpStep
+float LinearStep (const in float x, const in float edge0, const in float edge1);
+float2 LinearStep (const in float2 x, const in float2 edge0, const in float2 edge1);
+float2 LinearStep (const in float2 x, const in float edge0, const in float edge1);
+float3 LinearStep (const in float3 x, const in float3 edge0, const in float3 edge1);
+float3 LinearStep (const in float3 x, const in float edge0, const in float edge1);
+float4 LinearStep (const in float4 x, const in float4 edge0, const in float4 edge1);
+float4 LinearStep (const in float4 x, const in float edge0, const in float edge1);
+
+double LinearStep (const in double x, const in double edge0, const in double edge1);
+double2 LinearStep (const in double2 x, const in double2 edge0, const in double2 edge1);
+double2 LinearStep (const in double2 x, const in double edge0, const in double edge1);
+double3 LinearStep (const in double3 x, const in double3 edge0, const in double3 edge1);
+double3 LinearStep (const in double3 x, const in double edge0, const in double edge1);
+double4 LinearStep (const in double4 x, const in double4 edge0, const in double4 edge1);
+double4 LinearStep (const in double4 x, const in double edge0, const in double edge1);
+
+float BumpStep (const in float x, const in float edge0, const in float edge1);
+float2 BumpStep (const in float2 x, const in float2 edge0, const in float2 edge1);
+float2 BumpStep (const in float2 x, const in float edge0, const in float edge1);
+float3 BumpStep (const in float3 x, const in float3 edge0, const in float3 edge1);
+float3 BumpStep (const in float3 x, const in float edge0, const in float edge1);
+float4 BumpStep (const in float4 x, const in float4 edge0, const in float4 edge1);
+float4 BumpStep (const in float4 x, const in float edge0, const in float edge1);
+
+double BumpStep (const in double x, const in double edge0, const in double edge1);
+double2 BumpStep (const in double2 x, const in double2 edge0, const in double2 edge1);
+double2 BumpStep (const in double2 x, const in double edge0, const in double edge1);
+double3 BumpStep (const in double3 x, const in double3 edge0, const in double3 edge1);
+double3 BumpStep (const in double3 x, const in double edge0, const in double edge1);
+double4 BumpStep (const in double4 x, const in double4 edge0, const in double4 edge1);
+double4 BumpStep (const in double4 x, const in double edge0, const in double edge1);
+
+float SmoothBumpStep (const in float x, const in float edge0, const in float edge1);
+float2 SmoothBumpStep (const in float2 x, const in float2 edge0, const in float2 edge1);
+float2 SmoothBumpStep (const in float2 x, const in float edge0, const in float edge1);
+float3 SmoothBumpStep (const in float3 x, const in float3 edge0, const in float3 edge1);
+float3 SmoothBumpStep (const in float3 x, const in float edge0, const in float edge1);
+float4 SmoothBumpStep (const in float4 x, const in float4 edge0, const in float4 edge1);
+float4 SmoothBumpStep (const in float4 x, const in float edge0, const in float edge1);
+
+double SmoothBumpStep (const in double x, const in double edge0, const in double edge1);
+double2 SmoothBumpStep (const in double2 x, const in double2 edge0, const in double2 edge1);
+double2 SmoothBumpStep (const in double2 x, const in double edge0, const in double edge1);
+double3 SmoothBumpStep (const in double3 x, const in double3 edge0, const in double3 edge1);
+double3 SmoothBumpStep (const in double3 x, const in double edge0, const in double edge1);
+double4 SmoothBumpStep (const in double4 x, const in double4 edge0, const in double4 edge1);
+double4 SmoothBumpStep (const in double4 x, const in double edge0, const in double edge1);
 
 
 
@@ -477,240 +426,73 @@ float Const_InvLnOf10F ()  { return float( 0.4342944819032518 ); }
 double Const_InvLnOf10D ()  { return double( 0.4342944819032518LF ); }
 
 // Trigonometry
-float2  SinCos (in float x)     { return float2( Sin(x), Cos(x) ); }
-float2  ASinCos (in float x)    { return float2( ASin(x), ACos(x) ); }
-float2  SinCosH (in float x)    { return float2( SinH(x), CosH(x) ); }
-float2  ASinCosH (in float x)   { return float2( ASinH(x), ACosH(x) ); }
+float2  SinCos (const in float x)     { return float2( Sin(x), Cos(x) ); }
+float2  ASinCos (const in float x)    { return float2( ASin(x), ACos(x) ); }
+float2  SinCosH (const in float x)    { return float2( SinH(x), CosH(x) ); }
+float2  ASinCosH (const in float x)   { return float2( ASinH(x), ACosH(x) ); }
 
-float CoTan (in float x)  { return SafeDiv( float(1.0), Tan( x ), 0.0 ); }
-float2 CoTan (in float2 x)  { return SafeDiv( float2(1.0), Tan( x ), 0.0 ); }
-float3 CoTan (in float3 x)  { return SafeDiv( float3(1.0), Tan( x ), 0.0 ); }
-float4 CoTan (in float4 x)  { return SafeDiv( float4(1.0), Tan( x ), 0.0 ); }
+float CoTan (const in float x)  { return SafeDiv( float(1.0), Tan( x ), 0.0 ); }
+float2 CoTan (const in float2 x)  { return SafeDiv( float2(1.0), Tan( x ), 0.0 ); }
+float3 CoTan (const in float3 x)  { return SafeDiv( float3(1.0), Tan( x ), 0.0 ); }
+float4 CoTan (const in float4 x)  { return SafeDiv( float4(1.0), Tan( x ), 0.0 ); }
 
-float CoTanH (in float x)  { return SafeDiv( float(1.0), TanH( x ), 0.0 ); }
-float2 CoTanH (in float2 x)  { return SafeDiv( float2(1.0), TanH( x ), 0.0 ); }
-float3 CoTanH (in float3 x)  { return SafeDiv( float3(1.0), TanH( x ), 0.0 ); }
-float4 CoTanH (in float4 x)  { return SafeDiv( float4(1.0), TanH( x ), 0.0 ); }
+float CoTanH (const in float x)  { return SafeDiv( float(1.0), TanH( x ), 0.0 ); }
+float2 CoTanH (const in float2 x)  { return SafeDiv( float2(1.0), TanH( x ), 0.0 ); }
+float3 CoTanH (const in float3 x)  { return SafeDiv( float3(1.0), TanH( x ), 0.0 ); }
+float4 CoTanH (const in float4 x)  { return SafeDiv( float4(1.0), TanH( x ), 0.0 ); }
 
-float ACoTan (in float x)  { return SafeDiv( float(1.0), ATan( x ), 0.0 ); }
-float2 ACoTan (in float2 x)  { return SafeDiv( float2(1.0), ATan( x ), 0.0 ); }
-float3 ACoTan (in float3 x)  { return SafeDiv( float3(1.0), ATan( x ), 0.0 ); }
-float4 ACoTan (in float4 x)  { return SafeDiv( float4(1.0), ATan( x ), 0.0 ); }
+float ACoTan (const in float x)  { return SafeDiv( float(1.0), ATan( x ), 0.0 ); }
+float2 ACoTan (const in float2 x)  { return SafeDiv( float2(1.0), ATan( x ), 0.0 ); }
+float3 ACoTan (const in float3 x)  { return SafeDiv( float3(1.0), ATan( x ), 0.0 ); }
+float4 ACoTan (const in float4 x)  { return SafeDiv( float4(1.0), ATan( x ), 0.0 ); }
 
-float ACoTanH (in float x)  { return SafeDiv( float(1.0), ATanH( x ), 0.0 ); }
-float2 ACoTanH (in float2 x)  { return SafeDiv( float2(1.0), ATanH( x ), 0.0 ); }
-float3 ACoTanH (in float3 x)  { return SafeDiv( float3(1.0), ATanH( x ), 0.0 ); }
-float4 ACoTanH (in float4 x)  { return SafeDiv( float4(1.0), ATanH( x ), 0.0 ); }
+float ACoTanH (const in float x)  { return SafeDiv( float(1.0), ATanH( x ), 0.0 ); }
+float2 ACoTanH (const in float2 x)  { return SafeDiv( float2(1.0), ATanH( x ), 0.0 ); }
+float3 ACoTanH (const in float3 x)  { return SafeDiv( float3(1.0), ATanH( x ), 0.0 ); }
+float4 ACoTanH (const in float4 x)  { return SafeDiv( float4(1.0), ATanH( x ), 0.0 ); }
 
 
 // Sign (1 or -1)
-float Sign (in float x)  { return  x < 0.0 ? -1.0 : 1.0; }
-float2 Sign (in float2 x)  { return float2( Sign(x[0]), Sign(x[1]) ); }
-float3 Sign (in float3 x)  { return float3( Sign(x[0]), Sign(x[1]), Sign(x[2]) ); }
-float4 Sign (in float4 x)  { return float4( Sign(x[0]), Sign(x[1]), Sign(x[2]), Sign(x[3]) ); }
+float Sign (const in float x)  { return  x < 0.0 ? -1.0 : 1.0; }
+float2 Sign (const in float2 x)  { return float2( Sign(x[0]), Sign(x[1]) ); }
+float3 Sign (const in float3 x)  { return float3( Sign(x[0]), Sign(x[1]), Sign(x[2]) ); }
+float4 Sign (const in float4 x)  { return float4( Sign(x[0]), Sign(x[1]), Sign(x[2]), Sign(x[3]) ); }
 
-double Sign (in double x)  { return  x < 0.0 ? -1.0 : 1.0; }
-double2 Sign (in double2 x)  { return double2( Sign(x[0]), Sign(x[1]) ); }
-double3 Sign (in double3 x)  { return double3( Sign(x[0]), Sign(x[1]), Sign(x[2]) ); }
-double4 Sign (in double4 x)  { return double4( Sign(x[0]), Sign(x[1]), Sign(x[2]), Sign(x[3]) ); }
+double Sign (const in double x)  { return  x < 0.0 ? -1.0 : 1.0; }
+double2 Sign (const in double2 x)  { return double2( Sign(x[0]), Sign(x[1]) ); }
+double3 Sign (const in double3 x)  { return double3( Sign(x[0]), Sign(x[1]), Sign(x[2]) ); }
+double4 Sign (const in double4 x)  { return double4( Sign(x[0]), Sign(x[1]), Sign(x[2]), Sign(x[3]) ); }
 
-int Sign (in int x)  { return  x < 0 ? -1 : 1; }
-int2 Sign (in int2 x)  { return int2( Sign(x[0]), Sign(x[1]) ); }
-int3 Sign (in int3 x)  { return int3( Sign(x[0]), Sign(x[1]), Sign(x[2]) ); }
-int4 Sign (in int4 x)  { return int4( Sign(x[0]), Sign(x[1]), Sign(x[2]), Sign(x[3]) ); }
-
-#ifdef GL_ARB_gpu_shader_int64
-ilong Sign (in ilong x)  { return  x < 0 ? -1 : 1; }
-ilong2 Sign (in ilong2 x)  { return ilong2( Sign(x[0]), Sign(x[1]) ); }
-ilong3 Sign (in ilong3 x)  { return ilong3( Sign(x[0]), Sign(x[1]), Sign(x[2]) ); }
-ilong4 Sign (in ilong4 x)  { return ilong4( Sign(x[0]), Sign(x[1]), Sign(x[2]), Sign(x[3]) ); }
-#endif
+int Sign (const in int x)  { return  x < 0 ? -1 : 1; }
+int2 Sign (const in int2 x)  { return int2( Sign(x[0]), Sign(x[1]) ); }
+int3 Sign (const in int3 x)  { return int3( Sign(x[0]), Sign(x[1]), Sign(x[2]) ); }
+int4 Sign (const in int4 x)  { return int4( Sign(x[0]), Sign(x[1]), Sign(x[2]), Sign(x[3]) ); }
 
 #ifdef GL_ARB_gpu_shader_int64
-ulong Sign (in ulong x)  { return  x < 0 ? -1 : 1; }
-ulong2 Sign (in ulong2 x)  { return ulong2( Sign(x[0]), Sign(x[1]) ); }
-ulong3 Sign (in ulong3 x)  { return ulong3( Sign(x[0]), Sign(x[1]), Sign(x[2]) ); }
-ulong4 Sign (in ulong4 x)  { return ulong4( Sign(x[0]), Sign(x[1]), Sign(x[2]), Sign(x[3]) ); }
+ilong Sign (const in ilong x)  { return  x < 0 ? -1 : 1; }
+ilong2 Sign (const in ilong2 x)  { return ilong2( Sign(x[0]), Sign(x[1]) ); }
+ilong3 Sign (const in ilong3 x)  { return ilong3( Sign(x[0]), Sign(x[1]), Sign(x[2]) ); }
+ilong4 Sign (const in ilong4 x)  { return ilong4( Sign(x[0]), Sign(x[1]), Sign(x[2]), Sign(x[3]) ); }
 #endif
 
-
-// IsZero, Equals (with error)
-float  EpsilonF ()  { return 1.0e-5; }
-double EpsilonD ()  { return 1.0e-7LF; }
-
-real   Epsilon ()
-{
-# ifdef GX_FP_32
-	return EpsilonF();
-# elif GX_FP_64
-	return EpsilonD();
-# endif
-}
-
-bool IsZero (in float x)  { return Abs(x) < 1.0e-5; }
-bool2 IsZero (in float2 x)  { return bool2( IsZero(x[0]), IsZero(x[1]) ); }
-bool3 IsZero (in float3 x)  { return bool3( IsZero(x[0]), IsZero(x[1]), IsZero(x[2]) ); }
-bool4 IsZero (in float4 x)  { return bool4( IsZero(x[0]), IsZero(x[1]), IsZero(x[2]), IsZero(x[3]) ); }
-
-bool IsZero (in double x)  { return Abs(x) < 1.0e-7LF; }
-bool2 IsZero (in double2 x)  { return bool2( IsZero(x[0]), IsZero(x[1]) ); }
-bool3 IsZero (in double3 x)  { return bool3( IsZero(x[0]), IsZero(x[1]), IsZero(x[2]) ); }
-bool4 IsZero (in double4 x)  { return bool4( IsZero(x[0]), IsZero(x[1]), IsZero(x[2]), IsZero(x[3]) ); }
-
-bool IsZero (in int x)  { return Equals( x, int(0) ); }
-bool2 IsZero (in int2 x)  { return Equals( x, int2(0) ); }
-bool3 IsZero (in int3 x)  { return Equals( x, int3(0) ); }
-bool4 IsZero (in int4 x)  { return Equals( x, int4(0) ); }
-
-bool IsZero (in uint x)  { return Equals( x, uint(0) ); }
-bool2 IsZero (in uint2 x)  { return Equals( x, uint2(0) ); }
-bool3 IsZero (in uint3 x)  { return Equals( x, uint3(0) ); }
-bool4 IsZero (in uint4 x)  { return Equals( x, uint4(0) ); }
-
-bool IsZero (in bool x)  { return Equals( x, bool(0) ); }
-bool2 IsZero (in bool2 x)  { return Equals( x, bool2(0) ); }
-bool3 IsZero (in bool3 x)  { return Equals( x, bool3(0) ); }
-bool4 IsZero (in bool4 x)  { return Equals( x, bool4(0) ); }
-
-#ifdef GL_ARB_gpu_shader_int64
-bool IsZero (in ilong x)  { return Equals( x, ilong(0) ); }
-bool2 IsZero (in ilong2 x)  { return Equals( x, ilong2(0) ); }
-bool3 IsZero (in ilong3 x)  { return Equals( x, ilong3(0) ); }
-bool4 IsZero (in ilong4 x)  { return Equals( x, ilong4(0) ); }
-#endif
-
-#ifdef GL_ARB_gpu_shader_int64
-bool IsZero (in ulong x)  { return Equals( x, ulong(0) ); }
-bool2 IsZero (in ulong2 x)  { return Equals( x, ulong2(0) ); }
-bool3 IsZero (in ulong3 x)  { return Equals( x, ulong3(0) ); }
-bool4 IsZero (in ulong4 x)  { return Equals( x, ulong4(0) ); }
-#endif
-
-bool Equals (in float left, in float right)  { return Equals( left, right, 10 ); }
-bool2 Equals (in float2 left, in float2 right)  { return Equals( left, right, 10 ); }
-bool3 Equals (in float3 left, in float3 right)  { return Equals( left, right, 10 ); }
-bool4 Equals (in float4 left, in float4 right)  { return Equals( left, right, 10 ); }
-
-bool Equals (in double left, in double right)  { return Equals( left, right, 42 ); }
-bool2 Equals (in double2 left, in double2 right)  { return Equals( left, right, 42 ); }
-bool3 Equals (in double3 left, in double3 right)  { return Equals( left, right, 42 ); }
-bool4 Equals (in double4 left, in double4 right)  { return Equals( left, right, 42 ); }
-
-bool Equals (in int left, in int right)  { return left == right; }
-bool2 Equals (in int2 left, in int2 right)  { return equal( left, right ); }
-bool3 Equals (in int3 left, in int3 right)  { return equal( left, right ); }
-bool4 Equals (in int4 left, in int4 right)  { return equal( left, right ); }
-
-bool Equals (in uint left, in uint right)  { return left == right; }
-bool2 Equals (in uint2 left, in uint2 right)  { return equal( left, right ); }
-bool3 Equals (in uint3 left, in uint3 right)  { return equal( left, right ); }
-bool4 Equals (in uint4 left, in uint4 right)  { return equal( left, right ); }
-
-bool Equals (in bool left, in bool right)  { return left == right; }
-bool2 Equals (in bool2 left, in bool2 right)  { return equal( left, right ); }
-bool3 Equals (in bool3 left, in bool3 right)  { return equal( left, right ); }
-bool4 Equals (in bool4 left, in bool4 right)  { return equal( left, right ); }
-
-#ifdef GL_ARB_gpu_shader_int64
-bool Equals (in ilong left, in ilong right)  { return left == right; }
-bool2 Equals (in ilong2 left, in ilong2 right)  { return equal( left, right ); }
-bool3 Equals (in ilong3 left, in ilong3 right)  { return equal( left, right ); }
-bool4 Equals (in ilong4 left, in ilong4 right)  { return equal( left, right ); }
-#endif
-
-#ifdef GL_ARB_gpu_shader_int64
-bool Equals (in ulong left, in ulong right)  { return left == right; }
-bool2 Equals (in ulong2 left, in ulong2 right)  { return equal( left, right ); }
-bool3 Equals (in ulong3 left, in ulong3 right)  { return equal( left, right ); }
-bool4 Equals (in ulong4 left, in ulong4 right)  { return equal( left, right ); }
-#endif
-
-bool Equals (in float left, in float right, in uint accuracyInBits)
-{
-	int ileft = floatBitsToInt(left);
-	int iright = floatBitsToInt(right);
-	ileft = ileft < 0 ? (-2147483648 - ileft) : ileft;
-	iright = iright < 0 ? (-2147483648 - iright) : iright;
-	return Abs( ileft - iright ) <= (1 << (accuracyInBits & 31));
-}
-
-bool2 Equals (in float2 left, in float2 right, in uint accuracyInBits)
-{
-	return bool2(
-		Equals( left[0], right[0], accuracyInBits ),
-		Equals( left[1], right[1], accuracyInBits ) );
-}
-
-bool3 Equals (in float3 left, in float3 right, in uint accuracyInBits)
-{
-	return bool3(
-		Equals( left[0], right[0], accuracyInBits ),
-		Equals( left[1], right[1], accuracyInBits ),
-		Equals( left[2], right[2], accuracyInBits ) );
-}
-
-bool4 Equals (in float4 left, in float4 right, in uint accuracyInBits)
-{
-	return bool4(
-		Equals( left[0], right[0], accuracyInBits ),
-		Equals( left[1], right[1], accuracyInBits ),
-		Equals( left[2], right[2], accuracyInBits ),
-		Equals( left[3], right[3], accuracyInBits ) );
-}
-
-#ifdef GL_ARB_gpu_shader_int64
-bool Equals (in double left, in double right, in uint accuracyInBits)
-{
-	ilong ileft = doubleBitsToInt64(left);
-	ilong iright = doubleBitsToInt64(right);
-	ileft = ileft < 0 ? (-9223372036854775808L - ileft) : ileft;
-	iright = iright < 0 ? (-9223372036854775808L - iright) : iright;
-	return Abs( ileft - iright ) <= (1 << (accuracyInBits & 63));
-}
-
-bool2 Equals (in double2 left, in double2 right, in uint accuracyInBits)
-{
-	return bool2(
-		Equals( left[0], right[0], accuracyInBits ),
-		Equals( left[1], right[1], accuracyInBits ) );
-}
-
-bool3 Equals (in double3 left, in double3 right, in uint accuracyInBits)
-{
-	return bool3(
-		Equals( left[0], right[0], accuracyInBits ),
-		Equals( left[1], right[1], accuracyInBits ),
-		Equals( left[2], right[2], accuracyInBits ) );
-}
-
-bool4 Equals (in double4 left, in double4 right, in uint accuracyInBits)
-{
-	return bool4(
-		Equals( left[0], right[0], accuracyInBits ),
-		Equals( left[1], right[1], accuracyInBits ),
-		Equals( left[2], right[2], accuracyInBits ),
-		Equals( left[3], right[3], accuracyInBits ) );
-}
-
-#endif
 
 // ClampOut
-float ClampOut (in float x, in float minVal, in float maxVal)
+float ClampOut (const in float x, const in float minVal, const in float maxVal)
 {
 	float mid = (minVal + maxVal) * 0.5;
 	return x < mid ? (x < minVal ? x : minVal) : (x > maxVal ? x : maxVal);
 }
 
-float2 ClampOut (in float2 x, in float minVal, in float maxVal)  { return ClampOut( x, float2( minVal ), float2( maxVal ) ); }
-float2 ClampOut (in float2 x, in float2 minVal, in float2 maxVal)
+float2 ClampOut (const in float2 x, const in float minVal, const in float maxVal)  { return ClampOut( x, float2( minVal ), float2( maxVal ) ); }
+float2 ClampOut (const in float2 x, const in float2 minVal, const in float2 maxVal)
 {
 	return float2(
 		ClampOut( x[0], minVal[0], maxVal[0] ),
 		ClampOut( x[1], minVal[1], maxVal[1] ) );
 }
 
-float3 ClampOut (in float3 x, in float minVal, in float maxVal)  { return ClampOut( x, float3( minVal ), float3( maxVal ) ); }
-float3 ClampOut (in float3 x, in float3 minVal, in float3 maxVal)
+float3 ClampOut (const in float3 x, const in float minVal, const in float maxVal)  { return ClampOut( x, float3( minVal ), float3( maxVal ) ); }
+float3 ClampOut (const in float3 x, const in float3 minVal, const in float3 maxVal)
 {
 	return float3(
 		ClampOut( x[0], minVal[0], maxVal[0] ),
@@ -718,8 +500,8 @@ float3 ClampOut (in float3 x, in float3 minVal, in float3 maxVal)
 		ClampOut( x[2], minVal[2], maxVal[2] ) );
 }
 
-float4 ClampOut (in float4 x, in float minVal, in float maxVal)  { return ClampOut( x, float4( minVal ), float4( maxVal ) ); }
-float4 ClampOut (in float4 x, in float4 minVal, in float4 maxVal)
+float4 ClampOut (const in float4 x, const in float minVal, const in float maxVal)  { return ClampOut( x, float4( minVal ), float4( maxVal ) ); }
+float4 ClampOut (const in float4 x, const in float4 minVal, const in float4 maxVal)
 {
 	return float4(
 		ClampOut( x[0], minVal[0], maxVal[0] ),
@@ -728,22 +510,22 @@ float4 ClampOut (in float4 x, in float4 minVal, in float4 maxVal)
 		ClampOut( x[3], minVal[3], maxVal[3] ) );
 }
 
-double ClampOut (in double x, in double minVal, in double maxVal)
+double ClampOut (const in double x, const in double minVal, const in double maxVal)
 {
 	double mid = (minVal + maxVal) * 0.5;
 	return x < mid ? (x < minVal ? x : minVal) : (x > maxVal ? x : maxVal);
 }
 
-double2 ClampOut (in double2 x, in double minVal, in double maxVal)  { return ClampOut( x, double2( minVal ), double2( maxVal ) ); }
-double2 ClampOut (in double2 x, in double2 minVal, in double2 maxVal)
+double2 ClampOut (const in double2 x, const in double minVal, const in double maxVal)  { return ClampOut( x, double2( minVal ), double2( maxVal ) ); }
+double2 ClampOut (const in double2 x, const in double2 minVal, const in double2 maxVal)
 {
 	return double2(
 		ClampOut( x[0], minVal[0], maxVal[0] ),
 		ClampOut( x[1], minVal[1], maxVal[1] ) );
 }
 
-double3 ClampOut (in double3 x, in double minVal, in double maxVal)  { return ClampOut( x, double3( minVal ), double3( maxVal ) ); }
-double3 ClampOut (in double3 x, in double3 minVal, in double3 maxVal)
+double3 ClampOut (const in double3 x, const in double minVal, const in double maxVal)  { return ClampOut( x, double3( minVal ), double3( maxVal ) ); }
+double3 ClampOut (const in double3 x, const in double3 minVal, const in double3 maxVal)
 {
 	return double3(
 		ClampOut( x[0], minVal[0], maxVal[0] ),
@@ -751,8 +533,8 @@ double3 ClampOut (in double3 x, in double3 minVal, in double3 maxVal)
 		ClampOut( x[2], minVal[2], maxVal[2] ) );
 }
 
-double4 ClampOut (in double4 x, in double minVal, in double maxVal)  { return ClampOut( x, double4( minVal ), double4( maxVal ) ); }
-double4 ClampOut (in double4 x, in double4 minVal, in double4 maxVal)
+double4 ClampOut (const in double4 x, const in double minVal, const in double maxVal)  { return ClampOut( x, double4( minVal ), double4( maxVal ) ); }
+double4 ClampOut (const in double4 x, const in double4 minVal, const in double4 maxVal)
 {
 	return double4(
 		ClampOut( x[0], minVal[0], maxVal[0] ),
@@ -761,22 +543,22 @@ double4 ClampOut (in double4 x, in double4 minVal, in double4 maxVal)
 		ClampOut( x[3], minVal[3], maxVal[3] ) );
 }
 
-int ClampOut (in int x, in int minVal, in int maxVal)
+int ClampOut (const in int x, const in int minVal, const in int maxVal)
 {
 	int mid = (minVal+1)/2 + (maxVal+1)/2;
 	return x < mid ? (x < minVal ? x : minVal) : (x > maxVal ? x : maxVal);
 }
 
-int2 ClampOut (in int2 x, in int minVal, in int maxVal)  { return ClampOut( x, int2( minVal ), int2( maxVal ) ); }
-int2 ClampOut (in int2 x, in int2 minVal, in int2 maxVal)
+int2 ClampOut (const in int2 x, const in int minVal, const in int maxVal)  { return ClampOut( x, int2( minVal ), int2( maxVal ) ); }
+int2 ClampOut (const in int2 x, const in int2 minVal, const in int2 maxVal)
 {
 	return int2(
 		ClampOut( x[0], minVal[0], maxVal[0] ),
 		ClampOut( x[1], minVal[1], maxVal[1] ) );
 }
 
-int3 ClampOut (in int3 x, in int minVal, in int maxVal)  { return ClampOut( x, int3( minVal ), int3( maxVal ) ); }
-int3 ClampOut (in int3 x, in int3 minVal, in int3 maxVal)
+int3 ClampOut (const in int3 x, const in int minVal, const in int maxVal)  { return ClampOut( x, int3( minVal ), int3( maxVal ) ); }
+int3 ClampOut (const in int3 x, const in int3 minVal, const in int3 maxVal)
 {
 	return int3(
 		ClampOut( x[0], minVal[0], maxVal[0] ),
@@ -784,8 +566,8 @@ int3 ClampOut (in int3 x, in int3 minVal, in int3 maxVal)
 		ClampOut( x[2], minVal[2], maxVal[2] ) );
 }
 
-int4 ClampOut (in int4 x, in int minVal, in int maxVal)  { return ClampOut( x, int4( minVal ), int4( maxVal ) ); }
-int4 ClampOut (in int4 x, in int4 minVal, in int4 maxVal)
+int4 ClampOut (const in int4 x, const in int minVal, const in int maxVal)  { return ClampOut( x, int4( minVal ), int4( maxVal ) ); }
+int4 ClampOut (const in int4 x, const in int4 minVal, const in int4 maxVal)
 {
 	return int4(
 		ClampOut( x[0], minVal[0], maxVal[0] ),
@@ -794,22 +576,22 @@ int4 ClampOut (in int4 x, in int4 minVal, in int4 maxVal)
 		ClampOut( x[3], minVal[3], maxVal[3] ) );
 }
 
-uint ClampOut (in uint x, in uint minVal, in uint maxVal)
+uint ClampOut (const in uint x, const in uint minVal, const in uint maxVal)
 {
 	uint mid = (minVal+1)/2 + (maxVal+1)/2;
 	return x < mid ? (x < minVal ? x : minVal) : (x > maxVal ? x : maxVal);
 }
 
-uint2 ClampOut (in uint2 x, in uint minVal, in uint maxVal)  { return ClampOut( x, uint2( minVal ), uint2( maxVal ) ); }
-uint2 ClampOut (in uint2 x, in uint2 minVal, in uint2 maxVal)
+uint2 ClampOut (const in uint2 x, const in uint minVal, const in uint maxVal)  { return ClampOut( x, uint2( minVal ), uint2( maxVal ) ); }
+uint2 ClampOut (const in uint2 x, const in uint2 minVal, const in uint2 maxVal)
 {
 	return uint2(
 		ClampOut( x[0], minVal[0], maxVal[0] ),
 		ClampOut( x[1], minVal[1], maxVal[1] ) );
 }
 
-uint3 ClampOut (in uint3 x, in uint minVal, in uint maxVal)  { return ClampOut( x, uint3( minVal ), uint3( maxVal ) ); }
-uint3 ClampOut (in uint3 x, in uint3 minVal, in uint3 maxVal)
+uint3 ClampOut (const in uint3 x, const in uint minVal, const in uint maxVal)  { return ClampOut( x, uint3( minVal ), uint3( maxVal ) ); }
+uint3 ClampOut (const in uint3 x, const in uint3 minVal, const in uint3 maxVal)
 {
 	return uint3(
 		ClampOut( x[0], minVal[0], maxVal[0] ),
@@ -817,8 +599,8 @@ uint3 ClampOut (in uint3 x, in uint3 minVal, in uint3 maxVal)
 		ClampOut( x[2], minVal[2], maxVal[2] ) );
 }
 
-uint4 ClampOut (in uint4 x, in uint minVal, in uint maxVal)  { return ClampOut( x, uint4( minVal ), uint4( maxVal ) ); }
-uint4 ClampOut (in uint4 x, in uint4 minVal, in uint4 maxVal)
+uint4 ClampOut (const in uint4 x, const in uint minVal, const in uint maxVal)  { return ClampOut( x, uint4( minVal ), uint4( maxVal ) ); }
+uint4 ClampOut (const in uint4 x, const in uint4 minVal, const in uint4 maxVal)
 {
 	return uint4(
 		ClampOut( x[0], minVal[0], maxVal[0] ),
@@ -828,22 +610,22 @@ uint4 ClampOut (in uint4 x, in uint4 minVal, in uint4 maxVal)
 }
 
 #ifdef GL_ARB_gpu_shader_int64
-ilong ClampOut (in ilong x, in ilong minVal, in ilong maxVal)
+ilong ClampOut (const in ilong x, const in ilong minVal, const in ilong maxVal)
 {
 	ilong mid = (minVal+1)/2 + (maxVal+1)/2;
 	return x < mid ? (x < minVal ? x : minVal) : (x > maxVal ? x : maxVal);
 }
 
-ilong2 ClampOut (in ilong2 x, in ilong minVal, in ilong maxVal)  { return ClampOut( x, ilong2( minVal ), ilong2( maxVal ) ); }
-ilong2 ClampOut (in ilong2 x, in ilong2 minVal, in ilong2 maxVal)
+ilong2 ClampOut (const in ilong2 x, const in ilong minVal, const in ilong maxVal)  { return ClampOut( x, ilong2( minVal ), ilong2( maxVal ) ); }
+ilong2 ClampOut (const in ilong2 x, const in ilong2 minVal, const in ilong2 maxVal)
 {
 	return ilong2(
 		ClampOut( x[0], minVal[0], maxVal[0] ),
 		ClampOut( x[1], minVal[1], maxVal[1] ) );
 }
 
-ilong3 ClampOut (in ilong3 x, in ilong minVal, in ilong maxVal)  { return ClampOut( x, ilong3( minVal ), ilong3( maxVal ) ); }
-ilong3 ClampOut (in ilong3 x, in ilong3 minVal, in ilong3 maxVal)
+ilong3 ClampOut (const in ilong3 x, const in ilong minVal, const in ilong maxVal)  { return ClampOut( x, ilong3( minVal ), ilong3( maxVal ) ); }
+ilong3 ClampOut (const in ilong3 x, const in ilong3 minVal, const in ilong3 maxVal)
 {
 	return ilong3(
 		ClampOut( x[0], minVal[0], maxVal[0] ),
@@ -851,8 +633,8 @@ ilong3 ClampOut (in ilong3 x, in ilong3 minVal, in ilong3 maxVal)
 		ClampOut( x[2], minVal[2], maxVal[2] ) );
 }
 
-ilong4 ClampOut (in ilong4 x, in ilong minVal, in ilong maxVal)  { return ClampOut( x, ilong4( minVal ), ilong4( maxVal ) ); }
-ilong4 ClampOut (in ilong4 x, in ilong4 minVal, in ilong4 maxVal)
+ilong4 ClampOut (const in ilong4 x, const in ilong minVal, const in ilong maxVal)  { return ClampOut( x, ilong4( minVal ), ilong4( maxVal ) ); }
+ilong4 ClampOut (const in ilong4 x, const in ilong4 minVal, const in ilong4 maxVal)
 {
 	return ilong4(
 		ClampOut( x[0], minVal[0], maxVal[0] ),
@@ -863,22 +645,22 @@ ilong4 ClampOut (in ilong4 x, in ilong4 minVal, in ilong4 maxVal)
 
 #endif
 #ifdef GL_ARB_gpu_shader_int64
-ulong ClampOut (in ulong x, in ulong minVal, in ulong maxVal)
+ulong ClampOut (const in ulong x, const in ulong minVal, const in ulong maxVal)
 {
 	ulong mid = (minVal+1)/2 + (maxVal+1)/2;
 	return x < mid ? (x < minVal ? x : minVal) : (x > maxVal ? x : maxVal);
 }
 
-ulong2 ClampOut (in ulong2 x, in ulong minVal, in ulong maxVal)  { return ClampOut( x, ulong2( minVal ), ulong2( maxVal ) ); }
-ulong2 ClampOut (in ulong2 x, in ulong2 minVal, in ulong2 maxVal)
+ulong2 ClampOut (const in ulong2 x, const in ulong minVal, const in ulong maxVal)  { return ClampOut( x, ulong2( minVal ), ulong2( maxVal ) ); }
+ulong2 ClampOut (const in ulong2 x, const in ulong2 minVal, const in ulong2 maxVal)
 {
 	return ulong2(
 		ClampOut( x[0], minVal[0], maxVal[0] ),
 		ClampOut( x[1], minVal[1], maxVal[1] ) );
 }
 
-ulong3 ClampOut (in ulong3 x, in ulong minVal, in ulong maxVal)  { return ClampOut( x, ulong3( minVal ), ulong3( maxVal ) ); }
-ulong3 ClampOut (in ulong3 x, in ulong3 minVal, in ulong3 maxVal)
+ulong3 ClampOut (const in ulong3 x, const in ulong minVal, const in ulong maxVal)  { return ClampOut( x, ulong3( minVal ), ulong3( maxVal ) ); }
+ulong3 ClampOut (const in ulong3 x, const in ulong3 minVal, const in ulong3 maxVal)
 {
 	return ulong3(
 		ClampOut( x[0], minVal[0], maxVal[0] ),
@@ -886,8 +668,8 @@ ulong3 ClampOut (in ulong3 x, in ulong3 minVal, in ulong3 maxVal)
 		ClampOut( x[2], minVal[2], maxVal[2] ) );
 }
 
-ulong4 ClampOut (in ulong4 x, in ulong minVal, in ulong maxVal)  { return ClampOut( x, ulong4( minVal ), ulong4( maxVal ) ); }
-ulong4 ClampOut (in ulong4 x, in ulong4 minVal, in ulong4 maxVal)
+ulong4 ClampOut (const in ulong4 x, const in ulong minVal, const in ulong maxVal)  { return ClampOut( x, ulong4( minVal ), ulong4( maxVal ) ); }
+ulong4 ClampOut (const in ulong4 x, const in ulong4 minVal, const in ulong4 maxVal)
 {
 	return ulong4(
 		ClampOut( x[0], minVal[0], maxVal[0] ),
@@ -899,7 +681,7 @@ ulong4 ClampOut (in ulong4 x, in ulong4 minVal, in ulong4 maxVal)
 #endif
 
 // Wrap
-float Wrap (in float x, in float minVal, in float maxVal)
+float Wrap (const in float x, const in float minVal, const in float maxVal)
 {
 	if ( maxVal < minVal ) return minVal;
 	float size = maxVal - minVal;
@@ -907,16 +689,16 @@ float Wrap (in float x, in float minVal, in float maxVal)
 	if ( res < minVal ) return res + size;
 	return res;
 }
-float2 Wrap (in float2 x, in float minVal, in float maxVal)  { return Wrap( x, float2( minVal ), float2( maxVal ) ); }
-float2 Wrap (in float2 x, in float2 minVal, in float2 maxVal)
+float2 Wrap (const in float2 x, const in float minVal, const in float maxVal)  { return Wrap( x, float2( minVal ), float2( maxVal ) ); }
+float2 Wrap (const in float2 x, const in float2 minVal, const in float2 maxVal)
 {
 	return float2(
 		Wrap( x[0], minVal[0], maxVal[0] ),
 		Wrap( x[1], minVal[1], maxVal[1] ) );
 }
 
-float3 Wrap (in float3 x, in float minVal, in float maxVal)  { return Wrap( x, float3( minVal ), float3( maxVal ) ); }
-float3 Wrap (in float3 x, in float3 minVal, in float3 maxVal)
+float3 Wrap (const in float3 x, const in float minVal, const in float maxVal)  { return Wrap( x, float3( minVal ), float3( maxVal ) ); }
+float3 Wrap (const in float3 x, const in float3 minVal, const in float3 maxVal)
 {
 	return float3(
 		Wrap( x[0], minVal[0], maxVal[0] ),
@@ -924,8 +706,8 @@ float3 Wrap (in float3 x, in float3 minVal, in float3 maxVal)
 		Wrap( x[2], minVal[2], maxVal[2] ) );
 }
 
-float4 Wrap (in float4 x, in float minVal, in float maxVal)  { return Wrap( x, float4( minVal ), float4( maxVal ) ); }
-float4 Wrap (in float4 x, in float4 minVal, in float4 maxVal)
+float4 Wrap (const in float4 x, const in float minVal, const in float maxVal)  { return Wrap( x, float4( minVal ), float4( maxVal ) ); }
+float4 Wrap (const in float4 x, const in float4 minVal, const in float4 maxVal)
 {
 	return float4(
 		Wrap( x[0], minVal[0], maxVal[0] ),
@@ -935,7 +717,7 @@ float4 Wrap (in float4 x, in float4 minVal, in float4 maxVal)
 }
 
 
-double Wrap (in double x, in double minVal, in double maxVal)
+double Wrap (const in double x, const in double minVal, const in double maxVal)
 {
 	if ( maxVal < minVal ) return minVal;
 	double size = maxVal - minVal;
@@ -943,16 +725,16 @@ double Wrap (in double x, in double minVal, in double maxVal)
 	if ( res < minVal ) return res + size;
 	return res;
 }
-double2 Wrap (in double2 x, in double minVal, in double maxVal)  { return Wrap( x, double2( minVal ), double2( maxVal ) ); }
-double2 Wrap (in double2 x, in double2 minVal, in double2 maxVal)
+double2 Wrap (const in double2 x, const in double minVal, const in double maxVal)  { return Wrap( x, double2( minVal ), double2( maxVal ) ); }
+double2 Wrap (const in double2 x, const in double2 minVal, const in double2 maxVal)
 {
 	return double2(
 		Wrap( x[0], minVal[0], maxVal[0] ),
 		Wrap( x[1], minVal[1], maxVal[1] ) );
 }
 
-double3 Wrap (in double3 x, in double minVal, in double maxVal)  { return Wrap( x, double3( minVal ), double3( maxVal ) ); }
-double3 Wrap (in double3 x, in double3 minVal, in double3 maxVal)
+double3 Wrap (const in double3 x, const in double minVal, const in double maxVal)  { return Wrap( x, double3( minVal ), double3( maxVal ) ); }
+double3 Wrap (const in double3 x, const in double3 minVal, const in double3 maxVal)
 {
 	return double3(
 		Wrap( x[0], minVal[0], maxVal[0] ),
@@ -960,8 +742,8 @@ double3 Wrap (in double3 x, in double3 minVal, in double3 maxVal)
 		Wrap( x[2], minVal[2], maxVal[2] ) );
 }
 
-double4 Wrap (in double4 x, in double minVal, in double maxVal)  { return Wrap( x, double4( minVal ), double4( maxVal ) ); }
-double4 Wrap (in double4 x, in double4 minVal, in double4 maxVal)
+double4 Wrap (const in double4 x, const in double minVal, const in double maxVal)  { return Wrap( x, double4( minVal ), double4( maxVal ) ); }
+double4 Wrap (const in double4 x, const in double4 minVal, const in double4 maxVal)
 {
 	return double4(
 		Wrap( x[0], minVal[0], maxVal[0] ),
@@ -971,7 +753,7 @@ double4 Wrap (in double4 x, in double4 minVal, in double4 maxVal)
 }
 
 
-int Wrap (in int x, in int minVal, in int maxVal)
+int Wrap (const in int x, const in int minVal, const in int maxVal)
 {
 	if ( maxVal < minVal ) return minVal;
 	int size = maxVal+1 - minVal;
@@ -979,16 +761,16 @@ int Wrap (in int x, in int minVal, in int maxVal)
 	if ( res < minVal ) return res + size;
 	return res;
 }
-int2 Wrap (in int2 x, in int minVal, in int maxVal)  { return Wrap( x, int2( minVal ), int2( maxVal ) ); }
-int2 Wrap (in int2 x, in int2 minVal, in int2 maxVal)
+int2 Wrap (const in int2 x, const in int minVal, const in int maxVal)  { return Wrap( x, int2( minVal ), int2( maxVal ) ); }
+int2 Wrap (const in int2 x, const in int2 minVal, const in int2 maxVal)
 {
 	return int2(
 		Wrap( x[0], minVal[0], maxVal[0] ),
 		Wrap( x[1], minVal[1], maxVal[1] ) );
 }
 
-int3 Wrap (in int3 x, in int minVal, in int maxVal)  { return Wrap( x, int3( minVal ), int3( maxVal ) ); }
-int3 Wrap (in int3 x, in int3 minVal, in int3 maxVal)
+int3 Wrap (const in int3 x, const in int minVal, const in int maxVal)  { return Wrap( x, int3( minVal ), int3( maxVal ) ); }
+int3 Wrap (const in int3 x, const in int3 minVal, const in int3 maxVal)
 {
 	return int3(
 		Wrap( x[0], minVal[0], maxVal[0] ),
@@ -996,8 +778,8 @@ int3 Wrap (in int3 x, in int3 minVal, in int3 maxVal)
 		Wrap( x[2], minVal[2], maxVal[2] ) );
 }
 
-int4 Wrap (in int4 x, in int minVal, in int maxVal)  { return Wrap( x, int4( minVal ), int4( maxVal ) ); }
-int4 Wrap (in int4 x, in int4 minVal, in int4 maxVal)
+int4 Wrap (const in int4 x, const in int minVal, const in int maxVal)  { return Wrap( x, int4( minVal ), int4( maxVal ) ); }
+int4 Wrap (const in int4 x, const in int4 minVal, const in int4 maxVal)
 {
 	return int4(
 		Wrap( x[0], minVal[0], maxVal[0] ),
@@ -1007,7 +789,7 @@ int4 Wrap (in int4 x, in int4 minVal, in int4 maxVal)
 }
 
 
-uint Wrap (in uint x, in uint minVal, in uint maxVal)
+uint Wrap (const in uint x, const in uint minVal, const in uint maxVal)
 {
 	if ( maxVal < minVal ) return minVal;
 	uint size = maxVal+1 - minVal;
@@ -1015,16 +797,16 @@ uint Wrap (in uint x, in uint minVal, in uint maxVal)
 	if ( res < minVal ) return res + size;
 	return res;
 }
-uint2 Wrap (in uint2 x, in uint minVal, in uint maxVal)  { return Wrap( x, uint2( minVal ), uint2( maxVal ) ); }
-uint2 Wrap (in uint2 x, in uint2 minVal, in uint2 maxVal)
+uint2 Wrap (const in uint2 x, const in uint minVal, const in uint maxVal)  { return Wrap( x, uint2( minVal ), uint2( maxVal ) ); }
+uint2 Wrap (const in uint2 x, const in uint2 minVal, const in uint2 maxVal)
 {
 	return uint2(
 		Wrap( x[0], minVal[0], maxVal[0] ),
 		Wrap( x[1], minVal[1], maxVal[1] ) );
 }
 
-uint3 Wrap (in uint3 x, in uint minVal, in uint maxVal)  { return Wrap( x, uint3( minVal ), uint3( maxVal ) ); }
-uint3 Wrap (in uint3 x, in uint3 minVal, in uint3 maxVal)
+uint3 Wrap (const in uint3 x, const in uint minVal, const in uint maxVal)  { return Wrap( x, uint3( minVal ), uint3( maxVal ) ); }
+uint3 Wrap (const in uint3 x, const in uint3 minVal, const in uint3 maxVal)
 {
 	return uint3(
 		Wrap( x[0], minVal[0], maxVal[0] ),
@@ -1032,8 +814,8 @@ uint3 Wrap (in uint3 x, in uint3 minVal, in uint3 maxVal)
 		Wrap( x[2], minVal[2], maxVal[2] ) );
 }
 
-uint4 Wrap (in uint4 x, in uint minVal, in uint maxVal)  { return Wrap( x, uint4( minVal ), uint4( maxVal ) ); }
-uint4 Wrap (in uint4 x, in uint4 minVal, in uint4 maxVal)
+uint4 Wrap (const in uint4 x, const in uint minVal, const in uint maxVal)  { return Wrap( x, uint4( minVal ), uint4( maxVal ) ); }
+uint4 Wrap (const in uint4 x, const in uint4 minVal, const in uint4 maxVal)
 {
 	return uint4(
 		Wrap( x[0], minVal[0], maxVal[0] ),
@@ -1044,7 +826,7 @@ uint4 Wrap (in uint4 x, in uint4 minVal, in uint4 maxVal)
 
 
 #ifdef GL_ARB_gpu_shader_int64
-ilong Wrap (in ilong x, in ilong minVal, in ilong maxVal)
+ilong Wrap (const in ilong x, const in ilong minVal, const in ilong maxVal)
 {
 	if ( maxVal < minVal ) return minVal;
 	ilong size = maxVal+1 - minVal;
@@ -1052,16 +834,16 @@ ilong Wrap (in ilong x, in ilong minVal, in ilong maxVal)
 	if ( res < minVal ) return res + size;
 	return res;
 }
-ilong2 Wrap (in ilong2 x, in ilong minVal, in ilong maxVal)  { return Wrap( x, ilong2( minVal ), ilong2( maxVal ) ); }
-ilong2 Wrap (in ilong2 x, in ilong2 minVal, in ilong2 maxVal)
+ilong2 Wrap (const in ilong2 x, const in ilong minVal, const in ilong maxVal)  { return Wrap( x, ilong2( minVal ), ilong2( maxVal ) ); }
+ilong2 Wrap (const in ilong2 x, const in ilong2 minVal, const in ilong2 maxVal)
 {
 	return ilong2(
 		Wrap( x[0], minVal[0], maxVal[0] ),
 		Wrap( x[1], minVal[1], maxVal[1] ) );
 }
 
-ilong3 Wrap (in ilong3 x, in ilong minVal, in ilong maxVal)  { return Wrap( x, ilong3( minVal ), ilong3( maxVal ) ); }
-ilong3 Wrap (in ilong3 x, in ilong3 minVal, in ilong3 maxVal)
+ilong3 Wrap (const in ilong3 x, const in ilong minVal, const in ilong maxVal)  { return Wrap( x, ilong3( minVal ), ilong3( maxVal ) ); }
+ilong3 Wrap (const in ilong3 x, const in ilong3 minVal, const in ilong3 maxVal)
 {
 	return ilong3(
 		Wrap( x[0], minVal[0], maxVal[0] ),
@@ -1069,8 +851,8 @@ ilong3 Wrap (in ilong3 x, in ilong3 minVal, in ilong3 maxVal)
 		Wrap( x[2], minVal[2], maxVal[2] ) );
 }
 
-ilong4 Wrap (in ilong4 x, in ilong minVal, in ilong maxVal)  { return Wrap( x, ilong4( minVal ), ilong4( maxVal ) ); }
-ilong4 Wrap (in ilong4 x, in ilong4 minVal, in ilong4 maxVal)
+ilong4 Wrap (const in ilong4 x, const in ilong minVal, const in ilong maxVal)  { return Wrap( x, ilong4( minVal ), ilong4( maxVal ) ); }
+ilong4 Wrap (const in ilong4 x, const in ilong4 minVal, const in ilong4 maxVal)
 {
 	return ilong4(
 		Wrap( x[0], minVal[0], maxVal[0] ),
@@ -1082,7 +864,7 @@ ilong4 Wrap (in ilong4 x, in ilong4 minVal, in ilong4 maxVal)
 #endif
 
 #ifdef GL_ARB_gpu_shader_int64
-ulong Wrap (in ulong x, in ulong minVal, in ulong maxVal)
+ulong Wrap (const in ulong x, const in ulong minVal, const in ulong maxVal)
 {
 	if ( maxVal < minVal ) return minVal;
 	ulong size = maxVal+1 - minVal;
@@ -1090,16 +872,16 @@ ulong Wrap (in ulong x, in ulong minVal, in ulong maxVal)
 	if ( res < minVal ) return res + size;
 	return res;
 }
-ulong2 Wrap (in ulong2 x, in ulong minVal, in ulong maxVal)  { return Wrap( x, ulong2( minVal ), ulong2( maxVal ) ); }
-ulong2 Wrap (in ulong2 x, in ulong2 minVal, in ulong2 maxVal)
+ulong2 Wrap (const in ulong2 x, const in ulong minVal, const in ulong maxVal)  { return Wrap( x, ulong2( minVal ), ulong2( maxVal ) ); }
+ulong2 Wrap (const in ulong2 x, const in ulong2 minVal, const in ulong2 maxVal)
 {
 	return ulong2(
 		Wrap( x[0], minVal[0], maxVal[0] ),
 		Wrap( x[1], minVal[1], maxVal[1] ) );
 }
 
-ulong3 Wrap (in ulong3 x, in ulong minVal, in ulong maxVal)  { return Wrap( x, ulong3( minVal ), ulong3( maxVal ) ); }
-ulong3 Wrap (in ulong3 x, in ulong3 minVal, in ulong3 maxVal)
+ulong3 Wrap (const in ulong3 x, const in ulong minVal, const in ulong maxVal)  { return Wrap( x, ulong3( minVal ), ulong3( maxVal ) ); }
+ulong3 Wrap (const in ulong3 x, const in ulong3 minVal, const in ulong3 maxVal)
 {
 	return ulong3(
 		Wrap( x[0], minVal[0], maxVal[0] ),
@@ -1107,8 +889,8 @@ ulong3 Wrap (in ulong3 x, in ulong3 minVal, in ulong3 maxVal)
 		Wrap( x[2], minVal[2], maxVal[2] ) );
 }
 
-ulong4 Wrap (in ulong4 x, in ulong minVal, in ulong maxVal)  { return Wrap( x, ulong4( minVal ), ulong4( maxVal ) ); }
-ulong4 Wrap (in ulong4 x, in ulong4 minVal, in ulong4 maxVal)
+ulong4 Wrap (const in ulong4 x, const in ulong minVal, const in ulong maxVal)  { return Wrap( x, ulong4( minVal ), ulong4( maxVal ) ); }
+ulong4 Wrap (const in ulong4 x, const in ulong4 minVal, const in ulong4 maxVal)
 {
 	return ulong4(
 		Wrap( x[0], minVal[0], maxVal[0] ),
@@ -1121,106 +903,106 @@ ulong4 Wrap (in ulong4 x, in ulong4 minVal, in ulong4 maxVal)
 
 
 // Log, Log10, Exp10
-float Log (in float x, in float base)  { return Ln(x) / Ln(base); }
-float2 Log (in float2 x, in float2 base)  { return Ln(x) / Ln(base); }
-float3 Log (in float3 x, in float3 base)  { return Ln(x) / Ln(base); }
-float4 Log (in float4 x, in float4 base)  { return Ln(x) / Ln(base); }
+float Log (const in float x, const in float base)  { return Ln(x) / Ln(base); }
+float2 Log (const in float2 x, const in float2 base)  { return Ln(x) / Ln(base); }
+float3 Log (const in float3 x, const in float3 base)  { return Ln(x) / Ln(base); }
+float4 Log (const in float4 x, const in float4 base)  { return Ln(x) / Ln(base); }
 
-float Log10 (in float x)  { return Ln(x) * float(Const_InvLnOf10F()); }
-float2 Log10 (in float2 x)  { return Ln(x) * float2(Const_InvLnOf10F()); }
-float3 Log10 (in float3 x)  { return Ln(x) * float3(Const_InvLnOf10F()); }
-float4 Log10 (in float4 x)  { return Ln(x) * float4(Const_InvLnOf10F()); }
+float Log10 (const in float x)  { return Ln(x) * float(Const_InvLnOf10F()); }
+float2 Log10 (const in float2 x)  { return Ln(x) * float2(Const_InvLnOf10F()); }
+float3 Log10 (const in float3 x)  { return Ln(x) * float3(Const_InvLnOf10F()); }
+float4 Log10 (const in float4 x)  { return Ln(x) * float4(Const_InvLnOf10F()); }
 
-float Exp10 (in float x)  { return Pow( float(10.0), x ); }
-float2 Exp10 (in float2 x)  { return Pow( float2(10.0), x ); }
-float3 Exp10 (in float3 x)  { return Pow( float3(10.0), x ); }
-float4 Exp10 (in float4 x)  { return Pow( float4(10.0), x ); }
+float Exp10 (const in float x)  { return Pow( float(10.0), x ); }
+float2 Exp10 (const in float2 x)  { return Pow( float2(10.0), x ); }
+float3 Exp10 (const in float3 x)  { return Pow( float3(10.0), x ); }
+float4 Exp10 (const in float4 x)  { return Pow( float4(10.0), x ); }
 
 
 // Square
-float Square (in float x)  { return x * x; }
-float2 Square (in float2 x)  { return x * x; }
-float3 Square (in float3 x)  { return x * x; }
-float4 Square (in float4 x)  { return x * x; }
+float Square (const in float x)  { return x * x; }
+float2 Square (const in float2 x)  { return x * x; }
+float3 Square (const in float3 x)  { return x * x; }
+float4 Square (const in float4 x)  { return x * x; }
 
-double Square (in double x)  { return x * x; }
-double2 Square (in double2 x)  { return x * x; }
-double3 Square (in double3 x)  { return x * x; }
-double4 Square (in double4 x)  { return x * x; }
+double Square (const in double x)  { return x * x; }
+double2 Square (const in double2 x)  { return x * x; }
+double3 Square (const in double3 x)  { return x * x; }
+double4 Square (const in double4 x)  { return x * x; }
 
-int Square (in int x)  { return x * x; }
-int2 Square (in int2 x)  { return x * x; }
-int3 Square (in int3 x)  { return x * x; }
-int4 Square (in int4 x)  { return x * x; }
+int Square (const in int x)  { return x * x; }
+int2 Square (const in int2 x)  { return x * x; }
+int3 Square (const in int3 x)  { return x * x; }
+int4 Square (const in int4 x)  { return x * x; }
 
-uint Square (in uint x)  { return x * x; }
-uint2 Square (in uint2 x)  { return x * x; }
-uint3 Square (in uint3 x)  { return x * x; }
-uint4 Square (in uint4 x)  { return x * x; }
+uint Square (const in uint x)  { return x * x; }
+uint2 Square (const in uint2 x)  { return x * x; }
+uint3 Square (const in uint3 x)  { return x * x; }
+uint4 Square (const in uint4 x)  { return x * x; }
 
 #ifdef GL_ARB_gpu_shader_int64
-ilong Square (in ilong x)  { return x * x; }
-ilong2 Square (in ilong2 x)  { return x * x; }
-ilong3 Square (in ilong3 x)  { return x * x; }
-ilong4 Square (in ilong4 x)  { return x * x; }
+ilong Square (const in ilong x)  { return x * x; }
+ilong2 Square (const in ilong2 x)  { return x * x; }
+ilong3 Square (const in ilong3 x)  { return x * x; }
+ilong4 Square (const in ilong4 x)  { return x * x; }
 #endif
 
 #ifdef GL_ARB_gpu_shader_int64
-ulong Square (in ulong x)  { return x * x; }
-ulong2 Square (in ulong2 x)  { return x * x; }
-ulong3 Square (in ulong3 x)  { return x * x; }
-ulong4 Square (in ulong4 x)  { return x * x; }
+ulong Square (const in ulong x)  { return x * x; }
+ulong2 Square (const in ulong2 x)  { return x * x; }
+ulong3 Square (const in ulong3 x)  { return x * x; }
+ulong4 Square (const in ulong4 x)  { return x * x; }
 #endif
 
 
 // RoundToInt, RoundToUInt, RoundTo
-int RoundToInt (in float x)  { return int( round( x ) ); }
-uint RoundToUInt (in float x)  { return uint( round( x ) ); }
-int2 RoundToInt (in float2 x)  { return int2( round( x ) ); }
-uint2 RoundToUInt (in float2 x)  { return uint2( round( x ) ); }
-int3 RoundToInt (in float3 x)  { return int3( round( x ) ); }
-uint3 RoundToUInt (in float3 x)  { return uint3( round( x ) ); }
-int4 RoundToInt (in float4 x)  { return int4( round( x ) ); }
-uint4 RoundToUInt (in float4 x)  { return uint4( round( x ) ); }
+int RoundToInt (const in float x)  { return int( round( x ) ); }
+uint RoundToUInt (const in float x)  { return uint( round( x ) ); }
+int2 RoundToInt (const in float2 x)  { return int2( round( x ) ); }
+uint2 RoundToUInt (const in float2 x)  { return uint2( round( x ) ); }
+int3 RoundToInt (const in float3 x)  { return int3( round( x ) ); }
+uint3 RoundToUInt (const in float3 x)  { return uint3( round( x ) ); }
+int4 RoundToInt (const in float4 x)  { return int4( round( x ) ); }
+uint4 RoundToUInt (const in float4 x)  { return uint4( round( x ) ); }
 
 #ifdef GL_ARB_gpu_shader_int64
-ilong RoundToInt (in double x)  { return ilong( round( x ) ); }
-ulong RoundToUInt (in double x)  { return ulong( round( x ) ); }
-ilong2 RoundToInt (in double2 x)  { return ilong2( round( x ) ); }
-ulong2 RoundToUInt (in double2 x)  { return ulong2( round( x ) ); }
-ilong3 RoundToInt (in double3 x)  { return ilong3( round( x ) ); }
-ulong3 RoundToUInt (in double3 x)  { return ulong3( round( x ) ); }
-ilong4 RoundToInt (in double4 x)  { return ilong4( round( x ) ); }
-ulong4 RoundToUInt (in double4 x)  { return ulong4( round( x ) ); }
+ilong RoundToInt (const in double x)  { return ilong( round( x ) ); }
+ulong RoundToUInt (const in double x)  { return ulong( round( x ) ); }
+ilong2 RoundToInt (const in double2 x)  { return ilong2( round( x ) ); }
+ulong2 RoundToUInt (const in double2 x)  { return ulong2( round( x ) ); }
+ilong3 RoundToInt (const in double3 x)  { return ilong3( round( x ) ); }
+ulong3 RoundToUInt (const in double3 x)  { return ulong3( round( x ) ); }
+ilong4 RoundToInt (const in double4 x)  { return ilong4( round( x ) ); }
+ulong4 RoundToUInt (const in double4 x)  { return ulong4( round( x ) ); }
 #endif
 
-float RoundTo (in float x, in float base)  { return Round( x / base ) * base; }
-float2 RoundTo (in float2 x, in float base)  { return Round( x / base ) * base; }
-float3 RoundTo (in float3 x, in float base)  { return Round( x / base ) * base; }
-float4 RoundTo (in float4 x, in float base)  { return Round( x / base ) * base; }
+float RoundTo (const in float x, const in float base)  { return Round( x / base ) * base; }
+float2 RoundTo (const in float2 x, const in float base)  { return Round( x / base ) * base; }
+float3 RoundTo (const in float3 x, const in float base)  { return Round( x / base ) * base; }
+float4 RoundTo (const in float4 x, const in float base)  { return Round( x / base ) * base; }
 
-double RoundTo (in double x, in double base)  { return Round( x / base ) * base; }
-double2 RoundTo (in double2 x, in double base)  { return Round( x / base ) * base; }
-double3 RoundTo (in double3 x, in double base)  { return Round( x / base ) * base; }
-double4 RoundTo (in double4 x, in double base)  { return Round( x / base ) * base; }
+double RoundTo (const in double x, const in double base)  { return Round( x / base ) * base; }
+double2 RoundTo (const in double2 x, const in double base)  { return Round( x / base ) * base; }
+double3 RoundTo (const in double3 x, const in double base)  { return Round( x / base ) * base; }
+double4 RoundTo (const in double4 x, const in double base)  { return Round( x / base ) * base; }
 
 
 // SafeDiv
-float SafeDiv (in float left, in float right, in float defVal)  { return IsZero( right ) ? defVal : (left / right); }
-float2 SafeDiv (in float2 left, in float2 right, in float defVal)
+float SafeDiv (const in float left, const in float right, const in float defVal)  { return IsZero( right ) ? defVal : (left / right); }
+float2 SafeDiv (const in float2 left, const in float2 right, const in float defVal)
 {
 	return float2(
 		SafeDiv( left[0], right[0], defVal ),
 		SafeDiv( left[1], right[1], defVal ) );
 }
-float3 SafeDiv (in float3 left, in float3 right, in float defVal)
+float3 SafeDiv (const in float3 left, const in float3 right, const in float defVal)
 {
 	return float3(
 		SafeDiv( left[0], right[0], defVal ),
 		SafeDiv( left[1], right[1], defVal ),
 		SafeDiv( left[2], right[2], defVal ) );
 }
-float4 SafeDiv (in float4 left, in float4 right, in float defVal)
+float4 SafeDiv (const in float4 left, const in float4 right, const in float defVal)
 {
 	return float4(
 		SafeDiv( left[0], right[0], defVal ),
@@ -1229,21 +1011,21 @@ float4 SafeDiv (in float4 left, in float4 right, in float defVal)
 		SafeDiv( left[3], right[3], defVal ) );
 }
 
-double SafeDiv (in double left, in double right, in double defVal)  { return IsZero( right ) ? defVal : (left / right); }
-double2 SafeDiv (in double2 left, in double2 right, in double defVal)
+double SafeDiv (const in double left, const in double right, const in double defVal)  { return IsZero( right ) ? defVal : (left / right); }
+double2 SafeDiv (const in double2 left, const in double2 right, const in double defVal)
 {
 	return double2(
 		SafeDiv( left[0], right[0], defVal ),
 		SafeDiv( left[1], right[1], defVal ) );
 }
-double3 SafeDiv (in double3 left, in double3 right, in double defVal)
+double3 SafeDiv (const in double3 left, const in double3 right, const in double defVal)
 {
 	return double3(
 		SafeDiv( left[0], right[0], defVal ),
 		SafeDiv( left[1], right[1], defVal ),
 		SafeDiv( left[2], right[2], defVal ) );
 }
-double4 SafeDiv (in double4 left, in double4 right, in double defVal)
+double4 SafeDiv (const in double4 left, const in double4 right, const in double defVal)
 {
 	return double4(
 		SafeDiv( left[0], right[0], defVal ),
@@ -1254,95 +1036,249 @@ double4 SafeDiv (in double4 left, in double4 right, in double defVal)
 
 
 // IsOdd, IsEven
-bool IsOdd (in int x)  { return Equals( (x & 1), int(1) ); }
-bool2 IsOdd (in int2 x)  { return Equals( (x & 1), int2(1) ); }
-bool3 IsOdd (in int3 x)  { return Equals( (x & 1), int3(1) ); }
-bool4 IsOdd (in int4 x)  { return Equals( (x & 1), int4(1) ); }
+bool IsOdd (const in int x)  { return Equals( (x & 1), int(1) ); }
+bool2 IsOdd (const in int2 x)  { return Equals( (x & 1), int2(1) ); }
+bool3 IsOdd (const in int3 x)  { return Equals( (x & 1), int3(1) ); }
+bool4 IsOdd (const in int4 x)  { return Equals( (x & 1), int4(1) ); }
 
-bool IsOdd (in uint x)  { return Equals( (x & 1), uint(1) ); }
-bool2 IsOdd (in uint2 x)  { return Equals( (x & 1), uint2(1) ); }
-bool3 IsOdd (in uint3 x)  { return Equals( (x & 1), uint3(1) ); }
-bool4 IsOdd (in uint4 x)  { return Equals( (x & 1), uint4(1) ); }
+bool IsOdd (const in uint x)  { return Equals( (x & 1), uint(1) ); }
+bool2 IsOdd (const in uint2 x)  { return Equals( (x & 1), uint2(1) ); }
+bool3 IsOdd (const in uint3 x)  { return Equals( (x & 1), uint3(1) ); }
+bool4 IsOdd (const in uint4 x)  { return Equals( (x & 1), uint4(1) ); }
 
 #ifdef GL_ARB_gpu_shader_int64
-bool IsOdd (in ilong x)  { return Equals( (x & 1), ilong(1) ); }
-bool2 IsOdd (in ilong2 x)  { return Equals( (x & 1), ilong2(1) ); }
-bool3 IsOdd (in ilong3 x)  { return Equals( (x & 1), ilong3(1) ); }
-bool4 IsOdd (in ilong4 x)  { return Equals( (x & 1), ilong4(1) ); }
+bool IsOdd (const in ilong x)  { return Equals( (x & 1), ilong(1) ); }
+bool2 IsOdd (const in ilong2 x)  { return Equals( (x & 1), ilong2(1) ); }
+bool3 IsOdd (const in ilong3 x)  { return Equals( (x & 1), ilong3(1) ); }
+bool4 IsOdd (const in ilong4 x)  { return Equals( (x & 1), ilong4(1) ); }
 #endif
 
 #ifdef GL_ARB_gpu_shader_int64
-bool IsOdd (in ulong x)  { return Equals( (x & 1), ulong(1) ); }
-bool2 IsOdd (in ulong2 x)  { return Equals( (x & 1), ulong2(1) ); }
-bool3 IsOdd (in ulong3 x)  { return Equals( (x & 1), ulong3(1) ); }
-bool4 IsOdd (in ulong4 x)  { return Equals( (x & 1), ulong4(1) ); }
+bool IsOdd (const in ulong x)  { return Equals( (x & 1), ulong(1) ); }
+bool2 IsOdd (const in ulong2 x)  { return Equals( (x & 1), ulong2(1) ); }
+bool3 IsOdd (const in ulong3 x)  { return Equals( (x & 1), ulong3(1) ); }
+bool4 IsOdd (const in ulong4 x)  { return Equals( (x & 1), ulong4(1) ); }
 #endif
 
-bool IsEven (in int x)  { return Equals( (x & 1), int(0) ); }
-bool2 IsEven (in int2 x)  { return Equals( (x & 1), int2(0) ); }
-bool3 IsEven (in int3 x)  { return Equals( (x & 1), int3(0) ); }
-bool4 IsEven (in int4 x)  { return Equals( (x & 1), int4(0) ); }
+bool IsEven (const in int x)  { return Equals( (x & 1), int(0) ); }
+bool2 IsEven (const in int2 x)  { return Equals( (x & 1), int2(0) ); }
+bool3 IsEven (const in int3 x)  { return Equals( (x & 1), int3(0) ); }
+bool4 IsEven (const in int4 x)  { return Equals( (x & 1), int4(0) ); }
 
-bool IsEven (in uint x)  { return Equals( (x & 1), uint(0) ); }
-bool2 IsEven (in uint2 x)  { return Equals( (x & 1), uint2(0) ); }
-bool3 IsEven (in uint3 x)  { return Equals( (x & 1), uint3(0) ); }
-bool4 IsEven (in uint4 x)  { return Equals( (x & 1), uint4(0) ); }
+bool IsEven (const in uint x)  { return Equals( (x & 1), uint(0) ); }
+bool2 IsEven (const in uint2 x)  { return Equals( (x & 1), uint2(0) ); }
+bool3 IsEven (const in uint3 x)  { return Equals( (x & 1), uint3(0) ); }
+bool4 IsEven (const in uint4 x)  { return Equals( (x & 1), uint4(0) ); }
 
 #ifdef GL_ARB_gpu_shader_int64
-bool IsEven (in ilong x)  { return Equals( (x & 1), ilong(0) ); }
-bool2 IsEven (in ilong2 x)  { return Equals( (x & 1), ilong2(0) ); }
-bool3 IsEven (in ilong3 x)  { return Equals( (x & 1), ilong3(0) ); }
-bool4 IsEven (in ilong4 x)  { return Equals( (x & 1), ilong4(0) ); }
+bool IsEven (const in ilong x)  { return Equals( (x & 1), ilong(0) ); }
+bool2 IsEven (const in ilong2 x)  { return Equals( (x & 1), ilong2(0) ); }
+bool3 IsEven (const in ilong3 x)  { return Equals( (x & 1), ilong3(0) ); }
+bool4 IsEven (const in ilong4 x)  { return Equals( (x & 1), ilong4(0) ); }
 #endif
 
 #ifdef GL_ARB_gpu_shader_int64
-bool IsEven (in ulong x)  { return Equals( (x & 1), ulong(0) ); }
-bool2 IsEven (in ulong2 x)  { return Equals( (x & 1), ulong2(0) ); }
-bool3 IsEven (in ulong3 x)  { return Equals( (x & 1), ulong3(0) ); }
-bool4 IsEven (in ulong4 x)  { return Equals( (x & 1), ulong4(0) ); }
+bool IsEven (const in ulong x)  { return Equals( (x & 1), ulong(0) ); }
+bool2 IsEven (const in ulong2 x)  { return Equals( (x & 1), ulong2(0) ); }
+bool3 IsEven (const in ulong3 x)  { return Equals( (x & 1), ulong3(0) ); }
+bool4 IsEven (const in ulong4 x)  { return Equals( (x & 1), ulong4(0) ); }
 #endif
 
 
 // ToUNorm, ToSNorm
-float ToUNorm (in float x)  { return x * 0.5 + 0.5; }
-float2 ToUNorm (in float2 x)  { return x * 0.5 + 0.5; }
-float3 ToUNorm (in float3 x)  { return x * 0.5 + 0.5; }
-float4 ToUNorm (in float4 x)  { return x * 0.5 + 0.5; }
+float ToUNorm (const in float x)  { return x * 0.5 + 0.5; }
+float2 ToUNorm (const in float2 x)  { return x * 0.5 + 0.5; }
+float3 ToUNorm (const in float3 x)  { return x * 0.5 + 0.5; }
+float4 ToUNorm (const in float4 x)  { return x * 0.5 + 0.5; }
 
-double ToUNorm (in double x)  { return x * 0.5 + 0.5; }
-double2 ToUNorm (in double2 x)  { return x * 0.5 + 0.5; }
-double3 ToUNorm (in double3 x)  { return x * 0.5 + 0.5; }
-double4 ToUNorm (in double4 x)  { return x * 0.5 + 0.5; }
+double ToUNorm (const in double x)  { return x * 0.5 + 0.5; }
+double2 ToUNorm (const in double2 x)  { return x * 0.5 + 0.5; }
+double3 ToUNorm (const in double3 x)  { return x * 0.5 + 0.5; }
+double4 ToUNorm (const in double4 x)  { return x * 0.5 + 0.5; }
 
-float ToSNorm (in float x)  { return x * 2.0 - 1.0; }
-float2 ToSNorm (in float2 x)  { return x * 2.0 - 1.0; }
-float3 ToSNorm (in float3 x)  { return x * 2.0 - 1.0; }
-float4 ToSNorm (in float4 x)  { return x * 2.0 - 1.0; }
+float ToSNorm (const in float x)  { return x * 2.0 - 1.0; }
+float2 ToSNorm (const in float2 x)  { return x * 2.0 - 1.0; }
+float3 ToSNorm (const in float3 x)  { return x * 2.0 - 1.0; }
+float4 ToSNorm (const in float4 x)  { return x * 2.0 - 1.0; }
 
-double ToSNorm (in double x)  { return x * 2.0 - 1.0; }
-double2 ToSNorm (in double2 x)  { return x * 2.0 - 1.0; }
-double3 ToSNorm (in double3 x)  { return x * 2.0 - 1.0; }
-double4 ToSNorm (in double4 x)  { return x * 2.0 - 1.0; }
+double ToSNorm (const in double x)  { return x * 2.0 - 1.0; }
+double2 ToSNorm (const in double2 x)  { return x * 2.0 - 1.0; }
+double3 ToSNorm (const in double3 x)  { return x * 2.0 - 1.0; }
+double4 ToSNorm (const in double4 x)  { return x * 2.0 - 1.0; }
 
 
 // InvLerp, BiLerp
-float InvLerp (in float x, in float y, in float interpolated);
-float2 InvLerp (in float2 x, in float2 y, in float interpolated);
-float3 InvLerp (in float3 x, in float3 y, in float interpolated);
-float4 InvLerp (in float4 x, in float4 y, in float interpolated);
+float InvLerp (const in float x, const in float y, const in float interpolated)
+{
+	return (interpolated - x) / (y - x);
+}
+float2 InvLerp (const in float2 x, const in float2 y, const in float interpolated)
+{
+	return (interpolated - x) / (y - x);
+}
+float3 InvLerp (const in float3 x, const in float3 y, const in float interpolated)
+{
+	return (interpolated - x) / (y - x);
+}
+float4 InvLerp (const in float4 x, const in float4 y, const in float interpolated)
+{
+	return (interpolated - x) / (y - x);
+}
 
-double InvLerp (in double x, in double y, in double interpolated);
-double2 InvLerp (in double2 x, in double2 y, in double interpolated);
-double3 InvLerp (in double3 x, in double3 y, in double interpolated);
-double4 InvLerp (in double4 x, in double4 y, in double interpolated);
+double InvLerp (const in double x, const in double y, const in double interpolated)
+{
+	return (interpolated - x) / (y - x);
+}
+double2 InvLerp (const in double2 x, const in double2 y, const in double interpolated)
+{
+	return (interpolated - x) / (y - x);
+}
+double3 InvLerp (const in double3 x, const in double3 y, const in double interpolated)
+{
+	return (interpolated - x) / (y - x);
+}
+double4 InvLerp (const in double4 x, const in double4 y, const in double interpolated)
+{
+	return (interpolated - x) / (y - x);
+}
 
-float BiLerp (in float v0, in float v1, in float v2, in float v3, in float2 factor);
-float2 BiLerp (in float2 v0, in float2 v1, in float2 v2, in float2 v3, in float2 factor);
-float3 BiLerp (in float3 v0, in float3 v1, in float3 v2, in float3 v3, in float2 factor);
-float4 BiLerp (in float4 v0, in float4 v1, in float4 v2, in float4 v3, in float2 factor);
+float BiLerp (const in float v0, const in float v1, const in float v2, const in float v3, const in float2 factor)
+{
+	return Lerp( Lerp( v0, v3, factor.x ), Lerp( v1, v2, factor.x ), factor.y );
+}
+float2 BiLerp (const in float2 v0, const in float2 v1, const in float2 v2, const in float2 v3, const in float2 factor)
+{
+	return Lerp( Lerp( v0, v3, factor.x ), Lerp( v1, v2, factor.x ), factor.y );
+}
+float3 BiLerp (const in float3 v0, const in float3 v1, const in float3 v2, const in float3 v3, const in float2 factor)
+{
+	return Lerp( Lerp( v0, v3, factor.x ), Lerp( v1, v2, factor.x ), factor.y );
+}
+float4 BiLerp (const in float4 v0, const in float4 v1, const in float4 v2, const in float4 v3, const in float2 factor)
+{
+	return Lerp( Lerp( v0, v3, factor.x ), Lerp( v1, v2, factor.x ), factor.y );
+}
 
-double BiLerp (in double v0, in double v1, in double v2, in double v3, in double2 factor);
-double2 BiLerp (in double2 v0, in double2 v1, in double2 v2, in double2 v3, in double2 factor);
-double3 BiLerp (in double3 v0, in double3 v1, in double3 v2, in double3 v3, in double2 factor);
-double4 BiLerp (in double4 v0, in double4 v1, in double4 v2, in double4 v3, in double2 factor);
+double BiLerp (const in double v0, const in double v1, const in double v2, const in double v3, const in double2 factor)
+{
+	return Lerp( Lerp( v0, v3, factor.x ), Lerp( v1, v2, factor.x ), factor.y );
+}
+double2 BiLerp (const in double2 v0, const in double2 v1, const in double2 v2, const in double2 v3, const in double2 factor)
+{
+	return Lerp( Lerp( v0, v3, factor.x ), Lerp( v1, v2, factor.x ), factor.y );
+}
+double3 BiLerp (const in double3 v0, const in double3 v1, const in double3 v2, const in double3 v3, const in double2 factor)
+{
+	return Lerp( Lerp( v0, v3, factor.x ), Lerp( v1, v2, factor.x ), factor.y );
+}
+double4 BiLerp (const in double4 v0, const in double4 v1, const in double4 v2, const in double4 v3, const in double2 factor)
+{
+	return Lerp( Lerp( v0, v3, factor.x ), Lerp( v1, v2, factor.x ), factor.y );
+}
+
+
+// LinearStep, BumpStep, SmoothBumpStep
+float LinearStep (const in float x, const in float edge0, const in float edge1)  { return Clamp( (x - edge0) / (edge1 - edge0), 0.0, 1.0 ); }
+float2 LinearStep (const in float2 x, const in float2 edge0, const in float2 edge1)  { return Clamp( (x - edge0) / (edge1 - edge0), 0.0, 1.0 ); }
+float2 LinearStep (const in float2 x, const in float edge0, const in float edge1)  { return Clamp( (x - edge0) / (edge1 - edge0), 0.0, 1.0 ); }
+float3 LinearStep (const in float3 x, const in float3 edge0, const in float3 edge1)  { return Clamp( (x - edge0) / (edge1 - edge0), 0.0, 1.0 ); }
+float3 LinearStep (const in float3 x, const in float edge0, const in float edge1)  { return Clamp( (x - edge0) / (edge1 - edge0), 0.0, 1.0 ); }
+float4 LinearStep (const in float4 x, const in float4 edge0, const in float4 edge1)  { return Clamp( (x - edge0) / (edge1 - edge0), 0.0, 1.0 ); }
+float4 LinearStep (const in float4 x, const in float edge0, const in float edge1)  { return Clamp( (x - edge0) / (edge1 - edge0), 0.0, 1.0 ); }
+
+double LinearStep (const in double x, const in double edge0, const in double edge1)  { return Clamp( (x - edge0) / (edge1 - edge0), 0.0, 1.0 ); }
+double2 LinearStep (const in double2 x, const in double2 edge0, const in double2 edge1)  { return Clamp( (x - edge0) / (edge1 - edge0), 0.0, 1.0 ); }
+double2 LinearStep (const in double2 x, const in double edge0, const in double edge1)  { return Clamp( (x - edge0) / (edge1 - edge0), 0.0, 1.0 ); }
+double3 LinearStep (const in double3 x, const in double3 edge0, const in double3 edge1)  { return Clamp( (x - edge0) / (edge1 - edge0), 0.0, 1.0 ); }
+double3 LinearStep (const in double3 x, const in double edge0, const in double edge1)  { return Clamp( (x - edge0) / (edge1 - edge0), 0.0, 1.0 ); }
+double4 LinearStep (const in double4 x, const in double4 edge0, const in double4 edge1)  { return Clamp( (x - edge0) / (edge1 - edge0), 0.0, 1.0 ); }
+double4 LinearStep (const in double4 x, const in double edge0, const in double edge1)  { return Clamp( (x - edge0) / (edge1 - edge0), 0.0, 1.0 ); }
+
+float BumpStep (const in float x, const in float edge0, const in float edge1)  { return 1.0 - Abs( LinearStep( x, edge0, edge1 ) - 0.5 ) * 2.0; }
+float2 BumpStep (const in float2 x, const in float2 edge0, const in float2 edge1)  { return 1.0 - Abs( LinearStep( x, edge0, edge1 ) - 0.5 ) * 2.0; }
+float2 BumpStep (const in float2 x, const in float edge0, const in float edge1)  { return 1.0 - Abs( LinearStep( x, edge0, edge1 ) - 0.5 ) * 2.0; }
+float3 BumpStep (const in float3 x, const in float3 edge0, const in float3 edge1)  { return 1.0 - Abs( LinearStep( x, edge0, edge1 ) - 0.5 ) * 2.0; }
+float3 BumpStep (const in float3 x, const in float edge0, const in float edge1)  { return 1.0 - Abs( LinearStep( x, edge0, edge1 ) - 0.5 ) * 2.0; }
+float4 BumpStep (const in float4 x, const in float4 edge0, const in float4 edge1)  { return 1.0 - Abs( LinearStep( x, edge0, edge1 ) - 0.5 ) * 2.0; }
+float4 BumpStep (const in float4 x, const in float edge0, const in float edge1)  { return 1.0 - Abs( LinearStep( x, edge0, edge1 ) - 0.5 ) * 2.0; }
+
+double BumpStep (const in double x, const in double edge0, const in double edge1)  { return 1.0 - Abs( LinearStep( x, edge0, edge1 ) - 0.5 ) * 2.0; }
+double2 BumpStep (const in double2 x, const in double2 edge0, const in double2 edge1)  { return 1.0 - Abs( LinearStep( x, edge0, edge1 ) - 0.5 ) * 2.0; }
+double2 BumpStep (const in double2 x, const in double edge0, const in double edge1)  { return 1.0 - Abs( LinearStep( x, edge0, edge1 ) - 0.5 ) * 2.0; }
+double3 BumpStep (const in double3 x, const in double3 edge0, const in double3 edge1)  { return 1.0 - Abs( LinearStep( x, edge0, edge1 ) - 0.5 ) * 2.0; }
+double3 BumpStep (const in double3 x, const in double edge0, const in double edge1)  { return 1.0 - Abs( LinearStep( x, edge0, edge1 ) - 0.5 ) * 2.0; }
+double4 BumpStep (const in double4 x, const in double4 edge0, const in double4 edge1)  { return 1.0 - Abs( LinearStep( x, edge0, edge1 ) - 0.5 ) * 2.0; }
+double4 BumpStep (const in double4 x, const in double edge0, const in double edge1)  { return 1.0 - Abs( LinearStep( x, edge0, edge1 ) - 0.5 ) * 2.0; }
+
+float SmoothBumpStep (const in float x, const in float edge0, const in float edge1)
+{
+		float t = BumpStep( x, edge0, edge1 );
+		return t * t * (3.0 - 2.0 * t);
+}
+float2 SmoothBumpStep (const in float2 x, const in float2 edge0, const in float2 edge1)
+{
+		float2 t = BumpStep( x, edge0, edge1 );
+		return t * t * (3.0 - 2.0 * t);
+}
+float2 SmoothBumpStep (const in float2 x, const in float edge0, const in float edge1)
+{
+		float2 t = BumpStep( x, edge0, edge1 );
+		return t * t * (3.0 - 2.0 * t);
+}
+float3 SmoothBumpStep (const in float3 x, const in float3 edge0, const in float3 edge1)
+{
+		float3 t = BumpStep( x, edge0, edge1 );
+		return t * t * (3.0 - 2.0 * t);
+}
+float3 SmoothBumpStep (const in float3 x, const in float edge0, const in float edge1)
+{
+		float3 t = BumpStep( x, edge0, edge1 );
+		return t * t * (3.0 - 2.0 * t);
+}
+float4 SmoothBumpStep (const in float4 x, const in float4 edge0, const in float4 edge1)
+{
+		float4 t = BumpStep( x, edge0, edge1 );
+		return t * t * (3.0 - 2.0 * t);
+}
+float4 SmoothBumpStep (const in float4 x, const in float edge0, const in float edge1)
+{
+		float4 t = BumpStep( x, edge0, edge1 );
+		return t * t * (3.0 - 2.0 * t);
+}
+
+double SmoothBumpStep (const in double x, const in double edge0, const in double edge1)
+{
+		double t = BumpStep( x, edge0, edge1 );
+		return t * t * (3.0 - 2.0 * t);
+}
+double2 SmoothBumpStep (const in double2 x, const in double2 edge0, const in double2 edge1)
+{
+		double2 t = BumpStep( x, edge0, edge1 );
+		return t * t * (3.0 - 2.0 * t);
+}
+double2 SmoothBumpStep (const in double2 x, const in double edge0, const in double edge1)
+{
+		double2 t = BumpStep( x, edge0, edge1 );
+		return t * t * (3.0 - 2.0 * t);
+}
+double3 SmoothBumpStep (const in double3 x, const in double3 edge0, const in double3 edge1)
+{
+		double3 t = BumpStep( x, edge0, edge1 );
+		return t * t * (3.0 - 2.0 * t);
+}
+double3 SmoothBumpStep (const in double3 x, const in double edge0, const in double edge1)
+{
+		double3 t = BumpStep( x, edge0, edge1 );
+		return t * t * (3.0 - 2.0 * t);
+}
+double4 SmoothBumpStep (const in double4 x, const in double4 edge0, const in double4 edge1)
+{
+		double4 t = BumpStep( x, edge0, edge1 );
+		return t * t * (3.0 - 2.0 * t);
+}
+double4 SmoothBumpStep (const in double4 x, const in double edge0, const in double edge1)
+{
+		double4 t = BumpStep( x, edge0, edge1 );
+		return t * t * (3.0 - 2.0 * t);
+}
 

@@ -49,7 +49,7 @@ namespace Compute
 	{
 		enum type
 		{
-			None		= EShaderCompilationFlags::None,
+			Unknown		= EShaderCompilationFlags::Unknown,
 
 			FP_32		= EShaderCompilationFlags::FP_32,
 			FP_64		= EShaderCompilationFlags::FP_64,

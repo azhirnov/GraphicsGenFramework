@@ -27,7 +27,7 @@ namespace Graphics
 		typedef UniformBlock<T>						Self;
 		typedef T									Struct_t;
 		typedef StaticArray< ubyte, BUFFER_SIZE >	Buffer_t;
-		typedef StaticArray< MemoryBufferPtr, 3 >	GraphicsBuffers_t;
+		typedef StaticArray< MemoryBufferPtr, /*3*/1 >	GraphicsBuffers_t;
 
 
 	// variables
@@ -142,7 +142,7 @@ namespace Graphics
 
 		FOR( i, _graphicsBuffers )
 		{
-			_graphicsBuffers[i] = MemoryBuffer::New( program->SubSystems() );
+			_graphicsBuffers[i] = New<MemoryBuffer>( program->SubSystems() );
 
 			CHECK_ERR( _graphicsBuffers[i]->Create() );
 		}
@@ -166,7 +166,7 @@ namespace Graphics
 	{
 		_graphicsBuffers.Clear();
 
-		_currentGraphicsBuffer	= 0;
+		//_currentGraphicsBuffer	= 0;
 		_location				= -1;
 		_bindingIndex			= -1;
 		_changed				= false;

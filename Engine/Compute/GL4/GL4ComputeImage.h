@@ -39,11 +39,11 @@ namespace Compute
 
 
 	// methods
-	protected:
-		explicit GL4ComputeImage (const SubSystemsRef ss);
-		~GL4ComputeImage ();
-		
 	public:
+		explicit
+		GL4ComputeImage (const SubSystemsRef ss);
+		~GL4ComputeImage ();
+
 		bool Create (const uint4 &dim, ETexture::type imageType, EPixelFormat::type format,
 					 EMemoryAccess::type flags = EMemoryAccess::ReadWrite,
 					 BinaryBuffer data = Uninitialized,
@@ -81,7 +81,8 @@ namespace Compute
 		
 		bool					IsCreated ()		const	{ return Id().IsValid(); }
 
-		static ComputeImagePtr  New (const SubSystemsRef ss);
+		// TODO: Clear
+
 		static ComputeImagePtr  New (const TexturePtr &texture, EMemoryAccess::type flags = EMemoryAccess::ReadWrite, MipmapLevel level = MipmapLevel());
 
 

@@ -64,7 +64,7 @@ namespace GXTypes
 
 		~Union ();
 
-		TypeId_t  GetCurrentTypeId () const;
+		TypeId  GetCurrentTypeId () const;
 
 		usize GetCurrentIndex () const;
 
@@ -122,6 +122,11 @@ namespace GXTypes
 
 
 	
+/*
+=================================================
+	_TypeList_Destroy
+=================================================
+*/
 	template <typename ...Types>
 	struct Union<Types...>::_TypeList_Destroy
 	{
@@ -141,11 +146,15 @@ namespace GXTypes
 		}
 	};
 	
-	
+/*
+=================================================
+	_TypeList_GetTypeId
+=================================================
+*/
 	template <typename ...Types>
 	struct Union<Types...>::_TypeList_GetTypeId
 	{
-		TypeId_t	id;
+		TypeId		id;
 		const usize	index;
 
 		_TypeList_GetTypeId (usize index) : index(index)
@@ -156,12 +165,16 @@ namespace GXTypes
 		{
 			if ( index == Index )
 			{
-				id = TypeId<T>();
+				id = TypeIdOf<T>();
 			}
 		}
 	};
 	
-	
+/*
+=================================================
+	_TypeList_GetSizeOf
+=================================================
+*/
 	template <typename ...Types>
 	struct Union<Types...>::_TypeList_GetSizeOf
 	{
@@ -181,7 +194,11 @@ namespace GXTypes
 		}
 	};
 	
-	
+/*
+=================================================
+	_TypeList_Apply
+=================================================
+*/
 	template <typename ...Types>
 	template <typename Func, typename Data>
 	struct Union<Types...>::_TypeList_Apply
@@ -206,7 +223,11 @@ namespace GXTypes
 		}
 	};
 	
-	
+/*
+=================================================
+	_TypeList_Copy
+=================================================
+*/
 	template <typename ...Types>
 	struct Union<Types...>::_TypeList_Copy
 	{
@@ -227,7 +248,11 @@ namespace GXTypes
 		}
 	};
 	
-	
+/*
+=================================================
+	_TypeList_Move
+=================================================
+*/
 	template <typename ...Types>
 	struct Union<Types...>::_TypeList_Move
 	{
@@ -248,7 +273,11 @@ namespace GXTypes
 		}
 	};
 	
-	
+/*
+=================================================
+	_TypeList_Compare
+=================================================
+*/
 	template <typename ...Types>
 	template <usize CmpType>
 	struct Union<Types...>::_TypeList_Compare
@@ -285,16 +314,24 @@ namespace GXTypes
 			}
 		}
 	};
-
 	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename ...Types>
 	inline Union<Types...>::Union (UninitializedType) :
 		_currentIndex(INVALID_INDEX)
 	{
 		DEBUG_ONLY( ZeroMem( _data ) );
 	}
-
-		
+	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename ...Types>
 	inline Union<Types...>::Union (const Self &other) :
 		_currentIndex(INVALID_INDEX)
@@ -303,8 +340,12 @@ namespace GXTypes
 
 		_Copy( other );
 	}
-
-		
+	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename ...Types>
 	inline Union<Types...>::Union (Self &&other) :
 		_currentIndex(other._currentIndex)
@@ -314,7 +355,11 @@ namespace GXTypes
 		_Move( RVREF( other ) );
 	}
 		
-		
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename ...Types>
 	template <typename T>
 	inline Union<Types...>::Union (const T &value) :
@@ -323,15 +368,24 @@ namespace GXTypes
 		Create( value );
 	}
 		
+/*
+=================================================
+	destructor
+=================================================
+*/
 	template <typename ...Types>
 	inline Union<Types...>::~Union ()
 	{
 		Destroy();
 	}
-
 	
+/*
+=================================================
+	GetCurrentTypeId
+=================================================
+*/
 	template <typename ...Types>
-	forceinline TypeId_t  Union<Types...>::GetCurrentTypeId () const
+	forceinline TypeId  Union<Types...>::GetCurrentTypeId () const
 	{
 		// TODO: cache this value
 		_TypeList_GetTypeId		func( _currentIndex );
@@ -339,28 +393,44 @@ namespace GXTypes
 		return func.id;
 	}
 		
-	
+/*
+=================================================
+	GetCurrentIndex
+=================================================
+*/
 	template <typename ...Types>
 	inline usize Union<Types...>::GetCurrentIndex () const
 	{
 		return _currentIndex;
 	}
-
 	
+/*
+=================================================
+	IsDefined
+=================================================
+*/
 	template <typename ...Types>
 	inline bool Union<Types...>::IsDefined () const
 	{
 		return _currentIndex != INVALID_INDEX;
 	}
-
 	
+/*
+=================================================
+	GetPointer
+=================================================
+*/
 	template <typename ...Types>
 	inline void const * Union<Types...>::GetPointer () const
 	{
 		return _data;
 	}
-
 	
+/*
+=================================================
+	GetSizeOf
+=================================================
+*/
 	template <typename ...Types>
 	forceinline BytesU Union<Types...>::GetSizeOf () const
 	{
@@ -368,8 +438,12 @@ namespace GXTypes
 		TypeList_t::RuntimeForEach( func );
 		return BytesU( func.sizeOf );
 	}
-
 	
+/*
+=================================================
+	Create
+=================================================
+*/
 	template <typename ...Types>
 	template <typename T>
 	forceinline Union<Types...> &  Union<Types...>::Create (const T &value)
@@ -384,8 +458,12 @@ namespace GXTypes
 		UnsafeMem::PlacementNew<T>( _data, value );
 		return *this;
 	}
-
-		
+	
+/*
+=================================================
+	Create2
+=================================================
+*/
 	template <typename ...Types>
 	template <typename T>
 	forceinline Union<Types...> &  Union<Types...>::Create2 (T &&value)
@@ -399,7 +477,11 @@ namespace GXTypes
 		return *this;
 	}
 		
-	
+/*
+=================================================
+	Is
+=================================================
+*/
 	template <typename ...Types>
 	template <typename T>
 	forceinline bool Union<Types...>::Is () const
@@ -407,15 +489,23 @@ namespace GXTypes
 		_HasType<T>();
 		return _currentIndex == TypeList_t::IndexOf<T>;
 	}
-
 	
+/*
+=================================================
+	IsSame
+=================================================
+*/
 	template <typename ...Types>
 	forceinline bool Union<Types...>::IsSame (const Self &other) const
 	{
 		return this->GetCurrentIndex() == other.GetCurrentIndex();
 	}
-
 	
+/*
+=================================================
+	Get
+=================================================
+*/
 	template <typename ...Types>
 	template <typename T>
 	forceinline T &  Union<Types...>::Get ()
@@ -424,7 +514,11 @@ namespace GXTypes
 		return *PointerCast< T >( _data );
 	}
 	
-
+/*
+=================================================
+	Get
+=================================================
+*/
 	template <typename ...Types>
 	template <typename T>
 	forceinline T const &  Union<Types...>::Get () const
@@ -432,16 +526,24 @@ namespace GXTypes
 		ASSERT( Is<T>() );
 		return *PointerCast< T >( _data );
 	}
-
 	
+/*
+=================================================
+	Get
+=================================================
+*/
 	template <typename ...Types>
 	template <typename T>
 	forceinline T  Union<Types...>::Get (const T &defaultValue) const
 	{
 		return Is<T>() ? *PointerCast< T >( _data ) : defaultValue;
 	}
-
 	
+/*
+=================================================
+	Cast
+=================================================
+*/
 	template <typename ...Types>
 	template <typename T>
 	forceinline T &  Union<Types...>::Cast ()
@@ -450,8 +552,12 @@ namespace GXTypes
 		ASSERT( IsDefined() );
 		return *PointerCast< T >( _data );
 	}
-
 	
+/*
+=================================================
+	Cast
+=================================================
+*/
 	template <typename ...Types>
 	template <typename T>
 	forceinline T const &  Union<Types...>::Cast () const
@@ -460,8 +566,12 @@ namespace GXTypes
 		ASSERT( IsDefined() );
 		return *PointerCast< T >( _data );
 	}
-
 	
+/*
+=================================================
+	Set
+=================================================
+*/
 	template <typename ...Types>
 	template <typename T>
 	forceinline Union<Types...> &  Union<Types...>::Set (const T &value)
@@ -469,8 +579,12 @@ namespace GXTypes
 		Get<T>() = value;
 		return *this;
 	}
-
 	
+/*
+=================================================
+	Apply
+=================================================
+*/
 	template <typename ...Types>
 	template <typename Func>
 	forceinline void Union<Types...>::Apply (Func& func)
@@ -479,8 +593,12 @@ namespace GXTypes
 		_TypeList_Apply< Func&, void* >	iter( func, _data, _currentIndex );
 		TypeList_t::RuntimeForEach( iter );
 	}
-
 	
+/*
+=================================================
+	Apply
+=================================================
+*/
 	template <typename ...Types>
 	template <typename Func>
 	forceinline void Union<Types...>::Apply (const Func& func) const
@@ -489,8 +607,12 @@ namespace GXTypes
 		_TypeList_Apply< const Func&, void const * const >	iter( func, _data, _currentIndex );
 		TypeList_t::RuntimeForEach( iter );
 	}
-
 	
+/*
+=================================================
+	operator ==
+=================================================
+*/
 	template <typename ...Types>
 	forceinline bool Union<Types...>::operator == (const Self &right) const
 	{
@@ -501,8 +623,12 @@ namespace GXTypes
 		TypeList_t::RuntimeForEach( func );
 		return func.result;
 	}
-
 	
+/*
+=================================================
+	operator >
+=================================================
+*/
 	template <typename ...Types>
 	forceinline bool Union<Types...>::operator >  (const Self &right) const
 	{
@@ -513,8 +639,12 @@ namespace GXTypes
 		TypeList_t::RuntimeForEach( func );
 		return func.result;
 	}
-
 	
+/*
+=================================================
+	operator <
+=================================================
+*/
 	template <typename ...Types>
 	forceinline bool Union<Types...>::operator <  (const Self &right) const
 	{
@@ -526,7 +656,11 @@ namespace GXTypes
 		return func.result;
 	}
 	
-
+/*
+=================================================
+	operator =
+=================================================
+*/
 	template <typename ...Types>
 	forceinline Union<Types...>&  Union<Types...>::operator = (const Self &right)
 	{
@@ -534,8 +668,12 @@ namespace GXTypes
 		_Copy( right );
 		return *this;
 	}
-
-
+	
+/*
+=================================================
+	operator =
+=================================================
+*/
 	template <typename ...Types>
 	forceinline Union<Types...>&  Union<Types...>::operator = (Self &&right)
 	{
@@ -543,8 +681,12 @@ namespace GXTypes
 		_Move( RVREF( right ) );
 		return *this;
 	}
-
 	
+/*
+=================================================
+	Destroy
+=================================================
+*/
 	template <typename ...Types>
 	forceinline void Union<Types...>::Destroy ()
 	{
@@ -560,8 +702,12 @@ namespace GXTypes
 		DEBUG_ONLY( ZeroMem( _data ) );
 		_currentIndex	= INVALID_INDEX;
 	}
-
 	
+/*
+=================================================
+	_HasType
+=================================================
+*/
 	template <typename ...Types>
 	template <typename T>
 	forceinline void Union<Types...>::_HasType ()
@@ -569,7 +715,11 @@ namespace GXTypes
 		STATIC_ASSERT( (TypeList_t::HasType<T>), "type not presented in union" );
 	}
 	
-
+/*
+=================================================
+	_Copy
+=================================================
+*/
 	template <typename ...Types>
 	forceinline void Union<Types...>::_Copy (const Self &other)
 	{
@@ -587,8 +737,12 @@ namespace GXTypes
 			TypeList_t::RuntimeForEach( func );
 		}
 	}
-
-
+	
+/*
+=================================================
+	_Move
+=================================================
+*/
 	template <typename ...Types>
 	forceinline void Union<Types...>::_Move (Self &&other)
 	{
@@ -609,6 +763,11 @@ namespace GXTypes
 
 
 	
+/*
+=================================================
+	Hash
+=================================================
+*/
 	template <typename ...Types>
 	struct Hash< Union<Types...> > :
 		private Hash< BinaryBuffer >
@@ -619,6 +778,7 @@ namespace GXTypes
 
 		result_t operator () (const key_t &x) const
 		{
+			// TODO: it is not same as Hash( union.Get<T>() )
 			return base_t::operator ()( BinaryBuffer::FromVoid( x.GetPointer(), x.GetSizeOf() ) );
 		}
 	};

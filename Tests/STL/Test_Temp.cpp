@@ -4,15 +4,13 @@
 */
 
 #include "Engine/STL/Engine.STL.h"
-//#include "Debug.h"
+#include "Debug.h"
 
 using namespace GX_STL;
 using namespace GX_STL::GXTypes;
 using namespace GX_STL::GXMath;
 
 
-
 extern void Test_Temp ()
 {
-	//WARNING( "!!!" );
 }

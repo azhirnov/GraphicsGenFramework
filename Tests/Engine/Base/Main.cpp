@@ -18,6 +18,9 @@ public:
 	TestApplication (const IParallelThreadPtr &thread) :
 		GameApplication( thread )
 	{
+		CHECK( SubSystems()->Get< FileManager >()->FindAndSetCurrentDir( "Tests/Engine/Base" ) );
+
+		CHECK( Logger::GetInstance()->Open( "log", false ) );
 	}
 
 
@@ -33,7 +36,7 @@ public:
 
 	void _OnInit ()
 	{
-		CPUTIME_PROFILER("");
+		CPUTIME_PROFILER();
 		CPUTIME_PROFILER( "OnInit" );
 		CPUTIME_PROFILER( "OnInit2", 0.001 );
 

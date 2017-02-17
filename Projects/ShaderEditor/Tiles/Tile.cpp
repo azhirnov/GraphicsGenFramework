@@ -84,15 +84,5 @@ namespace ShaderEditor
 		return _zoom >= 0 ? real(1 << _zoom) : 1.0f / real(1 << -_zoom);
 	}
 
-/*
-=================================================
-	New
-=================================================
-*/
-	TilePtr  Tile::New (const SubSystemsRef ss)
-	{
-		return BaseObject::_New( new Tile( ss ) );
-	}
-
 
 }	// ShaderEditor

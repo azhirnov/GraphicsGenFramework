@@ -87,11 +87,6 @@ namespace GameUtils
 				es->Unsubscribe( SelfPtr(this), &KeyBindings::_OnKey );
 			}
 		}
-		
-		static SelfPtr New (const SubSystemsRef ss)
-		{
-			return BaseObject::_New( new Self( ss ) );
-		}
 
 		void AttachListener (const Delegate_t &listener)
 		{

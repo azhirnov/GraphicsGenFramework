@@ -66,15 +66,16 @@ namespace GXTypes
 
 		forceinline Result_t	SafeCall ()		const			{ return IsValid() ? _func() : Result_t(); }
 
-		forceinline TypeId_t	GetType ()		const			{ return _func.target_type(); }
+		forceinline TypeId		GetType ()		const			{ return _func.target_type(); }
 	};
 
 
-
-	//
-	// Function Builder
-	//
-
+	
+/*
+=================================================
+	helpers
+=================================================
+*/
 	namespace _types_hidden_
 	{
 		template <typename T, typename C, bool IsPtr>
@@ -91,26 +92,30 @@ namespace GXTypes
 		constexpr bool FB_IsSame = FB_GetBaseClass< T, C, TypeTraits::IsPointer<T> >::value;
 
 	}	// _types_hidden_
-
-
+	
+/*
+=================================================
+	FunctionBuilder
+=================================================
+*/
 	template <typename C, typename Class, typename Res, typename ...Args, typename ...Args2>
 	forceinline Function<Res>  FunctionBuilder (const C &cl, Res (Class::* fn) (Args...), Args2... args) noexcept
 	{
 		STATIC_ASSERT(( _types_hidden_::FB_IsSame< C, Class > ));
-		return std::bind( fn, cl, args... );
+		return std::bind( fn, cl, FW<Args2>(args)... );
 	}
 	
 	template <typename C, typename Class, typename Res, typename ...Args, typename ...Args2>
 	forceinline Function<Res>  FunctionBuilder (const C &cl, Res (Class::* fn) (Args...) const, Args2... args) noexcept
 	{
 		STATIC_ASSERT(( _types_hidden_::FB_IsSame< C, Class > ));
-		return std::bind( fn, cl, args... );
+		return std::bind( fn, cl, FW<Args2>(args)... );
 	}
 	
 	template <typename Res, typename ...Args, typename ...Args2>
 	forceinline Function<Res>  FunctionBuilder (Res (*fn) (Args...), Args2... args) noexcept
 	{
-		return std::bind( fn, args... );
+		return std::bind( fn, FW<Args2>(args)... );
 	}
 
 

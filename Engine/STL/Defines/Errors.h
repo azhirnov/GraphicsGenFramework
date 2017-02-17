@@ -47,7 +47,7 @@
 
 // return error
 #define RETURN_ERR( ... ) \
-	__GX_RETURN_ERR( AUXDEF_GETARG_0( __VA_ARGS__ ), AUXDEF_GETARG_1( __VA_ARGS__, Uninitialized ) )
+	__GX_RETURN_ERR( AUXDEF_GETARG_0( __VA_ARGS__ ), AUXDEF_GETARG_1( __VA_ARGS__, ::GX_STL::GXTypes::Uninitialized ) )
 
 
 // check and return error if false
@@ -55,7 +55,7 @@
 	__GX_CHECK_ERRX( (_func_), GX_TO_ANSI_STRING( _func_ ), ::GX_STL::ELog::_DefError, (_ret_)  )
 
 #define CHECK_ERR( ... ) \
-	__GX_CHECK_ERR( AUXDEF_GETARG_0( __VA_ARGS__ ), AUXDEF_GETARG_1( __VA_ARGS__, Uninitialized ) )
+	__GX_CHECK_ERR( AUXDEF_GETARG_0( __VA_ARGS__ ), AUXDEF_GETARG_1( __VA_ARGS__, ::GX_STL::GXTypes::Uninitialized ) )
 
 
 // check only
@@ -71,7 +71,7 @@
 		__GX_CHECK_ERRX( (_func_), GX_TO_ANSI_STRING( _func_ ), ::GX_STL::ELog::_DefWarning, (_ret_)  )
 
 #	define DBG_CHECK_ERR( ... ) \
-		__GX_DBG_CHECK_ERR( AUXDEF_GETARG_0( __VA_ARGS__ ), AUXDEF_GETARG_1( __VA_ARGS__, Uninitialized ) )
+		__GX_DBG_CHECK_ERR( AUXDEF_GETARG_0( __VA_ARGS__ ), AUXDEF_GETARG_1( __VA_ARGS__, ::GX_STL::GXTypes::Uninitialized ) )
 	
 
 	// check only
@@ -125,8 +125,8 @@
 #endif	// __GX_NO_EXCEPTIONS__
 
 #define CHECK_ALLOC_RT( _func_, _text_, _ret_ )	CHECK_ALLOC_RE( _func_, return _ret_, _text_ )
-#define CHECK_ALLOC_B( _func_, _res_ )			CHECK_ALLOC_RE( { _res_ = true; _func_; }, _res_ = Uninitialized, "Can't allocate memory" )
-#define CHECK_ALLOC_T( _func_, _text_ )			CHECK_ALLOC_RT( _func_, _text_, Uninitialized )
+#define CHECK_ALLOC_B( _func_, _res_ )			CHECK_ALLOC_RE( { _res_ = true; _func_; }, _res_ = ::GX_STL::GXTypes::Uninitialized, "Can't allocate memory" )
+#define CHECK_ALLOC_T( _func_, _text_ )			CHECK_ALLOC_RT( _func_, _text_, ::GX_STL::GXTypes::Uninitialized )
 #define CHECK_ALLOC_R( _func_, _ret_ )			CHECK_ALLOC_RT( _func_, "Can't allocate memory in function: \"" TOSTRING(_func_) "\"", _ret_ )
-#define CHECK_ALLOC( _func_ )					CHECK_ALLOC_R( _func_, Uninitialized )
+#define CHECK_ALLOC( _func_ )					CHECK_ALLOC_R( _func_, ::GX_STL::GXTypes::Uninitialized )
 

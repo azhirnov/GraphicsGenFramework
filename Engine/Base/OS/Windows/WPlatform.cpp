@@ -985,24 +985,25 @@ namespace WinPlatform
 	__AppEntryPoint
 =================================================
 */
-	int __AppEntryPoint (void (*createApp) (Base::IParallelThread *thread, OUT Base::Application *&))
+	int __AppEntryPoint (Base::ApplicationPtr (*createApp) (const Base::IParallelThreadPtr &))
 	{
 		GXMath::InitializeSTLMath();
 
 		CHECK_ERR( createApp != null );
 
-		SystemThread	sys;
+		int ret = 0;
+		{
+			SystemThread	sys;
+			ApplicationPtr	app = createApp( &sys );
 
-		Ptr< Application >	app;
-		createApp( &sys, app.ref() );
+			CHECK_ERR( app );
 
-		CHECK_ERR( app );
+			app->GetEventSystem()->Send( SysEvent::Application( SysEvent::Application::CREATED ) );
 
-		app->GetEventSystem()->Send( SysEvent::Application( SysEvent::Application::CREATED ) );
+			ret = app->SubSystems()->Get< Platform >().ToPtr< WindowsPlatform >()->Loop();
+		}
 
-		int ret = app->SubSystems()->Get< Platform >().ToPtr< WindowsPlatform >()->Loop();
-
-		DEBUG_ONLY( Referenced::s_ChenckNotReleasedObjects() );
+		DEBUG_ONLY( RefCountedObject::s_ChenckNotReleasedObjects() );
 
 		return ret;
 	}

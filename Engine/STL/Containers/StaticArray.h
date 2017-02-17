@@ -138,27 +138,44 @@ namespace GXTypes
 
 
 	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T, usize C, typename S>
 	inline StaticArray<T,C,S>::StaticArray (UninitializedType)
 	{
 		Strategy::Create( _memory, Count() );
 	}
 		
-
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T, usize C, typename S>
 	inline StaticArray<T,C,S>::StaticArray (const StaticArray<T,C,S> &other)
 	{
 		Strategy::Copy( _memory, other._memory, Count() );
 	}
 	
-		
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T, usize C, typename S>
 	inline StaticArray<T,C,S>::StaticArray (Buffer<const T> other)
 	{
 		Copy( other );
 	}
 	
-	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T, usize C, typename S>
 	inline void StaticArray<T,C,S>::Copy (Buffer<const T> other)
 	{
@@ -182,8 +199,12 @@ namespace GXTypes
 			Strategy::Create( _memory + other.Count(), Count() - other.Count() );
 		}
 	}
-
-		
+	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T, usize C, typename S>
 	inline StaticArray<T,C,S>::StaticArray (const T& value)
 	{
@@ -192,14 +213,22 @@ namespace GXTypes
 		}
 	}
 	
-	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T, usize C, typename S>
 	inline StaticArray<T,C,S>::StaticArray (std::initializer_list<T> list)
 	{
 		Copy( Buffer<const T>( list ) );
 	}
-
-		
+	
+/*
+=================================================
+	operator []
+=================================================
+*/
 	template <typename T, usize C, typename S>
 	inline T & StaticArray<T,C,S>::operator [] (usize index)
 	{
@@ -207,7 +236,6 @@ namespace GXTypes
 		return _memory[ index ];
 	}
 
-		
 	template <typename T, usize C, typename S>
 	inline const T & StaticArray<T,C,S>::operator [] (usize index) const
 	{
@@ -215,7 +243,11 @@ namespace GXTypes
 		return _memory[ index ];
 	}
 	
-	
+/*
+=================================================
+	At
+=================================================
+*/
 	template <typename T, usize C, typename S>
 	inline bool StaticArray<T,C,S>::At (usize index, T & value) const
 	{
@@ -223,8 +255,12 @@ namespace GXTypes
 		Strategy::Copy( &value, &_memory + index, 1 );
 		return true;
 	}
-
 	
+/*
+=================================================
+	Set
+=================================================
+*/
 	template <typename T, usize C, typename S>
 	inline bool StaticArray<T,C,S>::Set (usize index, const T &value)
 	{
@@ -233,7 +269,6 @@ namespace GXTypes
 		return true;
 	}
 	
-
 	template <typename T, usize C, typename S>
 	inline bool StaticArray<T,C,S>::Set (usize index, T&& value)
 	{
@@ -241,23 +276,35 @@ namespace GXTypes
 		Strategy::Move( _memory + index, &value, 1 );
 		return true;
 	}
-
-		
+	
+/*
+=================================================
+	Free
+=================================================
+*/
 	template <typename T, usize C, typename S>
 	inline void StaticArray<T,C,S>::Free ()
 	{
 		Clear();
 	}
-
-		
+	
+/*
+=================================================
+	Clear
+=================================================
+*/
 	template <typename T, usize C, typename S>
 	inline void StaticArray<T,C,S>::Clear ()
 	{
 		Strategy::Destroy( _memory, Count() );
 		Strategy::Create(  _memory, Count() );
 	}
-
-		
+	
+/*
+=================================================
+	Swap
+=================================================
+*/
 	template <typename T, usize C, typename S>
 	inline void StaticArray<T,C,S>::Swap (usize first, usize second)
 	{
@@ -269,31 +316,42 @@ namespace GXTypes
 		Strategy::Replace( _memory + second,	_memory + first,	1 );
 		Strategy::Replace( _memory + first,		&temp,				1 );
 	}
-
-		
+	
+/*
+=================================================
+	GetIter
+=================================================
+*/
 	template <typename T, usize C, typename S>
 	inline T * StaticArray<T,C,S>::GetIter (usize index)
 	{
 		ASSERT( index < Count() );
 		return _memory + index;
 	}
-
-		
+	
 	template <typename T, usize C, typename S>
 	inline const T * StaticArray<T,C,S>::GetIter (usize index) const
 	{
 		ASSERT( index < Count() );
 		return _memory + index;
 	}
-
-		
+	
+/*
+=================================================
+	IsBegin
+=================================================
+*/
 	template <typename T, usize C, typename S>
 	inline bool StaticArray<T,C,S>::IsBegin (const_iterator iter) const
 	{
 		return iter == Begin();
 	}
-
-
+	
+/*
+=================================================
+	IsEnd
+=================================================
+*/
 	template <typename T, usize C, typename S>
 	inline bool StaticArray<T,C,S>::IsEnd (const_iterator iter) const
 	{
@@ -306,6 +364,11 @@ namespace GXTypes
 	#undef RET_VOID
 	
 	
+/*
+=================================================
+	Hash
+=================================================
+*/
 	template <typename T, usize C, typename S>
 	struct Hash< StaticArray<T,C,S> > :
 		private Hash< Buffer<const T> >
@@ -340,9 +403,9 @@ namespace GXTypes
 	}	// _types_hidden_
 
 	template <typename ...Args>
-	inline typename _types_hidden_::StaticArrayFrom<Args...>  MakeStaticArray (Args... args)
+	forceinline typename _types_hidden_::StaticArrayFrom<Args...>  MakeStaticArray (Args... args)
 	{
-		return typename _types_hidden_::StaticArrayFrom<Args...>{ args... };
+		return typename _types_hidden_::StaticArrayFrom<Args...>{ FW<Args>(args)... };
 	}
 
 

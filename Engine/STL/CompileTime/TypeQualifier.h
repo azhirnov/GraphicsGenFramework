@@ -32,7 +32,7 @@ namespace CompileTime
 			// default combinations
 			Def_SimplePOD		= MemCopyAvailable | MemCopyFromFile | ZeroMemAvailable,
 			Def_ComplexPOD		= MemCopyAvailable | MemCopyFromFile | WithCtor,
-			Def_FastCopyable	= MemCopyAvailable | WithCtor,
+			Def_FastCopyable	= MemCopyAvailable | WithCtor | WithDtor,
 			Def_Complex			= WithCtor | WithDtor,
 			Def_Noncopyable		= Noncopyable,
 		};
@@ -84,7 +84,7 @@ namespace CompileTime
 			static const uint	share	= Q1 == Q::Unknown ? Q2 : (Q2 == Q::Unknown ? Q1 : (uint(Q1) & uint(Q2)));
 			static const uint	all		= uint(Q1) | uint(Q2);
 			static const uint	a		= all & Q::WithCtor ? share | Q::WithCtor : share;
-			static const uint	b		= all & Q::WithDtor ? a | Q::WithCtor : a;
+			static const uint	b		= all & Q::WithDtor ? a | Q::WithDtor : a;
 			static const uint	c		= all & Q::Noncopyable ? b | Q::Noncopyable : b;
 
 		public:

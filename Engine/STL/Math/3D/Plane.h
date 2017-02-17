@@ -50,6 +50,8 @@ namespace GXMath
 		void Set (const vec3_t &normal, const T& dist);
 		void Set (const vec3_t &p0, const vec3_t &p1, const vec3_t &p2);
 
+		void GetPerpendiculars (OUT vec3_t &n0, OUT vec3_t &n1, OUT vec3_t &n2) const;
+
 		_ESide_t		Intersect (const vec3_t &point) const;
 		_ESide_t		Intersect (const AABBox<T> &box) const;
 		_ESide_t		Intersect (const vec3_t &center, const vec3_t &halfextent) const;
@@ -72,31 +74,42 @@ namespace GXMath
 
 
 	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T>
 	inline Plane<T>::Plane () : _normal(), _dist(0)
 	{}
 
-	
 	template <typename T>
 	inline Plane<T>::Plane (const Vec<T,3> &normal, const T& dist) : _normal(normal), _dist(dist)
 	{}
 
-	
 	template <typename T>
 	inline Plane<T>::Plane (const Vec<T,3> &p0, const Vec<T,3> &p1, const Vec<T,3> &p2) : _normal(), _dist(0)
 	{
 		Set( p0, p1, p2 );
 	}
-
 	
+/*
+=================================================
+	Set
+=================================================
+*/
 	template <typename T>
 	inline void Plane<T>::Set (const Vec<T,3> &normal, const T& dist)
 	{
 		_normal	= normal;
 		_dist	= dist;
 	}
-
 	
+/*
+=================================================
+	Set
+=================================================
+*/
 	template <typename T>
 	inline void Plane<T>::Set (const Vec<T,3> &p0, const Vec<T,3> &p1, const Vec<T,3> &p2)
 	{
@@ -106,8 +119,12 @@ namespace GXMath
 		_normal = Cross( edge1, edge2 ).Normalize();
 		_dist   = -_normal.Dot( p0 );
 	}
-
 	
+/*
+=================================================
+	Intersect
+=================================================
+*/
 	template <typename T>
 	inline typename Plane<T>::ESide::type  Plane<T>::Intersect (const Vec<T,3> &point) const
 	{
@@ -117,14 +134,17 @@ namespace GXMath
 		if ( d > T(0) )	return ESide::Positive;
 		return ESide::None;
 	}
-
 	
+/*
+=================================================
+	Intersect
+=================================================
+*/
 	template <typename T>
 	inline typename Plane<T>::ESide::type  Plane<T>::Intersect (const AABBox<T> &box) const
 	{
 		return Intersect( box.Center(), box.HalfExtent() );
 	}
-
 	
 	template <typename T>
 	inline typename Plane<T>::ESide::type  Plane<T>::Intersect (const Vec<T,3> &center, const Vec<T,3> &halfextent) const
@@ -136,8 +156,12 @@ namespace GXMath
 		if ( d >  max_abs_d )	return ESide::Positive;
 		return ESide::Both;
 	}
-		
-	
+
+/*
+=================================================
+	Normalize
+=================================================
+*/
 	template <typename T>
 	inline Plane<T> & Plane<T>::Normalize ()
 	{
@@ -153,14 +177,22 @@ namespace GXMath
 		return *this;
 	}
 
-	
+/*
+=================================================
+	Distance
+=================================================
+*/
 	template <typename T>
 	inline T Plane<T>::Distance (const Vec<T,3> &point) const
 	{
 		return _normal.Dot( point ) + _dist;
 	}
 
-	
+/*
+=================================================
+	Project
+=================================================
+*/
 	template <typename T>
 	inline Vec<T,3> Plane<T>::Project (const Vec<T,3> &point) const
 	{
@@ -179,21 +211,33 @@ namespace GXMath
 		return mat * point;
 	}
 
-
+/*
+=================================================
+	operator ==
+=================================================
+*/
 	template <typename T>
 	inline bool Plane<T>::operator == (const Plane<T> &right) const
 	{
 		return Equals( _dist, right._dist ) and _normal == right._normal;
 	}
 
-	
+/*
+=================================================
+	operator !=
+=================================================
+*/
 	template <typename T>
 	inline bool Plane<T>::operator != (const Plane<T> &right) const
 	{
 		return not ( *this == right );
 	}
-	
-		
+
+/*
+=================================================
+	Convert
+=================================================
+*/
 	template <typename T>
 	template <typename T2>
 	inline Plane<T2>  Plane<T>::Convert () const
@@ -201,6 +245,19 @@ namespace GXMath
 		return TPlane<T2>( _normal.Convert<T2>(), T2(_dist) );
 	}
 	
+/*
+=================================================
+	GetPerpendiculars
+=================================================
+*/
+	template <typename T>
+	inline void Plane<T>::GetPerpendiculars (OUT vec3_t &n0, OUT vec3_t &n1, OUT vec3_t &n2) const
+	{
+		n0 = Cross( -vec3_t(T(0), T(0), T(1)), _normal ).Normalized();
+		n1 = Cross( -vec3_t(T(0), T(1), T(0)), _normal ).Normalized();
+		n2 = Cross( -vec3_t(T(1), T(0), T(0)), _normal ).Normalized();
+	}
+
 
 }	// GXMath
 }	// GX_STL

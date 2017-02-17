@@ -1,7 +1,7 @@
 
 [HEADER]
 
-real Billow (in real3 point, real frequency, real lacunarity, real persistence, int octaveCount, int seed);
+real Billow (in real3 point, const real frequency, const real lacunarity, const real persistence, const int octaveCount, const int seed);
 
 
 //-----------------------------------------------------------------------------
@@ -13,7 +13,7 @@ real Billow (in real3 point, real frequency, real lacunarity, real persistence, 
 #import "Core/Math/Math.glcs"
 #import "Core/Noise/_NoiseUtils.glcs"
 
-real Billow (in real3 point, real frequency, real lacunarity, real persistence, int octaveCount, int seed)
+real Billow (in real3 point, const real frequency, const real lacunarity, const real persistence, const int octaveCount, const int seed)
 {
 	real	value	= 0.0;
 	real	signal	= 0.0;
@@ -23,9 +23,9 @@ real Billow (in real3 point, real frequency, real lacunarity, real persistence, 
 
 	for (int octave = 0; octave < octaveCount; ++octave)
 	{
-		real3 n = MakeInt32Range( point );
-		
-		int oseed = (seed + octave) & 0xffffffff;
+		const real3	n		= MakeInt32Range( point );
+		const int	oseed	= (seed + octave) & 0xffffffff;
+
 		signal = GradientCoherentNoise3D( n, oseed );
 		signal = 2.0 * Abs(signal) - 1.0;
 		value += signal * pers;

@@ -47,11 +47,12 @@ namespace ShaderEditor
 
 	// methods
 	private:
-		SimpleLandscapeSample (const SubSystemsRef ss);
-
 		static uint	_GetTileMeshVertices ()		{ return 257; }
 
 	public:
+		explicit
+		SimpleLandscapeSample (const SubSystemsRef ss);
+
 		void Init () override;
 		void Release () override;
 		void Reload () override;
@@ -60,8 +61,6 @@ namespace ShaderEditor
 		void Update (TimeD dt) override;
 		
 		bool Next () override;
-
-		static ISamplePtr  New (const SubSystemsRef ss);
 	};
 
 

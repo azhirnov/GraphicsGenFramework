@@ -1,11 +1,30 @@
+/*
+	Particle type.
+*/
 
-struct ParticleVertex
+[HEADER]
+
+struct Particle
 {
-	float3	prevPos;
-	float	size;
 	float3	position;
-	float	time;
+	float	size;
 	float3	velocity;
 	uint	color;
+	float4	param;
 };
 
+void Particle_Create (out Particle p);
+
+
+//---------------------------------------------------------
+[SOURCE]
+
+
+void Particle_Create (out Particle p)
+{
+	p.position	= float3( 0.0 );
+	p.size		= 0.0;
+	p.velocity	= float3( 0.0 );
+	p.color		= 0;
+	p.param		= float4( 0.0 );
+}

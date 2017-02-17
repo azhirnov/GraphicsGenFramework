@@ -14,7 +14,7 @@ namespace Base
 	// Runnable (Java-style)
 	//
 
-	class Runnable : public Referenced
+	class Runnable : public RefCountedObject
 	{
 	// types
 	public:

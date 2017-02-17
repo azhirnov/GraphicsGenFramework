@@ -13,10 +13,10 @@ namespace ShaderEditor
 
 	extern void InitializeShaderSamples (Ptr< ShaderEditorCore > core)
 	{
-		core->AddSample( SimpleLandscapeSample::New( core->SubSystems() ) );
-		//core->AddSample( ParticlesSample::New( core->SubSystems() ) );
-		core->AddSample( RayTracingSamples::New( core->SubSystems() ) );
-		//core->AddSample( TessLandscapeSample::New( core->SubSystems() ) );
+		core->AddSample( New<ParticlesSample>( core->SubSystems() ) );
+		core->AddSample( New<RayTracingSamples>( core->SubSystems() ) );
+		core->AddSample( New<SimpleLandscapeSample>( core->SubSystems() ) );
+		//core->AddSample( New<TessLandscapeSample>( core->SubSystems() ) );
 	}
 
 }	// ShaderEditor

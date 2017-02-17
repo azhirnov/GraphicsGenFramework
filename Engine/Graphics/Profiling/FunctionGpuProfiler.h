@@ -33,7 +33,7 @@ namespace Profiler
 		FunctionGpuProfiler (const SubSystemsRef ss, const char *name, TimeD limitSec) :
 			_name(name), _limit(limitSec), _file(null), _line(0)
 		{
-			_gpuTimeQuery = GraphicsQuery::New( ss );
+			_gpuTimeQuery = New<GraphicsQuery>( ss );
 			_gpuTimeQuery->Create();
 			_gpuTimeQuery->Begin( EQuery::TimeElapsed, 0 );
 		}
@@ -41,7 +41,7 @@ namespace Profiler
 		FunctionGpuProfiler (const SubSystemsRef ss, const char *name, const char *func, const char *file, int line, TimeD limitSec) :
 			_file(file), _line(line), _limit(limitSec)
 		{
-			_gpuTimeQuery = GraphicsQuery::New( ss );
+			_gpuTimeQuery = New<GraphicsQuery>( ss );
 			_gpuTimeQuery->Create();
 			_gpuTimeQuery->Begin( EQuery::TimeElapsed, 0 );
 
@@ -68,7 +68,7 @@ namespace Profiler
 		Engine::Profiler::FunctionGpuProfiler \
 				AUXDEF_UNITE_RAW( __funcGpuProf, __COUNTER__ ) ( \
 					SubSystems(), \
-					AUXDEF_GETRAW( AUXDEF_GETARG_0( __VA_ARGS__, unknown ) ), \
+					AUXDEF_GETRAW( AUXDEF_GETARG_0( ""__VA_ARGS__, "no name" ) ), \
 					GX_FUNCTION_NAME, \
 					__FILE__, \
 					__LINE__, \

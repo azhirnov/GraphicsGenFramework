@@ -72,7 +72,7 @@ namespace Compute
 		if ( not _shared or
 			 _shared->TextureType() != imageType )
 		{
-			_shared = Texture::New( SubSystems(), PackFileID(), imageType );
+			_shared = GXTypes::New<Texture>( SubSystems(), imageType );
 		}
 
 		CHECK_ERR( _shared->Create( dim, format, MipmapLevelsRange(), MultiSamples() ) );
@@ -177,21 +177,11 @@ namespace Compute
 	New
 =================================================
 */
-	ComputeImagePtr GL4ComputeImage::New (const SubSystemsRef ss)
-	{
-		return BaseObject::_New( new GL4ComputeImage( ss ) );
-	}
-	
-/*
-=================================================
-	New
-=================================================
-*/
 	ComputeImagePtr GL4ComputeImage::New (const TexturePtr &texture, EMemoryAccess::type flags, MipmapLevel level)
 	{
 		CHECK_ERR( texture );
 
-		ComputeImagePtr img = ComputeImage::New( texture->SubSystems() );
+		ComputeImagePtr img = GXTypes::New<GL4ComputeImage>( texture->SubSystems() );
 
 		CHECK_ERR( img->Create( texture, flags, level ) );
 

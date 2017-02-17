@@ -40,12 +40,11 @@ namespace Graphics
 
 
 	// methods
-	protected:
+	public:
 		explicit
 		MemoryBuffer (const SubSystemsRef ss);
 		~MemoryBuffer ();
 
-	public:
 		bool Create ();
 		virtual void Destroy ();
 
@@ -75,8 +74,6 @@ namespace Graphics
 		BufferID const &	GetBufferID ()	const	{ return _id; }
 		BytesU				Size ()			const	{ return _size; }
 		EBufferUsage::type	Usage ()		const	{ return _usage; }
-
-		static MemoryBufferPtr  New (const SubSystemsRef ss);
 
 
 	// Resource
@@ -116,11 +113,10 @@ namespace Graphics
 
 
 	// methods
-	private:
+	public:
 		explicit
 		IndexBuffer (const SubSystemsRef ss);
 
-	public:
 		void Destroy () override;
 
 		bool SetIndexType (EIndex::type indexType);
@@ -128,7 +124,6 @@ namespace Graphics
 		usize			Count ()		const	{ return (usize) SafeDiv( _size, EIndex::SizeOf( _indexType ), BytesU() ); }
 		EIndex::type	IndexType ()	const	{ return _indexType; }
 
-		static IndexBufferPtr  New (const SubSystemsRef ss);
 
 	// Resource
 	public:
@@ -153,11 +148,10 @@ namespace Graphics
 
 
 	// methods
-	private:
+	public:
 		explicit
 		VertexBuffer (const SubSystemsRef ss);
 
-	public:
 		void Destroy () override;
 
 		bool SetAttribs (const VertexAttribsPtr &attribs, BytesU vertexStride);
@@ -177,7 +171,6 @@ namespace Graphics
 		BytesU					Stride ()		const	{ return _stride; }
 		usize					Count ()		const	{ return (usize) SafeDiv( _size, _stride, BytesU() ); }
 
-		static VertexBufferPtr  New (const SubSystemsRef ss);
 
 	// Resource
 	public:
@@ -244,7 +237,7 @@ namespace Graphics
 		CHECK_ERR( IsValid() );
 		CHECK_ERR( offset + size <= Size() );
 
-		return _ClearSubData( GetBufferID(), (usize)offset, (usize)size, EPixelFormat::FromType( value ), BinaryBuffer::From( value ) );
+		return _ClearSubData( GetBufferID(), (usize)offset, (usize)size, EPixelFormat::FromType( value ), BinaryBuffer::FromValue( value ) );
 	}
 
 	inline bool MemoryBuffer::ClearSubData (BytesU offset, BytesU size)
@@ -262,7 +255,7 @@ namespace Graphics
 	{
 		CHECK_ERR( IsValid() );
 
-		return _ClearSubData( GetBufferID(), 0, (usize)Size(), EPixelFormat::FromType( value ), BinaryBuffer::From( value ) );
+		return _ClearSubData( GetBufferID(), 0, (usize)Size(), EPixelFormat::FromType( value ), BinaryBuffer::FromValue( value ) );
 	}
 	
 	inline bool MemoryBuffer::Clear ()

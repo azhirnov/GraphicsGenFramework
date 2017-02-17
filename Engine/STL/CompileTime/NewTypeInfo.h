@@ -3,7 +3,6 @@
 #pragma once
 
 #include "OldTypeInfo.h"
-#include "CompileTimeDebug.h"
 
 namespace GX_STL
 {

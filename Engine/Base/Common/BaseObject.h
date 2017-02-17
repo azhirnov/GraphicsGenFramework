@@ -19,7 +19,7 @@ namespace Base
 	// Base Object
 	//
 
-	class BaseObject : public CReferencedObject
+	class BaseObject : public StaticRefCountedObject
 	{
 	// variables
 	private:

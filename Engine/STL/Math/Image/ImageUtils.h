@@ -116,8 +116,10 @@ struct ImageUtils : public Noninstancable
 	template <typename T>
 	static BytesU AlignedRowSize (const T rowSize, BytesU bytePerPixel, BytesU rowAlign)
 	{
+		typedef CompileTime::MainType<T, BytesU::value_t>	main_t;
+
 		CompileTime::MustBeInteger<T>();
-		return (BytesU) GXMath::AlignToLarge( Max( rowSize, T(1) ) * (T)bytePerPixel, rowAlign );
+		return (BytesU) GXMath::AlignToLarge( Max( rowSize, T(1) ) * (main_t)bytePerPixel, rowAlign );
 	}
 	
 /*
@@ -128,7 +130,7 @@ struct ImageUtils : public Noninstancable
 	template <typename T>
 	static BytesU AlignedSliceSize (const Vec<T,2> dim, BytesU bytePerPixel, BytesU rowAlign, BytesU sliceAlign)
 	{
-		const usize	row_size	= (usize) AlignedSize( dim.x, bytePerPixel, rowAlign );
+		const usize	row_size	= (usize) AlignedRowSize( dim.x, bytePerPixel, rowAlign );
 		const usize slice_size	= (usize) AlignedRowSize( dim.y * row_size, 1_b, sliceAlign );
 		return BytesU( slice_size );
 	}

@@ -45,9 +45,6 @@ namespace Compute
 	class   GL4ComputeProgram;
 	typedef GL4ComputeProgram		ComputeProgram;
 	SHARED_POINTER( ComputeProgram );
-	
-	class   GL4ComputeFunction;
-	typedef GL4ComputeFunction		ComputeFunction;
 
 
 	//
@@ -66,21 +63,19 @@ namespace Compute
 
 
 	// methods
-	protected:
+	public:
 		explicit
 		GL4ComputeProgram (const SubSystemsRef ss);
 		~GL4ComputeProgram ();
 
-		void _Delete ();
-
-	public:
 		bool Create (StringCRef filename, EProgramUnitFlags::type compilationFlags);
 
 		bool IsCreated () const;
 		
 		EProgramUnitFlags::type	GetFlags ()	const	{ return EProgramUnitFlags::type( _flags ); }
 
-		static ComputeProgramPtr New (const SubSystemsRef ss);
+	protected:
+		void _Delete ();
 	};
 
 

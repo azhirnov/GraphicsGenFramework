@@ -63,7 +63,7 @@ namespace ShaderEditor
 
 		bool Load (StringCRef filename)
 		{
-			_program = ShaderProgram::New( SubSystems() );
+			_program = New<ShaderProgram>( SubSystems() );
 
 			CHECK_ERR( _program->Load(
 				filename,
@@ -91,7 +91,7 @@ namespace ShaderEditor
 */
 	IShaderPtr  IShader::Create_TessLandscape (const SubSystemsRef ss)
 	{
-		SHARED_POINTER_TYPE( TessLandscapeShader )	ptr = BaseObject::_New( new TessLandscapeShader( ss ) );
+		auto	ptr = New<TessLandscapeShader>( ss );
 
 		CHECK_ERR( ptr->Load( "gl/Graphics/TessLandscape/shader.glsl" ) );
 		return ptr;

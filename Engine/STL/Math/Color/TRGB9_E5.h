@@ -9,6 +9,19 @@ namespace GX_STL
 {
 namespace GXMath
 {
+	namespace _math_hidden_
+	{
+		template <typename R, typename T>
+		inline R _Pow2 (const int& p)
+		{
+			if ( p >= 0 )
+				return R( T(1) << p );
+			else
+				return R(1) / R( T(1) << (-p) ); 
+		}
+
+	}	// _math_hidden_
+
 
 #	define _VEC_OPERATOR( _op_ ) \
 		template <typename T> Self&		operator _op_##= (const T& right)		{ Set( vec3_t(*this) _op_ right );  return *this; } \
@@ -136,9 +149,9 @@ namespace GXMath
 
 		float_t		f_max_c	= v_color.Max();
 		int			i_exp_p	= Max( -B-1, (int)Log2( f_max_c ) ) + B + 1;
-		float_t		f_max_s	= f_max_c / _math_hidden_::Pow2< float_t, int >( i_exp_p - B - N ) + FT(0.5);
+		float_t		f_max_s	= f_max_c / _math_hidden_::_Pow2< float_t, int >( i_exp_p - B - N ) + FT(0.5);
 		int			i_exp_s	= i_exp_p + not ( f_max_s < float_t(1<<N) );
-		float_t		f_2e	= _math_hidden_::Pow2< float_t, int >( i_exp_s - B - N );
+		float_t		f_2e	= _math_hidden_::_Pow2< float_t, int >( i_exp_s - B - N );
 
 		v_color = v_color / f_2e + 0.5f;
 
@@ -165,7 +178,7 @@ namespace GXMath
 			E_MAX	= 31,
 		};
 
-		float_t	f_exp	= _math_hidden_::Pow2< float_t, int >( _bits.e - B - N );
+		float_t	f_exp	= _math_hidden_::_Pow2< float_t, int >( _bits.e - B - N );
 
 		Red   = float_t( _bits.r_m ) * f_exp;
 		Green = float_t( _bits.g_m ) * f_exp;

@@ -33,8 +33,6 @@ namespace ShaderEditor
 	ShaderEditorCore::~ShaderEditorCore ()
 	{
 		SubSystems()->GetSetter< ShaderEditorCore >().Set( null );
-
-		Logger::GetInstance()->Close();
 	}
 	
 /*

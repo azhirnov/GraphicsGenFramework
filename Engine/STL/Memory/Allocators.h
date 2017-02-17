@@ -55,7 +55,6 @@ namespace GXTypes
 	// Aligned Allocator
 	//
 	
-	
 # ifdef PLATFORM_ANDROID
 #	pragma message ("aligned allocation changed to default")
 	

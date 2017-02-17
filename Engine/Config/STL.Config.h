@@ -57,6 +57,12 @@
 #endif
 
 
+// runtime error checks for OS functions
+#if !defined( __GX_FAST__ )
+#	define __GX_OS_ERROR_CHECKS__
+#endif
+
+
 // log show warning window in runtime
 #if defined( __GX_DEBUG__ )
 #	define __GX_LOG_SHOW_WARNING_ENABLED__

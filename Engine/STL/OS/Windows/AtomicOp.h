@@ -6,8 +6,6 @@
 
 #ifdef PLATFORM_WINDOWS
 
-#include <intrin.h>
-
 namespace GX_STL
 {
 namespace OS

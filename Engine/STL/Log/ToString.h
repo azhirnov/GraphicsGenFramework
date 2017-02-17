@@ -185,7 +185,7 @@ namespace GXTypes
 		if ( val < kb )	str.FormatI( val,       3, ' ' ) << " bit";		else
 		if ( val < mb )	str.FormatI( val >> 10, 3, ' ' ) << " Kbit";	else
 		if ( val < gb )	str.FormatI( val >> 20, 3, ' ' ) << " Mbit";	else
-						str.FormatI( val >> 30, 3, ' ' ) << " Gbit";	else
+						str.FormatI( val >> 30, 3, ' ' ) << " Gbit";
 		return str;
 	}
 	
@@ -303,10 +303,10 @@ namespace GXTypes
 	}
 /*
 =================================================
-	ToString (TypeId_t)
+	ToString (TypeId)
 =================================================
 */
-	inline String  ToString (const TypeId_t &value)
+	inline String  ToString (const TypeId &value)
 	{
 		return value.Get().name();
 	}

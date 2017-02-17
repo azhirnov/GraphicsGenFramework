@@ -21,12 +21,15 @@ namespace SdlPlatform
 #	endif
 
 #	define MAIN_APPLICATION_ENTRY( _app_ ) \
+		\
+		namespace Engine { namespace SdlPlatform { \
+			extern int __AppEntryPoint (Base::ApplicationPtr (*) (const Base::IParallelThreadPtr &)); \
+		}} \
 		int main (int argc, char *argv[]) \
 		{ \
 			return ::Engine::SdlPlatform::__AppEntryPoint( &::Engine::Base::Application::EntryPoint< _app_ > ); \
 		}
 
-	extern int __AppEntryPoint (void (*) (Base::IParallelThread *thread, OUT Base::Application *&));
 
 
 
@@ -67,7 +70,7 @@ namespace SdlPlatform
 		
 		uint						_pause;
 
-		SysEvent::time_t			_lastUpdateTime;
+		TimeD						_lastUpdateTime;
 
 		bool						_isLooping;
 		bool						_terminated;
@@ -137,7 +140,7 @@ namespace SdlPlatform
 		static int2		_GetWindowPos (SDL_Window *wnd);
 		static uint2	_GetWindowSize (SDL_Window *wnd);
 
-		SysEvent::time_t	_GetTimestamp ()	{ return _timer.GetTimeDelta(); }
+		TimeD			_GetTimestamp ()	{ return _timer.GetTimeDelta(); }
 	};
 
 

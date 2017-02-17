@@ -60,6 +60,11 @@ extern void Test_Math_Bit ()
 	BitsU	f4 = BitScanForward( 0x0u );			ASSERT( f4 == -1 );
 	BitsU	f5 = BitScanForward( ushort(0x04) );	ASSERT( f5 == 2 );
 
+	uint	i0 = ReverseBitOrder( 0x00000001u );	ASSERT( i0 == 0x80000000u );
+	uint	i1 = ReverseBitOrder( 0x80000000u );	ASSERT( i1 == 0x00000001u );
+	uint	i2 = ReverseBitOrder( 0x00001001u );	ASSERT( i2 == 0x80080000u );
+	uint	i3 = ReverseBitOrder( 0x10100001u );	ASSERT( i3 == 0x80000808u );
+
 
 	Bitfield<10>	g;
 	g.SetAll( true );	usize	g0 = g;				ASSERT( g0 == ToMask<uint>( 10_bit ) );

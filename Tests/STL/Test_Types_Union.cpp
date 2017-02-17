@@ -7,7 +7,14 @@ using namespace GX_STL::GXTypes;
 using namespace GX_STL::GXMath;
 
 
-typedef Union< byte, short, int, ilong, float, double >		Union_t;
+class RefClass : public RefCountedObject
+{
+	int i;
+};
+SHARED_POINTER( RefClass );
+
+
+typedef Union< byte, short, int, ilong, float, double, RefClassPtr >	Union_t;
 
 
 static void Union_Test1 ()
@@ -20,7 +27,25 @@ static void Union_Test1 ()
 }
 
 
+static void Union_Test2 ()
+{
+	STATIC_ASSERT( CompileTime::IsCtorAvailable< Union_t > );
+	STATIC_ASSERT( CompileTime::IsDtorAvailable< Union_t > );
+
+	RefClassPtr	p = new RefClass();
+	
+	Array<Union_t>	arr;
+
+	arr.Resize( 10 );
+
+	arr[0].Create( p );
+	arr[1].Create( 0.0f );
+	arr[2].Create( 777 );
+}
+
+
 extern void Test_Types_Union ()
 {
 	Union_Test1();
+	Union_Test2();
 }

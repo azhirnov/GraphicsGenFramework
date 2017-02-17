@@ -169,8 +169,7 @@ namespace GXTypes
 				if ( _currentQueue.Empty() )
 					return false;
 				
-				// TODO: use move ctor
-				x = _currentQueue.Front();
+				x = RVREF( _currentQueue.Front() );
 				_currentQueue.PopFront();
 			}
 
@@ -183,7 +182,7 @@ namespace GXTypes
 		usize ProcessAll (Op &op)
 		{
 			value_t	x;
-			usize		counter = 0;
+			usize	counter = 0;
 
 			while ( true )
 			{
@@ -193,8 +192,7 @@ namespace GXTypes
 					if ( _currentQueue.Empty() )
 						break;
 				
-					// TODO: use move ctor
-					x = _currentQueue.Front();
+					x = RVREF( _currentQueue.Front() );
 					_currentQueue.PopFront();
 
 				}
@@ -233,8 +231,7 @@ namespace GXTypes
 
 			if ( parent_t::_lockCurrentQueue.TryLock() )
 			{
-				// TODO: use move ctor
-				parent_t::_currentQueue.AppendBack( parent_t::_pendingQueue );
+				parent_t::_currentQueue.AppendBack( RVREF( parent_t::_pendingQueue ) );
 				parent_t::_lockCurrentQueue.Unlock();
 
 				parent_t::_pendingQueue.Clear();

@@ -384,33 +384,54 @@ namespace GXTypes
 		typedef CopyStrategy::CopyAndMoveCtor< TStaticString<T,Size> >		type;
 	};
 
-
+	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline TString<T,S,MC>::TString (UninitializedType) : _length(0), _size(0)
 	{}
-
 	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline TString<T,S,MC>::TString (const T *str, usize length) : _length(0), _size(0)
 	{
 		Copy( TStringRef<const T>( str, length == 0 and str != null ? _types_hidden_::StrLength( str ) : length ) );
 	}
 		
-	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline TString<T,S,MC>::TString (const Self &other) : _length(0), _size(0)
 	{
 		Copy( TStringRef<const T>( other ) );
 	}
 	
-
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline TString<T,S,MC>::TString (Self &&other)
 	{
 		_Move( RVREF( other ) );
 	}
 	
-
+/*
+=================================================
+	_Move
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void TString<T,S,MC>::_Move (Self &&other)
 	{
@@ -420,70 +441,111 @@ namespace GXTypes
 
 		other._length	= other._size = 0;
 	}
-
+	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline TString<T,S,MC>::TString (TStringRef<const T> str): _length(0), _size(0)
 	{
 		Copy( str );
 	}
-
 	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline TString<T,S,MC>::TString (const bool bValue): _length(0), _size(0)
 	{
 		Copy( bValue ? "true" : "false" );
 	}
-
-
+	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline TString<T,S,MC>::TString (const int value): _size(0), _length(0)
 	{
 		FormatI( value, GlobalConst::STL_StringDefaultRadix );
 	}
-
-
+	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline TString<T,S,MC>::TString (const uint uValue): _size(0), _length(0)
 	{
 		FormatI( uValue, GlobalConst::STL_StringDefaultRadix );
 	}
 	
-
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline TString<T,S,MC>::TString (const ilong value): _size(0), _length(0)
 	{
 		FormatI( value, GlobalConst::STL_StringDefaultRadix );
 	}
 	
-
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline TString<T,S,MC>::TString (const ulong value): _size(0), _length(0)
 	{
 		FormatI( value, GlobalConst::STL_StringDefaultRadix );
 	}
-
-
+	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline TString<T,S,MC>::TString (const float fValue): _size(0), _length(0)
 	{
 		FormatF( fValue, StringFormatF().Fmt<float>().CutZeros() );
 	}
-
-
+	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline TString<T,S,MC>::TString (const double dValue): _size(0), _length(0)
 	{
 		FormatF( dValue, StringFormatF().Fmt<double>().CutZeros() );
 	}
-
-
+	
+/*
+=================================================
+	destructor
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline TString<T,S,MC>::~TString ()
 	{
 		Free();
 	}
-
 	
+/*
+=================================================
+	_Reallocate
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void TString<T,S,MC>::_Reallocate (usize newSize, bool allowReserve)
 	{
@@ -508,15 +570,23 @@ namespace GXTypes
 		_length = old_count - 1;
 	}
 	
-
+/*
+=================================================
+	_CheckIntersection
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline bool TString<T,S,MC>::_CheckIntersection (const void *leftBegin, const void *leftEnd,
 													 const void *rightBegin, const void *rightEnd)
 	{
 		return CheckPointersAliasing( leftBegin, leftEnd, rightBegin, rightEnd );
 	}
-
 	
+/*
+=================================================
+	_GetLength
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline usize TString<T,S,MC>::_GetLength (const void *begin, const void *end)
 	{
@@ -524,39 +594,49 @@ namespace GXTypes
 		return ( usize(end) - usize(begin) ) / sizeof(T);
 	}
 		
-
+/*
+=================================================
+	Back
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline T &  TString<T,S,MC>::Back ()
 	{
 		ASSUME( _length >= 1 );
 		return _memory.Pointer()[_length-1];
 	}
-		
-
+	
 	template <typename T, typename S, typename MC>
 	inline const T & TString<T,S,MC>::Back () const
 	{
 		ASSUME( _length >= 1 );
 		return _memory.Pointer()[_length-1];
 	}
-
-		
+	
+/*
+=================================================
+	operator []
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline T & TString<T,S,MC>::operator [] (usize uNumb)
 	{
 		ASSUME( uNumb < _length );
 		return _memory.Pointer()[uNumb];
 	}
-		
-
+	
 	template <typename T, typename S, typename MC>
 	inline const T & TString<T,S,MC>::operator [] (usize uNumb) const
 	{
 		ASSUME( uNumb < _length );
 		return _memory.Pointer()[uNumb];
 	}
-
-
+	
+/*
+=================================================
+	Append
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void TString<T,S,MC>::Append (TStringRef<const T> str)
 	{
@@ -577,22 +657,34 @@ namespace GXTypes
 		_memory.Pointer()[_length] = 0;
 	}
 	
-	
+/*
+=================================================
+	Append
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void TString<T,S,MC>::Append (const void *begin, const void *end)
 	{
 		Append( (const T *)begin, _GetLength( begin, end ) );
 	}
 	
-
-	/*template <typename T, typename S, typename MC>
+/*
+=================================================
+	Append
+=================================================
+*
+	template <typename T, typename S, typename MC>
 	template <typename B>
 	inline void TString<T,S,MC>::Append (const B &value)
 	{
 		return Append( ToString( value ) );
-	}*/
-
-
+	}
+	
+/*
+=================================================
+	Copy
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	template <typename B>
 	inline void TString<T,S,MC>::Copy (TStringRef<const B> str)
@@ -620,8 +712,12 @@ namespace GXTypes
 		}
 		_memory.Pointer()[_length] = 0;
 	}
-
-
+	
+/*
+=================================================
+	Copy
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void TString<T,S,MC>::Copy (TStringRef<const T> str)
 	{
@@ -647,8 +743,12 @@ namespace GXTypes
 
 		_memory.Pointer()[_length] = 0;
 	}
-
-
+	
+/*
+=================================================
+	Free
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void TString<T,S,MC>::Free ()
 	{
@@ -657,7 +757,11 @@ namespace GXTypes
 		_size		= 0;
 	}
 	
-
+/*
+=================================================
+	Clear
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void TString<T,S,MC>::Clear ()
 	{
@@ -668,23 +772,30 @@ namespace GXTypes
 		_length = 0;
 	}
 	
-	
+/*
+=================================================
+	ptr
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline T *  TString<T,S,MC>::ptr ()
 	{
 		ASSERT( _size > 0 and _memory.Pointer() != null );
 		return _memory.Pointer();
 	}
-		
-
+	
 	template <typename T, typename S, typename MC>
 	inline T const *  TString<T,S,MC>::ptr () const
 	{
 		ASSERT( _size > 0 and _memory.Pointer() != null );
 		return _memory.Pointer();
 	}
-
-
+	
+/*
+=================================================
+	Insert
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void TString<T,S,MC>::Insert (TStringRef<const T> str, usize pos)
 	{
@@ -721,14 +832,22 @@ namespace GXTypes
 		_memory.Pointer()[_length] = 0;
 	}
 	
-
+/*
+=================================================
+	Insert
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void TString<T,S,MC>::Insert (const void *begin, const void *end, usize pos)
 	{
 		Insert( TStringRef<const T>( (const T*)begin, _GetLength( begin, end ) ), pos );
 	}
-
-
+	
+/*
+=================================================
+	Erase
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void TString<T,S,MC>::Erase (usize pos, usize count)
 	{
@@ -745,7 +864,11 @@ namespace GXTypes
 		}
 	}
 	
-
+/*
+=================================================
+	Erase
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void TString<T,S,MC>::Erase (const void *begin, const void *end)
 	{
@@ -756,7 +879,11 @@ namespace GXTypes
 		Erase( GetIndex( *begin ), _GetLength( begin, end ) );
 	}
 	
-
+/*
+=================================================
+	EraseFromBack
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void TString<T,S,MC>::EraseFromBack (usize count)
 	{
@@ -770,8 +897,12 @@ namespace GXTypes
 		_length -= count;
 		_memory.Pointer()[_length] = 0;
 	}
-
-
+	
+/*
+=================================================
+	Reserve
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void TString<T,S,MC>::Reserve (usize length)
 	{
@@ -785,8 +916,12 @@ namespace GXTypes
 
 		_Reallocate( size, false );
 	}
-
 	
+/*
+=================================================
+	Resize
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void TString<T,S,MC>::Resize (usize length, T value, bool allowReserve)
 	{
@@ -801,16 +936,24 @@ namespace GXTypes
 		_length = length;
 		_memory.Pointer()[_length] = 0;
 	}
-
-
+	
+/*
+=================================================
+	FreeReserve
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void TString<T,S,MC>::FreeReserve ()
 	{
 		if ( _Count() > _size )
 			_Reallocate( _Count(), false );
 	}
-
-
+	
+/*
+=================================================
+	FindAndDelete
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline bool TString<T,S,MC>::FindAndDelete (TStringRef<const T> value, usize &pos, usize start)
 	{
@@ -819,8 +962,12 @@ namespace GXTypes
 
 		return Erase( pos, str.Length() );
 	}
-
-
+	
+/*
+=================================================
+	FindAndChange
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline bool TString<T,S,MC>::FindAndChange (TStringRef<const T> searchStr, TStringRef<const T> newStr, usize &pos, usize start)
 	{
@@ -842,8 +989,12 @@ namespace GXTypes
 		
 		return true;
 	}
-
-		
+	
+/*
+=================================================
+	ChangeChars
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void TString<T,S,MC>::ChangeChars (const T searchChar, const T newChar)
 	{
@@ -856,15 +1007,23 @@ namespace GXTypes
 		}
 	}
 	
-	
+/*
+=================================================
+	ReplaceStrings
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void TString<T,S,MC>::ReplaceStrings (TStringRef<const T> pattern, TStringRef<const T> newString, usize start)
 	{
 		usize	pos = start;
 		for (; FindAndChange( pattern, newString, pos, pos ); pos += newString.Length()) {}
 	}
-
-		
+	
+/*
+=================================================
+	CutChars
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void TString<T,S,MC>::CutChars (const T value)
 	{
@@ -891,8 +1050,12 @@ namespace GXTypes
 			_memory.Pointer()[i-u_step] = _memory.Pointer()[i];
 		}
 	}
-
 	
+/*
+=================================================
+	SetLength
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void TString<T,S,MC>::SetLength (usize length)
 	{
@@ -902,15 +1065,23 @@ namespace GXTypes
 		_length = length;
 		_memory.Pointer()[_length] = 0;
 	}
-
 	
+/*
+=================================================
+	CalculateLength
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void TString<T,S,MC>::CalculateLength ()
 	{
 		SetLength( _types_hidden_::StrLength( cstr() ) );
 	}
-
 	
+/*
+=================================================
+	PopBack
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void TString<T,S,MC>::PopBack ()
 	{
@@ -921,7 +1092,11 @@ namespace GXTypes
 		_memory.Pointer()[_length] = 0;
 	}
 	
-	
+/*
+=================================================
+	FormatI
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	template <typename B>
 	inline TString<T,S,MC> & TString<T,S,MC>::FormatI (const B& value, int radix)
@@ -931,7 +1106,11 @@ namespace GXTypes
 		return *this;
 	}
 	
-
+/*
+=================================================
+	FormatAlignedI
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	template <typename B>
 	inline TString<T,S,MC> & TString<T,S,MC>::FormatAlignedI (const B& value, uint align, T alignChar, int radix)
@@ -954,7 +1133,11 @@ namespace GXTypes
 		return *this;
 	}
 	
-
+/*
+=================================================
+	FormatI
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	template <typename B>
 	inline TString<T,S,MC> & TString<T,S,MC>::FormatI (const B& value, usize stepSize, T spaceChar, int radix)
@@ -985,8 +1168,12 @@ namespace GXTypes
 
 		return *this;
 	}
-
 	
+/*
+=================================================
+	FormatF
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline TString<T,S,MC> & TString<T,S,MC>::FormatF (float fValue, const StringFormatF &fmt)
 	{
@@ -1023,8 +1210,12 @@ namespace GXTypes
 
 		return *this;
 	}
-
 	
+/*
+=================================================
+	FormatF
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline TString<T,S,MC> & TString<T,S,MC>::FormatF (double fValue, const StringFormatF &fmt)
 	{
@@ -1062,7 +1253,11 @@ namespace GXTypes
 		return *this;
 	}
 	
-	
+/*
+=================================================
+	Convert
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	template <typename T2, typename S2, typename A2>
 	inline void TString<T,S,MC>::Convert (TString<T2,S2,A2> &str) const
@@ -1081,7 +1276,12 @@ namespace GXTypes
 	#undef	RET_FALSE
 	#undef  RET_VOID
 	
-
+	
+/*
+=================================================
+	IntToStr
+=================================================
+*/
 	namespace _types_hidden_
 	{
 		template <typename T, typename B>
@@ -1126,6 +1326,11 @@ namespace GXTypes
 
 
 	
+/*
+=================================================
+	Hash
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	struct Hash< TString<T,S,MC> > :
 		private Hash< Buffer<const T> >

@@ -19,19 +19,20 @@ namespace Compute
 	{
 	// variables
 	private:
-		MemoryBufferPtr		_shared;
-		EMemoryAccess::type	_flags;
+		MemoryBufferPtr			_shared;
+		EMemoryAccess::type		_flags;
+		EBufferTarget::type		_target;
 
 
 	// methods
-	protected:
-		explicit GL4ComputeBuffer (const SubSystemsRef ss);
+	public:
+		explicit
+		GL4ComputeBuffer (const SubSystemsRef ss);
 		~GL4ComputeBuffer ();
 
-	public:
-		bool Create (BytesU size, EMemoryAccess::type flags = EMemoryAccess::ReadWrite);
-		bool Create (BinaryBuffer data, EMemoryAccess::type flags = EMemoryAccess::ReadWrite);
-		bool Create (const MemoryBufferPtr &shared, EMemoryAccess::type flags = EMemoryAccess::ReadWrite);
+		bool Create (BytesU size, EMemoryAccess::type flags = EMemoryAccess::ReadWrite, EBufferTarget::type target = EBufferTarget::ShaderStorage);
+		bool Create (BinaryBuffer data, EMemoryAccess::type flags = EMemoryAccess::ReadWrite, EBufferTarget::type target = EBufferTarget::ShaderStorage);
+		bool Create (const MemoryBufferPtr &shared, EMemoryAccess::type flags = EMemoryAccess::ReadWrite, EBufferTarget::type target = EBufferTarget::ShaderStorage);
 		
 		bool Read (OUT Buffer<ubyte> data, BytesU offset = Uninitialized) const;
 		bool Write (BinaryBuffer data, BytesU offset = Uninitialized);
@@ -49,12 +50,12 @@ namespace Compute
 		BaseObjectPtr const&	GetSharedObject ()	const	{ return _shared; }
 		
 		EMemoryAccess::type		MemoryAccess ()		const	{ return _flags; }
+		EBufferTarget::type		Target ()			const	{ return _target; }
 
 		BytesU					Size ()				const	{ return _shared ? _shared->Size() : 0_b; }
 		bool					IsCreated ()		const	{ return Id().IsValid(); }
 		BufferID				Id ()				const	{ return _shared ? _shared->GetBufferID() : BufferID(); }
 
-		static ComputeBufferPtr  New (const SubSystemsRef ss);
 		static ComputeBufferPtr  New (const MemoryBufferPtr &shared, EMemoryAccess::type flags = EMemoryAccess::ReadWrite);
 
 

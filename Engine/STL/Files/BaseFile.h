@@ -2,8 +2,7 @@
 
 #pragma once
 
-#include "Engine/STL/ThreadSafe/Referenced.h"
-#include "Engine/STL/Types/Ptr.h"
+#include "Engine/STL/Types/RefCountedObject.h"
 
 namespace GX_STL
 {
@@ -38,7 +37,7 @@ namespace File
 	// Base File interface
 	//
 
-	class BaseFile : protected Referenced
+	class BaseFile : protected RefCountedObject
 	{
 	// interface
 	public:

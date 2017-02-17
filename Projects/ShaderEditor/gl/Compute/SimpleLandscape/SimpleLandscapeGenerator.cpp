@@ -36,7 +36,10 @@ namespace ShaderEditor
 	// methods
 	public:
 		SimpleLandscapeGenerator (const SubSystemsRef ss) :
-			IGenerator( ss ), _numVertices(0), _scale(1.0f), _imageBorder(2)
+			IGenerator( ss ),
+			_genLandscape( SubSystems() ),	_genHeight( SubSystems() ),
+			_genNormals( SubSystems() ),	_genDiffuse( SubSystems() ),
+			_numVertices(0), _scale(1.0f), _imageBorder(2)
 		{}
 
 		bool SetArg (StringCRef name, const VariantRef &arg) override;
@@ -54,7 +57,7 @@ namespace ShaderEditor
 */
 	IGeneratorPtr  IGenerator::Create_SimpleLandscape (const SubSystemsRef ss)
 	{
-		return BaseObject::_New( new SimpleLandscapeGenerator( ss ) );
+		return New<SimpleLandscapeGenerator>( ss );
 	}
 
 /*
@@ -118,10 +121,10 @@ namespace ShaderEditor
 */
 	bool SimpleLandscapeGenerator::Compile ()
 	{
-		CHECK_ERR( _genLandscape.Load( SubSystems(), "gl/Compute/SimpleLandscape/gen_landscape.glcs", EShaderCompilationFlags::DefaultCompute ) );
-		CHECK_ERR( _genNormals.Load( SubSystems(), "gl/Compute/SimpleLandscape/gen_normals.glcs", EShaderCompilationFlags::DefaultCompute ) );
-		CHECK_ERR( _genDiffuse.Load( SubSystems(), "gl/Compute/SimpleLandscape/gen_diffuse.glcs", EShaderCompilationFlags::DefaultCompute ) );
-		CHECK_ERR( _genHeight.Load( SubSystems(), "gl/Compute/SimpleLandscape/gen_height.glcs", EShaderCompilationFlags::DefaultCompute ) );
+		CHECK_ERR( _genLandscape.Load( "gl/Compute/SimpleLandscape/gen_landscape.glcs", EShaderCompilationFlags::DefaultCompute ) );
+		CHECK_ERR( _genNormals.Load( "gl/Compute/SimpleLandscape/gen_normals.glcs", EShaderCompilationFlags::DefaultCompute ) );
+		CHECK_ERR( _genDiffuse.Load( "gl/Compute/SimpleLandscape/gen_diffuse.glcs", EShaderCompilationFlags::DefaultCompute ) );
+		CHECK_ERR( _genHeight.Load( "gl/Compute/SimpleLandscape/gen_height.glcs", EShaderCompilationFlags::DefaultCompute ) );
 
 		CHECK_ERR( SubSystems()->Get< GraphicsEngine >()->GetContext()->CreateSampler(
 			SamplerState( EWrapMode::Clamp, EFilter::Anisotropic_16 ), OUT _diffuseSampler ) );
@@ -129,8 +132,8 @@ namespace ShaderEditor
 		CHECK_ERR( SubSystems()->Get< GraphicsEngine >()->GetContext()->CreateSampler(
 			SamplerState( EWrapMode::Clamp, EFilter::MinMagMipLinear ), OUT _heightSampler ) );
 
-		_heightImage	= ComputeImage::New( SubSystems() );
-		_normalsImage	= ComputeImage::New( SubSystems() );
+		_heightImage	= New<ComputeImage>( SubSystems() );
+		_normalsImage	= New<ComputeImage>( SubSystems() );
 
 		return true;
 	}

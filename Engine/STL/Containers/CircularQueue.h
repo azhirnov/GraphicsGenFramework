@@ -158,27 +158,56 @@ namespace GXTypes
 	using FixedSizeCircularQueue = CircularQueue< T, typename AutoDetectCopyStrategy<T>::type, StaticMemoryContainer<T, Size> >;
 
 	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline CircularQueue<T,S,MC>::CircularQueue (UninitializedType) :
 		_first(0), _end(0), _size(0)
 	{}
-
-
+	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline CircularQueue<T,S,MC>::CircularQueue (const Self &other) :
 		_first(0), _end(0), _size(0)
 	{
 		Copy( other );
 	}
-
-
+	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline CircularQueue<T,S,MC>::CircularQueue (Self &&other)
 	{
 		_Move( RVREF( other ) );
 	}
 	
+/*
+=================================================
+	constructor
+=================================================
+*/
+	template <typename T, typename S, typename MC>
+	inline CircularQueue<T,S,MC>::CircularQueue (Buffer<const T> other) :
+		_first(0), _end(0), _size(0)
+	{
+		Copy( other );
+	}
 	
+/*
+=================================================
+	_Move
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void CircularQueue<T,S,MC>::_Move (Self &&other)
 	{
@@ -189,16 +218,12 @@ namespace GXTypes
 
 		other._first = other._end = other._size = 0;
 	}
-
-
-	template <typename T, typename S, typename MC>
-	inline CircularQueue<T,S,MC>::CircularQueue (Buffer<const T> other) :
-		_first(0), _end(0), _size(0)
-	{
-		Copy( other );
-	}
-
-
+	
+/*
+=================================================
+	_Reallocate
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void  CircularQueue<T,S,MC>::_Reallocate (usize newSize, bool allowReserve)
 	{
@@ -237,22 +262,34 @@ namespace GXTypes
 		_end   = old_count;
 	}
 	
-
+/*
+=================================================
+	_CheckIntersection
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline bool CircularQueue<T,S,MC>::_CheckIntersection (const void *leftBegin, const void *leftEnd,
 															const void *rightBegin, const void *rightEnd)
 	{
 		return CheckPointersAliasing( leftBegin, leftEnd, rightBegin, rightEnd );
 	}
-
 	
+/*
+=================================================
+	_WrapIndex
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline usize CircularQueue<T,S,MC>::_WrapIndex (isize i) const
 	{
 		return ( i < 0 ? _size + i : ( i >= (isize)_size ? i - _size : i ) );
 	}
 	
-
+/*
+=================================================
+	Count
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline usize  CircularQueue<T,S,MC>::Count () const
 	{
@@ -260,8 +297,12 @@ namespace GXTypes
 				( _end - _first ) :
 				( _size - _first + _end );
 	}
-
 	
+/*
+=================================================
+	Front
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline T & CircularQueue<T,S,MC>::Front ()
 	{
@@ -269,22 +310,24 @@ namespace GXTypes
 		return _memory.Pointer()[ _first ];
 	}
 	
-
 	template <typename T, typename S, typename MC>
 	inline T const & CircularQueue<T,S,MC>::Front () const
 	{
 		ASSERT( not Empty() );
 		return _memory.Pointer()[ _first ];
 	}
-
 	
+/*
+=================================================
+	Back
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline T & CircularQueue<T,S,MC>::Back ()
 	{
 		ASSERT( not Empty() );
 		return _memory.Pointer()[ _WrapIndex( _end - 1 ) ];
 	}
-
 	
 	template <typename T, typename S, typename MC>
 	inline T const & CircularQueue<T,S,MC>::Back () const
@@ -293,14 +336,17 @@ namespace GXTypes
 		return _memory.Pointer()[ _WrapIndex( _end - 1 ) ];
 	}
 		
-	
+/*
+=================================================
+	operator []
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline T & CircularQueue<T,S,MC>::operator [] (usize i)
 	{
 		ASSERT( i < Count() );
 		return _memory.Pointer()[ _WrapIndex( i + _first ) ];
 	}
-
 	
 	template <typename T, typename S, typename MC>
 	inline T const & CircularQueue<T,S,MC>::operator [] (usize i) const
@@ -309,7 +355,11 @@ namespace GXTypes
 		return _memory.Pointer()[ _WrapIndex( i + _first ) ];
 	}
 		
-	
+/*
+=================================================
+	PushBack
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void CircularQueue<T,S,MC>::PushBack (const T &value)
 	{
@@ -321,8 +371,12 @@ namespace GXTypes
 		Strategy::Copy( _memory.Pointer() + _end, &value, 1 );
 		_end = _WrapIndex( _end + 1 );
 	}
-
 	
+/*
+=================================================
+	PushBack
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void CircularQueue<T,S,MC>::PushBack (T&& value)
 	{
@@ -333,7 +387,11 @@ namespace GXTypes
 		_end = _WrapIndex( _end + 1 );
 	}
 	
-
+/*
+=================================================
+	PushFront
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void CircularQueue<T,S,MC>::PushFront (const T &value)
 	{
@@ -343,8 +401,12 @@ namespace GXTypes
 		_first = _WrapIndex( _first - 1 );
 		Strategy::Copy( _memory.Pointer() + _first, &value, 1 );
 	}
-
-
+	
+/*
+=================================================
+	PushFront
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void CircularQueue<T,S,MC>::PushFront (T&& value)
 	{
@@ -355,7 +417,11 @@ namespace GXTypes
 		Strategy::Move( _memory.Pointer() + _first, &value, 1 );
 	}
 		
-	
+/*
+=================================================
+	PopBack
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void CircularQueue<T,S,MC>::PopBack ()
 	{
@@ -365,8 +431,12 @@ namespace GXTypes
 			Strategy::Destroy( _memory.Pointer() + _end, 1 );
 		}
 	}
-
 	
+/*
+=================================================
+	PopFront
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void CircularQueue<T,S,MC>::PopFront ()
 	{
@@ -376,8 +446,12 @@ namespace GXTypes
 			_first = _WrapIndex( _first + 1 );
 		}
 	}
-
-		
+	
+/*
+=================================================
+	_AppendFront
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	template <typename B>
 	inline void CircularQueue<T,S,MC>::_AppendFront (B *pArray, usize count)
@@ -426,8 +500,12 @@ namespace GXTypes
 			_first -= count;
 		}
 	}
-
 	
+/*
+=================================================
+	_AppendBack
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	template <typename B>
 	inline void CircularQueue<T,S,MC>::_AppendBack (B *pArray, usize count)
@@ -476,14 +554,22 @@ namespace GXTypes
 		}
 	}
 	
-	
+/*
+=================================================
+	AppendFront
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void CircularQueue<T,S,MC>::AppendFront (Buffer<const T> value)
 	{
 		return _AppendFront<const T>( value.RawPtr(), value.Count() );
 	}
 		
-
+/*
+=================================================
+	AppendFront
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void CircularQueue<T,S,MC>::AppendFront (const Self &value)
 	{
@@ -495,6 +581,11 @@ namespace GXTypes
 		AppendFront( part0 );
 	}
 	
+/*
+=================================================
+	AppendFront
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void CircularQueue<T,S,MC>::AppendFront (Self &&value)
 	{
@@ -505,15 +596,23 @@ namespace GXTypes
 		_AppendFront<T>( part1.RawPtr(), part1.Count() );
 		_AppendFront<T>( part0.RawPtr(), part0.Count() );
 	}
-
-
+	
+/*
+=================================================
+	AppendBack
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void CircularQueue<T,S,MC>::AppendBack (Buffer<const T> value)
 	{
 		return _AppendBack<const T>( value.RawPtr(), value.Count() );
 	}
-		
 	
+/*
+=================================================
+	AppendBack
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void CircularQueue<T,S,MC>::AppendBack (const Self &value)
 	{
@@ -525,7 +624,11 @@ namespace GXTypes
 		AppendBack( part0 );
 	}
 		
-	
+/*
+=================================================
+	AppendBack
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void CircularQueue<T,S,MC>::AppendBack (Self &&value)
 	{
@@ -537,7 +640,11 @@ namespace GXTypes
 		_AppendBack<T>( part0.RawPtr(), part0.Count() );
 	}
 	
-
+/*
+=================================================
+	Reserve
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void CircularQueue<T,S,MC>::Reserve (usize size)
 	{
@@ -547,7 +654,11 @@ namespace GXTypes
 		_Reallocate( size, false );
 	}
 	
-
+/*
+=================================================
+	Resize
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void CircularQueue<T,S,MC>::Resize (usize newSize, bool allowReserve)
 	{
@@ -596,7 +707,11 @@ namespace GXTypes
 		}
 	}
 	
-
+/*
+=================================================
+	operator ==
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline bool CircularQueue<T,S,MC>::operator == (Buffer<const T> right) const
 	{
@@ -611,7 +726,11 @@ namespace GXTypes
 		return true;
 	}
 	
-
+/*
+=================================================
+	operator ==
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline bool CircularQueue<T,S,MC>::operator == (const Self &right) const
 	{
@@ -625,8 +744,12 @@ namespace GXTypes
 		}
 		return true;
 	}
-
 	
+/*
+=================================================
+	Free
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void CircularQueue<T,S,MC>::Free ()
 	{
@@ -649,8 +772,12 @@ namespace GXTypes
 		_first	= _end = 0;
 		_size	= 0;
 	}
-
 	
+/*
+=================================================
+	Clear
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void CircularQueue<T,S,MC>::Clear ()
 	{
@@ -672,7 +799,11 @@ namespace GXTypes
 		_first = _end = 0;
 	}
 	
-
+/*
+=================================================
+	Copy
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void CircularQueue<T,S,MC>::Copy (const Self &other)
 	{
@@ -680,15 +811,23 @@ namespace GXTypes
 		AppendBack( other );
 	}
 	
-
+/*
+=================================================
+	Copy
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void CircularQueue<T,S,MC>::Copy (Buffer<const T> other)
 	{
 		Clear();
 		AppendBack( other );
 	}
-
-
+	
+/*
+=================================================
+	GetParts
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void CircularQueue<T,S,MC>::GetParts (Buffer<T> &part0, Buffer<T> &part1)
 	{
@@ -710,7 +849,11 @@ namespace GXTypes
 		}
 	}
 	
-
+/*
+=================================================
+	GetParts
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void CircularQueue<T,S,MC>::GetParts (Buffer<const T> &part0, Buffer<const T> &part1) const
 	{
@@ -737,6 +880,11 @@ namespace GXTypes
 	#undef  RET_VOID
 	
 	
+/*
+=================================================
+	Hash
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	struct Hash< CircularQueue<T,S,MC> > :
 		private Hash< Buffer<const T> >
@@ -755,7 +903,7 @@ namespace GXTypes
 
 			x.GetParts( part0, part1 );
 
-			return (hasher( part0 ) << 1) ^ (hasher( part1 ) >> 1);
+			return hasher( part0 ) + hasher( part1 );
 		}
 	};
 

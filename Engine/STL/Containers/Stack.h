@@ -84,7 +84,12 @@ namespace GXTypes
 	template <typename T, usize Count>
 	using FixedSizeStack = Stack<T, typename AutoDetectCopyStrategy<T>::type, StaticMemoryContainer<T, Count> >;
 
-
+	
+/*
+=================================================
+	Pop
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline bool Stack<T,S,MC>::Pop ()
 	{
@@ -96,8 +101,12 @@ namespace GXTypes
 		WARNING("stack is empty");
 		return false;
 	}
-
-
+	
+/*
+=================================================
+	Push
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Stack<T,S,MC>::Push ()
 	{
@@ -106,6 +115,11 @@ namespace GXTypes
 	}
 
 	
+/*
+=================================================
+	Hash
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	struct Hash< Stack<T,S,MC> > :
 		private Hash< Buffer<const T> >

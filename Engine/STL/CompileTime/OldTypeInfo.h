@@ -51,11 +51,11 @@ namespace CompileTime
 		constexpr	int		INT32_MAX			= UINT32_MAX & ~INT32_MIN;
 		constexpr	ilong	INT64_MAX			= UINT64_MAX & ~INT64_MIN;
 
-		constexpr	float	FLOAT_MAX			= static_cast< float const &>( 0x7F7FFFFF );
-		constexpr	float	FLOAT_MIN			= static_cast< float const &>( 0x00800000 );
+		constexpr	float	FLOAT_MAX			= static_cast< float const &>( 0x7F7FFFFF );	// TODO: fix
+		constexpr	float	FLOAT_MIN			= static_cast< float const &>( 0x00800000 );	// TODO: fix
 
-		constexpr	double	DOUBLE_MAX			= static_cast< double const &>( 0x7FEFFFFFFFFFFFFFull );
-		constexpr	double	DOUBLE_MIN			= static_cast< double const &>( 0x0010000000000000ull );
+		constexpr	double	DOUBLE_MAX			= static_cast< double const &>( 0x7FEFFFFFFFFFFFFFull );	// TODO: fix
+		constexpr	double	DOUBLE_MIN			= static_cast< double const &>( 0x0010000000000000ull );	// TODO: fix
 
 		constexpr	uint	FLOAT_MAX_POW		= 38;
 		constexpr	uint	DOUBLE_MAX_POW		= 308;
@@ -83,11 +83,11 @@ namespace CompileTime
 		constexpr	int		INT32_MAX			= UINT32_MAX & ~INT32_MIN;
 		constexpr	ilong	INT64_MAX			= UINT64_MAX & ~INT64_MIN;
 
-		constexpr	float	FLOAT_MAX			= static_cast< float const &>( 0x7F7FFFFF );
-		constexpr	float	FLOAT_MIN			= static_cast< float const &>( 0x00800000 );
+		constexpr	float	FLOAT_MAX			= 3.402823466e+38F;
+		constexpr	float	FLOAT_MIN			= 1.175494351e-38F;
 
-		constexpr	double	DOUBLE_MAX			= static_cast< double const &>( 0x7FEFFFFFFFFFFFFFull );
-		constexpr	double	DOUBLE_MIN			= static_cast< double const &>( 0x0010000000000000ull );
+		constexpr	double	DOUBLE_MAX			= 1.7976931348623158e+308;
+		constexpr	double	DOUBLE_MIN			= 2.2250738585072014e-308;
 	
 		constexpr	uint	FLOAT_MAX_POW		= 38;
 		constexpr	uint	DOUBLE_MAX_POW		= 308;

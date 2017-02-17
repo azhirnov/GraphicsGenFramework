@@ -24,7 +24,7 @@ namespace OS
 	};
 
 	
-# ifdef __GX_FAST__
+# if !defined( __GX_OS_ERROR_CHECKS__ )
 
 #	define SDL_CALL( ... )		__VA_ARGS__
 #	define SDL_CHECK( ... )		__VA_ARGS__
@@ -48,9 +48,9 @@ namespace OS
 	}
 
 #	define SDL_CHECK( ... ) \
-		__SDL_CHECK( AUXDEF_GETARG_0( __VA_ARGS__ ), AUXDEF_GETARG_1( __VA_ARGS__, Uninitialized ) )
+		__SDL_CHECK( AUXDEF_GETARG_0( __VA_ARGS__ ), AUXDEF_GETARG_1( __VA_ARGS__, ::GX_STL::GXTypes::Uninitialized ) )
 
-#endif	// __GX_FAST__
+#endif	// !__GX_OS_ERROR_CHECKS__
 
 
 }	// OS

@@ -1,0 +1,20 @@
+/*
+	Physics functions for gravity simulations.
+*/
+
+[HEADER]
+
+real3 GravityAccel (const real3 position, const real3 center, const real gravity);
+
+
+//-----------------------------------------------------------------------------
+[SOURCE]
+
+#import "Core/Math/Math.glcs"
+
+
+real3 GravityAccel (const real3 position, const real3 center, const real gravity)
+{
+	const real3 v = center - position;
+	return Normalize( v ) * gravity / Dot( v, v );
+}

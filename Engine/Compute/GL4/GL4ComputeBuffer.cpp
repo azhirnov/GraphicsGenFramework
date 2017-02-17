@@ -16,7 +16,8 @@ namespace Compute
 */
 	GL4ComputeBuffer::GL4ComputeBuffer (const SubSystemsRef ss) :
 		BaseObject( ss ),
-		_flags( EMemoryAccess::Unknown )
+		_flags( EMemoryAccess::Unknown ),
+		_target( EBufferTarget::Unknown )
 	{
 	}
 	
@@ -40,7 +41,7 @@ namespace Compute
 		CHECK( IsCreated() );
 		CHECK( EnumEqMask( access, _flags & access, EMemoryAccess::Write ) );
 
-		_shared->BindBase( EBufferTarget::ShaderStorage, bindingIndex, access );
+		_shared->BindBase( _target, bindingIndex, access );
 	}
 
 /*
@@ -48,14 +49,15 @@ namespace Compute
 	Create
 =================================================
 */
-	bool GL4ComputeBuffer::Create (BytesU size, EMemoryAccess::type flags)
+	bool GL4ComputeBuffer::Create (BytesU size, EMemoryAccess::type flags, EBufferTarget::type target)
 	{
 		_Destroy();
 		
 		CHECK_ERR( size > 0 );
 
 		_flags	= flags;
-		_shared	= MemoryBuffer::New( SubSystems() );
+		_target	= target;
+		_shared	= GXTypes::New<MemoryBuffer>( SubSystems() );
 
 		CHECK_ERR( _shared->Create() );
 		CHECK_ERR( _shared->Allocate( size, EBufferUsage::Dynamic ) );
@@ -68,14 +70,15 @@ namespace Compute
 	Create
 =================================================
 */
-	bool GL4ComputeBuffer::Create (BinaryBuffer data, EMemoryAccess::type flags)
+	bool GL4ComputeBuffer::Create (BinaryBuffer data, EMemoryAccess::type flags, EBufferTarget::type target)
 	{
 		_Destroy();
 		
 		CHECK_ERR( not data.Empty() );
 		
 		_flags	= flags;
-		_shared	= MemoryBuffer::New( SubSystems() );
+		_target	= target;
+		_shared	= GXTypes::New<MemoryBuffer>( SubSystems() );
 
 		CHECK_ERR( _shared->Create() );
 		CHECK_ERR( _shared->SetData( data, EBufferUsage::Dynamic ) );
@@ -88,7 +91,7 @@ namespace Compute
 	Create
 =================================================
 */
-	bool GL4ComputeBuffer::Create (const MemoryBufferPtr &shared, EMemoryAccess::type flags)
+	bool GL4ComputeBuffer::Create (const MemoryBufferPtr &shared, EMemoryAccess::type flags, EBufferTarget::type target)
 	{
 		_Destroy();
 
@@ -96,6 +99,7 @@ namespace Compute
 
 		_shared	= shared;
 		_flags	= flags;
+		_target	= target;
 
 		return true;
 	}
@@ -154,19 +158,11 @@ namespace Compute
 	New
 =================================================
 */
-	ComputeBufferPtr  GL4ComputeBuffer::New (const SubSystemsRef ss)
-	{
-		return BaseObject::_New( new GL4ComputeBuffer( ss ) );
-	}
-	
-/*
-=================================================
-	New
-=================================================
-*/
 	ComputeBufferPtr  GL4ComputeBuffer::New (const MemoryBufferPtr &shared, EMemoryAccess::type flags)
 	{
-		ComputeBufferPtr	buf = New( shared->SubSystems() );
+		CHECK_ERR( shared );
+
+		ComputeBufferPtr	buf = GXTypes::New<GL4ComputeBuffer>( shared->SubSystems() );
 
 		CHECK_ERR( buf->Create( shared, flags ) );
 		return buf;
@@ -180,7 +176,8 @@ namespace Compute
 	void GL4ComputeBuffer::_Destroy ()
 	{
 		_shared	= null;
-		_flags	= EMemoryAccess::Unknown;
+		_flags	= EMemoryAccess::Unknown;		
+		_target	= EBufferTarget::Unknown;
 	}
 		
 

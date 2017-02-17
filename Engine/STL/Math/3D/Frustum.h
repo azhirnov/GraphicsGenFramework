@@ -59,7 +59,12 @@ namespace GXMath
 	};
 
 
-
+	
+/*
+=================================================
+	Setup
+=================================================
+*/
 	template <typename T>
 	inline void Frustum<T>::Setup (const Matrix<T,4,4> &vp)
 	{
@@ -100,7 +105,11 @@ namespace GXMath
 		_planes[EPlane::Far].Normalize();
 	}
 	
-			
+/*
+=================================================
+	IsVisible
+=================================================
+*/	
 	template <typename T>
 	inline bool Frustum<T>::IsVisible (const Vec<T,3> &point) const
 	{
@@ -113,15 +122,23 @@ namespace GXMath
 				 _planes[EPlane::Near  ].Intersect( point ) != PSide::Negative and
 				 _planes[EPlane::Far   ].Intersect( point ) != PSide::Negative );
 	}
-
-		
+	
+/*
+=================================================
+	IsVisible
+=================================================
+*/
 	template <typename T>
 	inline bool Frustum<T>::IsVisible (const AABBox<T> &box) const
 	{
 		return IsVisible( box.Center(), box.HalfExtent() );
 	}
-
-		
+	
+/*
+=================================================
+	IsVisible
+=================================================
+*/
 	template <typename T>
 	inline bool Frustum<T>::IsVisible (const Vec<T,3> &center, const T radius) const
 	{
@@ -132,8 +149,12 @@ namespace GXMath
 				 _planes[EPlane::Near  ].Distance( center ) >= -radius and
 				 _planes[EPlane::Far   ].Distance( center ) >= -radius );
 	}
-
-		
+	
+/*
+=================================================
+	IsVisible
+=================================================
+*/
 	template <typename T>
 	inline bool Frustum<T>::IsVisible (const Vec<T,3> &center, const Vec<T,3> &halfextents) const
 	{
@@ -147,7 +168,11 @@ namespace GXMath
 				 _planes[EPlane::Far   ].Intersect( center, halfextents ) != PSide::Negative );
 	}
 	
-
+/*
+=================================================
+	IsVisible
+=================================================
+*/
 	/*template <typename T>
 	inline bool Frustum<T>::IsVisible (const Frustum<T> &frustum) const
 	{
@@ -155,10 +180,14 @@ namespace GXMath
 		return false;
 	}*/
 	
-
+/*
+=================================================
+	Convert
+=================================================
+*/
 	template <typename T>
 	template <typename T2>
-	inline Frustum<T2> Frustum<T>::Convert() const
+	inline Frustum<T2> Frustum<T>::Convert () const
 	{
 		Frustum<T2>	ret;
 

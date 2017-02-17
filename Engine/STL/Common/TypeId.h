@@ -59,9 +59,9 @@ namespace GXTypes
 			std::type_index		_value;
 
 		public:
-			_TypeID () : _value(typeid(UnknownType)) {}
+			_TypeID () noexcept : _value(typeid(UnknownType)) {}
 
-			_TypeID (const std::type_index &value) : _value(value) {}
+			_TypeID (const std::type_index &value) noexcept : _value(value) {}
 
 			forceinline bool operator == (_TypeID right) const	{ return _value == right._value; }
 			forceinline bool operator != (_TypeID right) const	{ return _value != right._value; }
@@ -88,26 +88,36 @@ namespace GXTypes
 	}	// _types_hidden_
 
 
-	typedef _types_hidden_::_TypeID		TypeId_t;
+	typedef _types_hidden_::_TypeID		TypeId;
 
-
+	
+/*
+=================================================
+	TypeIdOf
+=================================================
+*/
 	template <typename T>
-	forceinline static TypeId_t  TypeId ()
+	forceinline static TypeId  TypeIdOf () noexcept
 	{
 		return _types_hidden_::_TypeId<T>::Get();
 	}
 
 	template <typename T>
-	forceinline static TypeId_t  TypeIdOf (const T&)
+	forceinline static TypeId  TypeIdOf (const T&) noexcept
 	{
-		return TypeId<T>();
+		return TypeIdOf<T>();
 	}
 	
-
+	
+/*
+=================================================
+	Hash
+=================================================
+*/
 	template <>
-	struct Hash< TypeId_t >
+	struct Hash< TypeId >
 	{
-		typedef TypeId_t												key_t;
+		typedef TypeId													key_t;
 		typedef Hash< TypeTraits::ResultOf< decltype(&key_t::Get) > >	base_t;
 		typedef base_t::result_t										result_t;
 

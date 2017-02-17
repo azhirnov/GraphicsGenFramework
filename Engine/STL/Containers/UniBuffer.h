@@ -104,21 +104,34 @@ namespace GXTypes
 	};
 
 
-
+	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T>
 	inline UniBuffer<T>::UniBuffer (UninitializedType) :
 		_memory(null), _count(0), _offset(0), _stride(0)
 	{}
-
 	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T>
 	inline UniBuffer<T>::UniBuffer (void_ptr_t memory, usize count, ushort offset, ushort stride) :
 		_memory(memory), _count(count), _offset(offset), _stride(stride)
 	{
 		ASSUME( _count == 0 or _memory != null );
 	}
-
-
+	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T>
 	template <typename B>
 	inline UniBuffer<T>::UniBuffer (Buffer<B> buffer, T (B::*member)) :
@@ -135,7 +148,11 @@ namespace GXTypes
 		ASSUME( _count == 0 or _memory != null );
 	}
 	
-
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T>
 	template <typename B>
 	inline UniBuffer<T>::UniBuffer (B *memory, usize count, T (B::*member)) :
@@ -147,7 +164,11 @@ namespace GXTypes
 		ASSUME( _count == 0 or _memory != null );
 	}
 	
-
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T>
 	template <typename B, usize I>
 	inline UniBuffer<T>::UniBuffer (const B (&arr)[I], T (B::*member)) :
@@ -158,30 +179,46 @@ namespace GXTypes
 	{
 		ASSUME( _count == 0 or _memory != null );
 	}
-
 	
+/*
+=================================================
+	operator ==
+=================================================
+*/
 	template <typename T>
 	inline bool UniBuffer<T>::operator == (const Self &other) const
 	{
 		return Equals( other, _CompareElements() );
 	}
-
 	
+/*
+=================================================
+	operator !=
+=================================================
+*/
 	template <typename T>
 	inline bool UniBuffer<T>::operator != (const Self &other) const
 	{
 		return not ( *this == other );
 	}
-
-
+	
+/*
+=================================================
+	operator []
+=================================================
+*/
 	template <typename T>
 	inline T &  UniBuffer<T>::operator [] (usize i)
 	{
 		ASSERT( i < _count );
 		return *(T *) ( ((char *) _memory) + (_offset + usize(_stride) * i) );
 	}
-
-
+	
+/*
+=================================================
+	operator []
+=================================================
+*/
 	template <typename T>
 	inline T const &  UniBuffer<T>::operator [] (usize i) const
 	{
@@ -189,7 +226,11 @@ namespace GXTypes
 		return *(const T * const) ( _Begin() + (_offset + usize(_stride) * i) );
 	}
 	
-
+/*
+=================================================
+	Equals
+=================================================
+*/
 	template <typename T>
 	template <typename Cmp>
 	inline bool UniBuffer<T>::Equals (const Self &other, Cmp sCmp) const
@@ -210,7 +251,11 @@ namespace GXTypes
 		return true;
 	}
 		
-
+/*
+=================================================
+	GetIndex
+=================================================
+*/
 	template <typename T>
 	inline usize UniBuffer<T>::GetIndex (const T &value) const
 	{
@@ -218,7 +263,11 @@ namespace GXTypes
 		return (usize( ((const char * const) &value) - _Begin() ) - _offset) / _stride;
 	}
 	
-
+/*
+=================================================
+	IsInArray
+=================================================
+*/
 	template <typename T>
 	inline bool UniBuffer<T>::IsInArray (const T &value) const
 	{
@@ -227,7 +276,11 @@ namespace GXTypes
 		return value_ptr >= _Begin() and value_ptr < _End();
 	}
 		
-
+/*
+=================================================
+	Find
+=================================================
+*/
 	template <typename T>
 	template <typename E>
 	inline bool UniBuffer<T>::Find (OUT usize &index, const E &value, usize start) const
@@ -244,8 +297,12 @@ namespace GXTypes
 		}
 		return false;
 	}
-
-
+	
+/*
+=================================================
+	IsExist
+=================================================
+*/
 	template <typename T>
 	template <typename E>
 	inline bool UniBuffer<T>::IsExist (const E &value) const
@@ -254,7 +311,11 @@ namespace GXTypes
 		return Find( idx, value, 0 );
 	}
 	
-
+/*
+=================================================
+	Intersects
+=================================================
+*/
 	template <typename T>
 	inline bool UniBuffer<T>::Intersects (const Self &other) const
 	{

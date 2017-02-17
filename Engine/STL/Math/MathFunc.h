@@ -128,8 +128,11 @@ namespace GXMath
 	template <typename T>				inline T		Gamma (const T& x);
 	template <typename T>				inline T		LnGamma (const T& x);
 
-	template <typename T>				inline T		Step (const T& edge, const T& x);
-	template <typename T>				inline T		SmoothStep (const T& edge0, const T& edge1, const T& x);
+	template <typename T>				inline T		Step (const T& x, const T& edge);
+	template <typename T>				inline T		LinearStep (const T& x, const T& edge0, const T& edge1);		//	/ 
+	template <typename T>				inline T		SmoothStep (const T& x, const T& edge0, const T& edge1);		//	/ smooth
+	template <typename T>				inline T		BumpStep (const T& x, const T& edge0, const T& edge1);			//  /\/\/\ 
+	template <typename T>				inline T		SmoothBumpStep (const T& x, const T& edge0, const T& edge1);	//	/\/\/\ smooth
 	
 
 
@@ -147,6 +150,8 @@ namespace GXMath
 	
 	template <typename T>				inline T		BitRotateLeft (const T& x, Bits<usize> shift);
 	template <typename T>				inline T		BitRotateRight (const T& x, Bits<usize> shift);
+	
+	template <typename T>				inline T		ReverseBitOrder (const T& x);
 
 	template <typename T>				inline Bits<usize>	BitScanReverse (const T& x);	// clz, findMSB
 	template <typename T>				inline Bits<usize>	BitScanForward (const T& x);	// ctz, findLSB
@@ -157,8 +162,7 @@ namespace GXMath
 	// AlignToLarge
 	//
 	
-	template <uint A, typename T>	constexpr T AlignToLarge (const T& value);
-	template <typename T>			constexpr T AlignToLarge (const T& value, const Bytes<usize> align);
+	template <typename T>			constexpr T AlignToLarge (const T& value, usize align);
 
 
 }	// GXMath

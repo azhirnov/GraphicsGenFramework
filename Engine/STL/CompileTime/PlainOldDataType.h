@@ -38,7 +38,7 @@ namespace CompileTime
 		struct _IsPOD
 		{
 			static const bool	value =	_IsPodDeepImpl< T, not ( TypeTraits::IsPointer< T >					or
-																 TypeTraits::IsReference< T >				or
+																 TypeTraits::IsLValueReference< T >			or
 																 TypeTraits::IsMemberVariablePointer< T >	or
 																 TypeTraits::IsMemberFunctionPointer< T >	or
 																 TypeTraits::IsFunctionPointer< T >			or

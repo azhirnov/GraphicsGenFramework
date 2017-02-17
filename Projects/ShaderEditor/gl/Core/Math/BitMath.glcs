@@ -1,0 +1,378 @@
+/*
+	This is generated file, don't change anything!
+*/
+
+[HEADER]
+
+#import  "Core/Common/Cmp.glcs"
+#include "Core/Math/MathDef.glcs"
+
+#define BitScanReverse				findMSB
+#define BitScanForward				findLSB
+#define IntLog2						BitScanReverse
+
+
+// ToMask
+int ToMask (const in int x);
+int2 ToMask (const in int2 x);
+int3 ToMask (const in int3 x);
+int4 ToMask (const in int4 x);
+
+uint ToMask (const in uint x);
+uint2 ToMask (const in uint2 x);
+uint3 ToMask (const in uint3 x);
+uint4 ToMask (const in uint4 x);
+
+#ifdef GL_ARB_gpu_shader_int64
+ilong ToMask (const in ilong x);
+ilong2 ToMask (const in ilong2 x);
+ilong3 ToMask (const in ilong3 x);
+ilong4 ToMask (const in ilong4 x);
+#endif
+
+#ifdef GL_ARB_gpu_shader_int64
+ulong ToMask (const in ulong x);
+ulong2 ToMask (const in ulong2 x);
+ulong3 ToMask (const in ulong3 x);
+ulong4 ToMask (const in ulong4 x);
+#endif
+
+
+// BitRotateLeft, BitRotateRight
+int BitRotateLeft  (const in int x, uint shift);
+int2 BitRotateLeft  (const in int2 x, uint shift);
+int2 BitRotateLeft  (const in int2 x, uint2 shift);
+int3 BitRotateLeft  (const in int3 x, uint shift);
+int3 BitRotateLeft  (const in int3 x, uint3 shift);
+int4 BitRotateLeft  (const in int4 x, uint shift);
+int4 BitRotateLeft  (const in int4 x, uint4 shift);
+
+uint BitRotateLeft  (const in uint x, uint shift);
+uint2 BitRotateLeft  (const in uint2 x, uint shift);
+uint2 BitRotateLeft  (const in uint2 x, uint2 shift);
+uint3 BitRotateLeft  (const in uint3 x, uint shift);
+uint3 BitRotateLeft  (const in uint3 x, uint3 shift);
+uint4 BitRotateLeft  (const in uint4 x, uint shift);
+uint4 BitRotateLeft  (const in uint4 x, uint4 shift);
+
+#ifdef GL_ARB_gpu_shader_int64
+ilong BitRotateLeft  (const in ilong x, uint shift);
+ilong2 BitRotateLeft  (const in ilong2 x, uint shift);
+ilong2 BitRotateLeft  (const in ilong2 x, uint2 shift);
+ilong3 BitRotateLeft  (const in ilong3 x, uint shift);
+ilong3 BitRotateLeft  (const in ilong3 x, uint3 shift);
+ilong4 BitRotateLeft  (const in ilong4 x, uint shift);
+ilong4 BitRotateLeft  (const in ilong4 x, uint4 shift);
+#endif
+
+#ifdef GL_ARB_gpu_shader_int64
+ulong BitRotateLeft  (const in ulong x, uint shift);
+ulong2 BitRotateLeft  (const in ulong2 x, uint shift);
+ulong2 BitRotateLeft  (const in ulong2 x, uint2 shift);
+ulong3 BitRotateLeft  (const in ulong3 x, uint shift);
+ulong3 BitRotateLeft  (const in ulong3 x, uint3 shift);
+ulong4 BitRotateLeft  (const in ulong4 x, uint shift);
+ulong4 BitRotateLeft  (const in ulong4 x, uint4 shift);
+#endif
+
+int BitRotateRight (const in int x, uint shift);
+int2 BitRotateRight (const in int2 x, uint shift);
+int2 BitRotateRight (const in int2 x, uint2 shift);
+int3 BitRotateRight (const in int3 x, uint shift);
+int3 BitRotateRight (const in int3 x, uint3 shift);
+int4 BitRotateRight (const in int4 x, uint shift);
+int4 BitRotateRight (const in int4 x, uint4 shift);
+
+uint BitRotateRight (const in uint x, uint shift);
+uint2 BitRotateRight (const in uint2 x, uint shift);
+uint2 BitRotateRight (const in uint2 x, uint2 shift);
+uint3 BitRotateRight (const in uint3 x, uint shift);
+uint3 BitRotateRight (const in uint3 x, uint3 shift);
+uint4 BitRotateRight (const in uint4 x, uint shift);
+uint4 BitRotateRight (const in uint4 x, uint4 shift);
+
+#ifdef GL_ARB_gpu_shader_int64
+ilong BitRotateRight (const in ilong x, uint shift);
+ilong2 BitRotateRight (const in ilong2 x, uint shift);
+ilong2 BitRotateRight (const in ilong2 x, uint2 shift);
+ilong3 BitRotateRight (const in ilong3 x, uint shift);
+ilong3 BitRotateRight (const in ilong3 x, uint3 shift);
+ilong4 BitRotateRight (const in ilong4 x, uint shift);
+ilong4 BitRotateRight (const in ilong4 x, uint4 shift);
+#endif
+
+#ifdef GL_ARB_gpu_shader_int64
+ulong BitRotateRight (const in ulong x, uint shift);
+ulong2 BitRotateRight (const in ulong2 x, uint shift);
+ulong2 BitRotateRight (const in ulong2 x, uint2 shift);
+ulong3 BitRotateRight (const in ulong3 x, uint shift);
+ulong3 BitRotateRight (const in ulong3 x, uint3 shift);
+ulong4 BitRotateRight (const in ulong4 x, uint shift);
+ulong4 BitRotateRight (const in ulong4 x, uint4 shift);
+#endif
+
+
+
+//---------------------------------------------------------
+[SOURCE]
+
+
+// ToMask
+int ToMask (const in int x) { return x < 0 ? 0 : x < 32 ? (int(1) << x) - 1 : int(-1); }
+int2 ToMask (const in int2 x) { return int2( ToMask(x[0]), ToMask(x[1]) ); }
+int3 ToMask (const in int3 x) { return int3( ToMask(x[0]), ToMask(x[1]), ToMask(x[2]) ); }
+int4 ToMask (const in int4 x) { return int4( ToMask(x[0]), ToMask(x[1]), ToMask(x[2]), ToMask(x[3]) ); }
+
+uint ToMask (const in uint x) { return x < 0 ? 0 : x < 32 ? (uint(1) << x) - 1 : uint(-1); }
+uint2 ToMask (const in uint2 x) { return uint2( ToMask(x[0]), ToMask(x[1]) ); }
+uint3 ToMask (const in uint3 x) { return uint3( ToMask(x[0]), ToMask(x[1]), ToMask(x[2]) ); }
+uint4 ToMask (const in uint4 x) { return uint4( ToMask(x[0]), ToMask(x[1]), ToMask(x[2]), ToMask(x[3]) ); }
+
+#ifdef GL_ARB_gpu_shader_int64
+ilong ToMask (const in ilong x) { return x < 0 ? 0 : x < 64 ? (ilong(1) << x) - 1 : ilong(-1); }
+ilong2 ToMask (const in ilong2 x) { return ilong2( ToMask(x[0]), ToMask(x[1]) ); }
+ilong3 ToMask (const in ilong3 x) { return ilong3( ToMask(x[0]), ToMask(x[1]), ToMask(x[2]) ); }
+ilong4 ToMask (const in ilong4 x) { return ilong4( ToMask(x[0]), ToMask(x[1]), ToMask(x[2]), ToMask(x[3]) ); }
+#endif
+
+#ifdef GL_ARB_gpu_shader_int64
+ulong ToMask (const in ulong x) { return x < 0 ? 0 : x < 64 ? (ulong(1) << x) - 1 : ulong(-1); }
+ulong2 ToMask (const in ulong2 x) { return ulong2( ToMask(x[0]), ToMask(x[1]) ); }
+ulong3 ToMask (const in ulong3 x) { return ulong3( ToMask(x[0]), ToMask(x[1]), ToMask(x[2]) ); }
+ulong4 ToMask (const in ulong4 x) { return ulong4( ToMask(x[0]), ToMask(x[1]), ToMask(x[2]), ToMask(x[3]) ); }
+#endif
+
+
+// BitRotateLeft, BitRotateRight
+int BitRotateLeft  (const in int x, uint shift)
+{
+	const uint mask = 31;
+	shift = shift & mask;
+	return (x << shift) | (x >> ( ~(shift-1) & mask ));
+}
+int2 BitRotateLeft  (const in int2 x, uint shift) { return BitRotateLeft( x, uint2(shift) ); }
+int2 BitRotateLeft  (const in int2 x, uint2 shift)
+{
+	const uint mask = 31;
+	shift = shift & mask;
+	return (x << shift) | (x >> ( ~(shift-1) & mask ));
+}
+int3 BitRotateLeft  (const in int3 x, uint shift) { return BitRotateLeft( x, uint3(shift) ); }
+int3 BitRotateLeft  (const in int3 x, uint3 shift)
+{
+	const uint mask = 31;
+	shift = shift & mask;
+	return (x << shift) | (x >> ( ~(shift-1) & mask ));
+}
+int4 BitRotateLeft  (const in int4 x, uint shift) { return BitRotateLeft( x, uint4(shift) ); }
+int4 BitRotateLeft  (const in int4 x, uint4 shift)
+{
+	const uint mask = 31;
+	shift = shift & mask;
+	return (x << shift) | (x >> ( ~(shift-1) & mask ));
+}
+
+uint BitRotateLeft  (const in uint x, uint shift)
+{
+	const uint mask = 31;
+	shift = shift & mask;
+	return (x << shift) | (x >> ( ~(shift-1) & mask ));
+}
+uint2 BitRotateLeft  (const in uint2 x, uint shift) { return BitRotateLeft( x, uint2(shift) ); }
+uint2 BitRotateLeft  (const in uint2 x, uint2 shift)
+{
+	const uint mask = 31;
+	shift = shift & mask;
+	return (x << shift) | (x >> ( ~(shift-1) & mask ));
+}
+uint3 BitRotateLeft  (const in uint3 x, uint shift) { return BitRotateLeft( x, uint3(shift) ); }
+uint3 BitRotateLeft  (const in uint3 x, uint3 shift)
+{
+	const uint mask = 31;
+	shift = shift & mask;
+	return (x << shift) | (x >> ( ~(shift-1) & mask ));
+}
+uint4 BitRotateLeft  (const in uint4 x, uint shift) { return BitRotateLeft( x, uint4(shift) ); }
+uint4 BitRotateLeft  (const in uint4 x, uint4 shift)
+{
+	const uint mask = 31;
+	shift = shift & mask;
+	return (x << shift) | (x >> ( ~(shift-1) & mask ));
+}
+
+#ifdef GL_ARB_gpu_shader_int64
+ilong BitRotateLeft  (const in ilong x, uint shift)
+{
+	const uint mask = 63;
+	shift = shift & mask;
+	return (x << shift) | (x >> ( ~(shift-1) & mask ));
+}
+ilong2 BitRotateLeft  (const in ilong2 x, uint shift) { return BitRotateLeft( x, uint2(shift) ); }
+ilong2 BitRotateLeft  (const in ilong2 x, uint2 shift)
+{
+	const uint mask = 63;
+	shift = shift & mask;
+	return (x << shift) | (x >> ( ~(shift-1) & mask ));
+}
+ilong3 BitRotateLeft  (const in ilong3 x, uint shift) { return BitRotateLeft( x, uint3(shift) ); }
+ilong3 BitRotateLeft  (const in ilong3 x, uint3 shift)
+{
+	const uint mask = 63;
+	shift = shift & mask;
+	return (x << shift) | (x >> ( ~(shift-1) & mask ));
+}
+ilong4 BitRotateLeft  (const in ilong4 x, uint shift) { return BitRotateLeft( x, uint4(shift) ); }
+ilong4 BitRotateLeft  (const in ilong4 x, uint4 shift)
+{
+	const uint mask = 63;
+	shift = shift & mask;
+	return (x << shift) | (x >> ( ~(shift-1) & mask ));
+}
+#endif
+
+#ifdef GL_ARB_gpu_shader_int64
+ulong BitRotateLeft  (const in ulong x, uint shift)
+{
+	const uint mask = 63;
+	shift = shift & mask;
+	return (x << shift) | (x >> ( ~(shift-1) & mask ));
+}
+ulong2 BitRotateLeft  (const in ulong2 x, uint shift) { return BitRotateLeft( x, uint2(shift) ); }
+ulong2 BitRotateLeft  (const in ulong2 x, uint2 shift)
+{
+	const uint mask = 63;
+	shift = shift & mask;
+	return (x << shift) | (x >> ( ~(shift-1) & mask ));
+}
+ulong3 BitRotateLeft  (const in ulong3 x, uint shift) { return BitRotateLeft( x, uint3(shift) ); }
+ulong3 BitRotateLeft  (const in ulong3 x, uint3 shift)
+{
+	const uint mask = 63;
+	shift = shift & mask;
+	return (x << shift) | (x >> ( ~(shift-1) & mask ));
+}
+ulong4 BitRotateLeft  (const in ulong4 x, uint shift) { return BitRotateLeft( x, uint4(shift) ); }
+ulong4 BitRotateLeft  (const in ulong4 x, uint4 shift)
+{
+	const uint mask = 63;
+	shift = shift & mask;
+	return (x << shift) | (x >> ( ~(shift-1) & mask ));
+}
+#endif
+
+int BitRotateRight (const in int x, uint shift)
+{
+	const uint mask = 31;
+	shift = shift & mask;
+	return (x >> shift) | (x << ( ~(shift-1) & mask ));
+}
+int2 BitRotateRight (const in int2 x, uint shift) { return BitRotateRight( x, uint2(shift) ); }
+int2 BitRotateRight (const in int2 x, uint2 shift)
+{
+	const uint mask = 31;
+	shift = shift & mask;
+	return (x >> shift) | (x << ( ~(shift-1) & mask ));
+}
+int3 BitRotateRight (const in int3 x, uint shift) { return BitRotateRight( x, uint3(shift) ); }
+int3 BitRotateRight (const in int3 x, uint3 shift)
+{
+	const uint mask = 31;
+	shift = shift & mask;
+	return (x >> shift) | (x << ( ~(shift-1) & mask ));
+}
+int4 BitRotateRight (const in int4 x, uint shift) { return BitRotateRight( x, uint4(shift) ); }
+int4 BitRotateRight (const in int4 x, uint4 shift)
+{
+	const uint mask = 31;
+	shift = shift & mask;
+	return (x >> shift) | (x << ( ~(shift-1) & mask ));
+}
+
+uint BitRotateRight (const in uint x, uint shift)
+{
+	const uint mask = 31;
+	shift = shift & mask;
+	return (x >> shift) | (x << ( ~(shift-1) & mask ));
+}
+uint2 BitRotateRight (const in uint2 x, uint shift) { return BitRotateRight( x, uint2(shift) ); }
+uint2 BitRotateRight (const in uint2 x, uint2 shift)
+{
+	const uint mask = 31;
+	shift = shift & mask;
+	return (x >> shift) | (x << ( ~(shift-1) & mask ));
+}
+uint3 BitRotateRight (const in uint3 x, uint shift) { return BitRotateRight( x, uint3(shift) ); }
+uint3 BitRotateRight (const in uint3 x, uint3 shift)
+{
+	const uint mask = 31;
+	shift = shift & mask;
+	return (x >> shift) | (x << ( ~(shift-1) & mask ));
+}
+uint4 BitRotateRight (const in uint4 x, uint shift) { return BitRotateRight( x, uint4(shift) ); }
+uint4 BitRotateRight (const in uint4 x, uint4 shift)
+{
+	const uint mask = 31;
+	shift = shift & mask;
+	return (x >> shift) | (x << ( ~(shift-1) & mask ));
+}
+
+#ifdef GL_ARB_gpu_shader_int64
+ilong BitRotateRight (const in ilong x, uint shift)
+{
+	const uint mask = 63;
+	shift = shift & mask;
+	return (x >> shift) | (x << ( ~(shift-1) & mask ));
+}
+ilong2 BitRotateRight (const in ilong2 x, uint shift) { return BitRotateRight( x, uint2(shift) ); }
+ilong2 BitRotateRight (const in ilong2 x, uint2 shift)
+{
+	const uint mask = 63;
+	shift = shift & mask;
+	return (x >> shift) | (x << ( ~(shift-1) & mask ));
+}
+ilong3 BitRotateRight (const in ilong3 x, uint shift) { return BitRotateRight( x, uint3(shift) ); }
+ilong3 BitRotateRight (const in ilong3 x, uint3 shift)
+{
+	const uint mask = 63;
+	shift = shift & mask;
+	return (x >> shift) | (x << ( ~(shift-1) & mask ));
+}
+ilong4 BitRotateRight (const in ilong4 x, uint shift) { return BitRotateRight( x, uint4(shift) ); }
+ilong4 BitRotateRight (const in ilong4 x, uint4 shift)
+{
+	const uint mask = 63;
+	shift = shift & mask;
+	return (x >> shift) | (x << ( ~(shift-1) & mask ));
+}
+#endif
+
+#ifdef GL_ARB_gpu_shader_int64
+ulong BitRotateRight (const in ulong x, uint shift)
+{
+	const uint mask = 63;
+	shift = shift & mask;
+	return (x >> shift) | (x << ( ~(shift-1) & mask ));
+}
+ulong2 BitRotateRight (const in ulong2 x, uint shift) { return BitRotateRight( x, uint2(shift) ); }
+ulong2 BitRotateRight (const in ulong2 x, uint2 shift)
+{
+	const uint mask = 63;
+	shift = shift & mask;
+	return (x >> shift) | (x << ( ~(shift-1) & mask ));
+}
+ulong3 BitRotateRight (const in ulong3 x, uint shift) { return BitRotateRight( x, uint3(shift) ); }
+ulong3 BitRotateRight (const in ulong3 x, uint3 shift)
+{
+	const uint mask = 63;
+	shift = shift & mask;
+	return (x >> shift) | (x << ( ~(shift-1) & mask ));
+}
+ulong4 BitRotateRight (const in ulong4 x, uint shift) { return BitRotateRight( x, uint4(shift) ); }
+ulong4 BitRotateRight (const in ulong4 x, uint4 shift)
+{
+	const uint mask = 63;
+	shift = shift & mask;
+	return (x >> shift) | (x << ( ~(shift-1) & mask ));
+}
+#endif
+

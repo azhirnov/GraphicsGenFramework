@@ -66,9 +66,12 @@ namespace Graphics
 	// methods
 	private:
 		Texture (PackFileID fileID, ETexture::type target, ETextureData::type dataType, const SubSystemsRef ss);
-		~Texture ();
 		
 	public:
+		Texture (const SubSystemsRef ss, ETexture::type target);
+		Texture (const SubSystemsRef ss, ETexture::type target, ETextureData::type dataType);
+		~Texture ();
+
 		void Bind (uint unit);
 		bool BindImage (uint unit, EMemoryAccess::type access, MipmapLevel level, TexArrLayer layer = Uninitialized);
 
@@ -128,8 +131,7 @@ namespace Graphics
 		static TexturePtr NewTex3D			 (const SubSystemsRef ss, const uint3 &size, EPixelFormat::type format, const MipmapLevelsRange &levels = Uninitialized, ETextureData::type dataType = ETextureData::Unknown);
 		static TexturePtr NewTexCubeMap		 (const SubSystemsRef ss, const uint2 &size, EPixelFormat::type format, const MipmapLevelsRange &levels = Uninitialized, ETextureData::type dataType = ETextureData::Unknown);
 		static TexturePtr NewTexCubeMapArray (const SubSystemsRef ss, const uint2 &size, TexArrLayer layers, EPixelFormat::type format, const MipmapLevelsRange &levels = Uninitialized, ETextureData::type dataType = ETextureData::Unknown);
-		static TexturePtr New				 (const SubSystemsRef ss, PackFileID fileID, ETexture::type target, ETextureData::type dataType = ETextureData::Unknown);
-
+		
 
 	// api specific methods
 	private:

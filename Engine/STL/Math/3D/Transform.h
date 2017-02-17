@@ -91,26 +91,32 @@ namespace GXMath
 	};
 
 	
-
+	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T>
 	inline Transformation<T>::Transformation (const Self &tr) :
 		_position(tr._position), _orientation(tr._orientation), _scale(tr._scale)
 	{}
 	
-
 	template <typename T>
 	inline Transformation<T>::Transformation (const Vec<T,3> &pos, const Quaternion<T> &orient, const vec_t &scale) :
 		_position(pos), _orientation(orient), _scale(scale)
 	{}
 
-
 	template <typename T>
 	inline Transformation<T>::Transformation (const Matrix<T,4,4> &mat) :
 		_position( mat.GetTranslation() ), _orientation( mat ), _scale( T(1) )
 	{}
-
 	
-	
+/*
+=================================================
+	operator +=
+=================================================
+*/
 	template <typename T>
 	inline Transformation<T> & Transformation<T>::operator += (const Self &right)
 	{
@@ -119,29 +125,45 @@ namespace GXMath
 		_scale			*= right._scale;
 		return *this;
 	}
-
 	
+/*
+=================================================
+	operator +
+=================================================
+*/
 	template <typename T>
 	inline Transformation<T> Transformation<T>::operator + (const Self &right) const
 	{
 		return Transformation<T>( *this ) += right;
 	}
 	
-
+/*
+=================================================
+	operator -=
+=================================================
+*/
 	template <typename T>
 	inline Transformation<T> & Transformation<T>::operator -= (const Self &right)
 	{
 		return (*this) += right.Inversed();
 	}
 	
-
+/*
+=================================================
+	operator -
+=================================================
+*/
 	template <typename T>
 	inline Transformation<T> Transformation<T>::operator -  (const Self &right)	const
 	{
 		return Self(*this) -= right;
 	}
-
-		
+	
+/*
+=================================================
+	operator ==
+=================================================
+*/
 	template <typename T>
 	inline bool Transformation<T>::operator == (const Self &right) const
 	{
@@ -150,14 +172,22 @@ namespace GXMath
 				All( _scale		== right._scale );
 	}
 	
-	
+/*
+=================================================
+	operator !=
+=================================================
+*/
 	template <typename T>
 	inline bool Transformation<T>::operator != (const Self &right) const
 	{
 		return not ( *this == right );
 	}
 	
-
+/*
+=================================================
+	operator >
+=================================================
+*/
 	template <typename T>
 	inline bool Transformation<T>::operator >  (const Self &right) const
 	{
@@ -172,8 +202,12 @@ namespace GXMath
 				_scale.y		!= right._scale.y		?	_scale.y		> right._scale.y		:
 															_scale.z		> right._scale.z;
 	}
-
 	
+/*
+=================================================
+	operator <
+=================================================
+*/
 	template <typename T>
 	inline bool Transformation<T>::operator <  (const Self &right) const
 	{
@@ -188,15 +222,23 @@ namespace GXMath
 				_scale.y		!= right._scale.y		?	_scale.y		< right._scale.y		:
 															_scale.z		< right._scale.z;
 	}
-
-
+	
+/*
+=================================================
+	GetMatrix
+=================================================
+*/
 	template <typename T>
 	inline void Transformation<T>::GetMatrix (OUT mat_t &matrix) const
 	{
 		GetModelMatrix( vec_t(), matrix );
 	}
-
-
+	
+/*
+=================================================
+	GetModelMatrix
+=================================================
+*/
 	template <typename T>
 	inline void Transformation<T>::GetModelMatrix (const vec_t &cameraPos, OUT mat_t &matrix) const
 	{
@@ -204,8 +246,12 @@ namespace GXMath
 		matrix.Translation() = _position - cameraPos;
 		matrix = matrix * mat_t::Scale( _scale );
 	}
-
-
+	
+/*
+=================================================
+	Inverse
+=================================================
+*/
 	template <typename T>
 	inline Transformation<T> & Transformation<T>::Inverse ()
 	{
@@ -215,22 +261,29 @@ namespace GXMath
 		return *this;
 	}
 
-
 	template <typename T>
 	inline Transformation<T> Transformation<T>::Inversed () const
 	{
 		return Transformation( *this ).Inverse();
 	}
 	
-
+/*
+=================================================
+	Move
+=================================================
+*/
 	template <typename T>
 	inline Transformation<T> & Transformation<T>::Move (const Vec<T,3> &delta)
 	{
 		_position += _orientation * (delta * _scale);
 		return *this;
 	}
-
 	
+/*
+=================================================
+	Rotate
+=================================================
+*/
 	template <typename T>
 	inline Transformation<T> & Transformation<T>::Rotate (const Quaternion<T> &delta)
 	{
@@ -238,7 +291,11 @@ namespace GXMath
 		return *this;
 	}
 	
-
+/*
+=================================================
+	Scale
+=================================================
+*/
 	template <typename T>
 	inline Transformation<T> & Transformation<T>::Scale (const vec_t &scale)
 	{
@@ -246,42 +303,66 @@ namespace GXMath
 		return *this;
 	}
 	
-
+/*
+=================================================
+	IsZero
+=================================================
+*/
 	template <typename T>
 	inline bool Transformation<T>::IsZero () const
 	{
 		return GXMath::IsZero( _position ) and GXMath::IsZero( _orientation ) and All( Equals( _scale, vec_t(T(1)) ) );
 	}
-
 	
+/*
+=================================================
+	GetGlobalVector
+=================================================
+*/
 	template <typename T>
 	inline Vec<T,3> Transformation<T>::GetGlobalVector (const Vec<T,3> &local) const
 	{
 		return _orientation * (local * _scale);
 	}
-
-		
+	
+/*
+=================================================
+	GetGlobalPosition
+=================================================
+*/
 	template <typename T>
 	inline Vec<T,3> Transformation<T>::GetGlobalPosition (const Vec<T,3> &local) const
 	{
 		return GetGlobalVector( local ) + _position;
 	}
-
-		
+	
+/*
+=================================================
+	GetLocalVector
+=================================================
+*/
 	template <typename T>
 	inline Vec<T,3> Transformation<T>::GetLocalVector (const Vec<T,3> &global) const
 	{
 		return (_orientation.Inversed() * global) / _scale;
 	}
-
-		
+	
+/*
+=================================================
+	GetLocalPosition
+=================================================
+*/
 	template <typename T>
 	inline Vec<T,3> Transformation<T>::GetLocalPosition (const Vec<T,3> &global) const
 	{
 		return GetLocalVector( global - _position );
 	}
 	
-	
+/*
+=================================================
+	Convert
+=================================================
+*/
 	template <typename T>
 	template <typename T2>
 	inline Transformation<T2> Transformation<T>::Convert () const

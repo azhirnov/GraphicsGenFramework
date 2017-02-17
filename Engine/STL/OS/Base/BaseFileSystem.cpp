@@ -171,10 +171,7 @@ namespace OS
 */
 	bool FileSystem::CreateDirectories (StringCRef path)
 	{
-		if ( path.Empty() )
-			return true;
-
-		if ( IsDirectoryExist( path ) )
+		if ( path.Empty() or IsDirectoryExist( path ) )
 			return true;
 
 		String	tmp		= path;

@@ -1,57 +1,11 @@
-// [HEADER]
 
-#define float4	vec4
-
-struct vertex
-{
-	float4 Position;
-	float4 Texcoord;
-	float4 Color;
-};
-
-#ifdef kernel_Main
-
-void Transform (layout(rgba32f) readonly imageBuffer PositionInput,
-				layout(rgba32f) writeonly imageBuffer PositionOutput);
-
-void Transform2 (const vertex Input, out vertex Output);
-
-layout(rgba32f) readonly uniform imageBuffer PositionInput;
-layout(rgba32f) writeonly uniform imageBuffer PositionOutput;
-
-
-layout(std140) readonly buffer iBuffer
-{
-	vertex Input[];
-} In;
-
-layout(std140) writeonly buffer oBuffer
-{
-	vertex Output[];
-} Out;
+#import "prog-1.glcs"
 
 void main ()
 {
-	Transform(PositionInput, PositionOutput);
-	Transform2(In.Input[gl_LocalInvocationIndex], Out.Output[gl_LocalInvocationIndex]);
-}
-#endif	// kernel_Main
-
-
-// [SOURCE]
-
-void Transform (layout(rgba32f) readonly imageBuffer PositionInput,
-				layout(rgba32f) writeonly imageBuffer PositionOutput)
-{
-	int VertexID = int(gl_LocalInvocationIndex);
-
-	float4 Position = imageLoad(PositionInput, VertexID);
+	CustomType ct;
 	
-	imageStore(PositionOutput, VertexID, Position);
-}
-
-
-void Transform2 (const vertex Input, out vertex Output)
-{
-	Output.Position = -Input.Position;
+	Init( ct );
+	
+	MathFunc( ct.i );
 }

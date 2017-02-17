@@ -85,16 +85,11 @@ namespace Graphics
 
 
 	// methods
-	private:
+	public:
 		explicit
 		TextureLoader (const SubSystemsRef ss);
 
-		bool _GenerateColoredMipmaps (const TexturePtr &tex);
-
-	public:
 		void EnableColoredMipmaps (bool enabled)	{ _coloredMipmaps = enabled; }
-
-		static TextureLoaderPtr  New (const SubSystemsRef ss);
 
 		
 	// IResourceLoader //
@@ -102,6 +97,11 @@ namespace Graphics
 		bool Load (OUT ResourcePtr &resource, PackFileID fileID, const RFilePtr &file) override;
 
 		EResource::type GetType () const override	{ return EResource::Texture; }
+
+
+	private:
+		bool _GenerateColoredMipmaps (const TexturePtr &tex);
+
 	};
 
 

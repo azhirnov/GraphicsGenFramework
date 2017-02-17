@@ -71,6 +71,9 @@ namespace OS
 */
 	PlatformUtils::Dialog::EResult  PlatformUtils::Dialog::ShowAssertion (StringCRef caption, StringCRef msg, StringCRef file, int line)
 	{
+		if ( msg.Length() > 1024 )
+			msg = msg.SubString( 0, 1024 );
+
 		String	str;
 		str << "File: " << file
 			<< "\nLine: " << line

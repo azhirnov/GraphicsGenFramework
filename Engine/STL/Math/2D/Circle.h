@@ -241,8 +241,8 @@ namespace GXTypes
 
 		result_t operator () (const key_t &x) const
 		{
-			return	Hash< typename GXMath::Circle<T>::vec_t >::operator ()( x.Center() ) ^
-					(Hash< T >::operator ()( x.Radius() ) << 3);
+			return	Hash< typename GXMath::Circle<T>::vec_t >::operator ()( x.Center() ) +
+					Hash< T >::operator ()( x.Radius() );
 		}
 	};
 

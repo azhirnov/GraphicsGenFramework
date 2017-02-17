@@ -61,12 +61,10 @@ namespace GXTypes
 
 	public:
 		Array (GX_DEFCTOR);
-
-		Array (const Self &other);
-
 		Array (Self &&other);
-
+		Array (const Self &other);
 		Array (Buffer<const T> other);
+		Array (std::initializer_list<T> list);
 
 		~Array ()														{ Free(); }
 
@@ -220,6 +218,11 @@ namespace GXTypes
 	using FixedSizeArray = Array< T, typename AutoDetectCopyStrategy<T>::type, StaticMemoryContainer<T, Size> >;
 	
 	
+/*
+=================================================
+	Buffer::From
+=================================================
+*/
 	template <typename T>
 	template <typename B, typename S, typename MC>
 	inline Buffer<T>  Buffer<T>::From (const Array<B,S,MC> &arr)
@@ -228,26 +231,64 @@ namespace GXTypes
 		return From<const B>( buf );
 	}
 
-
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T, typename S, typename MC>
-	inline Array<T,S,MC>::Array (UninitializedType): _count(0), _size(0)
+	inline Array<T,S,MC>::Array (UninitializedType) : _count(0), _size(0)
 	{}
 	
-		
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T, typename S, typename MC>
-	inline Array<T,S,MC>::Array (const Self &other): _count(0), _size(0)
+	inline Array<T,S,MC>::Array (const Self &other) : _count(0), _size(0)
 	{
 		Copy( other );
 	}
 	
-
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline Array<T,S,MC>::Array (Self &&other)
 	{
 		_Move( RVREF(other) );
 	}
 	
-
+/*
+=================================================
+	constructor
+=================================================
+*/
+	template <typename T, typename S, typename MC>
+	inline Array<T,S,MC>::Array (Buffer<const T> other) : _count(0), _size(0)
+	{
+		Copy( other );
+	}
+	
+/*
+=================================================
+	constructor
+=================================================
+*/
+	template <typename T, typename S, typename MC>
+	inline Array<T,S,MC>::Array (std::initializer_list<T> list) : _count(0), _size(0)
+	{
+		Copy( Buffer<const T>( list ) );
+	}
+	
+/*
+=================================================
+	_Move
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Array<T,S,MC>::_Move (Self &&other)
 	{
@@ -258,14 +299,11 @@ namespace GXTypes
 		other._count = other._size = 0;
 	}
 	
-
-	template <typename T, typename S, typename MC>
-	inline Array<T,S,MC>::Array (Buffer<const T> other): _count(0), _size(0)
-	{
-		Copy( other );
-	}
-
-
+/*
+=================================================
+	_Reallocate
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Array<T,S,MC>::_Reallocate (usize newSize, bool allowReserve)
 	{
@@ -292,15 +330,23 @@ namespace GXTypes
 		_count = new_count;
 	}
 	
-
+/*
+=================================================
+	_CheckIntersection
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline bool Array<T,S,MC>::_CheckIntersection (const void *leftBegin, const void *leftEnd,
 													const void *rightBegin, const void *rightEnd)
 	{
 		return CheckPointersAliasing( leftBegin, leftEnd, rightBegin, rightEnd );
 	}
-
-
+	
+/*
+=================================================
+	_Insert
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	template <typename B>
 	inline void Array<T,S,MC>::_Insert (B *pArray, const usize count, const usize pos)
@@ -355,7 +401,11 @@ namespace GXTypes
 			Strategy::Move( _memory.Pointer() + pos, (T *) pArray, count );
 	}
 	
-
+/*
+=================================================
+	At
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline bool Array<T,S,MC>::At (usize index, T & value) const
 	{
@@ -363,8 +413,12 @@ namespace GXTypes
 		Strategy::Copy( &value, _memory.Pointer() + index, 1 );
 		return true;
 	}
-
 	
+/*
+=================================================
+	Set
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline bool Array<T,S,MC>::Set (usize index, const T &value)
 	{
@@ -373,7 +427,11 @@ namespace GXTypes
 		return true;
 	}
 	
-
+/*
+=================================================
+	Set
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline bool Array<T,S,MC>::Set (usize index, T&& value)
 	{
@@ -381,8 +439,12 @@ namespace GXTypes
 		Strategy::Move( _memory.Pointer() + index, &value, 1 );
 		return true;
 	}
-
 	
+/*
+=================================================
+	ptr
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline T * Array<T,S,MC>::ptr ()
 	{
@@ -390,15 +452,23 @@ namespace GXTypes
 		return _memory.Pointer();
 	}
 	
-
+/*
+=================================================
+	ptr
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline const T * Array<T,S,MC>::ptr () const
 	{
 		ASSUME( _memory.Pointer() != null );
 		return _memory.Pointer();
 	}
-
 	
+/*
+=================================================
+	operator []
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline T & Array<T,S,MC>::operator [] (usize index)
 	{
@@ -406,7 +476,11 @@ namespace GXTypes
 		return _memory.Pointer()[index];
 	}
 	
-
+/*
+=================================================
+	operator []
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline const T & Array<T,S,MC>::operator [] (usize index) const
 	{
@@ -414,7 +488,11 @@ namespace GXTypes
 		return _memory.Pointer()[index];
 	}
 	
-
+/*
+=================================================
+	Back
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline T & Array<T,S,MC>::Back ()
 	{
@@ -422,7 +500,11 @@ namespace GXTypes
 		return _memory.Pointer()[_count-1];
 	}
 	
-
+/*
+=================================================
+	Back
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline const T & Array<T,S,MC>::Back () const
 	{
@@ -430,23 +512,35 @@ namespace GXTypes
 		return _memory.Pointer()[_count-1];
 	}
 	
-
+/*
+=================================================
+	Front
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline T & Array<T,S,MC>::Front ()
 	{
 		ASSUME( _memory.Pointer() != null );
 		return _memory.Pointer()[0];
 	}
-
 	
+/*
+=================================================
+	Front
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline const T & Array<T,S,MC>::Front () const
 	{
 		ASSUME( _memory.Pointer() != null );
 		return _memory.Pointer()[0];
 	}
-
-
+	
+/*
+=================================================
+	Free
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Array<T,S,MC>::Free ()
 	{
@@ -458,8 +552,12 @@ namespace GXTypes
 		_count = 0;
 		_size  = 0;
 	}
-
-
+	
+/*
+=================================================
+	Clear
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Array<T,S,MC>::Clear ()
 	{
@@ -469,8 +567,12 @@ namespace GXTypes
 		}
 		_count = 0;
 	}
-
-
+	
+/*
+=================================================
+	Erase
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Array<T,S,MC>::Erase (usize pos, usize count)
 	{
@@ -486,7 +588,11 @@ namespace GXTypes
 		Strategy::Replace( _memory.Pointer() + pos, _memory.Pointer() + pos + count, _count - pos );
 	}
 	
-
+/*
+=================================================
+	EraseFromBack
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Array<T,S,MC>::EraseFromBack (usize count)
 	{
@@ -501,7 +607,11 @@ namespace GXTypes
 		_count -= count;
 	}
 	
-	
+/*
+=================================================
+	FastErase
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Array<T,S,MC>::FastErase (usize pos, usize count)
 	{
@@ -533,8 +643,12 @@ namespace GXTypes
 			Strategy::Destroy( _memory.Pointer() + j, 1 );
 		}
 	}
-
 	
+/*
+=================================================
+	FindAndErase
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	template <typename E>
 	inline bool Array<T,S,MC>::FindAndErase (const E &value)
@@ -548,8 +662,12 @@ namespace GXTypes
 		}
 		return false;
 	}
-
 	
+/*
+=================================================
+	FindAndFastErase
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	template <typename E>
 	inline bool Array<T,S,MC>::FindAndFastErase (const E &value)
@@ -564,7 +682,11 @@ namespace GXTypes
 		return false;
 	}
 	
-	
+/*
+=================================================
+	FastErase
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Array<T,S,MC>::FastErase (usize pos)
 	{
@@ -579,8 +701,12 @@ namespace GXTypes
 			--_count;
 		}
 	}
-
-
+	
+/*
+=================================================
+	PushBack
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Array<T,S,MC>::PushBack (const T& value)
 	{
@@ -591,7 +717,11 @@ namespace GXTypes
 		++_count;
 	}
 	
-
+/*
+=================================================
+	PushBack
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Array<T,S,MC>::PushBack (T&& value)
 	{
@@ -601,8 +731,12 @@ namespace GXTypes
 		Strategy::Move( _memory.Pointer() + _count, &value, 1 );
 		++_count;
 	}
-
-
+	
+/*
+=================================================
+	PopBack
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Array<T,S,MC>::PopBack ()
 	{
@@ -614,7 +748,11 @@ namespace GXTypes
 		}
 	}
 
-	
+/*
+=================================================
+	PopFront
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Array<T,S,MC>::PopFront ()
 	{
@@ -622,16 +760,24 @@ namespace GXTypes
 
 		Erase( 0 );
 	}
-
-
+	
+/*
+=================================================
+	FreeReserve
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Array<T,S,MC>::FreeReserve ()
 	{
 		if ( _count > _size )
 			_Reallocate( _count, false );
 	}
-
-
+	
+/*
+=================================================
+	Resize
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Array<T,S,MC>::Resize (usize newSize, bool allowReserve)
 	{
@@ -655,8 +801,12 @@ namespace GXTypes
 		Strategy::Create( _memory.Pointer() + _count, newSize - _count );
 		_count = newSize;
 	}
-
-
+	
+/*
+=================================================
+	Reserve
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Array<T,S,MC>::Reserve (usize size)
 	{
@@ -669,7 +819,11 @@ namespace GXTypes
 		_Reallocate( size, false );
 	}
 	
-
+/*
+=================================================
+	Swap
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Array<T,S,MC>::Swap (usize first, usize second)
 	{
@@ -681,8 +835,12 @@ namespace GXTypes
 		Strategy::Replace( _memory.Pointer() + second,	_memory.Pointer() + first,	1 );
 		Strategy::Replace( _memory.Pointer() + first,	&temp,						1 );
 	}
-
-
+	
+/*
+=================================================
+	Convert
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	template <typename T2, typename S2, typename A2>
 	inline void Array<T,S,MC>::Convert (Array<T2,S2,A2> &other) const
@@ -694,8 +852,12 @@ namespace GXTypes
 			other[i] = T2( _memory.Pointer()[i] );
 		}
 	}
-
 	
+/*
+=================================================
+	Begin
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline T * Array<T,S,MC>::Begin ()
 	{
@@ -703,15 +865,23 @@ namespace GXTypes
 		return &_memory.Pointer()[0];
 	}
 	
-
+/*
+=================================================
+	Begin
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline const T * Array<T,S,MC>::Begin () const
 	{
 		ASSERT( _memory.Pointer() != null );
 		return &_memory.Pointer()[0];
 	}
-
 	
+/*
+=================================================
+	End
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline T * Array<T,S,MC>::End ()
 	{
@@ -719,15 +889,23 @@ namespace GXTypes
 		return &_memory.Pointer()[_count];
 	}
 	
-
+/*
+=================================================
+	End
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline const T * Array<T,S,MC>::End () const
 	{
 		ASSERT( _count != 0 );
 		return &_memory.Pointer()[_count];
 	}
-
 	
+/*
+=================================================
+	GetIter
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline T * Array<T,S,MC>::GetIter (usize index)
 	{
@@ -735,7 +913,11 @@ namespace GXTypes
 		return &_memory.Pointer()[index];
 	}
 	
-
+/*
+=================================================
+	GetIter
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline const T * Array<T,S,MC>::GetIter (usize index) const
 	{
@@ -743,14 +925,22 @@ namespace GXTypes
 		return &_memory.Pointer()[index];
 	}
 	
-
+/*
+=================================================
+	IsBegin
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline bool Array<T,S,MC>::IsBegin (const_iterator iter) const
 	{
 		return ( iter == Begin() );
 	}
 	
-
+/*
+=================================================
+	IsEnd
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline bool Array<T,S,MC>::IsEnd (const_iterator iter) const
 	{
@@ -763,6 +953,11 @@ namespace GXTypes
 	#undef  RET_VOID
 
 	
+/*
+=================================================
+	Hash
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	struct Hash< Array<T,S,MC> > :
 		private Hash< Buffer<const T> >

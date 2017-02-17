@@ -67,7 +67,12 @@ namespace GXMath
 	constexpr Percents operator "" _pct (unsigned long long value)	{ return Percents::FromPercents( real(value) ); }
 
 	
-
+	
+/*
+=================================================
+	TypeInfo
+=================================================
+*/
 	template <typename T>
 	struct ::GX_STL::CompileTime::TypeInfo< GXMath::Percentage<T> >
 	{
@@ -91,7 +96,11 @@ namespace GXMath
 		static constexpr uint	Count()		{ return TypeInfo< inner_type >::Count(); }
 	};
 
-
+/*
+=================================================
+	Hash
+=================================================
+*/
 	template <typename T>
 	struct ::GX_STL::GXTypes::Hash< GXMath::Percentage<T> > : private Hash<T>
 	{

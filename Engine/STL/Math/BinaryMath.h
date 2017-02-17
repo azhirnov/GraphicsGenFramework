@@ -9,16 +9,16 @@ namespace GX_STL
 namespace GXMath
 {
 	
-
-	//
-	// Safe Left Bit Shift
-	//
-	
+/*
+=================================================
+	SafeLeftBitShift
+=================================================
+*/
 	template <typename T>
-	inline T  SafeLeftBitShift (const T& x, BitsU shift)
+	forceinline T  SafeLeftBitShift (const T& x, BitsU shift)
 	{
-		CompileTime::MustBeInteger<T>();
-
+		STATIC_ASSERT( CompileTime::IsScalarOrEnum<T> );
+		STATIC_ASSERT( CompileTime::IsInteger<T> );
 		ASSUME( shift >= 0 );
 
 		return x << ( usize(shift) & (CompileTime::SizeOf<T>::bits - 1) );
@@ -40,17 +40,16 @@ namespace GXMath
 		return ret;
 	}
 	
-
-
-	//
-	// Safe Right Bit Shift
-	//
-
+/*
+=================================================
+	SafeRightBitShift
+=================================================
+*/
 	template <typename T>
-	inline T  SafeRightBitShift (const T& x, BitsU shift)
+	forceinline T  SafeRightBitShift (const T& x, BitsU shift)
 	{
-		CompileTime::MustBeInteger<T>();
-
+		STATIC_ASSERT( CompileTime::IsScalarOrEnum<T> );
+		STATIC_ASSERT( CompileTime::IsInteger<T> );
 		ASSUME( shift >= 0 );
 
 		return x >> ( usize(shift) & (CompileTime::SizeOf<T>::bits - 1) );
@@ -72,16 +71,15 @@ namespace GXMath
 		return ret;
 	}
 	
-
-
-	//
-	// Circular Bit Shift
-	//
-
+/*
+=================================================
+	BitRotateLeft
+----
+	from https://en.wikipedia.org/wiki/Circular_shift#Implementing_circular_shifts
+=================================================
+*/
 	namespace _math_hidden_
 	{
-		// from https://en.wikipedia.org/wiki/Circular_shift#Implementing_circular_shifts
-
 		template <typename T>
 		forceinline T _BitRotateLeft (T value, usize shift)
 		{
@@ -90,27 +88,18 @@ namespace GXMath
 			shift &= mask;
 			return (value << shift) | (value >> ( ~(shift-1) & mask ));
 		}
-		
-		template <typename T>
-		forceinline T _BitRotateRight (T value, usize shift)
-		{
-			const usize	mask = (CompileTime::SizeOf<T>::bits - 1);
-
-			shift &= mask;
-			return (value >> shift) | (value << ( ~(shift-1) & mask ));
-		}
 	}
-
+	
 	template <typename T>
-	inline T  BitRotateLeft (const T& x, BitsU shift)
+	forceinline T  BitRotateLeft (const T& x, BitsU shift)
 	{
-		CompileTime::MustBeInteger<T>();
-		
+		STATIC_ASSERT( CompileTime::IsScalarOrEnum<T> );
+		STATIC_ASSERT( CompileTime::IsInteger<T> );
 		ASSUME( shift >= 0 );
 
 		typedef CompileTime::NearUInt::FromType<T>	Unsigned_t;
 
-		return _math_hidden_::_BitRotateLeft( Unsigned_t(x), usize(shift) );
+		return (T) _math_hidden_::_BitRotateLeft( Unsigned_t(x), usize(shift) );
 	}
 
 	template <typename T, usize I>
@@ -128,18 +117,36 @@ namespace GXMath
 		FOR( i, ret )	ret[i] = BitRotateLeft( x[i], shift );
 		return ret;
 	}
+	
+/*
+=================================================
+	BitRotateRight
+----
+	from https://en.wikipedia.org/wiki/Circular_shift#Implementing_circular_shifts
+=================================================
+*/
+	namespace _math_hidden_
+	{
+		template <typename T>
+		forceinline T _BitRotateRight (T value, usize shift)
+		{
+			const usize	mask = (CompileTime::SizeOf<T>::bits - 1);
 
+			shift &= mask;
+			return (value >> shift) | (value << ( ~(shift-1) & mask ));
+		}
+	}
 
 	template <typename T>
-	inline T  BitRotateRight (const T& x, BitsU shift)
+	forceinline T  BitRotateRight (const T& x, BitsU shift)
 	{
-		CompileTime::MustBeInteger<T>();
-		
+		STATIC_ASSERT( CompileTime::IsScalarOrEnum<T> );
+		STATIC_ASSERT( CompileTime::IsInteger<T> );
 		ASSUME( shift >= 0 );
 
 		typedef CompileTime::NearUInt::FromType<T>	Unsigned_t;
 
-		return _math_hidden_::_BitRotateRight( Unsigned_t(x), int(shift) );
+		return (T) _math_hidden_::_BitRotateRight( Unsigned_t(x), int(shift) );
 	}
 
 	template <typename T, usize I>
@@ -158,14 +165,13 @@ namespace GXMath
 		return ret;
 	}
 
-	
-
-	//
-	// To Bit
-	//
-
+/*
+=================================================
+	ToBit
+=================================================
+*/
 	template <typename T>
-	inline T  ToBit (BitsU bitIndex)
+	forceinline T  ToBit (BitsU bitIndex)
 	{
 		return SafeLeftBitShift( T(1), (usize)bitIndex );
 	}
@@ -177,42 +183,89 @@ namespace GXMath
 		FOR( i, ret )	ret[i] = ToBit<T>( bitIndex[i] );
 		return ret;
 	}
-
 	
-	//
-	// To Mask
-	//
+/*
+=================================================
+	ToMask
+=================================================
+*/
+	namespace _math_hidden_
+	{
+		template <typename T>
+		struct _ToMask {
+			forceinline static T Get (const BitsU lastBitIndex)
+			{
+				STATIC_ASSERT( CompileTime::IsScalarOrEnum<T> );
+				STATIC_ASSERT( CompileTime::IsInteger<T> );
+
+				// Test:
+				// (1 << lastBitIndex-1) & ToMask( lastBitIndex ) == (1 << lastBitIndex-1)
+
+				return	lastBitIndex < 0 ? T(0) :
+							lastBitIndex < CompileTime::SizeOf<T>::bits ?
+								(T(1) << (usize)lastBitIndex) - 1 :
+								T(-1);
+			}
+		};
+		
+		template <typename T, usize I>
+		struct _ToMask< Vec<T,I> > {
+			forceinline static Vec<T,I> Get (const BitsU lastBitIndex)
+			{
+				Vec<T,I>		ret;
+				FOR( i, ret )	ret[i] = _ToMask<T>::Get( lastBitIndex );
+				return ret;
+			}
+		};
+	}	// _math_hidden_
 
 	template <typename T>
-	inline T  ToMask (BitsU lastBitIndex)
+	forceinline T  ToMask (const BitsU lastBitIndex)
 	{
-		STATIC_ASSERT( CompileTime::IsInteger<T> /*and CompileTime::IsUnsigned<T>*/ );
-
-		// Test:
-		// (1 << lastBitIndex-1) & ToMask( lastBitIndex ) == (1 << lastBitIndex-1)
-
-		return	lastBitIndex < 0 ? T(0) :
-					lastBitIndex < CompileTime::SizeOf<T>::bits ?
-						(T(1) << (usize)lastBitIndex) - 1 :
-						T(-1);
+		return _math_hidden_::_ToMask<T>::Get( lastBitIndex );
 	}
 
 	template <typename T, usize I>
-	inline Vec<T,I>  ToMask (const Vec<BitsU,I> &bitIndex)
+	inline Vec<T,I>  ToMask (const Vec<BitsU,I> &lastBitIndex)
 	{
 		Vec<T,I>		ret;
-		FOR( i, ret )	ret[i] = ToMask<T>( bitIndex[i] );
+		FOR( i, ret )	ret[i] = ToMask<T>( lastBitIndex[i] );
 		return ret;
 	}
 
+/*
+=================================================
+	ToMask
+=================================================
+*/
+	namespace _math_hidden_
+	{
+		template <typename T>
+		struct _ToMask2 {
+			forceinline static T Get (const BitsU first, const BitsU last)
+			{
+				ASSERT( first <= last );
+				return _ToMask<T>::Get( first ) ^ _ToMask<T>::Get( last );
+			}
+		};
+		
+		template <typename T, usize I>
+		struct _ToMask2< Vec<T,I> > {
+			forceinline static Vec<T,I> Get (const BitsU first, const BitsU last)
+			{
+				Vec<T,I>		ret;
+				FOR( i, ret )	ret[i] = _ToMask2<T>::Get( first, last );
+				return ret;
+			}
+		};
+	}	// _math_hidden_
 
 	template <typename T>
-	inline T  ToMask (BitsU first, BitsU last)
+	forceinline T  ToMask (const BitsU first, const BitsU last)
 	{
-		ASSERT( first <= last );
-		return ToMask<T>( first ) ^ ToMask<T>( last );
+		return _math_hidden_::_ToMask2<T>::Get( first, last );
 	}
-
+	
 	template <typename T, usize I>
 	inline Vec<T,I>  ToMask (const Vec<BitsU,I> first, const Vec<BitsU,I> last)
 	{
@@ -220,59 +273,211 @@ namespace GXMath
 		FOR( i, ret )	ret[i] = ToMask<T>( first[i], last[i] );
 		return ret;
 	}
-	
 
-	
-	//
-	// Get Bit Mask For Type
-	//
+/*
+=================================================
+	GetMaskForType
+=================================================
+*/
+	namespace _math_hidden_
+	{
+		template <typename T>
+		struct _GetMaskForType {
+			forceinline static T Get ()
+			{
+				STATIC_ASSERT( CompileTime::IsInteger<T> and CompileTime::IsUnsigned<T> );
+				return T(-1);
+			}
+		};
+		
+		template <typename T, usize I>
+		struct _GetMaskForType< Vec<T,I> > {
+			forceinline static Vec<T,I> Get ()
+			{
+				Vec<T,I>		ret;
+				FOR( i, ret )	ret[i] = _GetMaskForType<T>::Get();
+				return ret;
+			}
+		};
+	}	// _math_hidden_
 
 	template <typename T>
-	inline T  GetMaskForType (const T &)
+	forceinline T  GetMaskForType (const T &)
 	{
-		STATIC_ASSERT( CompileTime::IsInteger<T> /*and CompileTime::IsUnsigned<T>*/ );
-
-		return T(-1);
+		return _math_hidden_::_GetMaskForType< T >::Get();
 	}
 	
-	template <typename T, usize I>
-	inline Vec<T,I>  GetMaskForType (const Vec<T,I> &)
+/*
+=================================================
+	IntLog2
+=================================================
+*/
+	namespace _math_hidden_
 	{
-		return Vec<T,I>( GetMaskForType<T>() );
-	}
-	
+		template <uint Bit>
+		struct _RecursiveBitScanReverse
+		{
+			template <typename T>
+			forceinline static uint Get (const T& x)
+			{
+				return uint( !!T(x >> Bit) ) + _RecursiveBitScanReverse< Bit-1 >::Get( x );
+			}
+		};
 
-	
-	//
-	// BitScanReverse, BitScanForward
-	//
+		template <>
+		struct _RecursiveBitScanReverse<0>
+		{
+			template <typename T>
+			forceinline static uint Get (const T& x)
+			{
+				return uint( !!x );
+			}
+		};
+
+	}	// _math_hidden_
+
 
 	template <typename T>
-	inline BitsU BitScanReverse (const T& x)
+	forceinline uint IntLog2 (const T& x)
 	{
-		return BitsU( IntLog2( x ) );
-	}
-
-
-	template <typename T>
-	inline BitsU BitScanForward (const T& x)
-	{
-		CompileTime::MustBeInteger<T>();
-
+		STATIC_ASSERT( CompileTime::IsScalarOrEnum<T> );
+		STATIC_ASSERT( CompileTime::IsInteger<T> );
+		
 		typedef typename CompileTime::NearUInt::FromType<T>	utype;
 
 		const utype	value = ReferenceCast<utype>(x);
 
-		uint bits = _math_hidden_::_RecursiveBitScanForward< CompileTime::SizeOf<utype>::bits-1 >::Get( value );
+		return _math_hidden_::_RecursiveBitScanReverse< CompileTime::SizeOf<utype>::bits-1 >::Get( value ) - 1;
+	}
 
-		return BitsU( bits > 0 ? CompileTime::SizeOf<utype>::bits - bits : -1 );
+	template <typename T, usize I>
+	inline Vec<uint,I>  IntLog2 (const Vec<T,I> &x)
+	{
+		Vec<uint,I>		ret;
+		FOR( i, ret )	ret[i] = IntLog2( x[i] );
+		return ret;
+	}
+
+/*
+=================================================
+	BitScanReverse
+=================================================
+*/
+	template <typename T>
+	forceinline BitsU BitScanReverse (const T& x)
+	{
+		return BitsU( IntLog2( x ) );
+	}
+
+	template <typename T, usize I>
+	inline Vec<BitsU,I> BitScanReverse (const Vec<T,I> &x)
+	{
+		Vec<BitsU,I>	ret;
+		FOR( i, x )		ret[i] = BitScanReverse( x[i] );
+		return ret;
+	}
+	
+/*
+=================================================
+	BitScanForward
+=================================================
+*/
+	namespace _math_hidden_
+	{
+		template <uint Bit>
+		struct _RecursiveBitScanForward
+		{
+			template <typename T>
+			forceinline static uint Get (const T& x)
+			{
+				return uint( (!!T(x >> Bit)) & (!(x & ((T(1) << Bit) - 1))) ) + _RecursiveBitScanForward< Bit-1 >::Get( x );
+			}
+		};
+
+		template <>
+		struct _RecursiveBitScanForward<0>
+		{
+			template <typename T>
+			forceinline static uint Get (const T& x)
+			{
+				return uint( !!x );
+			}
+		};
+	}
+
+	template <typename T>
+	forceinline BitsU BitScanForward (const T& x)
+	{
+		STATIC_ASSERT( CompileTime::IsScalarOrEnum<T> );
+		STATIC_ASSERT( CompileTime::IsInteger<T> );
+
+		typedef typename CompileTime::NearUInt::FromType<T>	utype;
+
+		const utype	value = ReferenceCast<utype>(x);
+		
+		return BitsU( _math_hidden_::_RecursiveBitScanForward< CompileTime::SizeOf<utype>::bits-1 >::Get( value ) - 1 );
 	}
 
 	template <typename T, usize I>
 	inline Vec<BitsU,I> BitScanForward (const Vec<T,I> &x)
 	{
-		Vec<BitsU,I>		ret;
+		Vec<BitsU,I>	ret;
 		FOR( i, x )		ret[i] = BitScanForward( x[i] );
+		return ret;
+	}
+	
+/*
+=================================================
+	ReverseBitOrder
+=================================================
+*/
+	namespace _math_hidden_
+	{
+		// from http://graphics.stanford.edu/~seander/bithacks.html#BitReverseObvious
+
+		template <uint Bit>
+		struct _RecursiveReverseBitOrder
+		{
+			template <typename T>
+			forceinline static T Get (const T &x, const T &mask)
+			{
+				const uint	s = Bit >> 1;
+				const T		m = mask ^ (mask << s);
+				const T		v = ((x >> s) & m) | ((x << s) & ~m);
+
+				return _RecursiveReverseBitOrder< s >::Get( v, m );
+			}
+		};
+		
+		template <>
+		struct _RecursiveReverseBitOrder<0>
+		{
+			template <typename T>
+			forceinline static T Get (const T &x, const T &)
+			{
+				return x;
+			}
+		};
+	}
+	
+	template <typename T>
+	forceinline T ReverseBitOrder (const T& x)
+	{
+		STATIC_ASSERT( CompileTime::IsScalarOrEnum<T> );
+		STATIC_ASSERT( CompileTime::IsInteger<T> );
+
+		typedef typename CompileTime::NearUInt::FromType<T>	utype;
+
+		const utype	value = ReferenceCast<utype>(x);
+
+		return _math_hidden_::_RecursiveReverseBitOrder< CompileTime::SizeOf<utype>::bits >::Get( x, ~T(0) );
+	}
+
+	template <typename T, usize I>
+	inline Vec<T,I> ReverseBitOrder (const Vec<T,I> &x)
+	{
+		Vec<T,I>	ret;
+		FOR( i, x )	ret[i] = ReverseBitOrder( x[i] );
 		return ret;
 	}
 

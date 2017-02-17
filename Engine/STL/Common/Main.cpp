@@ -66,8 +66,8 @@ namespace GXTypes
 #endif
 	
 DEBUG_ONLY(
-	Set<Referenced*>	Referenced::_objectRefs;
-	OS::Mutex			Referenced::_mutex;
+	Set<RefCountedObject*>	RefCountedObject::_objectRefs;
+	OS::Mutex				RefCountedObject::_mutex;
 )
 
 }	// GXTypes

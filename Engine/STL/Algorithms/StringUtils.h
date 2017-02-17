@@ -158,13 +158,13 @@ namespace StringUtils
 	inline ilong	ToInt64 (StringCRef sStr)			{ return atoll( sStr.cstr() ); }
 	//inline ilong	ToInt64 (const char *pStr)			{ return atoll( pStr ); }
 #endif
-	/*
+	
 	inline float	ToFloat (StringCRef sStr)			{ return float( atof( sStr.cstr() ) ); }
 	//inline float	ToFloat (const char *pStr)			{ return float( atof( pStr ) ); }
 	inline double	ToDouble (StringCRef sStr)			{ return atof( sStr.cstr() ); }
 	//inline double	ToDouble (const char *pStr)			{ return atof( pStr ); }
 
-
+	/*
 	/*template <typename T>
 	inline int ToInt32 (TStringRef<const T> sStr)
 	{
@@ -265,6 +265,17 @@ namespace StringUtils
 		return sign ? -val : val;
 	}*/
 
+	/*
+	template <typename R>
+	inline R  Pow10 (const int p)
+	{
+		R	ret = R(1);
+
+		for (int i = 0; i < Abs(p); ++i)
+			ret *= R(10);
+
+		return ( p < 0  ?  R(1) / ret  :  ret );
+	}
 
 	template <typename T>
 	inline double FromStrToFloat (TStringRef<const T> s)

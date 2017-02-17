@@ -1,10 +1,12 @@
 // Copyright © 2014-2017  Zhirnov Andrey. All rights reserved.
+/*
+	Helper types for debuging compile-time code (templates, constexpr, ...)
+*/
 
 #pragma once
 
 #include "TemplateUtils.h"
 //#include "TypeList.h"
-#include <typeinfo>
 
 namespace GX_STL
 {
@@ -38,7 +40,7 @@ namespace Debug
 	// Type List To String
 	//
 
-	/*template <typename Typelist>
+	template <typename Typelist>
 	struct TypeListToString
 	{
 	private:
@@ -77,7 +79,7 @@ namespace Debug
 		{
 			WARNING( ToString().cstr() );
 		}
-	};*/
+	};
 
 
 }	// Debug

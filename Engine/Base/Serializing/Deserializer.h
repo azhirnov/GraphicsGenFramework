@@ -392,14 +392,14 @@ namespace Base
 
 		
 		template <typename T, typename B, typename S>
-		void _Load (CRefCounter<T,B,S> &value) const
+		void _Load (ReferenceCounter<T,B,S> &value) const
 		{
 			_CheckTypeOf( value );
 
 			SerializableObjectID	id;
 			_file->Read( id );
 
-			value = _objFactory->Create( id, _baseObj ).To< CRefCounter<T,B,S> >();
+			value = _objFactory->Create( id, _baseObj ).To< ReferenceCounter<T,B,S> >();
 			CHECK( value );
 
 			_Load( *value );

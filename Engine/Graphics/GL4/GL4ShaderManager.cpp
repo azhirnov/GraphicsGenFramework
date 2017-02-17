@@ -131,7 +131,7 @@ namespace Graphics
 	_CompileShader
 =================================================
 */
-	bool ShaderManager::_CompileShader (INOUT LoadedShader &shaderData, Buffer<SourceInfo> shaderSource) const
+	bool ShaderManager::_CompileShader (INOUT LoadedShader &shaderData, Buffer<SourceInfo> shaderSource, StringCRef filename) const
 	{
 		using namespace gl;
 
@@ -308,7 +308,7 @@ namespace Graphics
 			GL_CALL( glGetShaderInfoLog( shaderData.shader.Id(), log_size, null, info.ptr() ) );
 			info.CalculateLength();
 			
-			_ParseCompilationErrors( shaderSource, shaderData.shaderType, info, compiled );
+			_ParseCompilationErrors( shaderSource, shaderData.shaderType, info, compiled, filename );
 		}
 
 		if ( not compiled )
@@ -326,7 +326,8 @@ namespace Graphics
 =================================================
 */
 	bool ShaderManager::_LinkProgram (OUT ProgramID &prog, Buffer<ShaderID> shaders, ShaderBits_t activeShaders,
-									  const VertexAttribsState &input, const FragmentOutputState &output) const
+									  const VertexAttribsState &input, const FragmentOutputState &output,
+									  StringCRef filename) const
 	{
 		using namespace gl;
 		
@@ -357,7 +358,7 @@ namespace Graphics
 			GL_CALL( glGetProgramInfoLog( prog.Id(), log_size, null, info.ptr() ) );
 			info.CalculateLength();
 			
-			_ParseLinkingErrors( info, linked );
+			_ParseLinkingErrors( info, linked, filename );
 		}
 
 		if ( not linked )
@@ -382,7 +383,8 @@ namespace Graphics
 	_ParseCompilationErrors
 =================================================
 */
-	void ShaderManager::_ParseCompilationErrors (Buffer<SourceInfo> sources, EShader::type shaderType, StringCRef log, bool compiled) const
+	void ShaderManager::_ParseCompilationErrors (Buffer<SourceInfo> sources, EShader::type shaderType, StringCRef log,
+												 bool compiled, StringCRef filename) const
 	{
 		// pattern:	<number> ( <line> ) : <error/warning> <code>: <description>
 
@@ -391,7 +393,7 @@ namespace Graphics
 		String					str;		str.Reserve( log.Length() * 2 );
 		usize					prev_line = -1;
 
-		str << EShader::ToString( shaderType ) << " shader compilation "
+		str << EShader::ToString( shaderType ) << " shader \"" << filename << "\" compilation "
 			<< (compiled ? "message" : "error") << "\n---------------\n";
 
 		StringParser::DivideLines( log, OUT lines );
@@ -460,11 +462,14 @@ namespace Graphics
 	_ParseLinkingErrors
 =================================================
 */
-	void ShaderManager::_ParseLinkingErrors (StringCRef log, bool linked) const
+	void ShaderManager::_ParseLinkingErrors (StringCRef log, bool linked, StringCRef filename) const
 	{
 		String	str;
 
-		str << "Program linking " << (linked ? "message" : "error") << "\n---------------\n" << log;
+		str << "Program \"" << filename << "\"linking "
+			<< (linked ? "message" : "error") << "\n---------------\n" << log;
+
+		// TODO: parse errors
 
 		LOG( str.cstr(), linked ? (ELog::Debug | ELog::SpoilerFlag) : (ELog::Error | ELog::OpenSpoilerFlag) );
 	}

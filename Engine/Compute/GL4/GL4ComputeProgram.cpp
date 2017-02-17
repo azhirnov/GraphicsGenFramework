@@ -15,7 +15,7 @@ namespace Compute
 =================================================
 */
 	GL4ComputeProgram::GL4ComputeProgram (const SubSystemsRef ss) :
-		BaseObject( ss ), _flags( EShaderCompilationFlags::None )
+		BaseObject( ss ), _flags( EShaderCompilationFlags::Unknown )
 	{
 	}
 	
@@ -56,7 +56,7 @@ namespace Compute
 		_shaders.Clear();
 		_header.Clear();
 
-		_flags = EShaderCompilationFlags::None;
+		_flags = EShaderCompilationFlags::Unknown;
 	}
 	
 /*
@@ -67,16 +67,6 @@ namespace Compute
 	bool GL4ComputeProgram::IsCreated () const
 	{
 		return not _shaders.Empty() and not _header.Empty();
-	}
-	
-/*
-=================================================
-	New
-=================================================
-*/
-	ComputeProgramPtr GL4ComputeProgram::New (const SubSystemsRef ss)
-	{
-		return BaseObject::_New( new GL4ComputeProgram( ss ) );
 	}
 
 

@@ -125,21 +125,28 @@ namespace GXMath
 
 
 	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T>
 	inline AABBox<T>::AABBox () : _min(), _max()
 	{}
 
-		
 	template <typename T>
 	inline AABBox<T>::AABBox (const AABBox<T> &box) : _min(box._min), _max(box._max)
 	{}
 
-	
 	template <typename T>
 	inline AABBox<T>::AABBox (const Vec<T,3> &min, const Vec<T,3> &max) : _min(min), _max(max)
 	{}
 	
-		
+/*
+=================================================
+	Set
+=================================================
+*/
 	template <typename T>
 	inline AABBox<T> & AABBox<T>::Set (const Vec<T,3> &point)
 	{
@@ -147,8 +154,12 @@ namespace GXMath
 		_max = point;
 		return *this;
 	}
-
-		
+	
+/*
+=================================================
+	Set
+=================================================
+*/
 	template <typename T>
 	inline AABBox<T> & AABBox<T>::Set (const Vec<T,3> &min, const Vec<T,3> &max)
 	{
@@ -156,8 +167,12 @@ namespace GXMath
 		_max = max;
 		return *this;
 	}
-
 	
+/*
+=================================================
+	SetBBox
+=================================================
+*/
 	template <typename T>
 	inline AABBox<T> & AABBox<T>::SetBBox (const Vec<T,3> &center, const Vec<T,3> &extents)
 	{
@@ -166,23 +181,35 @@ namespace GXMath
 		return *this;
 	}
 	
-
+/*
+=================================================
+	Add
+=================================================
+*/
 	template <typename T>
 	inline void AABBox<T>::Add (const Vec<T,3> &point)
 	{
 		_max.MakeCeil( point );
 		_min.MakeFloor( point );
 	}
-
-
+	
+/*
+=================================================
+	Add
+=================================================
+*/
 	template <typename T>
 	inline void AABBox<T>::Add (const AABBox<T> &box)
 	{
 		Add( box.Min() );
 		Add( box.Max() );
 	}
-
-		
+	
+/*
+=================================================
+	Repair
+=================================================
+*/
 	template <typename T>
 	inline void AABBox<T>::Repair ()
 	{
@@ -191,7 +218,11 @@ namespace GXMath
 		if ( _min.z > _max.z )	SwapValues( _min.z, _max.z );
 	}
 	
-		
+/*
+=================================================
+	Move
+=================================================
+*/
 	template <typename T>
 	inline void AABBox<T>::Move (const Vec<T,3> &delta)
 	{
@@ -199,16 +230,24 @@ namespace GXMath
 		_max += delta;
 	}
 	
-		
+/*
+=================================================
+	Scale
+=================================================
+*/
 	template <typename T>
 	inline void AABBox<T>::Scale (const Vec<T,3> &scale)
 	{
 		_min *= scale;
 		_max *= scale;
 	}
-
-
-	/*template <typename T>
+	
+/*
+=================================================
+	Rotate
+=================================================
+*
+	template <typename T>
 	inline void AABBox<T>::Rotate (const Matrix<T,3,3> &mat)
 	{
 		Vec<T,3>	v_min	 = _min,
@@ -238,8 +277,12 @@ namespace GXMath
 		v_corner.z = v_min.z;
 		Add( mat.RotateVect( v_corner ) );
 	}
-
-
+	
+/*
+=================================================
+	Rotate
+=================================================
+*
 	template <typename T>
 	inline void AABBox<T>::Rotate (const Matrix<T,4,4> &mat)
 	{
@@ -270,8 +313,12 @@ namespace GXMath
 		v_corner.z = v_min.z;
 		Add( mat.RotateVect( v_corner ) );
 	}
-
-		
+	
+/*
+=================================================
+	Transform
+=================================================
+*
 	template <typename T>
 	inline void AABBox<T>::Transform (const Matrix<T,4,4> &mat)
 	{
@@ -302,8 +349,12 @@ namespace GXMath
 		v_corner.z = v_min.z;
 		Add( mat.TransformVect( v_corner ) );
 	}
-
-
+	
+/*
+=================================================
+	TransformExt
+=================================================
+*
 	template <typename T>
 	inline void AABBox<T>::TransformExt (const Matrix<T,4,4> &mat)
 	{
@@ -332,30 +383,41 @@ namespace GXMath
 			}
 		}
 	}
-
-		
-	/*template <typename T>
+	
+/*
+=================================================
+	InterpolateL
+=================================================
+*
+	template <typename T>
 	inline void AABBox<T>::InterpolateL (const AABBox<T> &sBox1, const AABBox<T> &sBox2, T tK)
 	{
 		_min.InterpolateL( sBox1.Min(), sBox2.Min(), tK );
 		_max.InterpolateL( sBox1.Max(), sBox2.Max(), tK );
 	}
-
-		
+	
+/*
+=================================================
+	InterpolateQ
+=================================================
+*
 	template <typename T>
 	inline void AABBox<T>::InterpolateQ (const AABBox<T> &sBox1, const AABBox<T> &sBox2, const AABBox<T> &sBox3, T tK)
 	{
 		_min.InterpolateQ( sBox1.Min(), sBox2.Min(), sBox3.Min(), tK );
 		_max.InterpolateQ( sBox1.Max(), sBox2.Max(), sBox3.Max(), tK );
-	}*/
-
-
+	}
+	
+/*
+=================================================
+	operator ==
+=================================================
+*/
 	template <typename T>
 	inline bool AABBox<T>::operator == (const AABBox<T> &right) const
 	{
 		return ( _min == right._min and _max == right._max );
 	}
-	
 	
 	template <typename T>
 	inline bool AABBox<T>::operator != (const AABBox<T> &right) const
@@ -363,7 +425,11 @@ namespace GXMath
 		return not ( *this == right );
 	}
 	
-		
+/*
+=================================================
+	operator +=
+=================================================
+*/
 	template <typename T>
 	inline AABBox<T> & AABBox<T>::operator += (const Vec<T,3> &right)
 	{
@@ -371,45 +437,54 @@ namespace GXMath
 		return *this;
 	}
 
-		
 	template <typename T>
 	inline AABBox<T> & AABBox<T>::operator += (const AABBox<T> &right)
 	{
 		Add( right );
 		return *this;
 	}
-
-		
+	
+/*
+=================================================
+	operator +
+=================================================
+*/
 	template <typename T>
 	inline AABBox<T> AABBox<T>::operator + (const Vec<T,3> &right) const
 	{
 		return AABBox<T>(*this) += right;
 	}
 
-		
 	template <typename T>
 	inline AABBox<T> AABBox<T>::operator + (const AABBox<T> &right) const
 	{
 		return AABBox<T>(*this) += right;
 	}
-
-		
-	/*template <typename T>
+	
+/*
+=================================================
+	operator *=
+=================================================
+*
+	template <typename T>
 	inline AABBox<T> & AABBox<T>::operator *= (const Matrix<T,4,4> &right)
 	{
 		TransformExt( right );
 		return *this;
 	}
 
-		
 	template <typename T>
 	inline AABBox<T> & AABBox<T>::operator *= (const Matrix<T,3,3> &right)
 	{
 		Rotate( right );
 		return *this;
 	}
-
-		
+	
+/*
+=================================================
+	operator *
+=================================================
+*
 	template <typename T>
 	inline AABBox<T> AABBox<T>::operator * (const Matrix<T,4,4> &right) const
 	{
@@ -418,16 +493,19 @@ namespace GXMath
 		return ret;
 	}
 
-		
 	template <typename T>
 	inline AABBox<T> AABBox<T>::operator * (const Matrix<T,3,3> &right) const
 	{
 		AABBox<T>	ret(*this);
 		ret.Transform( right );
 		return ret;
-	}*/
-
-
+	}
+	
+/*
+=================================================
+	Volume
+=================================================
+*/
 	template <typename T>
 	inline T AABBox<T>::Volume () const
 	{
@@ -435,15 +513,23 @@ namespace GXMath
 		return ext.x * ext.y * ext.z;
 	}
 	
-
+/*
+=================================================
+	MinRadius
+=================================================
+*/
 	template <typename T>
 	inline T AABBox<T>::MinRadius () const
 	{
 		const Vec<T,3>	side = Extent();
 		return T(0.5) * GXMath::Min( side.x, side.y, side.z );
 	}
-
-
+	
+/*
+=================================================
+	MaxRadius
+=================================================
+*/
 	template <typename T>
 	inline T AABBox<T>::MaxRadius () const
 	{
@@ -452,36 +538,56 @@ namespace GXMath
 
 		return sq3_div2 * GXMath::Max( side.x, side.y, side.z );
 	}
-
 	
+/*
+=================================================
+	IsInside
+=================================================
+*/
 	template <typename T>
 	inline bool AABBox<T>::IsInside (const Vec<T,3> &point) const
 	{
 		return All( point >= _min ) and All( point <= _max );
 	}
-
-
+	
+/*
+=================================================
+	IsFullInside
+=================================================
+*/
 	template <typename T>
 	inline bool AABBox<T>::IsFullInside (const Vec<T,3> &point) const
 	{
 		return All( point > _min ) and All( point < _max );
 	}
 	
-	
+/*
+=================================================
+	IsInside
+=================================================
+*/
 	template <typename T>
 	inline bool AABBox<T>::IsInside (const AABBox<T> &box) const
 	{
 		return All( box._min >= _min ) and All( box._max <= _max );
 	}
-
 	
+/*
+=================================================
+	IsFullInside
+=================================================
+*/
 	template <typename T>
 	inline bool AABBox<T>::IsFullInside (const AABBox<T> &box) const
 	{
 		return All( box._min > _min ) and All( box._max < _max );
 	}
-
-
+	
+/*
+=================================================
+	Intersect
+=================================================
+*/
 	template <typename T>
 	inline bool AABBox<T>::Intersect (const AABBox<T> &box) const
 	{
@@ -489,7 +595,11 @@ namespace GXMath
 				 _min.x > box._max.x or _min.y > box._max.y or _min.z > box._max.z );
 	}
 	
-		
+/*
+=================================================
+	Intersection
+=================================================
+*/
 	template <typename T>
 	inline AABBox<T> AABBox<T>::Intersection (const AABBox<T> &box) const
 	{
@@ -501,8 +611,12 @@ namespace GXMath
 
 		return ret;
 	}
-
-
+	
+/*
+=================================================
+	GetCorner
+=================================================
+*/
 	template <typename T>
 	inline Vec<T,3> AABBox<T>::GetCorner (_Corner_t corner) const
 	{
@@ -522,7 +636,11 @@ namespace GXMath
 		return Vec<T,3>();
 	}
 	
-
+/*
+=================================================
+	GetPoints
+=================================================
+*/
 	template <typename T>
 	inline void AABBox<T>::GetPoints (Vec<T,3> aPoints[8]) const
 	{
@@ -535,8 +653,12 @@ namespace GXMath
 		aPoints[6] = Vec<T,3>( _min.x, _max.y, _max.z );
 		aPoints[7] = _max;
 	}
-
-
+	
+/*
+=================================================
+	Convert
+=================================================
+*/
 	template <typename T>
 	template <typename T2>
 	inline AABBox<T2>  AABBox<T>::Convert () const
@@ -544,12 +666,17 @@ namespace GXMath
 		return AABBox<T2>( _min.Convert<T2>(), _max.Convert<T2>() );
 	}
 	
-
-	/*template <typename T>
+/*
+=================================================
+	ToSphere
+=================================================
+*
+	template <typename T>
 	inline Sphere<T>  AABBox<T>::ToSphere () const
 	{
 		return Sphere<T>( Center(), MaxRadius() );
-	}*/
+	}
+	*/
 
 
 }	// GXMath

@@ -50,6 +50,11 @@ namespace GXMath
 	
 
 	
+/*
+=================================================
+	InnerPoint
+=================================================
+*/
 	template <typename VecType>
 	inline bool  Triangle<VecType>::InnerPoint (const VecType &p) const
 	{
@@ -65,8 +70,12 @@ namespace GXMath
 
 		return ( (b1 == b2) and (b2 == b3) );
 	}
-
 	
+/*
+=================================================
+	PointToBarycentric
+=================================================
+*/
 	template <typename VecType>
 	inline typename Triangle<VecType>::vec3_t  Triangle<VecType>::PointToBarycentric (const vec_t &p) const
 	{
@@ -88,8 +97,12 @@ namespace GXMath
 
 		return uvw;
 	}
-
 	
+/*
+=================================================
+	PointFromBarycentric
+=================================================
+*/
 	template <typename VecType>
 	inline VecType  Triangle<VecType>::PointFromBarycentric (const vec3_t &b) const
 	{
@@ -112,9 +125,9 @@ namespace GXTypes
 
 		result_t operator () (const key_t &x) const
 		{
-			return	(base_t::operator ()( x[0] ) << 1) ^
-					(base_t::operator ()( x[1] ) << 2) ^
-					(base_t::operator ()( x[2] ) << 3);
+			return	base_t::operator ()( x[0] ) +
+					base_t::operator ()( x[1] ) +
+					base_t::operator ()( x[2] );
 		}
 	};
 

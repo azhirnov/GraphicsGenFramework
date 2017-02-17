@@ -49,8 +49,6 @@ namespace Graphics
 		uint			Index ()	const	{ return _index; }
 		QueryID const&	QueryId ()	const	{ return _id; }
 
-		static GraphicsQueryPtr  New (const SubSystemsRef ss);
-
 	private:
 		void _Delete ();
 

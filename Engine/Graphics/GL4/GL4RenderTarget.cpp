@@ -283,9 +283,9 @@ namespace Graphics
 
 		GL_CALL( glBindFramebuffer( GL_READ_FRAMEBUFFER, _rt.Id() ) );
 
-		GL_CALL( glPixelStorei( GL_PACK_ALIGNMENT, GLint(align) ) );
+		GL_CALL( glPixelStorei( GL_PACK_ALIGNMENT, (GLint) isize(align) ) );
 		GL_CALL( glReadnPixels( region.left, region.bottom, region.Width(), region.Height(),
-								fmt, type, GLsizei(data.Size()), data.ptr() ) );
+								fmt, type, (GLsizei) isize(data.Size()), data.ptr() ) );
 		
 		GL_CALL( glBindFramebuffer( GL_READ_FRAMEBUFFER, 0 ) );
 

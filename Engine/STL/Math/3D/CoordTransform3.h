@@ -8,15 +8,21 @@ namespace GX_STL
 {
 namespace GXMath
 {
+	
+/*
+=================================================
+	CartesianToSpherical
+----
+	Cartesian -> Spherical
 
-	// Cartesian -> Spherical
+	x - radius
+	y - polar angle Theta
+	z - azimuthal angle Phi
+=================================================
+*/
 	template <typename T>
-	inline Vec<T,3>  CartesianToSpherical(const Vec<T,3> &cartesian)
+	inline Vec<T,3>  CartesianToSpherical (const Vec<T,3> &cartesian)
 	{
-		// x - radius
-		// y - polar angle Theta
-		// z - azimuthal angle Phi
-		
 		CompileTime::MustBeFloat<T>();
 
 		Vec<T,3>	spherical;
@@ -29,16 +35,21 @@ namespace GXMath
 
 		return spherical;
 	}
+	
+/*
+=================================================
+	SphericalToCartesian
+----
+	Spherical -> Cartesian
 
-
-	// Spherical -> Cartesian
+	x - radius
+	y - polar angle Theta
+	z - azimuthal angle Phi
+=================================================
+*/
 	template <typename T>
-	inline Vec<T,3>  SphericalToCartesian(const Vec<T,3> &spherical)
+	inline Vec<T,3>  SphericalToCartesian (const Vec<T,3> &spherical)
 	{
-		// x - radius
-		// y - polar angle Theta
-		// z - azimuthal angle Phi
-		
 		CompileTime::MustBeFloat<T>();
 
 		Vec<T,3>		cartesian;
@@ -52,16 +63,21 @@ namespace GXMath
 		return cartesian;
 	}
 
+/*
+=================================================
+	SphericalToCilindrical
+----
+	Spherical -> Cilindrical
 
-	// Spherical -> Cilindrical
+	spherical:					cilindrical:
+	x - radius					x - radius
+	y - polar angle Theta		y - azimuthal angle Phi
+	z - azimuthal angle Phi		z - elevation
+=================================================
+*/
 	template <typename T>
-	inline Vec<T,3>  SphericalToCilindrical(const Vec<T,3> &spherical)
+	inline Vec<T,3>  SphericalToCilindrical (const Vec<T,3> &spherical)
 	{
-		// spherical:					cilindrical:
-		// x - radius					x - radius
-		// y - polar angle Theta		y - azimuthal angle Phi
-		// z - azimuthal angle Phi		z - elevation
-		
 		CompileTime::MustBeFloat<T>();
 
 		Vec<T,3>		cilindrical;
@@ -73,17 +89,22 @@ namespace GXMath
 
 		return cilindrical;
 	}
+	
+/*
+=================================================
+	CilindricalToSpherical
+----
+	Cilindrical -> Spherical
 
-
-	// Cilindrical -> Spherical
+	spherical:					cilindrical:
+	x - radius					x - radius
+	y - polar angle Theta		y - azimuthal angle Phi
+	z - azimuthal angle Phi		z - elevation
+=================================================
+*/
 	template <typename T>
-	inline Vec<T,3>  CilindricalToSpherical(const Vec<T,3> &cilindrical)
+	inline Vec<T,3>  CilindricalToSpherical (const Vec<T,3> &cilindrical)
 	{
-		// spherical:					cilindrical:
-		// x - radius					x - radius
-		// y - polar angle Theta		y - azimuthal angle Phi
-		// z - azimuthal angle Phi		z - elevation
-		
 		CompileTime::MustBeFloat<T>();
 
 		Vec<T,3>		spherical;
@@ -94,16 +115,21 @@ namespace GXMath
 
 		return spherical;
 	}
+	
+/*
+=================================================
+	CartesianToCilindrical
+----
+	Cartesian -> Cilindrical
 
-
-	// Cartesian -> Cilindrical
+	x - radius
+	y - azimuthal angle Phi
+	z - elevation
+=================================================
+*/
 	template <typename T>
-	inline Vec<T,3>  CartesianToCilindrical(const Vec<T,3> &cartesian)
+	inline Vec<T,3>  CartesianToCilindrical (const Vec<T,3> &cartesian)
 	{
-		// x - radius
-		// y - azimuthal angle Phi
-		// z - elevation
-		
 		CompileTime::MustBeFloat<T>();
 
 		Vec<T,3>	cilindrical;
@@ -114,16 +140,21 @@ namespace GXMath
 
 		return cilindrical;
 	}
+	
+/*
+=================================================
+	CartesianToCilindrical
+----
+	Cilindrical -> Cartesian
 
-
-	// Cilindrical -> Cartesian
+	x - radius
+	y - azimuthal angle Phi
+	z - elevation
+=================================================
+*/
 	template <typename T>
-	inline Vec<T,3>  CilindricalToCartesian(const Vec<T,3> &cilindrical)
+	inline Vec<T,3>  CilindricalToCartesian (const Vec<T,3> &cilindrical)
 	{
-		// x - radius
-		// y - azimuthal angle Phi
-		// z - elevation
-		
 		CompileTime::MustBeFloat<T>();
 
 		Vec<T,3>		cartesian;

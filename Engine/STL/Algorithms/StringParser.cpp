@@ -352,13 +352,14 @@ namespace GXTypes
 		while ( pos < str.Length() )
 		{
 			//const char	c = str[pos];
-			const char	p = (pos-1) >= str.Length() ? 0 : str[pos-1];
+			const char	p = (pos-1) >= str.Length() ? '\0' : str[pos-1];
 				
-			if ( p == '\n' or p == '\r' )
+			if ( p == '\n' or p == '\r' or p == '\0' )
 				return;
 
 			--pos;
 		}
+		pos = 0;
 	}
 	
 /*

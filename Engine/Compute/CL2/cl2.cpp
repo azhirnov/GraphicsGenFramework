@@ -53,7 +53,7 @@ namespace cl
 	{
 	// variables
 	private:
-		Engine::Library		_library;
+		GX_STL::OS::Library		_library;
 
 	// methods
 	public:

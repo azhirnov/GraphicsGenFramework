@@ -6,6 +6,10 @@ using namespace GX_STL;
 using namespace GX_STL::GXTypes;
 using namespace GX_STL::GXMath;
 
+#ifndef __GX_DEBUG__
+#	error In release configuration tests don't show errors!
+#endif
+
 
 extern void Test_CompileTime_TypeInfo ();
 extern void Test_CompileTime_TypeList ();
@@ -26,6 +30,7 @@ extern void Test_Containers_HashSet ();
 
 extern void Test_Dimensions_PhysicsValue ();
 
+extern void Test_Math_Abs ();
 extern void Test_Math_Color ();
 extern void Test_Math_ColorFormat ();
 extern void Test_Math_ImageUtils ();
@@ -73,6 +78,7 @@ void main ()
 
 	Test_Dimensions_PhysicsValue();
 
+	Test_Math_Abs();
 	Test_Math_Color();
 	Test_Math_ColorFormat();
 	Test_Math_ImageUtils();
@@ -94,7 +100,7 @@ void main ()
 
 	Test_SimpleScript();
 	
-	DEBUG_ONLY( Referenced::s_ChenckNotReleasedObjects() );
+	DEBUG_ONLY( RefCountedObject::s_ChenckNotReleasedObjects() );
 
 	WARNING( "Tests Finished!" );
 }

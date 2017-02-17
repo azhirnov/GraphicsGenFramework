@@ -25,13 +25,7 @@ namespace ShaderEditor
 	{
 		Reload();
 
-		_controller.Reset();
-
-		_renderState = RenderState();
-		_renderState.depth.test				= true;
-		_renderState.depth.write			= true;
-		//_renderState.depth.func				= ECompareFunc::LEqual;
-		//_renderState.point.programPointSize	= true;
+		_controller.Reset(Transformation<real>(real3(0.0f, 0.0f, 10.0f), quat()));
 	}
 
 /*
@@ -51,13 +45,13 @@ namespace ShaderEditor
 */
 	void ParticlesSample::Reload ()
 	{
-		ParticleEmitterPtr	new_emitter		= ParticleEmitter::New( SubSystems() );
+		ParticleEmitterPtr	new_emitter		= New<ParticleEmitter>( SubSystems() );
 		IGeneratorPtr		new_generator	= IGenerator::Create_SimpleParticles( SubSystems() );
 		IShaderPtr			new_shader		= IShader::Create_SimpleParticles( SubSystems() );
 		
 		VertexAttribsDesc	desc;
-		desc.Add( VertexAttribsDesc::AttribIndex(0), &ParticleVertex::prevPos );
-		desc.Add( VertexAttribsDesc::AttribIndex(1), &ParticleVertex::position );
+		desc.Add( VertexAttribsDesc::AttribIndex(0), &ParticleVertex::position );
+		desc.Add( VertexAttribsDesc::AttribIndex(1), &ParticleVertex::velocity );
 		desc.Add( VertexAttribsDesc::AttribIndex(2), &ParticleVertex::color, true );
 		desc.Add( VertexAttribsDesc::AttribIndex(3), &ParticleVertex::size );
 
@@ -80,8 +74,6 @@ namespace ShaderEditor
 		rt->Clear();
 
 		real4x4 model	= _controller.GetModelMatrix() * real4x4::FromQuat( quat().RotationX( -90.0_deg ) );
-		
-		SubSystems()->Get<GraphicsEngine>()->GetStateManager()->SetRenderState( _renderState );
 
 		_emitter->Update( globalTime );
 		_emitter->Render( rt, model, _controller.GetViewMatrix(), _controller.GetProjMatrix() );
@@ -106,16 +98,6 @@ namespace ShaderEditor
 	{
 		// no more shaders
 		return false;
-	}
-	
-/*
-=================================================
-	New
-=================================================
-*/
-	ISamplePtr  ParticlesSample::New (const SubSystemsRef ss)
-	{
-		return BaseObject::_New( new ParticlesSample( ss ) );
 	}
 
 

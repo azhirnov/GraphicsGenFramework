@@ -157,7 +157,7 @@ namespace GXFilters
 		}
 
 
-		void	Clear ()			{ _values.ClearMem(); }
+		void	Clear ()			{ _values.Clear(); }
 
 		usize	Count ()	const	{ return _values.Count(); }
 

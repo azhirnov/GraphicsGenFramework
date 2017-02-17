@@ -42,8 +42,17 @@ namespace OS
 	};
 
 
+#ifndef __GX_OS_ERROR_CHECKS__
+
+#	define CHECK_OS_ERROR() \
+		{}
+
+#else
+
 #	define CHECK_OS_ERROR() \
 		::GX_STL::OS::PlatformUtils::_CheckError( __FILE__, __LINE__ )
+
+#endif	// !__GX_OS_ERROR_CHECKS__
 
 
 }	// OS

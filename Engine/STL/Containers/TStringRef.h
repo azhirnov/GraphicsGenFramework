@@ -179,45 +179,74 @@ namespace GXTypes
 	};
 	
 
-
+	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T>
 	inline TStringRef<T>::TStringRef (UninitializedType) :
 		_memory(null), _count(0)
 	{}
-
 	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T>
 	inline TStringRef<T>::TStringRef (T *pString) :
 		_memory(pString), _count( pString == null ? 0 : _types_hidden_::StrLength(pString)+1 )
 	{}
-
-
+	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T>
 	inline TStringRef<T>::TStringRef (T *pString, usize length) :
 		_memory(pString), _count( pString == null ? 0 : length+1 )
 	{}
-
 	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T>
 	inline TStringRef<T>::TStringRef (void *pBegin, void *pEnd) :
 		_memory( (T*)pBegin ), _count( ( usize(pEnd) - usize(pBegin) ) / sizeof(T) )
 	{}
-
 	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T>
 	inline TStringRef<T>::TStringRef (const std::basic_string< C, std::char_traits<C>, std::allocator<C> > &str) :
 		_memory( (T *) str.c_str() ), _count( str.empty() ? 0 : str.length()+1 )
 	{}
-
 	
+/*
+=================================================
+	ToStdString
+=================================================
+*/
 	template <typename T>
 	inline std::basic_string< typename TStringRef<T>::C, std::char_traits< typename TStringRef<T>::C >, std::allocator< typename TStringRef<T>::C > >
 		TStringRef<T>::ToStdString () const
 	{
 		return std::basic_string< C, std::char_traits<C>, std::allocator<C> >( ptr(), Length() );
 	}
-
-
+	
+/*
+=================================================
+	operator []
+=================================================
+*/
 	template <typename T>
 	inline T & TStringRef<T>::operator [] (usize i)
 	{
@@ -225,7 +254,6 @@ namespace GXTypes
 		return ptr()[i];
 	}
 	
-
 	template <typename T>
 	inline T const & TStringRef<T>::operator [] (usize i) const
 	{
@@ -233,7 +261,11 @@ namespace GXTypes
 		return ptr()[i];
 	}
 		
-	
+/*
+=================================================
+	operator ==
+=================================================
+*/
 	template <typename T>
 	inline bool TStringRef<T>::operator == (TStringRef<const T> right) const
 	{
@@ -246,28 +278,34 @@ namespace GXTypes
 		return _Equals( _memory, right.ptr(), Length() );
 	}
 
-		
 	template <typename T>
 	inline bool TStringRef<T>::operator == (const T *pStr) const
 	{
 		return ( *this == Self(pStr) );
 	}
-
 	
+/*
+=================================================
+	operator !=
+=================================================
+*/
 	template <typename T>
 	inline bool TStringRef<T>::operator != (TStringRef<const T> right) const
 	{
 		return not ( *this == right );
 	}
 
-	
 	template <typename T>
 	inline bool TStringRef<T>::operator != (const T *pStr) const
 	{
 		return not ( *this == pStr );
 	}
 		
-
+/*
+=================================================
+	operator <
+=================================================
+*/
 	template <typename T>
 	inline bool TStringRef<T>::operator < (TStringRef<const T> right) const
 	{
@@ -284,7 +322,11 @@ namespace GXTypes
 		return false;
 	}
 		
-
+/*
+=================================================
+	operator >
+=================================================
+*/
 	template <typename T>
 	inline bool TStringRef<T>::operator > (TStringRef<const T> right) const
 	{
@@ -301,21 +343,33 @@ namespace GXTypes
 		return false;
 	}
 	
-		
+/*
+=================================================
+	operator <=
+=================================================
+*/
 	template <typename T>
 	inline bool TStringRef<T>::operator <= (TStringRef<const T> right) const
 	{
 		return not ( *this > right );
 	}
 		
-
+/*
+=================================================
+	operator >=
+=================================================
+*/
 	template <typename T>
 	inline bool TStringRef<T>::operator >= (TStringRef<const T> right) const
 	{
 		return not ( *this < right );
 	}
-
-	/*
+	
+/*
+=================================================
+	NumericLess
+=================================================
+*
 	template <typename T>
 	inline bool TStringRef<T>::NumericLess (TStringRef<const T> right) const
 	{
@@ -361,8 +415,12 @@ namespace GXTypes
 		}
 		return Length() < right.Length();
 	}
-	*/
 
+/*
+=================================================
+	ptr
+=================================================
+*/
 	template <typename T>
 	inline T * TStringRef<T>::ptr ()
 	{
@@ -370,7 +428,6 @@ namespace GXTypes
 		return _memory;
 	}
 	
-
 	template <typename T>
 	inline T const * TStringRef<T>::ptr () const
 	{
@@ -378,7 +435,11 @@ namespace GXTypes
 		return _memory;
 	}
 	
-	
+/*
+=================================================
+	EqualsIC
+=================================================
+*/
 	template <typename T>
 	inline bool TStringRef<T>::EqualsIC (TStringRef<const T> right) const
 	{
@@ -387,8 +448,12 @@ namespace GXTypes
 
 		return _Equals( ptr(), right.ptr(), Length() );
 	}
-
-		
+	
+/*
+=================================================
+	StartsWith
+=================================================
+*/
 	template <typename T>
 	inline bool TStringRef<T>::StartsWith (TStringRef<const T> right) const
 	{
@@ -398,7 +463,11 @@ namespace GXTypes
 		return _Equals( ptr(), right.ptr(), right.Length() );
 	}
 	
-
+/*
+=================================================
+	StartsWithIC
+=================================================
+*/
 	template <typename T>
 	inline bool TStringRef<T>::StartsWithIC (TStringRef<const T> right) const
 	{
@@ -407,8 +476,12 @@ namespace GXTypes
 
 		return _EqualsIC( ptr(), right.ptr(), right.Length() );
 	}
-
-
+	
+/*
+=================================================
+	EndsWith
+=================================================
+*/
 	template <typename T>
 	inline bool TStringRef<T>::EndsWith (TStringRef<const T> right) const
 	{
@@ -417,8 +490,12 @@ namespace GXTypes
 
 		return _Equals( ptr() + (Length() - right.Length()), right.ptr(), right.Length() );
 	}
-
 	
+/*
+=================================================
+	EndsWithIC
+=================================================
+*/
 	template <typename T>
 	inline bool TStringRef<T>::EndsWithIC (TStringRef<const T> right) const
 	{
@@ -427,8 +504,12 @@ namespace GXTypes
 
 		return _EqualsIC( ptr() + (Length() - right.Length()), right.ptr(), right.Length() );
 	}
-
 	
+/*
+=================================================
+	HasChar
+=================================================
+*/
 	template <typename T>
 	inline bool TStringRef<T>::HasChar (T right) const
 	{
@@ -436,7 +517,11 @@ namespace GXTypes
 		return Find( right, pos );
 	}
 	
-
+/*
+=================================================
+	HasCharIC
+=================================================
+*/
 	template <typename T>
 	inline bool TStringRef<T>::HasCharIC (T right) const
 	{
@@ -444,7 +529,11 @@ namespace GXTypes
 		return FindIC( right, pos );
 	}
 	
-
+/*
+=================================================
+	HasSubString
+=================================================
+*/
 	template <typename T>
 	inline bool TStringRef<T>::HasSubString (TStringRef<const T> right) const
 	{
@@ -452,15 +541,23 @@ namespace GXTypes
 		return Find( right, pos );
 	}
 	
-
+/*
+=================================================
+	HasSubStringIC
+=================================================
+*/
 	template <typename T>
 	inline bool TStringRef<T>::HasSubStringIC (TStringRef<const T> right) const
 	{
 		usize	pos;
 		return FindIC( right, pos );
 	}
-
-
+	
+/*
+=================================================
+	_Equals
+=================================================
+*/
 	template <typename T>
 	inline bool TStringRef<T>::_Equals (const T *left, const T *right, usize length)
 	{
@@ -471,7 +568,11 @@ namespace GXTypes
 		return true;
 	}
 	
-
+/*
+=================================================
+	_EqualsIC
+=================================================
+*/
 	template <typename T>
 	inline bool TStringRef<T>::_EqualsIC (const T *left, const T *right, usize length)
 	{
@@ -482,7 +583,11 @@ namespace GXTypes
 		return true;
 	}
 	
-
+/*
+=================================================
+	Find
+=================================================
+*/
 	template <typename T>
 	inline bool  TStringRef<T>::Find (TStringRef<const T> value, usize &pos, usize start) const
 	{
@@ -505,8 +610,12 @@ namespace GXTypes
 		}
 		return false;
 	}
-
-
+	
+/*
+=================================================
+	Find
+=================================================
+*/
 	template <typename T>
 	inline bool  TStringRef<T>::Find (const T tValue, usize &pos, usize start) const
 	{
@@ -523,8 +632,11 @@ namespace GXTypes
 		return false;
 	}
 	
-
-
+/*
+=================================================
+	FindIC
+=================================================
+*/
 	template <typename T>
 	inline bool  TStringRef<T>::FindIC (TStringRef<const T> value, usize &pos, usize start) const
 	{
@@ -548,8 +660,12 @@ namespace GXTypes
 		}
 		return false;
 	}
-
-
+	
+/*
+=================================================
+	FindIC
+=================================================
+*/
 	template <typename T>
 	inline bool  TStringRef<T>::FindIC (const T tValue, usize &pos, usize start) const
 	{
@@ -567,8 +683,12 @@ namespace GXTypes
 		}
 		return false;
 	}
-
-
+	
+/*
+=================================================
+	SubString
+=================================================
+*/
 	template <typename T>
 	inline TStringRef<T>  TStringRef<T>::SubString (usize pos, usize count)
 	{
@@ -580,8 +700,12 @@ namespace GXTypes
 
 		return ( TStringRef<T>( _memory + pos, count ) );
 	}
-
-
+	
+/*
+=================================================
+	SubString
+=================================================
+*/
 	template <typename T>
 	inline TStringRef<const T>  TStringRef<T>::SubString (usize pos, usize count) const
 	{
@@ -594,7 +718,11 @@ namespace GXTypes
 		return ( TStringRef<const T>( _memory + pos, count ) );
 	}
 	
-	
+/*
+=================================================
+	GetInterval
+=================================================
+*/
 	template <typename T>
 	inline TStringRef<T>  TStringRef<T>::GetInterval (usize begin, usize end)
 	{
@@ -608,8 +736,12 @@ namespace GXTypes
 		ASSERT( begin < end );
 		return SubString( begin, end - begin );
 	}
-
 	
+/*
+=================================================
+	GetInterval
+=================================================
+*/
 	template <typename T>
 	inline TStringRef<T>  TStringRef<T>::GetInterval (const T* begin, const T* end)
 	{
@@ -621,8 +753,12 @@ namespace GXTypes
 	{
 		return GetInterval( GetIndex(*begin), GetIndex(*end) );
 	}
-
 	
+/*
+=================================================
+	LessThan
+=================================================
+*/
 	template <typename T>
 	inline bool  TStringRef<T>::LessThan (TStringRef<const T> right) const
 	{
@@ -640,8 +776,12 @@ namespace GXTypes
 		}
 		return Length() < right.Length();
 	}
-
 	
+/*
+=================================================
+	GreaterThan
+=================================================
+*/
 	template <typename T>
 	inline bool  TStringRef<T>::GreaterThan (TStringRef<const T> right) const
 	{
@@ -659,8 +799,12 @@ namespace GXTypes
 		}
 		return Length() > right.Length();
 	}
-
 	
+/*
+=================================================
+	LessThanIC
+=================================================
+*/
 	template <typename T>
 	inline bool  TStringRef<T>::LessThanIC (TStringRef<const T> right) const
 	{
@@ -678,8 +822,12 @@ namespace GXTypes
 		}
 		return Length() < right.Length();
 	}
-
 	
+/*
+=================================================
+	GreaterThanIC
+=================================================
+*/
 	template <typename T>
 	inline bool  TStringRef<T>::GreaterThanIC (TStringRef<const T> right) const
 	{
@@ -697,8 +845,12 @@ namespace GXTypes
 		}
 		return Length() > right.Length();
 	}
-
-
+	
+/*
+=================================================
+	EqualsInRange
+=================================================
+*/
 	template <typename T>
 	inline bool  TStringRef<T>::EqualsInRange (TStringRef<const T> right, usize begin, usize end) const
 	{
@@ -710,7 +862,11 @@ namespace GXTypes
 		return _Equals( ptr() + begin, right.ptr(), end - begin );
 	}
 	
-
+/*
+=================================================
+	EqualsInRangeIC
+=================================================
+*/
 	template <typename T>
 	inline bool  TStringRef<T>::EqualsInRangeIC (TStringRef<const T> right, usize begin, usize end) const
 	{
@@ -722,7 +878,11 @@ namespace GXTypes
 		return _EqualsIC( ptr() + begin, right.ptr(), end - begin );
 	}
 	
-
+/*
+=================================================
+	Intersects
+=================================================
+*/
 	template <typename T>
 	inline bool  TStringRef<T>::Intersects (TStringRef<const T> other) const
 	{
@@ -732,6 +892,11 @@ namespace GXTypes
 	}
 	
 	
+/*
+=================================================
+	StrLength
+=================================================
+*/
 	namespace _types_hidden_
 	{
 		template <typename T>
@@ -755,7 +920,12 @@ namespace GXTypes
 
 	}	// _types_hidden_
 
-
+	
+/*
+=================================================
+	Hash
+=================================================
+*/
 	template <typename T>
 	struct Hash< TStringRef<T> > :
 		private Hash< Buffer<const T> >

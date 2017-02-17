@@ -59,7 +59,7 @@ namespace Profiler
 #	define CPUTIME_PROFILER( ... ) \
 		Engine::Profiler::FunctionCpuProfiler \
 				AUXDEF_UNITE_RAW( __funcCpuProf, __COUNTER__ ) ( \
-					AUXDEF_GETRAW( AUXDEF_GETARG_0( __VA_ARGS__, unknown ) ), \
+					AUXDEF_GETRAW( AUXDEF_GETARG_0( ""__VA_ARGS__, "no name" ) ), \
 					GX_FUNCTION_NAME, \
 					__FILE__, \
 					__LINE__, \

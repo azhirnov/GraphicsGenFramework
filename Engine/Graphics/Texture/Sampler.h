@@ -13,7 +13,7 @@ namespace Graphics
 	// Sampler
 	//
 
-	class Sampler : public Referenced
+	class Sampler : public RefCountedObject
 	{
 	// variables
 	private:

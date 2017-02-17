@@ -123,12 +123,6 @@ namespace Base
 
 			_thread.Wait();
 		}
-
-
-		static ParallelThreadPtr New (const SubSystemsRef ss)
-		{
-			return BaseObject::_New( new ParallelThread( ss ) );
-		}
 	};
 
 

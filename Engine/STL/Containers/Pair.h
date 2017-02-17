@@ -53,6 +53,11 @@ namespace GXTypes
 	};
 
 	
+/*
+=================================================
+	Hash
+=================================================
+*/
 	template <typename FirstType, typename SecondType>
 	struct Hash< Pair< FirstType, SecondType > > :
 		private Hash< FirstType >, private Hash< SecondType >
@@ -65,7 +70,7 @@ namespace GXTypes
 
 		result_t operator () (const key_t &x) const
 		{
-			return	(Hash< FirstType >::operator ()( x.first ) << 2) ^
+			return	Hash< FirstType >::operator ()( x.first ) +
 					Hash< SecondType >::operator ()( x.second );
 		}
 	};

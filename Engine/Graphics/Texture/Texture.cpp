@@ -16,7 +16,7 @@ namespace Graphics
 	TexturePtr Texture::NewTex2D (const SubSystemsRef ss, const uint2 &size, EPixelFormat::type format, const MipmapLevelsRange &levels, MultiSamples samples, ETextureData::type dataType)
 	{
 		ETexture::type	target	= samples > MultiSamples(1) ? ETexture::Tex2DMS : ETexture::Tex2D;
-		TexturePtr		p		= BaseObject::_New( new Texture( PackFileID(), target, dataType, ss ) );
+		TexturePtr		p		= New<Texture>( ss, target, dataType );
 
 		CHECK_ERR( p->Create( uint4( size, 1u, 1u ), format, levels, samples ) );
 		return p;
@@ -25,7 +25,7 @@ namespace Graphics
 	TexturePtr Texture::NewTex2DArray (const SubSystemsRef ss, const uint2 &size, TexArrLayer layers, EPixelFormat::type format, const MipmapLevelsRange &levels, MultiSamples samples, ETextureData::type dataType)
 	{
 		ETexture::type	target	= samples > MultiSamples(1) ? ETexture::Tex2DMSArray : ETexture::Tex2DArray;
-		TexturePtr		p		= BaseObject::_New( new Texture( PackFileID(), target, dataType, ss ) );
+		TexturePtr		p		= New<Texture>( ss, target, dataType );
 
 		CHECK_ERR( p->Create( uint4( size, 1u, layers.Get() ), format, levels, samples ) );
 		return p;
@@ -33,7 +33,7 @@ namespace Graphics
 
 	TexturePtr Texture::NewTex3D (const SubSystemsRef ss, const uint3 &size, EPixelFormat::type format, const MipmapLevelsRange &levels, ETextureData::type dataType)
 	{
-		TexturePtr	p = BaseObject::_New( new Texture( PackFileID(), ETexture::Tex3D, dataType, ss ) );
+		TexturePtr	p = New<Texture>( ss, ETexture::Tex3D, dataType );
 
 		CHECK_ERR( p->Create( uint4( size, 1u ), format, levels, Uninitialized ) );
 		return p;
@@ -41,7 +41,7 @@ namespace Graphics
 
 	TexturePtr Texture::NewTexCubeMap (const SubSystemsRef ss, const uint2 &size, EPixelFormat::type format, const MipmapLevelsRange &levels, ETextureData::type dataType)
 	{
-		TexturePtr	p = BaseObject::_New( new Texture( PackFileID(), ETexture::TexCube, dataType, ss ) );
+		TexturePtr	p = New<Texture>( ss, ETexture::TexCube, dataType );
 
 		CHECK_ERR( p->Create( uint4( size, 6u, 1u ), format, levels, Uninitialized ) );
 		return p;
@@ -49,20 +49,10 @@ namespace Graphics
 
 	TexturePtr Texture::NewTexCubeMapArray (const SubSystemsRef ss, const uint2 &size, TexArrLayer layers, EPixelFormat::type format, const MipmapLevelsRange &levels, ETextureData::type dataType)
 	{
-		TexturePtr	p = BaseObject::_New( new Texture( PackFileID(), ETexture::TexCubeArray, dataType, ss ) );
+		TexturePtr	p = New<Texture>( ss, ETexture::TexCubeArray, dataType );
 
 		CHECK_ERR( p->Create( uint4( size, 6u, layers.Get() ), format, levels, Uninitialized ) );
 		return p;
-	}
-	
-/*
-=================================================
-	New
-=================================================
-*/
-	TexturePtr Texture::New (const SubSystemsRef ss, PackFileID fileID, ETexture::type target, ETextureData::type dataType)
-	{
-		return BaseObject::_New( new Texture( fileID, target, dataType, ss ) );
 	}
 	
 /*
@@ -79,6 +69,14 @@ namespace Graphics
 		_imgSupported( false )
 	{
 	}
+		
+	Texture::Texture (const SubSystemsRef ss, ETexture::type target) :
+		Texture( PackFileID(), target, Uninitialized, ss )
+	{}
+
+	Texture::Texture (const SubSystemsRef ss, ETexture::type target, ETextureData::type dataType) :
+		Texture( PackFileID(), target, dataType, ss )
+	{}
 	
 /*
 =================================================

@@ -86,16 +86,6 @@ namespace Compute
 	
 /*
 =================================================
-	New
-=================================================
-*/
-	ComputeSyncEventPtr  CL2ComputeSyncEvent::New (const SubSystemsRef ss)
-	{
-		return BaseObject::_New( new CL2ComputeSyncEvent( ss ) );
-	}
-	
-/*
-=================================================
 	_Delete
 =================================================
 */

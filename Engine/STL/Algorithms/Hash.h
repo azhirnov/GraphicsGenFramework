@@ -8,6 +8,20 @@
 
 namespace GX_STL
 {
+
+// BitRotateLeft depends of Bits
+// Bits depends of Hash
+// hidden _BitRotateLeft not depends of this
+namespace GXMath
+{
+namespace _math_hidden_
+{
+	template <typename T>
+	forceinline T _BitRotateLeft (T value, usize shift);
+
+}	// _math_hidden_
+}	// GXMath
+
 namespace GXTypes
 {
 
@@ -34,10 +48,31 @@ namespace GXTypes
 		
 		constexpr explicit HashResult (usize val) : _value(val) {}
 
+
+		Self operator ~ () const
+		{
+			return Self( ~_value );
+		}
+
+
+		Self operator + (const Self &right) const
+		{
+			return Self(*this) += right;
+		}
+
+		Self& operator += (const Self &right)
+		{
+			_value ^= GXMath::_math_hidden_::_BitRotateLeft( right._value, 1 );
+			return *this;
+		}
+
+
+		_GX_DIM_CMP_OPERATORS_SELF( _value );
+
 		//operator usize () const	{ return _value; }
 
-		_GX_DIM_ALL_INTEGER_OPERATORS_SELF( _value )
-		_GX_DIM_ALL_INTEGER_OPERATORS_TYPE( _value, value_t, )
+		//_GX_DIM_ALL_INTEGER_OPERATORS_SELF( _value )
+		//_GX_DIM_ALL_INTEGER_OPERATORS_TYPE( _value, value_t, )
 	};
 	
 

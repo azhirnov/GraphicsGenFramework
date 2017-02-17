@@ -23,7 +23,8 @@ namespace ShaderEditor
 	// methods
 	public:
 		ThousandsOfStarsGenerator (const SubSystemsRef ss) :
-			IGenerator( ss )
+			IGenerator( ss ),
+			_pass1Func( SubSystems() ),	_pass2Func( SubSystems() )
 		{}
 
 		bool SetArg (StringCRef name, const VariantRef &arg) override;
@@ -41,7 +42,7 @@ namespace ShaderEditor
 */
 	IGeneratorPtr  IGenerator::Create_ThousandsOfStars (const SubSystemsRef ss)
 	{
-		return BaseObject::_New( new ThousandsOfStarsGenerator( ss ) );
+		return New<ThousandsOfStarsGenerator>( ss );
 	}
 
 /*
@@ -73,10 +74,10 @@ namespace ShaderEditor
 */
 	bool ThousandsOfStarsGenerator::Compile ()
 	{
-		CHECK_ERR( _pass1Func.Load( SubSystems(), "gl/Compute/ThousandsOfStars/pass1.glcs", EShaderCompilationFlags::DefaultCompute ) );
-		CHECK_ERR( _pass2Func.Load( SubSystems(), "gl/Compute/ThousandsOfStars/pass2.glcs", EShaderCompilationFlags::DefaultCompute ) );
+		CHECK_ERR( _pass1Func.Load( "gl/Compute/ThousandsOfStars/pass1.glcs", EShaderCompilationFlags::DefaultCompute ) );
+		CHECK_ERR( _pass2Func.Load( "gl/Compute/ThousandsOfStars/pass2.glcs", EShaderCompilationFlags::DefaultCompute ) );
 		
-		_tempImage = ComputeImage::New( SubSystems() );
+		_tempImage = New<ComputeImage>( SubSystems() );
 
 		CHECK_ERR( SubSystems()->Get< GraphicsEngine >()->GetContext()->CreateSampler(
 			SamplerState( EWrapMode::Clamp, EFilter::MinMagMipLinear ), OUT _sampler ) );

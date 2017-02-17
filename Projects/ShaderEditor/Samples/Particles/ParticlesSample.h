@@ -16,35 +16,33 @@ namespace ShaderEditor
 	{
 	// types
 	private:
-		typedef Shared::FreeCameraController	CameraController_t;
+		typedef FreeCameraController	CameraController_t;
 		
 		struct ParticleVertex
 		{
-			float3	prevPos;
-			float	size;
 			float3	position;
-			float	time;
+			float	size;
 			float3	velocity;
 			color4u	color;
+			float4	param;
 		};
 
 
 	// variables
 	private:
 		CameraController_t		_controller;
-		
-		RenderState				_renderState;
 
 		ParticleEmitterPtr		_emitter;
 
 
 	// methods
 	private:
-		ParticlesSample (const SubSystemsRef ss);
-
-		static const uint	_MaxParticles ()	{ return 1u << 24; }
+		static const uint	_MaxParticles ()	{ return 1u << 18; }
 
 	public:
+		explicit
+		ParticlesSample (const SubSystemsRef ss);
+
 		void Init () override;
 		void Release () override;
 		void Reload () override;
@@ -53,8 +51,6 @@ namespace ShaderEditor
 		void Update (TimeD dt) override;
 		
 		bool Next () override;
-
-		static ISamplePtr  New (const SubSystemsRef ss);
 	};
 
 

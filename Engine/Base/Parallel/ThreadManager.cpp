@@ -36,7 +36,7 @@ namespace Base
 */
 	IParallelThreadPtr ThreadManager::CreateThread ()
 	{
-		ParallelThreadPtr	thread = ParallelThread::New( SubSystems() );
+		ParallelThreadPtr	thread = New<ParallelThread>( SubSystems() );
 		AddThread( thread );
 
 		thread->Start();
@@ -56,10 +56,10 @@ namespace Base
 		{
 			WARNING( "current thread not found" );
 
-			thread = MainThread::New( SubSystems() );
+			thread = New<MainThread>( SubSystems() );
 			AddThread( thread );
 		}
-		return VirtualThread::New( thread );
+		return New<VirtualThread>( thread );
 	}
 	
 /*

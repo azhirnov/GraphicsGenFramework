@@ -10,7 +10,7 @@ namespace GXTypes
 	//
 	// Debug type with ctors logging
 	//
-	/*
+	
 	template <usize UID>
 	struct TDebugCtorLog
 	{
@@ -28,7 +28,7 @@ namespace GXTypes
 #	endif
 
 		~TDebugCtorLog ()							{ WARNING( (String("dtor - ") << UID).cstr() ); }
-	};*/
+	};
 	
 	//#define GX_DEBUGINSTCOUNTER_NO_MOVECTOR
 

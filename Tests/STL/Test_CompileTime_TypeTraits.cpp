@@ -36,30 +36,24 @@ enum ETestEnum {};
 
 // EnableIf //
 template <typename T>
-static int Test1 (T a, CompileTime::EnableIf< (sizeof(T) > 2), int > dummy = 0)
-{
-	return 1;
-}
+static int Test1 (T a, CompileTime::EnableIf< (sizeof(T) > 2), int > dummy = 0)			{ return 1; }
 
 template <typename T>
-static float Test1 (T b, CompileTime::EnableIf< (sizeof(T) <= 2), int > dummy = 0)
-{
-	return 2.0f;
-}
+static float Test1 (T b, CompileTime::EnableIf< (sizeof(T) <= 2), int > dummy = 0)		{ return 2.0f; }
+
+template <typename T>
+static int Test2 (T a, CompileTime::EnableIf< (IsPointer<T>), int > dummy = 0)			{ return 4; }
+
+template <typename T>
+static float Test2 (T b, CompileTime::EnableIf< (not IsPointer<T>), int > dummy = 0)	{ return 5.0f; }
 
 
 // SwitchType //
 template <typename T>
-static int Test2 (CompileTime::SwitchType< (sizeof(T) > 2), T, void > a)
-{
-	return 1;
-}
+static int Test3 (CompileTime::SwitchType< (sizeof(T) > 2), T, void > a)				{ return 1; }
 
 template <typename T>
-static float Test2 (CompileTime::SwitchType< (sizeof(T) <= 2), T, void > a)
-{
-	return 2.0f;
-}
+static float Test3 (CompileTime::SwitchType< (sizeof(T) <= 2), T, void > a)				{ return 2.0f; }
 
 
 extern void Test_CompileTime_TypeTraits ()
@@ -116,12 +110,12 @@ extern void Test_CompileTime_TypeTraits ()
 	STATIC_ASSERT(( IsSameTypes< RemovePointer< int * * >, int * > ));
 
 
-	// IsReference //
-	STATIC_ASSERT( not IsReference< int > );
-	STATIC_ASSERT( IsReference< const int & > );
-	STATIC_ASSERT( IsReference< int & > );
-	STATIC_ASSERT( not IsReference< int * > );
-	STATIC_ASSERT( not IsReference< int && > );
+	// IsLValueReference //
+	STATIC_ASSERT( not IsLValueReference< int > );
+	STATIC_ASSERT( IsLValueReference< const int & > );
+	STATIC_ASSERT( IsLValueReference< int & > );
+	STATIC_ASSERT( not IsLValueReference< int * > );
+	STATIC_ASSERT( not IsLValueReference< int && > );
 	
 
 	// RemoveReference //
@@ -270,11 +264,15 @@ extern void Test_CompileTime_TypeTraits ()
 	STATIC_ASSERT(( IsSameTypes< std::result_of_t< decltype(&Test::MemberFunc2)(Test, int, float) >, int > ));
 	
 
-	int	param = 1;
+	//ubyte	param = 1;	// error: 'initializing': conversion from 'float' to 'int', possible loss of data
+	int		param = 1;
+
+	int const* const	param2 = null;
 
 	// EnableIf //
 	int	a = Test1( param );
+	int	b = Test2( param2 );
 
 	// SwitchType //
-	int	b = Test1( param );
+	int	c = Test3< decltype(param) >( param );
 }

@@ -101,28 +101,45 @@ namespace GXTypes
 
 	
 	
+/*
+=================================================
+	operator ==
+=================================================
+*/
 	template <usize C>
 	inline bool  StaticBitArray<C>::operator == (const Self &right) const
 	{
 		return _memory == right._memory;
 	}
-
 	
+/*
+=================================================
+	operator !=
+=================================================
+*/
 	template <usize C>
 	inline bool  StaticBitArray<C>::operator != (const Self &right) const
 	{
 		return not (*this == right);
 	}
-
 	
+/*
+=================================================
+	operator []
+=================================================
+*/
 	template <usize C>
 	inline typename StaticBitArray<C>::BitRef  StaticBitArray<C>::operator [] (usize index)
 	{
 		ASSUME( index < Count() );
 		return _memory[ _ToArrayIndex( index ) ][ _ToElemIndex( index ) ];
 	}
-
 	
+/*
+=================================================
+	operator []
+=================================================
+*/
 	template <usize C>
 	inline bool  StaticBitArray<C>::operator [] (usize index) const
 	{
@@ -130,47 +147,71 @@ namespace GXTypes
 		return _memory[ _ToArrayIndex( index ) ][ _ToElemIndex( index ) ];
 	}
 	
-
+/*
+=================================================
+	SetAt
+=================================================
+*/
 	template <usize C>
 	inline void  StaticBitArray<C>::SetAt (usize index, bool bit)
 	{
 		ASSUME( index < Count() );
 		return _memory[ _ToArrayIndex( index ) ].SetAt( _ToElemIndex( index ), bit );
 	}
-
 	
+/*
+=================================================
+	Set
+=================================================
+*/
 	template <usize C>
 	inline void  StaticBitArray<C>::Set (usize index)
 	{
 		ASSUME( index < Count() );
 		return _memory[ _ToArrayIndex( index ) ].Set( _ToElemIndex( index ) );
 	}
-
 	
+/*
+=================================================
+	Reset
+=================================================
+*/
 	template <usize C>
 	inline void  StaticBitArray<C>::Reset (usize index)
 	{
 		ASSUME( index < Count() );
 		return _memory[ _ToArrayIndex( index ) ].Reset( _ToElemIndex( index ) );
 	}
-
 	
+/*
+=================================================
+	And
+=================================================
+*/
 	template <usize C>
 	inline void  StaticBitArray<C>::And (usize index, bool bit)
 	{
 		ASSUME( index < Count() );
 		return _memory[ _ToArrayIndex( index ) ].And( _ToElemIndex( index ) );
 	}
-
 	
+/*
+=================================================
+	Or
+=================================================
+*/
 	template <usize C>
 	inline void  StaticBitArray<C>::Or (usize index, bool bit)
 	{
 		ASSUME( index < Count() );
 		return _memory[ _ToArrayIndex( index ) ].Or( _ToElemIndex( index ) );
 	}
-
 	
+/*
+=================================================
+	Xor
+=================================================
+*/
 	template <usize C>
 	inline void  StaticBitArray<C>::Xor (usize index, bool bit)
 	{
@@ -178,7 +219,11 @@ namespace GXTypes
 		return _memory[ _ToArrayIndex( index ) ].Xor( _ToElemIndex( index ) );
 	}
 	
-	
+/*
+=================================================
+	SetAll
+=================================================
+*/
 	template <usize C>
 	inline void  StaticBitArray<C>::SetAll (bool bit)
 	{
@@ -188,6 +233,11 @@ namespace GXTypes
 	}
 
 	
+/*
+=================================================
+	Hash
+=================================================
+*/
 	template <usize C>
 	struct Hash< StaticBitArray<C> > :
 		private Hash< Buffer<const typename StaticBitArray<C>::value_t > >

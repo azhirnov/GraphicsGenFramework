@@ -14,7 +14,7 @@ namespace Graphics
 	// Vertex Attribs
 	//
 
-	class VertexAttribs : public Referenced
+	class VertexAttribs : public RefCountedObject
 	{
 	// variables
 	private:

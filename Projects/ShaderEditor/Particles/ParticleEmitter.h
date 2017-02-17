@@ -21,17 +21,6 @@ namespace ShaderEditor
 	{
 	// types
 	private:
-		/*struct ParticleVertex
-		{
-			float3	prevPos;
-			float3	position;
-			float	size;
-			float3	velocity;
-			float	time;
-			float2	param;	// reserved
-			color4u	color;
-		};*/
-
 		typedef StaticArray< VertexBufferPtr, 2 >		MemBuffer2_t;
 
 
@@ -39,6 +28,9 @@ namespace ShaderEditor
 	private:
 		IGeneratorPtr		_particleProcessor;
 		IShaderPtr			_particleRenderer;
+
+		TimeD				_prevGlobalTime;
+
 		MemBuffer2_t		_particleBuffers;
 		uint				_particlesCount;
 		uint				_currBuffer : 1;
@@ -46,12 +38,11 @@ namespace ShaderEditor
 
 
 	// methods
-	protected:
+	public:
 		explicit
 		ParticleEmitter (const SubSystemsRef ss);
 		~ParticleEmitter ();
 
-	public:
 		bool Create (const IGeneratorPtr &processor, const IShaderPtr &renderer, uint maxParticles,
 					 const VertexAttribsDesc &attribs, BytesU vertexSize);
 
@@ -61,8 +52,6 @@ namespace ShaderEditor
 					 const real4x4 &viewMat, const real4x4 &projMat);
 
 		bool Update (TimeD globalTime);
-
-		static ParticleEmitterPtr  New (const SubSystemsRef ss);
 	};
 
 

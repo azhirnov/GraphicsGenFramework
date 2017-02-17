@@ -30,16 +30,6 @@ namespace Graphics
 		IResourceLoader( ss ),
 		_coloredMipmaps( false )
 	{}
-		
-/*
-=================================================
-	New
-=================================================
-*/
-	TextureLoaderPtr  TextureLoader::New (const SubSystemsRef ss)
-	{
-		return BaseObject::_New( new TextureLoader( ss ) );
-	}
 
 /*
 =================================================
@@ -59,7 +49,7 @@ namespace Graphics
 		SamplerState	sampler_state;
 		CHECK_ERR( file->Read( sampler_state ) );
 
-		TexturePtr	tex = Texture::New( SubSystems(), fileID, header.target, header.dataType );
+		TexturePtr		tex = New<Texture>( Texture( fileID, header.target, header.dataType, SubSystems() ) );
 
 		Array< uint >	offsets;
 		BinaryArray		data;
@@ -131,7 +121,7 @@ namespace Graphics
 */
 	bool TextureLoader::_GenerateColoredMipmaps (const TexturePtr &tex)
 	{
-		RenderTargetPtr	rt = RenderTarget::New( SubSystems() );
+		RenderTargetPtr	rt = New<RenderTarget>( SubSystems() );
 
 		CHECK_ERR( rt->Create() );
 

@@ -30,6 +30,9 @@ namespace OS
 		
 		static bool CreateDirectories (StringCRef path);	// create directories for path
 		static bool FindAndSetCurrentDir (StringCRef dirname, uint searchDepth);
+		
+		template <typename Filter>
+		static void RecursiveFindFiles (StringCRef path, Filter filter, uint depth, INOUT Array<String> &fileNames);
 
 	private:
 		template <typename B>
@@ -57,6 +60,47 @@ namespace OS
 		};
 	};
 	
+	
+/*
+=================================================
+	RecursiveFindFiles
+=================================================
+*/
+	template <typename Filter>
+	inline void FileSystem::RecursiveFindFiles (StringCRef path, Filter filter, uint depth, INOUT Array<String> &fileNames)
+	{
+		if ( depth == 0 )
+			return;
+
+		String			tmp;
+		Array<String>	files;
+		CHECK( GetAllFilesInPath( path, OUT files ) );
+
+		// search files in current path
+		FOR( i, files )
+		{
+			if ( filter( files[i] ) )
+			{
+				tmp = path;
+				FileAddress::AddNameToPath( INOUT tmp, files[i] );
+
+				fileNames.PushBack( tmp );
+			}
+		}
+
+		Array<String>&	dirs = files;
+		CHECK( GetAllDirsInPath( path, OUT dirs ) );
+
+		// recursive search
+		FOR( i, dirs )
+		{
+			tmp = path;
+			FileAddress::AddDirectoryToPath( INOUT tmp, dirs[i] );
+
+			RecursiveFindFiles( tmp, filter, depth-1, INOUT fileNames );
+		}
+	}
+
 
 }	// OS
 }	// GX_STL

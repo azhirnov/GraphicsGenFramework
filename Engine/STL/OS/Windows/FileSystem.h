@@ -37,9 +37,6 @@ namespace OS
 		static bool GetAllFilesInPath (StringCRef path, OUT Array<String> &fileNames);
 		static bool GetAllDirsInPath (StringCRef path, OUT Array<String> &directories);
 		
-		//template <typename Filter>
-		//static bool RecursiveFindFiles (StringCRef path, Filter filter, INOUT Array<String> &fileNames);
-		
 		static bool CopyFile (StringCRef fromFile, StringCRef toFile);
 		static bool CopyDirectory (StringCRef fromDir, StringCRef toDir);
 

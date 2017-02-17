@@ -126,7 +126,7 @@ namespace Base
 		struct Item
 		{
 			void *		ptr = null;
-			TypeId_t	id;
+			TypeId		id;
 
 			template <typename T>
 			void Set (T *p)
@@ -134,16 +134,16 @@ namespace Base
 				CompileTime::MustBeSameSize< decltype(ptr), decltype(p) >();
 
 				ASSERT( (ptr == null) == (p != null) );
-				ASSERT( TypeId<T>() == id or id == TypeId_t() );
+				ASSERT( TypeIdOf<T>() == id or id == TypeId() );
 
 				ptr = reinterpret_cast< void *>( p );
-				id	= TypeId<T>();
+				id	= TypeIdOf<T>();
 			}
 
 			template <typename T>
 			Ptr<T> Get ()
 			{
-				ASSERT( TypeId<T>() == id );
+				ASSERT( TypeIdOf<T>() == id );
 				return reinterpret_cast< T *>( ptr );
 			}
 		};
@@ -152,12 +152,15 @@ namespace Base
 
 
 	// variables
-		ItemsArray_t	_items;
+	private:
+		ItemsArray_t		_items;
+		usize				_threadId;
 
 
 	// methods
 	public:
-		EngineSubSystems ()
+		EngineSubSystems () :
+			_threadId( OS::CurrentThread::GetCurrentThreadId() )
 		{}
 
 		template <typename T>
@@ -166,7 +169,14 @@ namespace Base
 		template <typename T>
 		Setter<T> GetSetter ()
 		{
+			ASSERT( _CheckThread() );
 			return Setter<T>( this );
+		}
+
+	private:
+		bool _CheckThread () const
+		{
+			return _threadId == OS::CurrentThread::GetCurrentThreadId();
 		}
 	};
 
@@ -195,6 +205,7 @@ namespace Base
 			template <> \
 			inline Ptr< _type_ > EngineSubSystems::Get () \
 			{ \
+				ASSERT( _CheckThread() ); \
 				return this->_items[ _typelist_::IndexOf< _type_ > ].Get< _type_ >(); \
 			} \
 		}

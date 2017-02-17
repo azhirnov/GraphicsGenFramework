@@ -143,10 +143,7 @@ namespace File
 
 
 	private:
-		static SubRFilePtr New (const File::RFilePtr &file, BytesU offset, BytesU size)
-		{
-			return new SubRFile( file, offset, size );
-		}
+		static SubRFilePtr New (const File::RFilePtr &file, BytesU offset, BytesU size) = delete;
 	};
 
 
@@ -222,10 +219,7 @@ namespace File
 
 
 	private:
-		static SubWFilePtr New (const File::WFilePtr &file, BytesU offset, BytesU size)
-		{
-			return new SubWFile( file, offset, size );
-		}
+		static SubWFilePtr New (const File::WFilePtr &file, BytesU offset, BytesU size) = delete;
 	};
 	
 

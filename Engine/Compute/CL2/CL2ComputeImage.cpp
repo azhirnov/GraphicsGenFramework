@@ -72,8 +72,8 @@ namespace Compute
 
 		if ( has_data )
 		{
-			img_desc.image_row_pitch	= AlignedImageRowSize( size.x, bpp, xAlign );
-			img_desc.image_slice_pitch	= AlignedImageSliceSize( size.xy(), bpp, xAlign, xyAlign );
+			img_desc.image_row_pitch	= (size_t)ImageUtils::AlignedRowSize( size.x, bpp, xAlign );
+			img_desc.image_slice_pitch	= (size_t)ImageUtils::AlignedSliceSize( size.xy(), bpp, xAlign, xyAlign );
 		}
 
 		cl_int	cl_err = 0;
@@ -197,12 +197,12 @@ namespace Compute
 		uint3	img_size	= Max( size, uint3(1) );
 		
 		BytesU	bpp			= EPixelFormat::BitPerPixel( _format ).ToBytes();
-		usize	row_pitch	= AlignedImageRowSize( img_size.x, bpp, xAlign );
-		usize	slice_pitch	= 0;
+		BytesU	row_pitch	= ImageUtils::AlignedRowSize( img_size.x, bpp, xAlign );
+		BytesU	slice_pitch;
 		
 		// for 3D
 		if ( Depth() > 1 or NumLayers() > 1 )
-			slice_pitch = AlignedImageSliceSize( img_size.xy(), bpp, xAlign, xyAlign );
+			slice_pitch = ImageUtils::AlignedSliceSize( img_size.xy(), bpp, xAlign, xyAlign );
 
 		cl_command_queue	cmd_queue = SubSystems()->Get< ComputeEngine >()->GetCommandQueue();
 
@@ -214,7 +214,8 @@ namespace Compute
 					true,
 					img_offset.To< usize3 >().ptr(),
 					img_size.To< usize3 >().ptr(),
-					row_pitch, slice_pitch,
+					(size_t)row_pitch,
+					(size_t)slice_pitch,
 					data.ptr(),
 					0, null,
 					null ) );
@@ -240,8 +241,8 @@ namespace Compute
 		uint3	img_size	= Max( size, uint3(1) );
 
 		BytesU	bpp			= BytesU( EPixelFormat::BitPerPixel( _format ) );
-		usize	row_pitch	= AlignedImageRowSize( img_size.x, bpp, xAlign );
-		usize	slice_pitch	= AlignedImageSliceSize( img_size.xy(), bpp, xAlign, xyAlign );
+		BytesU	row_pitch	= ImageUtils::AlignedRowSize( img_size.x, bpp, xAlign );
+		BytesU	slice_pitch	= ImageUtils::AlignedSliceSize( img_size.xy(), bpp, xAlign, xyAlign );
 
 		cl_command_queue	cmd_queue = SubSystems()->Get< ComputeEngine >()->GetCommandQueue();
 
@@ -253,7 +254,8 @@ namespace Compute
 					true,
 					img_offset.To< usize3 >().ptr(),
 					img_size.To< usize3 >().ptr(),
-					row_pitch, slice_pitch,
+					(size_t)row_pitch,
+					(size_t)slice_pitch,
 					data.ptr(),
 					0, null,
 					null ) );
@@ -278,7 +280,7 @@ namespace Compute
 		uint3	dst_offset	= Texture::Utils::ConvertOffset( this->ImageType(), dstOffset );
 		uint3	dst_size	= Texture::Utils::ConvertSize( this->ImageType(), size );
 		BytesU	bpp			= BytesU( EPixelFormat::BitPerPixel( PixelFormat() ) );
-		usize	data_size	= dst_size.Volume() * bpp;
+		BytesU	data_size	= dst_size.Volume() * bpp;
 
 		CHECK_ERR( data_size <= src->Size() );
 		
@@ -290,7 +292,7 @@ namespace Compute
 					cmd_queue,
 					src->Id(),
 					this->Id(),
-					srcOffset,
+					(size_t)srcOffset,
 					dst_offset.To< usize3 >().ptr(),
 					dst_size.To< usize3 >().ptr(),
 					0, null,
@@ -351,12 +353,12 @@ namespace Compute
 		
 		CHECK_ERR( IsCreated() );
 		CHECK_ERR( dst and dst->IsCreated() );
-		CHECK_ERR( All( dstOffset + size <= this->Dimension() ) );
+		//CHECK_ERR( All( dstOffset + size <= this->Dimension() ) );
 		
 		uint3	src_offset	= Texture::Utils::ConvertOffset( this->ImageType(), srcOffset );
 		uint3	src_size	= Texture::Utils::ConvertSize( this->ImageType(), size );
 		BytesU	bpp			= BytesU( EPixelFormat::BitPerPixel( PixelFormat() ) );
-		usize	data_size	= src_size.Volume() * bpp;
+		BytesU	data_size	= src_size.Volume() * bpp;
 
 		CHECK_ERR( data_size <= dst->Size() );
 		
@@ -370,7 +372,7 @@ namespace Compute
 					dst->Id(),
 					src_offset.To< usize3 >().ptr(),
 					src_size.To< usize3 >().ptr(),
-					dstOffset,
+					(size_t)dstOffset,
 					0, null,
 					null ) );
 		
@@ -406,16 +408,6 @@ namespace Compute
 		CL2ComputeUtils::ReleaseObjects( cmd_queue, this );
 		return true;
 	}
-
-/*
-=================================================
-	New
-=================================================
-*/
-	ComputeImagePtr  CL2ComputeImage::New (const SubSystemsRef ss)
-	{
-		return BaseObject::_New( new CL2ComputeImage( ss ) );
-	}
 	
 /*
 =================================================
@@ -424,7 +416,9 @@ namespace Compute
 */
 	ComputeImagePtr  CL2ComputeImage::New (const TexturePtr &texture, EMemoryAccess::type flags, MipmapLevel level)
 	{
-		ComputeImagePtr	p = CL2ComputeImage::New( texture->SubSystems() );
+		CHECK_ERR( texture );
+
+		ComputeImagePtr	p = GXTypes::New<CL2ComputeImage>( texture->SubSystems() );
 
 		CHECK_ERR( p->Create( texture, flags, level ) );
 		return p;

@@ -188,6 +188,9 @@ namespace gl
 		GL_CALL( glGetIntegerv( GL_MAX_DRAW_BUFFERS, data ) );
 		log << "\nMax draw buffers:      " << data[0];
 		
+		GL_CALL( glGetIntegerv( GL_MAX_DUAL_SOURCE_DRAW_BUFFERS, data ) );
+		log << "\nMax dual draw buffers: " << data[0];
+
 		GL_CALL( glGetIntegerv( GL_MAX_UNIFORM_BUFFER_BINDINGS, data ) );
 		log << "\nMax UBO bindings:      " << data[0];
 		
@@ -195,19 +198,23 @@ namespace gl
 		log << "\nMax UBO size:          " << ToString( BytesU( data[0] ) );
 		
 		GL_CALL( glGetIntegerv( GL_MAX_SHADER_STORAGE_BUFFER_BINDINGS, data ) );
-		log << "\nMax SSB bindings:      " << data[0];
+		log << "\nMax SSBO bindings:     " << data[0];
 			
 		GL_CALL( glGetIntegerv( GL_MAX_SHADER_STORAGE_BLOCK_SIZE, data ) );
-		log << "\nMax SSB size:          " << ToString( BytesU( data[0] ) );
+		log << "\nMax SSBO size:         " << ToString( BytesU( data[0] ) );
 		
 		GL_CALL( glGetIntegerv( GL_MAX_COMBINED_SHADER_STORAGE_BLOCKS, data ) );
-		log << "\nMax SSB blocks:        " << data[0];
+		log << "\nMax SSBO blocks:       " << data[0];
 
 		GL_CALL( glGetIntegerv( GL_MAX_COMBINED_SHADER_OUTPUT_RESOURCES, data ) );
-		log << "\nMax SSB out blocks:    " << data[0];
+		log << "\nMax SSBO out blocks:   " << data[0];
 
 		GL_CALL( glGetIntegerv( GL_MAX_TESS_GEN_LEVEL, data ) );
 		log << "\nMax tess gen level:    " << data[0];
+
+		// TODO: GL_MAX_FRAMEBUFFER_WIDTH, GL_MAX_FRAMEBUFFER_HEIGHT,
+		//		GL_MAX_FRAMEBUFFER_LAYERS, GL_MAX_FRAMEBUFFER_SAMPLES,
+		//		GL_MAX_SERVER_WAIT_TIMEOUT
 
 		LOG( log.cstr(), ELog::Debug | ELog::SpoilerFlag );
 

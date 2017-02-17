@@ -45,14 +45,14 @@ namespace GXTypes
 			//virtual void		Swap (Interface_t *)	= 0;
 			virtual void		MoveTo (Buffer<char>)	= 0;
 			virtual void		CopyTo (Buffer<char>)	const = 0;
-			virtual TypeId_t	TypeId ()				const = 0;
+			virtual TypeId		TypeIdOf ()				const = 0;
 			virtual BytesU		Size ()					const = 0;
 		
 			bool Cmp (const Interface_t *right) const
 			{
 				const BytesU size = Size();
 				return	( size == right->Size() ) and
-						( TypeId() == right->TypeId() ) and
+						( TypeIdOf() == right->TypeIdOf() ) and
 						UnsafeMem::MemCmp( (void *)this, (void *)right, size ) == 0;
 			}
 		
@@ -60,8 +60,8 @@ namespace GXTypes
 			{
 				const BytesU	size0 = Size();
 				const BytesU	size1 = right->Size();
-				const TypeId_t	type0 = TypeId();
-				const TypeId_t	type1 = right->TypeId();
+				const TypeId	type0 = TypeIdOf();
+				const TypeId	type1 = right->TypeIdOf();
 			
 				if ( type0 == type1 ) {
 					if ( size0 == size1 )
@@ -76,8 +76,8 @@ namespace GXTypes
 			{
 				const BytesU	size0 = Size();
 				const BytesU	size1 = right->Size();
-				const TypeId_t	type0 = TypeId();
-				const TypeId_t	type1 = right->TypeId();
+				const TypeId	type0 = TypeIdOf();
+				const TypeId	type1 = right->TypeIdOf();
 			
 				if ( type0 == type1 ) {
 					if ( size0 == size1 )
@@ -110,8 +110,8 @@ namespace GXTypes
 			explicit StaticDelegate (Function_t fn) noexcept : _func(fn) {}
 
 			bool		IsValid ()				const override	{ return _func != null; }
-			Ret			Call (Args... args)		const override	{ return _func( args... ); }
-			TypeId_t	TypeId ()				const override	{ return TypeIdOf( *this ); }
+			Ret			Call (Args... args)		const override	{ return _func( FW<Args>(args)... ); }
+			TypeId		TypeIdOf ()				const override	{ return GXTypes::TypeIdOf( *this ); }
 			BytesU		Size ()					const override	{ return SizeOf( *this ); }
 			
 			void MoveTo (Buffer<char> buf)
@@ -149,8 +149,8 @@ namespace GXTypes
 			MemberDelegate (Ptr_t &&ptr, Function_t fn) noexcept : _classPtr( RVREF(ptr) ), _func(fn) {}
 
 			bool		IsValid ()			const override	{ return _func != null and _classPtr != null; }
-			Ret			Call (Args... args)	const override	{ return ((*_classPtr).*_func)( args... ); }
-			TypeId_t	TypeId ()			const override	{ return TypeIdOf( *this ); }
+			Ret			Call (Args... args)	const override	{ return ((*_classPtr).*_func)( FW<Args>(args)... ); }
+			TypeId		TypeIdOf ()			const override	{ return GXTypes::TypeIdOf( *this ); }
 			BytesU		Size ()				const override	{ return SizeOf( *this ); }
 			
 			void MoveTo (Buffer<char> buf)
@@ -188,8 +188,8 @@ namespace GXTypes
 			MemberDelegateConst (Ptr_t &&ptr, Function_t fn) noexcept : _classPtr( RVREF(ptr) ), _func(fn) {}
 
 			bool		IsValid ()			const override	{ return _func != null and _classPtr != null; }
-			Ret			Call (Args... args)	const override	{ return ((*_classPtr).*_func)( args... ); }
-			TypeId_t	TypeId ()			const override	{ return TypeIdOf( *this ); }
+			Ret			Call (Args... args)	const override	{ return ((*_classPtr).*_func)( FW<Args>(args)... ); }
+			TypeId		TypeIdOf ()			const override	{ return GXTypes::TypeIdOf( *this ); }
 			BytesU		Size ()				const override	{ return SizeOf( *this ); }
 			
 			void MoveTo (Buffer<char> buf)
@@ -283,12 +283,12 @@ namespace GXTypes
 
 		forceinline bool		IsValid ()							const	{ return _IsCreated() DEBUG_ONLY( and _Internal()->IsValid() ); }
 
-		forceinline Result_t	operator () (Args... args)			const	{ ASSERT( IsValid() );  return _Internal()->Call( args... ); }
+		forceinline Result_t	operator () (Args... args)			const	{ ASSERT( IsValid() );  return _Internal()->Call( FW<Args>(args)... ); }
 		
-		forceinline Result_t	Call (Args... args)					const	{ ASSERT( IsValid() );	return _Internal()->Call( args... ); }
-		forceinline Result_t	SafeCall (Args... args)				const	{ return IsValid() ? _Internal()->Call( args... ) : Result_t(); }
+		forceinline Result_t	Call (Args... args)					const	{ ASSERT( IsValid() );	return _Internal()->Call( FW<Args>(args)... ); }
+		forceinline Result_t	SafeCall (Args... args)				const	{ return IsValid() ? _Internal()->Call( FW<Args>(args)... ) : Result_t(); }
 
-		forceinline TypeId_t	GetType ()							const	{ return IsValid() ? _Internal()->TypeId() : TypeId_t(); }
+		forceinline TypeId		GetType ()							const	{ return IsValid() ? _Internal()->TypeIdOf() : TypeId(); }
 
 		forceinline bool operator == (const Self &right)			const	{ ASSERT( IsValid() );  return _Internal()->Cmp( right._Internal() );  }
 		forceinline bool operator <  (const Self &right)			const	{ ASSERT( IsValid() );  return _Internal()->Less( right._Internal() ); }
@@ -382,11 +382,11 @@ namespace GXTypes
 	};
 
 
-
-	//
-	// Delegate Builder
-	//
-	
+/*
+=================================================
+	DelegateBuilder
+=================================================
+*/
 	template <typename Ret, typename ...Args>
 	forceinline Delegate< Ret (Args...) >  DelegateBuilder (Ret (*fn) (Args...)) noexcept
 	{
@@ -460,9 +460,9 @@ namespace GXTypes
 		forceinline void Clear ()													{ _delegates.Clear(); }
 
 
-		forceinline void Call (Args... args)					const		{ FOR( i, _delegates ) { _delegates[i].Call( args... ); } }
+		forceinline void Call (Args... args)					const		{ FOR( i, _delegates ) { _delegates[i].Call( FW<Args>(args)... ); } }
 
-		forceinline void operator () (Args... args)				const		{ FOR( i, _delegates ) { _delegates[i].Call( args... ); } }
+		forceinline void operator () (Args... args)				const		{ FOR( i, _delegates ) { _delegates[i].Call( FW<Args>(args)... ); } }
 
 		forceinline bool Empty ()								const		{ return _delegates.Empty(); }
 

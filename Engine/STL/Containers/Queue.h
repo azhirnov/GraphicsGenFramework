@@ -150,25 +150,53 @@ namespace GXTypes
 	using FixedSizeQueue = Queue< T, typename AutoDetectCopyStrategy<T>::type, StaticMemoryContainer<T, Size> >;
 
 
-
+	
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline Queue<T,S,MC>::Queue (UninitializedType) : _size(0), _first(0), _last(-1) {}
 		
-
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline Queue<T,S,MC>::Queue (const Self &other) : _size(0), _first(0), _last(-1)
 	{
 		Copy( other );
 	}
 	
-
+/*
+=================================================
+	constructor
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline Queue<T,S,MC>::Queue (Self &&other)
 	{
 		_Move( RVREF( other ) );
 	}
 	
+/*
+=================================================
+	constructor
+=================================================
+*/
+	template <typename T, typename S, typename MC>
+	inline Queue<T,S,MC>::Queue (Buffer<const T> other) : _size(0), _first(0), _last(-1)
+	{
+		Copy( other );
+	}
 
+/*
+=================================================
+	_Move
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Queue<T,S,MC>::_Move (Self &&other)
 	{
@@ -179,15 +207,12 @@ namespace GXTypes
 
 		other._size = other._first = other._last = 0;
 	}
-
-
-	template <typename T, typename S, typename MC>
-	inline Queue<T,S,MC>::Queue (Buffer<const T> other) : _size(0), _first(0), _last(-1)
-	{
-		Copy( other );
-	}
-
 	
+/*
+=================================================
+	_Reallocate
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Queue<T,S,MC>::_Reallocate (usize newSize)
 	{
@@ -216,7 +241,11 @@ namespace GXTypes
 			Strategy::Destroy( old_memcont.Pointer() + old_first + old_count, old_count - new_count );
 	}
 	
-	
+/*
+=================================================
+	_CalcFirstOffset
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline usize Queue<T,S,MC>::_CalcFirstOffset (usize size)
 	{
@@ -225,15 +254,23 @@ namespace GXTypes
 		return (size * nom + den*2 - 1) / (den * 2);
 	}
 	
-
+/*
+=================================================
+	_CheckIntersection
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline bool Queue<T,S,MC>::_CheckIntersection (const void *leftBegin, const void *leftEnd,
 													const void *rightBegin, const void *rightEnd)
 	{
 		return CheckPointersAliasing( leftBegin, leftEnd, rightBegin, rightEnd );
 	}
-
 	
+/*
+=================================================
+	_ReplaceToLeft
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Queue<T,S,MC>::_ReplaceToLeft (usize offset)
 	{
@@ -261,8 +298,12 @@ namespace GXTypes
 		_last += offset;
 		_Reallocate( _size + offset );
 	}
-
-
+	
+/*
+=================================================
+	_ReplaceToRight
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Queue<T,S,MC>::_ReplaceToRight (usize offset)
 	{
@@ -291,14 +332,17 @@ namespace GXTypes
 		_Reallocate( _size + offset );
 	}
 	
-
+/*
+=================================================
+	operator []
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline T & Queue<T,S,MC>::operator [] (usize i)
 	{
 		ASSERT( i < Count() );
 		return _memory.Pointer()[ i + _first ];
 	}
-
 	
 	template <typename T, typename S, typename MC>
 	inline const T & Queue<T,S,MC>::operator [] (usize i) const
@@ -306,48 +350,57 @@ namespace GXTypes
 		ASSERT( i < Count() );
 		return _memory.Pointer()[ i + _first ];
 	}
-
 	
+/*
+=================================================
+	ptr
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline T * Queue<T,S,MC>::ptr ()
 	{
 		ASSUME( _memory.Pointer() != null and _first < (isize)_size );
 		return _memory.Pointer() + _first;
 	}
-
-
+	
 	template <typename T, typename S, typename MC>
 	inline const T * Queue<T,S,MC>::ptr () const
 	{
 		ASSUME( _memory.Pointer() != null and _first < (isize)_size );
 		return _memory.Pointer() + _first;
 	}
-
-
+	
+/*
+=================================================
+	Front
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline T & Queue<T,S,MC>::Front ()
 	{
 		ASSUME( _memory.Pointer() != null and _first < (isize)_size );
 		return _memory.Pointer()[_first];
 	}
-
-
+	
 	template <typename T, typename S, typename MC>
 	inline const T & Queue<T,S,MC>::Front () const
 	{
 		ASSUME( _memory.Pointer() != null and _first < (isize)_size );
 		return _memory.Pointer()[_first];
 	}
-
-
+	
+/*
+=================================================
+	Back
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline T & Queue<T,S,MC>::Back ()
 	{
 		ASSUME( _memory.Pointer() != null and _last < (isize)_size );
 		return _memory.Pointer()[_last];
 	}
-
-
+	
 	template <typename T, typename S, typename MC>
 	inline const T & Queue<T,S,MC>::Back () const
 	{
@@ -355,7 +408,11 @@ namespace GXTypes
 		return _memory.Pointer()[_last];
 	}
 	
-	
+/*
+=================================================
+	PushBack
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Queue<T,S,MC>::PushBack (const T &value)
 	{
@@ -363,15 +420,18 @@ namespace GXTypes
 		Strategy::Copy( _memory.Pointer() + _last, &value, 1 );
 	}
 	
-
 	template <typename T, typename S, typename MC>
 	inline void Queue<T,S,MC>::PushBack (T &&value)
 	{
 		_ReplaceToLeft();
 		Strategy::Move( _memory.Pointer() + _last, &value, 1 );
 	}
-
 	
+/*
+=================================================
+	PushFront
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Queue<T,S,MC>::PushFront (const T &value)
 	{
@@ -379,15 +439,18 @@ namespace GXTypes
 		Strategy::Copy( _memory.Pointer() + _first, &value, 1 );
 	}
 
-
 	template <typename T, typename S, typename MC>
 	inline void Queue<T,S,MC>::PushFront (T &&value)
 	{
 		_ReplaceToRight();
 		Strategy::Move( _memory.Pointer() + _first, &value, 1 );
 	}
-
 	
+/*
+=================================================
+	PopBack
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Queue<T,S,MC>::PopBack ()
 	{
@@ -396,8 +459,12 @@ namespace GXTypes
 			--_last;
 		}
 	}
-
 	
+/*
+=================================================
+	PopFront
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Queue<T,S,MC>::PopFront ()
 	{
@@ -406,8 +473,12 @@ namespace GXTypes
 			++_first;
 		}
 	}
-
 	
+/*
+=================================================
+	Resize
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Queue<T,S,MC>::Resize (usize newSize)
 	{
@@ -433,8 +504,12 @@ namespace GXTypes
 		Strategy::Create( _memory.Pointer() + _first + old_count, newSize - old_count );
 		_last = _first + newSize-1;
 	}
-
 	
+/*
+=================================================
+	Reserve
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Queue<T,S,MC>::Reserve (usize size)
 	{
@@ -446,8 +521,12 @@ namespace GXTypes
 
 		_Reallocate( size );
 	}
-
 	
+/*
+=================================================
+	Free
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Queue<T,S,MC>::Free ()
 	{
@@ -460,8 +539,12 @@ namespace GXTypes
 		_size	= 0;
 		_last	= -1;
 	}
-
 	
+/*
+=================================================
+	Clear
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Queue<T,S,MC>::Clear ()
 	{
@@ -471,8 +554,12 @@ namespace GXTypes
 		_first	= _CalcFirstOffset( _size );
 		_last	= _first-1;
 	}
-
 	
+/*
+=================================================
+	Copy
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Queue<T,S,MC>::Copy (Buffer<const T> other)
 	{
@@ -497,7 +584,11 @@ namespace GXTypes
 		Strategy::Copy( _memory.Pointer() + _first, arrayPtr, Count() );
 	}
 		
-
+/*
+=================================================
+	AppendFront
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Queue<T,S,MC>::AppendFront (Buffer<const T> other)
 	{
@@ -508,7 +599,11 @@ namespace GXTypes
 		Strategy::Copy( _memory.Pointer() + _first, other.ptr(), other.Count() );
 	}
 		
-
+/*
+=================================================
+	AppendFront
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Queue<T,S,MC>::AppendFront (Self &&other)
 	{
@@ -519,7 +614,11 @@ namespace GXTypes
 		Strategy::Move( _memory.Pointer() + _first, other.ptr(), other.Count() );
 	}
 		
-		
+/*
+=================================================
+	AppendBack
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Queue<T,S,MC>::AppendBack (Buffer<const T> other)
 	{
@@ -530,7 +629,11 @@ namespace GXTypes
 		Strategy::Copy( _memory.Pointer() + _last - other.Count() + 1, other.ptr(), other.Count() );
 	}
 		
-		
+/*
+=================================================
+	AppendBack
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Queue<T,S,MC>::AppendBack (Self &&other)
 	{
@@ -540,8 +643,12 @@ namespace GXTypes
 		_ReplaceToLeft( other.Count() );
 		Strategy::Move( _memory.Pointer() + _last - other.Count() + 1, other.ptr(), other.Count() );
 	}
-
 	
+/*
+=================================================
+	Erase
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Queue<T,S,MC>::Erase (usize pos, usize count)
 	{
@@ -568,15 +675,23 @@ namespace GXTypes
 			_last -= count;
 		}
 	}
-
-		
+	
+/*
+=================================================
+	EraseFromFront
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Queue<T,S,MC>::EraseFromFront (usize count)
 	{
 		return Erase( 0, count );
 	}
-
-		
+	
+/*
+=================================================
+	EraseFromBack
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	inline void Queue<T,S,MC>::EraseFromBack (usize count)
 	{
@@ -589,6 +704,11 @@ namespace GXTypes
 	#undef  RET_VOID
 
 	
+/*
+=================================================
+	Hash
+=================================================
+*/
 	template <typename T, typename S, typename MC>
 	struct Hash< Queue<T,S,MC> > :
 		private Hash< Buffer<const T> >

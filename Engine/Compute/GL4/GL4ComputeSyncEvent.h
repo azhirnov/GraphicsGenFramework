@@ -28,12 +28,11 @@ namespace Compute
 
 
 	// methods
-	private:
+	public:
 		explicit
 		GL4ComputeSyncEvent (const SubSystemsRef ss);
 		~GL4ComputeSyncEvent ();
 
-	public:
 		bool IsCreated ()	const	{ return _syncID.IsValid(); }
 
 		bool Create ();
@@ -48,7 +47,6 @@ namespace Compute
 
 		TimeL MaxTimeout () const;
 
-		static ComputeSyncEventPtr  New (const SubSystemsRef ss);
 
 	private:
 		void _Delete ();

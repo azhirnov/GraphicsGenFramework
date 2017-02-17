@@ -4,6 +4,8 @@
 
 #include "Projects/ShaderEditor/Core/Common.h"
 #include "Projects/ShaderEditor/Core/IShader.h"
+#include "Projects/ShaderEditor/Core/Renderer.h"
+
 
 namespace ShaderEditor
 {
@@ -74,22 +76,21 @@ namespace ShaderEditor
 
 	// methods
 	protected:
-		Tile (const SubSystemsRef ss);
-		~Tile ();
-
 		void _Create (const Transformation_t &tr, const int2 &index, int zoom);
 
 		void _Draw (const real3 &cameraPos, const Matrix_t &viewProjMat);
 		
 	public:
+		explicit
+		Tile (const SubSystemsRef ss);
+		~Tile ();
+
 		void SetLandscape (const LandscapeTileData &landscape);
 
 		uint	GetZoomLevel ()	const	{ return _zoom; }
 		float	GetScale ()		const;
 
 		Transformation_t const&	GetTransform ()	const	{ return _transform; }
-
-		static TilePtr  New (const SubSystemsRef ss);
 	};
 
 

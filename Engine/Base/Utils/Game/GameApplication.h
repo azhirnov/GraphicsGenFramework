@@ -32,8 +32,9 @@ namespace GameUtils
 			uint			__frameCounter;
 		//)
 		
-		bool					__entered	: 1;
-		bool					__inited	: 1;
+		bool				__entered		: 1;
+		bool				__inited		: 1;
+		bool				__subscribed	: 1;
 
 
 	// methods
@@ -54,16 +55,36 @@ namespace GameUtils
 			//)
 		}
 
+		void _Subscribe ()
+		{
+			if ( not __subscribed )
+			{
+				GetEventSystem()->Subscribe( GameApplicationPtr(this), &GameApplication::_OnUpdate );
+				GetEventSystem()->Subscribe( GameApplicationPtr(this), &GameApplication::_OnAppEvent );
+				GetEventSystem()->Subscribe( GameApplicationPtr(this), &GameApplication::_OnWindowEvent );
+				__subscribed = true;
+			}
+		}
+
+		void _Unsubscribe ()
+		{
+			if ( __subscribed )
+			{
+				__subscribed = false;
+				GetEventSystem()->Unsubscribe( GameApplicationPtr(this), &GameApplication::_OnWindowEvent );
+				GetEventSystem()->Unsubscribe( GameApplicationPtr(this), &GameApplication::_OnAppEvent );
+				GetEventSystem()->Unsubscribe( GameApplicationPtr(this), &GameApplication::_OnUpdate );
+			}
+		}
+
 
 	protected:
 		explicit
 		GameApplication (const IParallelThreadPtr &thread) :
 			BaseApplication( thread ),
-			__entered(false), __inited(false)
+			__entered(false), __inited(false), __subscribed(false)
 		{
-			GetEventSystem()->Subscribe( GameApplicationPtr(this), &GameApplication::_OnUpdate );
-			GetEventSystem()->Subscribe( GameApplicationPtr(this), &GameApplication::_OnAppEvent );
-			GetEventSystem()->Subscribe( GameApplicationPtr(this), &GameApplication::_OnWindowEvent );
+			_Subscribe();
 
 			//DEBUG_ONLY(
 				__frameCounter = 0;
@@ -74,9 +95,7 @@ namespace GameUtils
 
 		~GameApplication ()
 		{
-			GetEventSystem()->Unsubscribe( GameApplicationPtr(this), &GameApplication::_OnWindowEvent );
-			GetEventSystem()->Unsubscribe( GameApplicationPtr(this), &GameApplication::_OnAppEvent );
-			GetEventSystem()->Unsubscribe( GameApplicationPtr(this), &GameApplication::_OnUpdate );
+			ASSERT( not __subscribed );
 		}
 	
 
@@ -124,8 +143,9 @@ namespace GameUtils
 				case SysEvent::Application::DESTROY :
 					DEBUG_CONSOLE( "Application Destroy" );
 					MOBILE_ONLY(
-						_OnExit()
-					);
+						_OnExit();
+						_Unsubscribe();
+					)
 					break;
 				
 				case SysEvent::Application::ENTER_BACKGROUND :
@@ -151,11 +171,13 @@ namespace GameUtils
 				case SysEvent::Application::SURFACE_DESTROYED :
 					DEBUG_CONSOLE( "Application Surface Destroyed" );
 					_OnExit();
+					_Unsubscribe();
 					break;
 				
 				case SysEvent::Application::LOW_MEMORY :
 					DEBUG_CONSOLE( "Application Low Memory" );
 					_OnExit();
+					_Unsubscribe();
 					break;
 			}
 		}

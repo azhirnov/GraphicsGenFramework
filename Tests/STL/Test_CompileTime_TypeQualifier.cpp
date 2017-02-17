@@ -55,6 +55,10 @@ struct UnknownQualTest2 : TypeQualifier< ETypeQualifier::Def_Complex >, Noncopya
 struct UnknownQualTest3 : InheritWithTypeQualifier< ETypeQualifier::Def_Complex, ComplexTest, NoncopyableTest, FastCopyableTest >
 {};
 
+struct CopyQualTest : CopyQualifiers< PODStruct, FastCopyable, PODType >
+{
+};
+
 
 extern void Test_CompileTime_TypeQualifier ()
 {
@@ -93,4 +97,10 @@ extern void Test_CompileTime_TypeQualifier ()
 	STATIC_ASSERT( _ctime_hidden_::_GetTypeQualifier< UnknownQualTest >::value	== ETypeQualifier::Def_SimplePOD );
 	STATIC_ASSERT( _ctime_hidden_::_GetTypeQualifier< UnknownQualTest2 >::value	== ETypeQualifier::Def_FastCopyable );
 	STATIC_ASSERT( _ctime_hidden_::_GetTypeQualifier< UnknownQualTest3 >::value	== ETypeQualifier::Def_Complex );
+	
+	STATIC_ASSERT( IsCtorAvailable< FastCopyable > );
+	STATIC_ASSERT( IsDtorAvailable< FastCopyable > );
+	
+	STATIC_ASSERT( IsCtorAvailable< CopyQualTest > );
+	STATIC_ASSERT( IsDtorAvailable< CopyQualTest > );
 }
