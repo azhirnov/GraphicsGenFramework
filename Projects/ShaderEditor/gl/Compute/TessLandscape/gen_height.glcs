@@ -10,8 +10,9 @@ uniform float2	unScale;
 void main ()
 {
 	int2	img_coord	= GetGlobalCoord().xy;
-	float2	coord		= GetGlobalCoordUNorm().xy * unScale + unPosition;
-	float	height		= PerlinNoise2D( coord, 0.1, 2.0, 0.5, 12, 0 );
+	float2	coord		= (GetGlobalCoordUNorm().xy * unScale + unPosition);
+	float	height		= Sin( coord.x ) * Cos( coord.y );
+	//float	height		= PerlinNoise2D( coord, 0.1, 2.0, 0.5, 2, 0 );
 
 	imageStore( outHeightImage, img_coord, float4( height ) );
 }

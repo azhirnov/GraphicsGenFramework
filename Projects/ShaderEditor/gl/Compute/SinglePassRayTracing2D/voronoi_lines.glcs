@@ -1,0 +1,16 @@
+
+#include "Common.glcs"
+
+DECL_IMAGE( image2D, rgba8, writeonly, outImage );
+
+uniform float	unGlobalTime;
+
+
+void main ()
+{
+	int2	img_coord	= GetGlobalCoord().xy;
+	float2	coord		= GetGlobalCoordUNormCorrected();
+	float	value		= VoronoiLines( coord * 100.0, 0.5, 0.5 );
+
+	imageStore( outImage, img_coord, HSVtoRGBA( value, 1.0, 1.0, 1.0 ) );
+}

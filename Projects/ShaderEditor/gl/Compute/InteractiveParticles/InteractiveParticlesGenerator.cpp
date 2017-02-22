@@ -5,7 +5,7 @@
 namespace ShaderEditor
 {
 
-	class SimpleParticlesGenerator : public IGenerator
+	class InteractiveParticlesGenerator : public IGenerator
 	{
 	// variables
 	private:
@@ -13,17 +13,17 @@ namespace ShaderEditor
 		ComputeFunction		_updateFunc;
 
 		// input/output
-		VertexBufferPtr		_inBuffer;
 		VertexBufferPtr		_outBuffer;
 		TimeD				_globalTime;
 		TimeD				_timeDelta;
+		float4				_mouse;
 		uint				_count;
 		bool				_initialize;
 
 
 	// methods
 	public:
-		SimpleParticlesGenerator (const SubSystemsRef ss) :
+		InteractiveParticlesGenerator (const SubSystemsRef ss) :
 			IGenerator( ss ),
 			_initFunc( SubSystems() ),	_updateFunc( SubSystems() ),
 			_count(0), _initialize(false)
@@ -39,12 +39,12 @@ namespace ShaderEditor
 	
 /*
 =================================================
-	Create_SimpleParticles
+	Create_InteractiveParticles
 =================================================
 */
-	IGeneratorPtr  IGenerator::Create_SimpleParticles (const SubSystemsRef ss)
+	IGeneratorPtr  IGenerator::Create_InteractiveParticles (const SubSystemsRef ss)
 	{
-		return New<SimpleParticlesGenerator>( ss );
+		return New< InteractiveParticlesGenerator >( ss );
 	}
 
 /*
@@ -52,15 +52,9 @@ namespace ShaderEditor
 	SetArg
 =================================================
 */
-	bool SimpleParticlesGenerator::SetArg (StringCRef name, const VariantRef &arg)
+	bool InteractiveParticlesGenerator::SetArg (StringCRef name, const VariantRef &arg)
 	{
-		if ( name == "inBuffer" and arg.IsType<VertexBufferPtr>() )
-		{
-			_inBuffer = arg.Get<VertexBufferPtr>();
-			return true;
-		}
-
-		if ( name == "outBuffer" and arg.IsType<VertexBufferPtr>() )
+		if ( name == "buffer" and arg.IsType<VertexBufferPtr>() )
 		{
 			_outBuffer = arg.Get<VertexBufferPtr>();
 			return true;
@@ -89,6 +83,12 @@ namespace ShaderEditor
 			_count = arg.Get<uint>();
 			return true;
 		}
+
+		if ( name == "mouse" and arg.IsType<float4>() )
+		{
+			_mouse = arg.Get<float4>();
+			return true;
+		}
 			
 		RETURN_ERR( "Unknown argument name or unsupported type!" );
 	}
@@ -98,10 +98,10 @@ namespace ShaderEditor
 	Compile
 =================================================
 */
-	bool SimpleParticlesGenerator::Compile ()
+	bool InteractiveParticlesGenerator::Compile ()
 	{
-		CHECK_ERR( _initFunc.Load( "gl/Compute/SimpleParticles/init.glcs", EShaderCompilationFlags::DefaultCompute ) );
-		CHECK_ERR( _updateFunc.Load( "gl/Compute/SimpleParticles/update.glcs", EShaderCompilationFlags::DefaultCompute ) );
+		CHECK_ERR( _initFunc.Load( "gl/Compute/InteractiveParticles/init.glcs", EShaderCompilationFlags::DefaultCompute ) );
+		CHECK_ERR( _updateFunc.Load( "gl/Compute/InteractiveParticles/update.glcs", EShaderCompilationFlags::DefaultCompute ) );
 		
 		_count		= 0;
 		_initialize	= true;
@@ -113,9 +113,9 @@ namespace ShaderEditor
 	Render
 =================================================
 */
-	void SimpleParticlesGenerator::Render ()
+	void InteractiveParticlesGenerator::Render ()
 	{
-		CHECK( _inBuffer and _outBuffer );
+		CHECK( _outBuffer );
 		CHECK( _count > 0 );
 
 		if ( _initialize )
@@ -129,10 +129,10 @@ namespace ShaderEditor
 			return;
 		}
 
-		_updateFunc.SetArg( "inBuffer",		_inBuffer );
 		_updateFunc.SetArg( "outBuffer",	_outBuffer );
 		_updateFunc.SetArg( "unTimeDelta",	(float)_timeDelta.Seconds() );
 		_updateFunc.SetArg( "unGlobalTime",	(float)_globalTime.Seconds() );
+		_updateFunc.SetArg( "unMouse",		_mouse );
 
 		_updateFunc.Run( uint3(_count, 0, 0) );
 	}

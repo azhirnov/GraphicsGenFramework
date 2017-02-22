@@ -20,7 +20,7 @@ struct Vertex
 };
 
 
-Vertex UnpackVertex (in PackedVertex v)
+Vertex UnpackVertex (const PackedVertex v)
 {
 	Vertex result;
 	result.position	= float3( v.positionX, v.positionY, v.positionZ );
@@ -29,7 +29,7 @@ Vertex UnpackVertex (in PackedVertex v)
 	return result;
 }
 
-PackedVertex PackVertex (in Vertex v)
+PackedVertex PackVertex (const Vertex v)
 {
 	PackedVertex	result;
 	result.positionX	= v.position.x;

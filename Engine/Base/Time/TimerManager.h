@@ -52,64 +52,15 @@ namespace Base
 	// methods
 	public:
 		explicit
-		TimerManager (const SubSystemsRef ss) :
-			VirtualThread( ss->Get< ThreadManager >()->GetCurrent() )
-		{}
+		TimerManager (const SubSystemsRef ss);
+		~TimerManager ();
 
-
-		~TimerManager ()
-		{}
-
-
-		bool CreateTimer (TimeD interval, const OnElapsed_t &func)
-		{
-			SCOPELOCK( _lock );
-
-			if ( _timers.Empty() )
-			{
-				_AddToQueue();
-			}
-
-			_timers.PushBack( Timer( func, _timer.GetCurrentTime() + interval ) );
-
-			return true;
-		}
+		bool CreateTimer (TimeD interval, const OnElapsed_t &cb);
 
 
 	private:
-		void _AddToQueue ()
-		{
-			Push( ParallelOp( FunctionBuilder( TimerManagerPtr( this ), &TimerManager::_Update ) ) );
-		}
-
-
-		void _Update ()
-		{
-			SCOPELOCK( _lock );
-
-			const TimeD		st = _timer.GetStartTime();		_timer.Start();
-			const TimeD		ct = _timer.GetStartTime();
-			const TimeD		dt = ct - st;
-
-			FOR( i, _timers )
-			{
-				if ( _timers[i].endTime >= ct )
-				{
-					_timers[i].func.SafeCall();
-					_timers.Erase( i );
-					--i;
-				}
-			}
-
-			if ( dt < TimeD::FromSeconds( 1.0e-6 ) )
-			{
-				TODO( "check" );
-				OS::Thread::Yield();
-			}
-
-			if ( not _timers.Empty() )
-				_AddToQueue();
-		}
+		void _AddToQueue ();
+		void _Update ();
 	};
 
 

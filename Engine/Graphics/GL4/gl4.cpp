@@ -70,7 +70,7 @@ namespace gl
 		using namespace Engine;
 
 		int	missing = 0;	// number of missing function addresses
-		int counter = 0;	// number of all functions
+		int	counter = 0;	// number of all functions
 
 		CHECK_ERR( SingletonSingleThread::Instance< Base::LibOpenGL >()->Load() );
 		
@@ -83,7 +83,7 @@ namespace gl
 		
 		{
 			int	major = 0;
-			int minor = 0;
+			int	minor = 0;
 			GL_CALL( glGetIntegerv( GL_MAJOR_VERSION, &major ) );
 			GL_CALL( glGetIntegerv( GL_MINOR_VERSION, &minor ) );
 			gl4Version = major * 100 + minor * 10;
@@ -135,7 +135,7 @@ namespace gl
 			<< "\nGLSL:                  " << (const char*)glGetString( GL_SHADING_LANGUAGE_VERSION );
 
 		GL_CALL( glGetIntegerv( GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, data ) );
-		log	<< "\nMax anisotropy:        " << data[0];
+		log << "\nMax anisotropy:        " << data[0];
 		
 		GL_CALL( glGetIntegerv( GL_MAX_VERTEX_ATTRIBS, data ) );
 		log << "\nMax attribs:           " << data[0];

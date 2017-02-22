@@ -4,7 +4,7 @@
 DECL_IMAGE( image2D, r32f, readonly, inHeightImage );
 DECL_IMAGE( image2D, rgba16f, writeonly, outNormalsImage );
 
-uniform float2	unScale;
+uniform float2	unImageScale;
 
 
 float3 ImageOffset (in int2 center, in int2 offset, in float2 scale)
@@ -17,7 +17,7 @@ void main ()
 	int2	img_coord	= GetGlobalCoord().xy;
 	int3	offset		= int3(-1, 0, 1);
 
-	float2	scale		= unScale;
+	float2	scale		= unImageScale;
 	float3	center		= float3( 0.0, 0.0, imageLoad( inHeightImage, img_coord ).x );
 	float3	normal		= float3(0.0);
 	

@@ -52,8 +52,8 @@ namespace Graphics
 */
 	inline bool TextureUniform::Create (const ShaderProgramPtr &program, StringCRef name)
 	{
-		CHECK_ERR( program->SubSystems()->Get< GraphicsEngine >()->GetContext()->CreateUniform(
-						program->GetProgramID(), name, OUT _location ) );
+		CHECK_ERR( program->SubSystems()->Get< GraphicsEngine >()->GetContext()->
+				  CreateUniform( program->GetProgramID(), name, OUT _location ) );
 
 		_texUnit = 0;
 		return true;

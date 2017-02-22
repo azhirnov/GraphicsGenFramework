@@ -2,11 +2,11 @@
 // uniforms //
 layout(std140)
 uniform ShaderUB {
-	float4x4		mvp;
+	float4x4	mvp;
 	float3		lightDir;
 } UB;
 
-uniform sampler2D	unDiffuseTexture;
+uniform sampler2D	unDiffuseMap;
 
 
 // shader input/output data types //
@@ -41,7 +41,7 @@ TVertData_t { \
 
 		float	light = clamp( dot( Input.normal, UB.lightDir ), ambient, 1.0 );
 
-		outColor0 = texture( unDiffuseTexture, Input.texcoord );
+		outColor0 = texture( unDiffuseMap, Input.texcoord );
 		outColor0 *= light;
 	}
 

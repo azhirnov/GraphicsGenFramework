@@ -1,5 +1,5 @@
 
-#import  "Compute/SimpleParticles/shared.glcs"
+#import  "Compute/Particles/shared.glcs"
 
 DECL_BUFFER( std140, Particle, writeonly, outBuffer );
 

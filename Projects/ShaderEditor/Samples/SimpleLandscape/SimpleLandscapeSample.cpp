@@ -12,7 +12,8 @@ namespace ShaderEditor
 =================================================
 */
 	SimpleLandscapeSample::SimpleLandscapeSample (const SubSystemsRef ss) :
-		ISample( ss ),		_tileInitializer( SubSystems() )
+		ISample( ss ),		_tileInitializer( SubSystems() ),
+		_wireframe( false )
 	{
 	}
 	
@@ -32,6 +33,8 @@ namespace ShaderEditor
 		
 		_renderState = RenderState();
 		_renderState.depth.test = true;
+
+		_wireframe = false;
 
 		Reload();
 	}
@@ -53,10 +56,10 @@ namespace ShaderEditor
 */
 	void SimpleLandscapeSample::Reload ()
 	{
-		IShaderPtr	new_shader = IShader::Create_Simple3D( SubSystems() );
+		/*IShaderPtr	new_shader = IShader::Create_Simple3D( SubSystems() );
 
 		if ( new_shader )
-			_shader = new_shader;
+			_shader = new_shader;*/
 
 		_tileInitializer.Reload();
 	}
@@ -92,6 +95,13 @@ namespace ShaderEditor
 	void SimpleLandscapeSample::Update (TimeD dt)
 	{
 		SubSystems()->Get< ShaderEditorCore >()->GetTilesManager()->Update( dt );
+		
+		Ptr< Input >	input = SubSystems()->Get< Input >();
+
+		if ( input->IsKeyClicked( EKey::O ) )
+			_wireframe = not _wireframe;
+
+		_renderState.polygon.mode = _wireframe ? EPolygonMode::Line : EPolygonMode::Fill;
 	}
 	
 /*
@@ -155,7 +165,7 @@ namespace ShaderEditor
 		ComputeBufferPtr	cbuf_out	= ComputeBuffer::New( out_vb, EMemoryAccess::Write );
 		usize				num_verts	= in_vb->Count();
 		uint2				dimension	= uint2( _GetTileMeshVertices() );
-		float				scale		= tile->GetTransform().GetScale().x;
+		float				scale		= tile->GetTileSize();
 		float2				position	= tile->GetTransform().Position().xz();
 		
 		_landscapeGen->SetArg( "inBuffer",		cbuf_in );

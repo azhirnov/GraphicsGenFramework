@@ -65,7 +65,7 @@ namespace Compute
 	Create
 =================================================
 */
-	bool CL2ComputeBuffer::Create (BinaryBuffer data, EMemoryAccess::type flags)
+	bool CL2ComputeBuffer::Create (BinaryCBuffer data, EMemoryAccess::type flags)
 	{
 		using namespace cl;
 
@@ -144,7 +144,7 @@ namespace Compute
 	Read
 =================================================
 */
-	bool CL2ComputeBuffer::Read (Buffer<ubyte> data, BytesU offset) const
+	bool CL2ComputeBuffer::Read (OUT BinaryBuffer data, BytesU offset) const
 	{
 		using namespace cl;
 		
@@ -174,7 +174,7 @@ namespace Compute
 	Write
 =================================================
 */
-	bool CL2ComputeBuffer::Write (BinaryBuffer data, BytesU offset)
+	bool CL2ComputeBuffer::Write (BinaryCBuffer data, BytesU offset)
 	{
 		using namespace cl;
 		
@@ -246,7 +246,7 @@ namespace Compute
 	_FillBuffer
 =================================================
 */
-	bool CL2ComputeBuffer::_FillBuffer (usize offset, usize size, BinaryBuffer pattern)
+	bool CL2ComputeBuffer::_FillBuffer (usize offset, usize size, BinaryCBuffer pattern)
 	{
 		using namespace cl;
 		

@@ -166,6 +166,7 @@ namespace ShaderEditor
 		const float2	scale_with_border	= float2( _scale ) * float2(_dimWithBorder) / float2(_dimension);
 		const float4	img_scale_bias		= uint4( _dimension-1, _imageBorder ).To<float4>();
 		const float4	texc_scale_bias		= img_scale_bias / float2(_dimWithBorder-1).xyxy();
+		const float2	border_offset		= _scale * float2(_imageBorder) / float2(_dimension);
 
 
 		// generate height map
@@ -190,6 +191,7 @@ namespace ShaderEditor
 		_genLandscape.SetArg( "inHeightImage",		_heightImage );
 		_genLandscape.SetArg( "inNormalsImage",		_normalsImage );
 		_genLandscape.SetArg( "unImageScaleBias",	img_scale_bias );
+		_genLandscape.SetArg( "unScale",			float2(_scale) );
 
 		_genLandscape.Run( uint3( _numVertices, 0, 0 ) );
 
@@ -199,8 +201,7 @@ namespace ShaderEditor
 		_genDiffuse.SetArg( "inHeightTexture",		_heightImage->GetSharedObject() );
 		_genDiffuse.SetArg( "inNormalsTexture",		_normalsImage->GetSharedObject() );
 		_genDiffuse.SetArg( "unTextureScaleBias",	texc_scale_bias );
-		//_genDiffuse.SetArg( "unPosition",		_position );
-		//_genDiffuse.SetArg( "unScale",			scale_with_border );
+		//_genDiffuse.SetArg( "unPosition",			_position );
 
 		_genDiffuse.Run( _outDiffuseImage->Dimension().xyo() );
 		

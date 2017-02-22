@@ -1,0 +1,80 @@
+/*
+	Shared source for initialization and updating particles.
+*/
+
+[HEADER]
+
+#include "Common.glcs"
+#import  "Compute/Particles/vertex.glcs"
+
+
+void InitParticle (out Particle particle, const float globalTime);
+
+void UpdateParticle (inout Particle outParticle, const float4 mouse, const float frameTime, const float globalTime, const float dt);
+
+
+//---------------------------------------------------------
+[SOURCE]
+
+
+const AABBox	BOX			= { float3(-10.0), float3(10.0) };
+const float		MAX_ITER	= 20.0;
+
+
+void RestartParticle (out Particle particle, const float globalTime)
+{
+	real	index		= real(GetGlobalIndex());
+	real	size		= real(GetGlobalIndexSize());
+	real	vel			= 0.5;
+	real	rnd			= DHash12(float2( index / size, globalTime + 2.28374 )) * size;
+
+	particle.position	= ParticleEmitter_Sphere( rnd, size ) * 0.1;
+	particle.size		= 8.0;
+	particle.color		= 0xFFFFFFFF;
+	particle.velocity	= Normalize( particle.position ) * vel;
+}
+
+
+void InitParticle (out Particle particle, const float globalTime)
+{
+	Particle_Create( particle );
+	RestartParticle( particle, globalTime + GetGlobalIndexUNorm() * 1.6334 );
+}
+
+
+void UpdateParticle (inout Particle outParticle, const float4 mouse, const float frameTime, const float globalTime, const float dt)
+{
+	const float cnt = Clamp( Round( frameTime / dt ), 1.0, MAX_ITER );
+
+	for (float t = 0.0; t < cnt; ++t)
+	{
+		float3	accel	= float3( 0.0 );
+		
+#if 1
+		if ( mouse.w > 0.0 )
+		{
+			accel += GravityAccel( outParticle.position, mouse.xyz, 10.0 );
+		}
+		else
+		{
+			accel += -outParticle.velocity * 0.1;
+		}
+#elif 0
+		if ( mouse.w > 0.0 )
+		{
+			accel += Normalize( mouse.xyz - outParticle.position ) * 1.5;
+		}
+#endif
+
+		outParticle.velocity += accel * dt;
+		outParticle.position += outParticle.velocity * dt;
+
+		if ( not AABBox_IsInside( BOX, outParticle.position ) )
+		{
+			RestartParticle( outParticle, globalTime );
+		}
+	}
+
+	outParticle.color = ParticleColor_FromNormalizedVelocity( outParticle.velocity );
+	//outParticle.color = ParticleColor_FromVelocityLength( outParticle.velocity );
+}

@@ -10,21 +10,19 @@ namespace ShaderEditor
 	// variables
 	private:
 		ComputeFunction		_genLandscape;
-		ComputeFunction		_genHeight;
-		ComputeFunction		_genNormals;
 		ComputeFunction		_genDiffuse;
+		ComputeFunction		_genDisplacement;
 
-		ComputeImagePtr		_heightImage;
-		ComputeImagePtr		_normalsImage;
-		uint2				_dimWithBorder;
 		const uint2			_imageBorder;
 
 		ComputeImagePtr		_outDiffuseImage;
+		ComputeImagePtr		_outDisplacementImage;
 		SamplerPtr			_diffuseSampler;
 		SamplerPtr			_heightSampler;
 
 		// input/output
 		TexturePtr			_outDiffuseTex;
+		TexturePtr			_outDisplacementMap;
 		ComputeBufferPtr	_inBuffer;
 		ComputeBufferPtr	_outBuffer;
 		uint2				_dimension;
@@ -37,9 +35,9 @@ namespace ShaderEditor
 	public:
 		TessLandscapeGenerator (const SubSystemsRef ss) :
 			IGenerator( ss ),
-			_genLandscape( SubSystems() ),	_genHeight( SubSystems() ),
-			_genNormals( SubSystems() ),	_genDiffuse( SubSystems() ),
-			_numVertices(0), _scale(1.0f), _imageBorder(2)
+			_genLandscape( SubSystems() ),		_genDiffuse( SubSystems() ),
+			_genDisplacement( SubSystems() ),	_numVertices(0),
+			_scale(1.0f)
 		{}
 
 		bool SetArg (StringCRef name, const VariantRef &arg) override;
@@ -87,8 +85,7 @@ namespace ShaderEditor
 
 		if ( name == "dimension" and arg.IsType<uint2>() )
 		{
-			_dimension		= arg.Get<uint2>();
-			_dimWithBorder	= _dimension + _imageBorder * 2;
+			_dimension = arg.Get<uint2>();
 			return true;
 		}
 
@@ -111,6 +108,13 @@ namespace ShaderEditor
 			return true;
 		}
 
+		if ( name == "outDisplacementMap" and arg.IsType<TexturePtr>() )
+		{
+			_outDisplacementMap   = arg.Get<TexturePtr>();
+			_outDisplacementImage = ComputeImage::New( _outDisplacementMap ); 
+			return true;
+		}
+
 		RETURN_ERR( "Unknown argument name or unsupported type!" );
 	}
 	
@@ -121,19 +125,15 @@ namespace ShaderEditor
 */
 	bool TessLandscapeGenerator::Compile ()
 	{
-		CHECK_ERR( _genLandscape.Load( "gl/Generators/TessLandscape/gen_landscape.glcs", EShaderCompilationFlags::DefaultCompute ) );
-		CHECK_ERR( _genNormals.Load( "gl/Generators/TessLandscape/gen_normals.glcs", EShaderCompilationFlags::DefaultCompute ) );
-		CHECK_ERR( _genDiffuse.Load( "gl/Generators/TessLandscape/gen_diffuse.glcs", EShaderCompilationFlags::DefaultCompute ) );
-		CHECK_ERR( _genHeight.Load( "gl/Generators/TessLandscape/gen_height.glcs", EShaderCompilationFlags::DefaultCompute ) );
+		CHECK_ERR( _genDisplacement.Load( "gl/Compute/TessLandscape/gen_displacement.glcs", EShaderCompilationFlags::DefaultCompute ) );
+		CHECK_ERR( _genLandscape.Load( "gl/Compute/TessLandscape/gen_landscape.glcs", EShaderCompilationFlags::DefaultCompute ) );
+		CHECK_ERR( _genDiffuse.Load( "gl/Compute/TessLandscape/gen_diffuse.glcs", EShaderCompilationFlags::DefaultCompute ) );
 
 		CHECK_ERR( SubSystems()->Get< GraphicsEngine >()->GetContext()->CreateSampler(
 			SamplerState( EWrapMode::Clamp, EFilter::Anisotropic_16 ), OUT _diffuseSampler ) );
 
 		CHECK_ERR( SubSystems()->Get< GraphicsEngine >()->GetContext()->CreateSampler(
 			SamplerState( EWrapMode::Clamp, EFilter::MinMagMipLinear ), OUT _heightSampler ) );
-
-		_heightImage	= New<ComputeImage>( SubSystems() );
-		_normalsImage	= New<ComputeImage>( SubSystems() );
 
 		return true;
 	}
@@ -146,66 +146,46 @@ namespace ShaderEditor
 	void TessLandscapeGenerator::Render ()
 	{
 		CHECK( _genLandscape.IsCreated() );
-		CHECK( _genHeight.IsCreated() );
-		CHECK( _genNormals.IsCreated() );
+		CHECK( _genDisplacement.IsCreated() );
 		CHECK( IsNotZero( _dimension ) );
 
 		CHECK( _inBuffer and _outBuffer and _outDiffuseTex );
 		CHECK( _inBuffer->Size() == _outBuffer->Size() );
 
-		if ( Any( _dimWithBorder != _heightImage->Dimension().xy() ) or
-			 Any( _dimWithBorder != _normalsImage->Dimension().xy() ) )
-		{
-			CHECK( _heightImage->Create( _dimWithBorder.xyoo(), ETexture::Tex2D, EPixelFormat::R32F ) );
-			CHECK( _normalsImage->Create( _dimWithBorder.xyoo(), ETexture::Tex2D, EPixelFormat::RGBA16F ) );
-		
-			_heightImage->GetSharedObject()->SetSampler( _heightSampler );
-			_normalsImage->GetSharedObject()->SetSampler( _heightSampler );
-		}
-		
-		const float2	scale_with_border	= float2( _scale ) * float2(_dimWithBorder) / float2(_dimension);
-		const float4	img_scale_bias		= uint4( _dimension-1, _imageBorder ).To<float4>();
-		const float4	texc_scale_bias		= img_scale_bias / float2(_dimWithBorder-1).xyxy();
 
+		// generate displacement (height) map
+		_genDisplacement.SetArg( "outDisplacementImage",	_outDisplacementImage );
+		_genDisplacement.SetArg( "unPosition",				_position );
+		_genDisplacement.SetArg( "unScale",					float2(_scale) );
+		_genDisplacement.SetArg( "unInvSize",				1.0f / float2(_outDisplacementImage->Dimension().xy() - 1) );
 
-		// generate height map
-		_genHeight.SetArg( "outHeightImage",	_heightImage );
-		_genHeight.SetArg( "unPosition",		_position );
-		_genHeight.SetArg( "unScale",			scale_with_border );
-
-		_genHeight.Run( _heightImage->Dimension().xyo() );
-
-
-		// generate normals map
-		_genNormals.SetArg( "inHeightImage",	_heightImage );
-		_genNormals.SetArg( "outNormalsImage",	_normalsImage );
-		_genNormals.SetArg( "unScale",			_scale / float2(_dimWithBorder) );
-		
-		_genNormals.Run( _normalsImage->Dimension().xyo() );
+		_genDisplacement.Run( _outDisplacementImage->Dimension().xyo() );
 
 
 		// copy height and normals to vertex buffer
-		_genLandscape.SetArg( "inBuffer",			_inBuffer );
-		_genLandscape.SetArg( "outBuffer",			_outBuffer );
-		_genLandscape.SetArg( "inHeightImage",		_heightImage );
-		_genLandscape.SetArg( "inNormalsImage",		_normalsImage );
-		_genLandscape.SetArg( "unImageScaleBias",	img_scale_bias );
+		_genLandscape.SetArg( "inBuffer",		_inBuffer );
+		_genLandscape.SetArg( "outBuffer",		_outBuffer );
+		_genLandscape.SetArg( "unPosition",		_position );
+		_genLandscape.SetArg( "unScale",		float2(_scale) );
+		_genLandscape.SetArg( "unInvSize",		1.0f / float2(_dimension - 1) );
 
 		_genLandscape.Run( uint3( _numVertices, 0, 0 ) );
 
 		
 		// generate diffuse map
-		_genDiffuse.SetArg( "outDiffuseImage",		_outDiffuseImage );
-		_genDiffuse.SetArg( "inHeightTexture",		_heightImage->GetSharedObject() );
-		_genDiffuse.SetArg( "inNormalsTexture",		_normalsImage->GetSharedObject() );
-		_genDiffuse.SetArg( "unTextureScaleBias",	texc_scale_bias );
-		//_genDiffuse.SetArg( "unPosition",		_position );
-		//_genDiffuse.SetArg( "unScale",			scale_with_border );
+		_genDiffuse.SetArg( "outDiffuseImage",	_outDiffuseImage );
+		_genDiffuse.SetArg( "unPosition",		_position );
+		_genDiffuse.SetArg( "unScale",			float2(_scale) );
 
 		_genDiffuse.Run( _outDiffuseImage->Dimension().xyo() );
 		
+
+		// prepare output textures
 		_outDiffuseTex->GenerateMipmaps();
 		_outDiffuseTex->SetSampler( _diffuseSampler );
+
+		_outDisplacementMap->GenerateMipmaps();
+		_outDisplacementMap->SetSampler( _heightSampler );
 	}
 
 

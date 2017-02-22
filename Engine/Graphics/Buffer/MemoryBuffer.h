@@ -84,9 +84,9 @@ namespace Graphics
 
 		
 	private:
-		bool _SetData (Buffer<const ubyte> data, EBufferUsage::type usage);
-		bool _SubData (Buffer<const ubyte> data, BytesU offset);
-		bool _GetData (OUT Buffer<ubyte> data, BytesU offset);
+		bool _SetData (BinaryCBuffer data, EBufferUsage::type usage);
+		bool _SubData (BinaryCBuffer data, BytesU offset);
+		bool _GetData (OUT BinaryBuffer data, BytesU offset);
 		void _BarrierNow (EMemoryBarrier::type flags = EMemoryBarrier::Unknown);
 
 
@@ -95,7 +95,7 @@ namespace Graphics
 		static bool _BufferData (const BufferID &id, const void *data, usize dataSize, EBufferUsage::type usage);
 		static bool _BufferSubData (const BufferID &id, const void *data, usize dataSize, usize offset);
 		static bool _GetBufferSubData (const BufferID &id, void *data, usize dataSize, usize offset);
-		static bool _ClearSubData (const BufferID &id, usize offset, usize size, EPixelFormat::type fmt, BinaryBuffer pattern);
+		static bool _ClearSubData (const BufferID &id, usize offset, usize size, EPixelFormat::type fmt, BinaryCBuffer pattern);
 		static bool _CopyBufferSubData (const BufferID &src, const BufferID &dst, usize readOffset, usize writeOffset, usize size);
 	};
 
@@ -188,13 +188,13 @@ namespace Graphics
 	template <typename T>
 	inline bool MemoryBuffer::SetData (Buffer<const T> data, EBufferUsage::type usage)
 	{
-		return _SetData( Buffer<const ubyte>::From( data ), usage );
+		return _SetData( BinaryCBuffer::From( data ), usage );
 	}
 
 	template <typename T>
 	inline bool MemoryBuffer::SetData (Buffer<T> data, EBufferUsage::type usage)
 	{
-		return _SetData( Buffer<const ubyte>::From( data ), usage );
+		return _SetData( BinaryCBuffer::From( data ), usage );
 	}
 
 /*
@@ -205,13 +205,13 @@ namespace Graphics
 	template <typename T>
 	inline bool MemoryBuffer::SubData (Buffer<const T> data, BytesU offset)
 	{
-		return _SubData( Buffer<const ubyte>::From( data ), offset );
+		return _SubData( BinaryCBuffer::From( data ), offset );
 	}
 
 	template <typename T>
 	inline bool MemoryBuffer::SubData (Buffer<T> data, BytesU offset)
 	{
-		return _SubData( Buffer<const ubyte>::From( data ), offset );
+		return _SubData( BinaryCBuffer::From( data ), offset );
 	}
 
 /*
@@ -222,7 +222,7 @@ namespace Graphics
 	template <typename T>
 	inline bool MemoryBuffer::GetData (OUT Buffer<T> data, BytesU offset)
 	{
-		Buffer<ubyte> tmp_data = Buffer<ubyte>::From( data );
+		BinaryBuffer	tmp_data = BinaryBuffer::From( data );
 		return _GetData( tmp_data, offset );
 	}
 	
@@ -237,7 +237,7 @@ namespace Graphics
 		CHECK_ERR( IsValid() );
 		CHECK_ERR( offset + size <= Size() );
 
-		return _ClearSubData( GetBufferID(), (usize)offset, (usize)size, EPixelFormat::FromType( value ), BinaryBuffer::FromValue( value ) );
+		return _ClearSubData( GetBufferID(), (usize)offset, (usize)size, EPixelFormat::FromType( value ), BinaryCBuffer::FromValue( value ) );
 	}
 
 	inline bool MemoryBuffer::ClearSubData (BytesU offset, BytesU size)
@@ -255,7 +255,7 @@ namespace Graphics
 	{
 		CHECK_ERR( IsValid() );
 
-		return _ClearSubData( GetBufferID(), 0, (usize)Size(), EPixelFormat::FromType( value ), BinaryBuffer::FromValue( value ) );
+		return _ClearSubData( GetBufferID(), 0, (usize)Size(), EPixelFormat::FromType( value ), BinaryCBuffer::FromValue( value ) );
 	}
 	
 	inline bool MemoryBuffer::Clear ()

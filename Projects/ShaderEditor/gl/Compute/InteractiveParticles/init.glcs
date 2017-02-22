@@ -1,0 +1,12 @@
+
+#import  "Compute/InteractiveParticles/shared.glcs"
+
+DECL_BUFFER( std140, Particle, writeonly, outBuffer );
+
+uniform float unGlobalTime;
+
+
+void main ()
+{
+	InitParticle( outBuffer[ GetGlobalIndex() ], unGlobalTime );
+}

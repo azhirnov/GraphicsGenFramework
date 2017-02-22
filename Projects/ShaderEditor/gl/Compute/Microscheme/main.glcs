@@ -78,17 +78,19 @@ float4 Microscheme (float2 point, float2 border,
 
 void main ()
 {
-	int2	img_coord	= GetGlobalCoord().xy;
-	float2	coord		= GetGlobalCoordUNorm().xy;
+	int2	img_coord		= GetGlobalCoord().xy;
+	float2	size			= float2(GetGlobalSize().xy);
+	float	scale_to_pix	= Max( size.x, size.y ) - 1.0;
+	float2	coord			= float2(GetGlobalCoord().xy) / scale_to_pix;
+	float2	center			= (size.xy * 0.5) / scale_to_pix;
 	float4	color;
 
 #if 1
-	float2	scale_to_pix	= float2(GetGlobalSize().xy - 1);
 	float	freq			= 8.0 * float(Max( unCellSize.x, unCellSize.y ));
-	float2	border			= 2.0 / scale_to_pix;
+	float2	border			= float2(2.0) / scale_to_pix;
 	float	radius			= 0.01 * unGlobalTime;
 
-	color = Microscheme( coord * freq, border * freq, float2(0.5) * freq, radius * freq );
+	color = Microscheme( coord * freq, border * freq, center * freq, radius * freq );
 
 #else
 	// test grid

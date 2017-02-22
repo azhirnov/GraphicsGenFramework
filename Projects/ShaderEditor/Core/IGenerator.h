@@ -45,9 +45,11 @@ namespace ShaderEditor
 		static IGeneratorPtr  Create_SimpleLandscape (const SubSystemsRef ss);
 		static IGeneratorPtr  Create_TessLandscape (const SubSystemsRef ss);
 		static IGeneratorPtr  Create_Microscheme (const SubSystemsRef ss);
-		static IGeneratorPtr  Create_VoronoiRecursion (const SubSystemsRef ss);
 		static IGeneratorPtr  Create_ThousandsOfStars (const SubSystemsRef ss);
 		static IGeneratorPtr  Create_SimpleParticles (const SubSystemsRef ss);
+		static IGeneratorPtr  Create_InteractiveParticles (const SubSystemsRef ss);
+		static IGeneratorPtr  Create_SinglePassRayTracing2D (const SubSystemsRef ss);
+		static IGeneratorPtr  Create_SinglePassRayTracing3D (const SubSystemsRef ss);
 	};
 
 

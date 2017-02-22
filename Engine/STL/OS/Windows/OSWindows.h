@@ -35,7 +35,7 @@ namespace OS
 
 	// variables
 	protected:
-		alignas(Align)	char	_data[ Size ];
+		alignas(Align)	ubyte	_data[ Size ];
 		const TypeId			_typeid;
 		bool					_isDefined;
 
@@ -136,14 +136,14 @@ namespace OS
 		template <typename T>
 		forceinline void _Create ()
 		{
-			PlacementNew<T>( Buffer<char>( _data ) );
+			PlacementNew<T>( BinaryBuffer( _data ) );
 			_isDefined = true;
 		}
 
 		template <typename T>
 		forceinline void _Create (const T &value)
 		{
-			PlacementNew<T>( Buffer<char>( _data ), value );
+			PlacementNew<T>( BinaryBuffer( _data ), value );
 			_isDefined = true;
 		}
 

@@ -185,7 +185,7 @@ namespace Graphics
 =================================================
 */
 	bool Texture::_AddImage (const uint4 &offset, uint level, const uint3 &size, EPixelFormat::type format,
-							 BinaryBuffer data, BytesU xAlign, BytesU xyAlign)
+							 BinaryCBuffer data, BytesU xAlign, BytesU xyAlign)
 	{
 		using namespace gl;
 		
@@ -330,7 +330,7 @@ namespace Graphics
 =================================================
 */
 	bool Texture::_AddCompressedImage (const uint4 &offset, uint level, const uint3 &size, EPixelFormat::type format,
-										BinaryBuffer data, BytesU xAlign, BytesU xyAlign)
+										BinaryCBuffer data, BytesU xAlign, BytesU xyAlign)
 	{
 		using namespace gl;
 		
@@ -551,8 +551,7 @@ namespace Graphics
 	_GetImage
 =================================================
 */
-	bool Texture::_GetImage (INOUT Buffer<ubyte> &data, uint level, EPixelFormat::type format,
-							 BytesU xAlign, BytesU xyAlign) const
+	bool Texture::_GetImage (INOUT BinaryBuffer data, uint level, EPixelFormat::type format, BytesU xAlign, BytesU xyAlign) const
 	{
 		using namespace gl;
 		
@@ -580,7 +579,7 @@ namespace Graphics
 	_GetSubImage
 =================================================
 */
-	bool Texture::_GetSubImage (INOUT Buffer<ubyte> &data, const uint4 &offset, uint level, const uint3 &size,
+	bool Texture::_GetSubImage (INOUT BinaryBuffer data, const uint4 &offset, uint level, const uint3 &size,
 								EPixelFormat::type format, BytesU xAlign, BytesU xyAlign) const
 	{
 		using namespace gl;

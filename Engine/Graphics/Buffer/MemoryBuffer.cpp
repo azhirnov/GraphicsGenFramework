@@ -27,7 +27,7 @@ namespace Graphics
 */
 	MemoryBuffer::~MemoryBuffer ()
 	{
-		SubSystems()->Get<GraphicsEngine>()->GetContext()->DeleteBuffer( _id );
+		Destroy();
 	}
 	
 /*
@@ -56,9 +56,11 @@ namespace Graphics
 	{
 		Resource::_Destroy();
 
-		SubSystems()->Get<GraphicsEngine>()->GetStateManager()->UnbindBufferBase( _id );
-
-		SubSystems()->Get<GraphicsEngine>()->GetContext()->DeleteBuffer( _id );
+		if ( SubSystems()->Get< GraphicsEngine >() )
+		{
+			// unbind and delete
+			SubSystems()->Get<GraphicsEngine>()->GetContext()->DeleteBuffer( _id );
+		}
 
 		_size	= 0_b;
 		_usage	= EBufferUsage::Unknown;
@@ -129,7 +131,7 @@ namespace Graphics
 	_SetData
 =================================================
 */
-	bool MemoryBuffer::_SetData (Buffer<const ubyte> data, EBufferUsage::type usage)
+	bool MemoryBuffer::_SetData (BinaryCBuffer data, EBufferUsage::type usage)
 	{
 		CHECK_ERR( GetBufferID().IsValid() );
 		CHECK_ERR( not data.Empty() );
@@ -155,7 +157,7 @@ namespace Graphics
 	_SubData
 =================================================
 */
-	bool MemoryBuffer::_SubData (Buffer<const ubyte> data, BytesU offset)
+	bool MemoryBuffer::_SubData (BinaryCBuffer data, BytesU offset)
 	{
 		CHECK_ERR( GetBufferID().IsValid() );
 		CHECK_ERR( not data.Empty() );
@@ -173,7 +175,7 @@ namespace Graphics
 	_GetData
 =================================================
 */
-	bool MemoryBuffer::_GetData (OUT Buffer<ubyte> data, BytesU offset)
+	bool MemoryBuffer::_GetData (OUT BinaryBuffer data, BytesU offset)
 	{
 		CHECK_ERR( GetBufferID().IsValid() );
 		

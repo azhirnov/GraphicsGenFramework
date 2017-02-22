@@ -37,7 +37,11 @@ namespace Graphics
 	{
 		Resource::_Destroy();
 
-		SubSystems()->Get< GraphicsEngine >()->GetContext()->DeleteProgram( _program );
+		if ( SubSystems()->Get< GraphicsEngine >() )
+		{
+			// unbind and delete
+			SubSystems()->Get< GraphicsEngine >()->GetContext()->DeleteProgram( _program );
+		}
 
 		_onBindEvent.Clear();
 		_numUniformBlocks = 0;

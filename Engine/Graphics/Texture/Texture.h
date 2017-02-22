@@ -78,13 +78,13 @@ namespace Graphics
 		bool Create (const uint4 &dim, EPixelFormat::type format, const MipmapLevelsRange &levels = Uninitialized, MultiSamples samples = Uninitialized);
 		bool AllocLevel (MipmapLevel level);
 
-		bool AddImage (const uint4 &offset, MipmapLevel level, const uint3 &size, EPixelFormat::type format, BinaryBuffer data,
+		bool AddImage (const uint4 &offset, MipmapLevel level, const uint3 &size, EPixelFormat::type format, BinaryCBuffer data,
 						BytesU xAlign = 4_b, BytesU xyAlign = 4_b);
 		
-		bool GetImage (OUT Buffer<ubyte> &data, MipmapLevel level, EPixelFormat::type format,
+		bool GetImage (OUT BinaryBuffer data, MipmapLevel level, EPixelFormat::type format, 
 						BytesU xAlign = 4_b, BytesU xyAlign = 4_b);
 
-		bool GetImage (OUT Buffer<ubyte> &data, const uint4 &offset, MipmapLevel level,
+		bool GetImage (OUT BinaryBuffer data, const uint4 &offset, MipmapLevel level,
 						const uint3 &size, EPixelFormat::type format,
 						BytesU xAlign = 4_b, BytesU xyAlign = 4_b);
 
@@ -138,15 +138,15 @@ namespace Graphics
 		bool _Create (const uint4 &dim, EPixelFormat::type format, uint2 levels, MultiSamples samples);
 
 		bool _AddImage (const uint4 &offset, uint level, const uint3 &size, EPixelFormat::type format,
-						BinaryBuffer data, BytesU xAlign, BytesU xyAlign);
+						BinaryCBuffer data, BytesU xAlign, BytesU xyAlign);
 
 		bool _AddCompressedImage (const uint4 &offset, uint level, const uint3 &size, EPixelFormat::type format,
-									BinaryBuffer data, BytesU xAlign, BytesU xyAlign);
+									BinaryCBuffer data, BytesU xAlign, BytesU xyAlign);
 
-		bool _GetImage (INOUT Buffer<ubyte> &data, uint level, EPixelFormat::type format,
+		bool _GetImage (INOUT BinaryBuffer data, uint level, EPixelFormat::type format,
 						BytesU xAlign, BytesU xyAlign) const;
 		
-		bool _GetSubImage (INOUT Buffer<ubyte> &data, const uint4 &offset, uint level, const uint3 &size,
+		bool _GetSubImage (INOUT BinaryBuffer data, const uint4 &offset, uint level, const uint3 &size,
 							EPixelFormat::type format, BytesU xAlign, BytesU xyAlign) const;
 
 		bool _AllocLevel (uint level);

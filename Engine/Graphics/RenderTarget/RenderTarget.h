@@ -98,7 +98,7 @@ namespace Graphics
 		bool HasStencil () const;
 		bool HasColor () const;
 
-		bool GetImage (OUT Buffer<ubyte> &data, EPixelFormat::type format, const RectU &region,
+		bool GetImage (OUT BinaryBuffer data, EPixelFormat::type format, const RectU &region,
 						ERenderTarget::type target = ERenderTarget::Color0,
 						BytesU align = 1_b) const;
 

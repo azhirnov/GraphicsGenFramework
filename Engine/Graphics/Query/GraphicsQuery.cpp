@@ -51,7 +51,10 @@ namespace Graphics
 */
 	void GraphicsQuery::_Delete ()
 	{
-		SubSystems()->Get< GraphicsEngine >()->GetContext()->DeleteQuery( _id );
+		if ( SubSystems()->Get< GraphicsEngine >() )
+		{
+			SubSystems()->Get< GraphicsEngine >()->GetContext()->DeleteQuery( _id );
+		}
 
 		_target				= EQuery::Unknown;
 		_index				= uint(-1);

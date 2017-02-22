@@ -39,7 +39,7 @@ namespace ShaderEditor
 		void Update (Time<double> dt) override
 		{
 			Ptr< Input >	input	= SubSystems()->Get< Input >();
-			const uint		id		= input->GetLastTouchId();
+			const uint		id		= 0;
 			
 			Platform::WindowDesc	wnd;
 			SubSystems()->Get< Platform >()->GetWindowDesc( wnd );

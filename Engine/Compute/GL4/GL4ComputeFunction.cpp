@@ -119,11 +119,10 @@ namespace Compute
 */
 	void GL4ComputeFunction::Destroy ()
 	{
-		if ( _progID.IsValid() )
+		if ( SubSystems()->Get< GraphicsEngine >() )
 		{
 			SubSystems()->Get< GraphicsEngine >()->GetContext()->DeleteProgram( _progID );
 		}
-		CHECK( not _progID.IsValid() );
 
 		_args.Clear();
 
@@ -356,7 +355,7 @@ namespace Compute
 				if ( name_ref.StartsWith( "in" ) )
 					write_access = false;
 				else
-				if ( name_ref.StartsWith( "out" ) )
+				if ( name_ref.StartsWith( "out" ) or name_ref.StartsWith( "inout" ) )
 					write_access = true;
 
 				_args.Add( StString_t( name_ref ), Arg( i, Arg::StorageBuffer, write_access ) );

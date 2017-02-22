@@ -12,8 +12,9 @@ namespace ShaderEditor
 =================================================
 */
 	RayTracingSamples::RayTracingSamples (const SubSystemsRef ss) :
-		ISample( ss ), _controller( SubSystems() ),
-		_curShader( 0 )
+		ISample( ss ),				_controller( SubSystems() ),
+		_currentGenerator( 0 ),		_currentShader( 0 ),
+		_regenerate( true )
 	{
 	}
 		
@@ -24,12 +25,23 @@ namespace ShaderEditor
 */
 	void RayTracingSamples::Init ()
 	{
-		_imageGen	= _ChooseShader( _curShader );
+		_imageGen	= _ChooseShader( _currentGenerator, _currentShader );
 		_image		= New<ComputeImage>( SubSystems() );
 
-		CHECK( _image->Create( uint2(1 << 12).xyoo(), ETexture::Tex2D, EPixelFormat::RGBA8_UNorm ) );
+		CHECK( _image->Create( uint2(1<<12, 1<<11).xyoo(), ETexture::Tex2D, EPixelFormat::RGBA8_UNorm ) );
 
 		CHECK( _imageGen->Compile() );
+			
+
+		SamplerPtr	sampler;
+
+		CHECK( SubSystems()->Get< GraphicsEngine >()->GetContext()->CreateSampler(
+			SamplerState( EWrapMode::Clamp, EFilter::MinMagMipLinear ), OUT sampler ) );
+
+		_image->GetSharedObject()->SetSampler( sampler );
+
+
+		_regenerate	= true;
 	}
 	
 /*
@@ -50,11 +62,12 @@ namespace ShaderEditor
 */
 	void RayTracingSamples::Reload ()
 	{
-		IGeneratorPtr	new_generator = _ChooseShader( _curShader );
+		IGeneratorPtr	new_generator = _ChooseShader( _currentGenerator, _currentShader );
 
 		if ( new_generator and new_generator->Compile() )
 		{
-			_imageGen = new_generator;
+			_regenerate	= true;
+			_imageGen	= new_generator;
 		}
 	}
 	
@@ -63,32 +76,56 @@ namespace ShaderEditor
 	_ChooseShader
 =================================================
 */
-	IGeneratorPtr RayTracingSamples::_ChooseShader (uint index) const
+	IGeneratorPtr RayTracingSamples::_ChooseShader (uint &genIndex, uint &shIndex) const
 	{
 		IGeneratorPtr	ptr = null;
 
-		switch ( index )
+		switch ( genIndex )
 		{
 			case 0 :
 			{
-				uint2	cellSize( 10 );
-				uint2	subCellSize( 4 );
+				if ( shIndex == 0 )
+				{
+					uint2	cellSize( 10 );
+					uint2	subCellSize( 4 );
 
-				ptr = IGenerator::Create_Microscheme( SubSystems() );
-
-				ptr->SetArg( "cellSize",	cellSize );
-				ptr->SetArg( "subCellSize",	subCellSize );
-				break;
+					ptr = IGenerator::Create_Microscheme( SubSystems() );
+					ptr->SetArg( "cellSize",	cellSize );
+					ptr->SetArg( "subCellSize",	subCellSize );
+					break;
+				}
+				genIndex ++;
+				shIndex  = 0;
 			}
 			case 1 :
 			{
-				ptr = IGenerator::Create_VoronoiRecursion( SubSystems() );
-				break;
+				if ( shIndex == 0 )
+				{
+					ptr = IGenerator::Create_ThousandsOfStars( SubSystems() );
+					break;
+				}
+				genIndex ++;
+				shIndex  = 0;
 			}
 			case 2 :
 			{
-				ptr = IGenerator::Create_ThousandsOfStars( SubSystems() );
-				break;
+				ptr = IGenerator::Create_SinglePassRayTracing2D( SubSystems() );
+
+				if ( ptr->SetArg( "shader_index", shIndex ) )
+					break;
+				
+				genIndex ++;
+				shIndex  = 0;
+			}
+			case 3 :
+			{
+				ptr = IGenerator::Create_SinglePassRayTracing3D( SubSystems() );
+
+				if ( ptr->SetArg( "shader_index", shIndex ) )
+					break;
+				
+				genIndex ++;
+				shIndex  = 0;
 			}
 		}
 		return ptr;
@@ -101,21 +138,27 @@ namespace ShaderEditor
 */
 	void RayTracingSamples::Draw (const RenderTargetPtr &rt, TimeD globalTime)
 	{
-		// resize target
-		/*if ( Any( uint2(rt->GetViewport().Size()) != _image->Dimension().xy() ) )
-		{
-			CHECK( _image->Create( uint2(rt->GetViewport().Size()).xyoo(), ETexture::Tex2D, EPixelFormat::RGBA8_UNorm ) );
-		}*/
+		// update image
+		TimeD	dt = globalTime - _prevGlobalTime;
 
+		_prevGlobalTime = globalTime;
+
+		if ( not dt.IsZero() or _regenerate )
+		{
+			_regenerate = false;
+
+			_imageGen->SetArg( "globalTime",	globalTime );
+			_imageGen->SetArg( "timeDelta",		dt );
+			_imageGen->SetArg( "outImage",		_image );
+		
+			_imageGen->Render();
+		}
+
+		// draw
 		SubSystems()->Get< GraphicsEngine >()->GetStateManager()->SetRenderState( RenderState() );
 
 		rt->SetClearColor( ERenderTarget::Color0, float4() );
 		rt->Clear();
-
-		_imageGen->SetArg( "globalTime",	globalTime );
-		_imageGen->SetArg( "outImage",		_image );
-		
-		_imageGen->Render();
 
 		SubSystems()->Get< ShaderEditorCore >()->GetRenderer()->
 			DrawImage( _controller, _image, EImageViewMode::Color );
@@ -138,15 +181,17 @@ namespace ShaderEditor
 */
 	bool RayTracingSamples::Next ()
 	{
-		IGeneratorPtr	new_generator = _ChooseShader( ++_curShader );
+		IGeneratorPtr	new_generator = _ChooseShader( _currentGenerator, ++_currentShader );
 		
 		if ( new_generator and new_generator->Compile() )
 		{
-			_imageGen = new_generator;
+			_regenerate	= true;
+			_imageGen	= new_generator;
 			return true;
 		}
 
-		_curShader = 0;
+		_currentGenerator	= 0;
+		_currentShader		= 0;
 		return false;
 	}
 

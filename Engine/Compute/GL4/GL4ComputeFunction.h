@@ -115,6 +115,9 @@ namespace Compute
 
 		template <typename T>
 		Self& SetArg (StringCRef name, const Radians<T> &value);
+		
+		template <typename T>
+		bool TrySetArg (StringCRef name, const T& value);
 
 		bool HasArg (StringCRef name) const;
 		
@@ -175,6 +178,22 @@ namespace Compute
 	inline GL4ComputeFunction & GL4ComputeFunction::SetArg (StringCRef name, const Radians<T> &value)
 	{
 		return SetArg( name, (T)value );
+	}
+	
+/*
+=================================================
+	TrySetArg
+=================================================
+*/
+	template <typename T>
+	bool GL4ComputeFunction::TrySetArg (StringCRef name, const T& value)
+	{
+		if ( HasArg( name ) )
+		{
+			SetArg( name, value );
+			return true;
+		}
+		return false;
 	}
 
 

@@ -136,6 +136,7 @@ namespace Graphics
 		
 		bool Initialize ();
 		void Deinitialize ();
+		void Reset ();
 
 
 		// sync
@@ -203,14 +204,12 @@ namespace Graphics
 		// states
 		void SetRenderState (const RenderState &state);
 
-		bool IsTessellationEnabled ()				const			{ return _currentProgram._patchSize != 0; }
-
 		void EnableFramebufferSRGB (bool enabled);
-		bool IsFramebufferSRGB ()					const			{ return _framebufferSRGB; }
+		bool IsFramebufferSRGB ()						const		{ return _framebufferSRGB; }
 
-		float2 const &		GetPointSizeRange ()	const			{ return _pointSizeRange; }
-
-		RenderState const &	GetRenderState ()		const			{ return _renderState; }
+		float2 const &		GetPointSizeRange ()		const		{ return _pointSizeRange; }
+		RenderState const &	GetRenderState ()			const		{ return _renderState; }
+		bool				IsTessellationEnabled ()	const		{ return _currentProgram._patchSize != 0; }
 
 
 		// viewport

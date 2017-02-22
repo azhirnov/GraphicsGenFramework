@@ -12,7 +12,8 @@
 #define AnyLessEqual( _a_, _b_ )	Any( LessEqual( (_a_), (_b_) ) )
 #define AnyGreater( _a_, _b_ )		Any( Greater( (_a_), (_b_) ) )
 #define AnyGreaterEqual( _a_, _b_ )	Any( GreaterEqual( (_a_), (_b_) ) )
-#define AllEqual( _a_, _b_ )		All( Equals( (_a_), (_b_) )
+#define AllEqual( _a_, _b_ )		All( Equals( (_a_), (_b_) ) )
+#define AnyEqual( _a_, _b_ )		Any( Equals( (_a_), (_b_) ) )
 
 
 // Less, Greater, LessEqual, GreaterEqual

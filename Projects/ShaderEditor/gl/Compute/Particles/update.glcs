@@ -1,0 +1,13 @@
+
+#import  "Compute/Particles/shared.glcs"
+
+DECL_BUFFER( std140, Particle, coherent,  outBuffer );
+
+uniform float unTimeDelta;
+uniform float unGlobalTime;
+
+
+void main ()
+{
+	UpdateParticle( outBuffer[ GetGlobalIndex() ], unTimeDelta, unGlobalTime, 0.001 );
+}

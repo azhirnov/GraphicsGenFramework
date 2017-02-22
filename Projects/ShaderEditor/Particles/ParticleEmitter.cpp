@@ -12,7 +12,7 @@ namespace ShaderEditor
 */
 	ParticleEmitter::ParticleEmitter (const SubSystemsRef ss) :
 		BaseObject( ss ),
-		_particlesCount( 0 ),	_currBuffer( 0 ),	_initialize(false)
+		_particlesCount( 0 ),	_initialize(false)
 	{
 	}
 	
@@ -40,17 +40,13 @@ namespace ShaderEditor
 		Destroy();
 
 		_particlesCount = maxParticles;
-		
-		FOR( i, _particleBuffers )
-		{
-			_particleBuffers[i] = New<VertexBuffer>( SubSystems() );
+		_particleBuffer = New<VertexBuffer>( SubSystems() );
 			
-			CHECK( _particleBuffers[i]->Create() );
-			CHECK( _particleBuffers[i]->Allocate( BytesU(_particlesCount) * vertexSize, EBufferUsage::Dynamic ) );
+		CHECK( _particleBuffer->Create() );
+		CHECK( _particleBuffer->Allocate( BytesU(_particlesCount) * vertexSize, EBufferUsage::Dynamic ) );
 
-			_particleBuffers[i]->SetAttribs( attribs, vertexSize );
-			_particleBuffers[i]->SetPrimitive( EPrimitive::Point );
-		}
+		_particleBuffer->SetAttribs( attribs, vertexSize );
+		_particleBuffer->SetPrimitive( EPrimitive::Point );
 
 		_particleProcessor = processor;
 		CHECK_ERR( _particleProcessor->Compile() );
@@ -69,12 +65,10 @@ namespace ShaderEditor
 */
 	void ParticleEmitter::Destroy ()
 	{
-		_particleBuffers.Clear();
-
+		_particleBuffer		= null;
 		_particleRenderer	= null;
 		_particleProcessor	= null;
 		_particlesCount		= 0;
-		_currBuffer			= 0;
 		_initialize			= false;
 		_prevGlobalTime		= Uninitialized;
 	}
@@ -95,11 +89,7 @@ namespace ShaderEditor
 		if ( dt.IsZero() and not _initialize )
 			return true;
 
-		uint	in_idx	= _currBuffer;
-		uint	out_idx	= ++_currBuffer;
-
-		_particleProcessor->SetArg( "inBuffer",		_particleBuffers[in_idx] );
-		_particleProcessor->SetArg( "outBuffer",	_particleBuffers[out_idx] );
+		_particleProcessor->SetArg( "buffer",		_particleBuffer );
 		_particleProcessor->SetArg( "globalTime",	globalTime );
 		_particleProcessor->SetArg( "timeDelta",	dt );
 		_particleProcessor->SetArg( "count",		_particlesCount );
@@ -128,7 +118,7 @@ namespace ShaderEditor
 
 		_particleRenderer->Active();
 
-		_particleBuffers[ _currBuffer ]->Draw();
+		_particleBuffer->Draw();
 		return true;
 	}
 

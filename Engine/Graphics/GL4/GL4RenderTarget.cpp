@@ -259,7 +259,7 @@ namespace Graphics
 	GetImage
 =================================================
 */
-	bool RenderTarget::GetImage (OUT Buffer<ubyte> &data, EPixelFormat::type format, const RectU &region,
+	bool RenderTarget::GetImage (OUT BinaryBuffer data, EPixelFormat::type format, const RectU &region,
 								 ERenderTarget::type target, BytesU align) const
 	{
 		using namespace gl;

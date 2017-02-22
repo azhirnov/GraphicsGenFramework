@@ -1,0 +1,251 @@
+
+#include "Common.glcs"
+
+DECL_IMAGE( image2D, rgba8, writeonly, outImage );
+
+uniform float	unGlobalTime;
+
+
+// 0 - pyramid
+// 1 - voronoi
+// 2 - julia
+#define DISTFUNC_TYPE 1
+
+
+const float		maxDist			= 2.55;
+const float 	smallVal 		= 0.001;
+const float 	farPlane 		= 10.0;
+const float 	nearPlane 		= 0.5;
+const int 		maxIter 		= 512;
+
+#if DISTFUNC_TYPE == 0
+const float2	hgtScaleBias	= float2( 4.0, -2.5 );
+const float3	rayLookAt		= float3(0.0, -0.5, 0.0);
+const float3	rayOrigin		= float3(0.0, 1.5, 0.0);
+#endif
+
+#if DISTFUNC_TYPE == 1
+const float2	hgtScaleBias	= float2( 4.0, -2.5 );
+const float3	rayLookAt		= float3(0.0, -0.5, 0.0);
+const float3	rayOrigin		= float3(0.0, 1.5, 0.0);
+#endif
+
+#if DISTFUNC_TYPE == 2
+const float2	hgtScaleBias	= float2( 1.0, -0.5 );
+const float3	rayLookAt		= float3( 0.0, -0.9, 0.0 );
+const float3	rayOrigin		= float3( 0.0, 1.7, -1.0 );
+#endif
+
+//--------------------------------------------
+
+
+#if DISTFUNC_TYPE == 0
+
+float2 DistFunc (const float2 uv)
+{
+	const float2 	spherePos1 = float2(  1.0, 3.0 );
+	const float2 	spherePos2 = float2( -1.0, 3.0 );
+    
+    const float d = min( distance(uv, spherePos1), distance(uv, spherePos2) );
+    
+    //return float2( clamp( d, 0.0, maxDist ), 1.0 );
+    return float2( clamp( pow(d, 0.25), 0.0, maxDist ), 1.0 );
+}
+
+#endif
+//--------------------------------------------
+
+
+#if DISTFUNC_TYPE == 1
+
+float Hash21 (const float2 p)
+{
+    return fract( sin( p.x + p.y * 64.0 ) * 104003.9 );
+}
+
+float2 Hash22 (const float2 p)
+{
+    const float2 q = float2( dot( p, float2(127.1,311.7) ), 
+							 dot( p, float2(269.5,183.3) ) );
+	return fract( sin(q) * 43758.5453 );
+}
+
+float2 CenterOfVoronoiCell (const float2 local, const float2 global, const float time)
+{
+    const float2 point = local + global;
+    return local + sin( time * Hash22( point ) * 0.628 ) * 0.5 + 0.5;
+}
+
+float ValueOfVoronoiCell (const float2 coord)
+{
+    return Hash21( coord );
+}
+
+float2 VoronoiCircles (const float2 coord, const float freq, const float time)
+{
+    const int radius = 2;
+    
+    float2 point = coord * freq;
+    float2 ipoint = floor( point );
+    float2 fpoint = fract( point );
+    
+    float2 center = fpoint;
+    float2 icenter = float2(0);
+    
+    float md = 2147483647.0; // min square distance
+    
+	// find nearest circle
+	for (int y = -radius; y <= radius; ++y)
+	for (int x = -radius; x <= radius; ++x)
+	{
+        float2 cur = float2(x, y);
+		float2 c = CenterOfVoronoiCell( float2(cur), ipoint, time );
+		float d = dot( c - fpoint, c - fpoint );
+
+		if ( d < md )
+		{
+			md = d;
+			center = c;
+			icenter = cur;
+		}
+	}
+    return float2( pow( md, 0.25 ), ValueOfVoronoiCell( icenter + ipoint ) );
+    //return float2( sqrt( md ), ValueOfVoronoiCell( icenter + ipoint ) );
+    //return float2( md, ValueOfVoronoiCell( icenter + ipoint ) );
+}
+
+
+float2 DistFunc (const float2 uv)
+{
+    return clamp( VoronoiCircles( uv, 1.0, unGlobalTime ), 0.0, maxDist );
+}
+
+#endif
+//--------------------------------------------
+
+#if DISTFUNC_TYPE == 2
+
+// based on https://www.shadertoy.com/view/Mss3R8
+float2 JuliaDist (const float2 p)
+{
+	p = -1.0 + 2.0*p;
+	p.x *= scrSize.x / scrSize.y;
+
+	float ltime = 0.5-0.5*cos(unGlobalTime*0.12);
+    
+	float an = 2.0*ltime;
+	p = mat2(cos(an),sin(an),-sin(an),cos(an))*p;
+	
+    float2 ce = float2( 0.2655,0.301 );
+	ce += 0.8 * cos(4.0+4.0*ltime);
+	p = ce + (p-ce);
+	
+    float2 c = float2( -0.745, 0.186 ) - 0.045 * (1.0-ltime);
+	
+	float2 z = p;
+	float2 dz = float2( 1.0, 0.0 );
+
+	for (int i=0; i < 256; ++i)
+	{
+		dz = 2.0*float2(z.x*dz.x-z.y*dz.y, z.x*dz.y + z.y*dz.x );
+        z = float2( z.x*z.x - z.y*z.y, 2.0*z.x*z.y ) + c;
+        
+		if( dot(z,z) > 200.0 )
+            break;
+	}
+	
+	float d = sqrt( dot(z,z)/dot(dz,dz) ) * log( dot(z,z) );
+
+    return float2( d, 1.0 );
+	//return pow( clamp( 150.0 * d, 0.0, 1.0 ), 0.5 );
+}
+
+float2 DistFunc (const float2 uv)
+{
+    return clamp( JuliaDist( uv * 0.4 + float2(0.5, 0.0) ), 0.0, maxDist );
+}
+#endif
+//--------------------------------------------
+
+
+void mainImage (out float4 fragColor, const float2 fragCoord, const float2 scrSize)
+{
+    float 	fovX 	= radians(90.0);
+    float 	fovY 	= fovX * scrSize.y / scrSize.x;
+    float2 	uvScale = nearPlane / cos( float2(fovX, fovY) * 0.5 );
+	float2 	uv 		= (fragCoord.xy - scrSize.xy * 0.5) / (scrSize.xy * 0.5) * uvScale;
+    float3 	raydir 	= normalize(float3(uv.x, uv.y, 1.0) + rayLookAt);
+    float3 	raypos 	= rayOrigin;
+    float 	depth 	= nearPlane;
+    float3 	color 	= float3(0.0);
+    
+    if (fragCoord.x > scrSize.x*0.5)
+    {
+        for (int i = 0; i < maxIter; ++i)
+        {
+            float3	pos	= raypos + raydir * depth;
+
+            float2	dm	= DistFunc( pos.xz );
+
+            float	h	= max( (1.0 - dm.x / maxDist) * hgtScaleBias.x + hgtScaleBias.y, 0.0 );
+            float	dh	= pos.y - h;
+
+            color = float3(float(i)/float(maxIter), 0, 0);
+            //color = float3(0, d, 0);
+
+            if ( abs(dh) < smallVal )
+            {
+                //color = HSVtoRGB( clamp( float3( dm.y, 1.0, h+0.2 ), 0.0, 1.0 ) );
+                break;
+            }
+
+            depth += dh * 0.5;
+
+            if ( depth > farPlane )
+                break;
+        }
+    }
+    else
+    {
+        for (int i = 0; i < maxIter; ++i)
+        {
+            float3	pos	= raypos + raydir * depth;
+
+            float2	dm	= DistFunc( pos.xz );
+
+            float	h	= max( (1.0 - dm.x / maxDist) * hgtScaleBias.x + hgtScaleBias.y, 0.0 );
+            float	dh	= pos.y - h;
+
+            color = float3(0, float(i)/float(maxIter), 0);
+            //color = float3(0, d, 0);
+
+            if ( abs(dh) < smallVal )
+            {
+                //color = HSVtoRGB( clamp( float3( dm.y, 1.0, h+0.2 ), 0.0, 1.0 ) );
+                break;
+            }
+
+            depth += dh * 0.125;
+
+            if ( depth > farPlane )
+                break;
+        }
+    }
+    
+    //fragColor = float4(float3(depth / farPlane), 1.0);
+    fragColor = float4(color, 1.0);
+	//fragColor = float4(abs(raydir),1.0);
+}
+
+
+void main ()
+{
+	int2	img_coord	= GetGlobalCoord().xy;
+	float2	coord		= float2(img_coord);
+	float2	size		= float2(GetGlobalSize().xy);
+	float4	color;
+
+	mainImage( color, coord, size );
+
+	imageStore( outImage, img_coord, color );
+}

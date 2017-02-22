@@ -9,6 +9,7 @@ DECL_IMAGE( image2D, r32f, readonly, inHeightImage );
 DECL_IMAGE( image2D, rgba16f, readonly, inNormalsImage );
 
 uniform float4	unImageScaleBias;
+uniform float2	unScale;
 
 
 void main ()
@@ -21,8 +22,9 @@ void main ()
 	float	height		= imageLoad( inHeightImage, img_coord ).r;
 	float3	normal		= imageLoad( inNormalsImage, img_coord ).rgb;
 
-	vert.position.y += height;
-	vert.normal		 = normal;
+	vert.position.xz *= unScale;
+	vert.position.y  += height;
+	vert.normal		  = normal;
 
 	outBuffer[index] = PackVertex( vert );
 }

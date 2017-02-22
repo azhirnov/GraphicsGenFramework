@@ -4,14 +4,16 @@
 
 [HEADER]
 
-float3  RGBtoHSV (in float3 rgb);
-float3  HSVtoRGB (in float3 hsv);
+float3  RGBtoHSV (const float3 rgb);
+float3  HSVtoRGB (const float3 hsv);
+float4  HSVtoRGBA (const float3 hsv, const float alpha);
+float4  HSVtoRGBA (const float h, const float s, const float v, const float alpha);
 
 
 //-----------------------------------------------------------------------------
 [SOURCE]
 
-float3  RGBtoHSV (in float3 rgb)
+float3  RGBtoHSV (const float3 rgb)
 {
 	float	k = 0.0;
 	float	r = rgb.x;
@@ -39,11 +41,22 @@ float3  RGBtoHSV (in float3 rgb)
 }
 
 
-float3 HSVtoRGB (in float3 hsv)
+float3 HSVtoRGB (const float3 hsv)
 {
 	float3 col = float3( abs( hsv.x * 6.0 - 3.0 ) - 1.0,
 						 2.0 - abs( hsv.x * 6.0 - 2.0 ),
 						 2.0 - abs( hsv.x * 6.0 - 4.0 ) );
 
 	return (( clamp( col, float3(0.0), float3(1.0) ) - 1.0 ) * hsv.y + 1.0 ) * hsv.z;
+}
+
+
+float4  HSVtoRGBA (const float3 hsv, const float alpha)
+{
+	return float4( HSVtoRGB( hsv ), alpha );
+}
+
+float4  HSVtoRGBA (const float h, const float s, const float v, const float alpha)
+{
+	return float4( HSVtoRGB(float3( h, s, v )), alpha );
 }

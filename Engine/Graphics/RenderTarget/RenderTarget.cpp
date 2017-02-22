@@ -85,7 +85,10 @@ namespace Graphics
 	void RenderTarget::Destroy ()
 	{
 		if ( not _isSystemRT and SubSystems()->Get< GraphicsEngine >() )
+		{
+			// unbind and delete
 			SubSystems()->Get< GraphicsEngine >()->GetContext()->DeleteRenderTarget( _rt );
+		}
 
 		_targets.Clear();
 		_viewports.Clear();
@@ -109,7 +112,7 @@ namespace Graphics
 		sm->BindRenderTarget( _rt );
 		sm->EnableFramebufferSRGB( _isSRGB );
 
-		sm->PushViewport();
+		//sm->PushViewport();
 
 		DEBUG_ONLY( _CheckViewports(); )
 
@@ -131,7 +134,7 @@ namespace Graphics
 		Ptr< StateManager >	sm = SubSystems()->Get< GraphicsEngine >()->GetStateManager();
 
 		//sm->BindRenderTarget( RenderTargetID() );
-		sm->PopViewport();
+		//sm->PopViewport();
 	}
 
 /*

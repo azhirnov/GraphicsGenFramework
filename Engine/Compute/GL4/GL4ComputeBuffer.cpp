@@ -70,7 +70,7 @@ namespace Compute
 	Create
 =================================================
 */
-	bool GL4ComputeBuffer::Create (BinaryBuffer data, EMemoryAccess::type flags, EBufferTarget::type target)
+	bool GL4ComputeBuffer::Create (BinaryCBuffer data, EMemoryAccess::type flags, EBufferTarget::type target)
 	{
 		_Destroy();
 		
@@ -109,7 +109,7 @@ namespace Compute
 	Read
 =================================================
 */
-	bool GL4ComputeBuffer::Read (OUT Buffer<ubyte> data, BytesU offset) const
+	bool GL4ComputeBuffer::Read (OUT BinaryBuffer data, BytesU offset) const
 	{
 		CHECK_ERR( IsCreated() );
 
@@ -122,7 +122,7 @@ namespace Compute
 	Write
 =================================================
 */
-	bool GL4ComputeBuffer::Write (BinaryBuffer data, BytesU offset)
+	bool GL4ComputeBuffer::Write (BinaryCBuffer data, BytesU offset)
 	{
 		CHECK_ERR( IsCreated() );
 

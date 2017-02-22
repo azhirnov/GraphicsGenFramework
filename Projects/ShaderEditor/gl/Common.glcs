@@ -37,10 +37,13 @@
 // Effects //
 #import "Core/Effects/Blur.glcs"
 
-// Particles /
+// Particles //
 #import "Core/Particles/Colors.glcs"
 #import "Core/Particles/Emitters.glcs"
 
-// Physics
+// Physics //
 #import "Core/Physics/Gravity.glcs"
 #import "Core/Physics/Magnetism.glcs"
+
+// Signed Distance Field //
+#import "Core/SDF/DefaultSDF.glcs"

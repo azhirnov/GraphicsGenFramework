@@ -5,7 +5,6 @@
 #include "Common.h"
 #include "Renderer.h"
 #include "ISample.h"
-#include "Projects/ShaderEditor/Particles/ParticleRenderer.h"
 #include "Projects/ShaderEditor/Tiles/TilesManager.h"
 
 namespace ShaderEditor
@@ -22,7 +21,6 @@ namespace ShaderEditor
 		GraphicsEngine		_graphicsEngine;
 		ComputeEngine		_computeEngine;
 		Renderer			_renderer;
-		ParticleRenderer	_particleRenderer;
 		TilesManager		_tilesManager;
 
 		Array< ISamplePtr >	_samples;
@@ -43,7 +41,6 @@ namespace ShaderEditor
 		void AddSample (const ISamplePtr &sample);
 
 		Ptr< Renderer >			GetRenderer ()			{ return &_renderer; }
-		Ptr< ParticleRenderer >	GetParticleRenderer ()	{ return &_particleRenderer; }
 		Ptr< TilesManager >		GetTilesManager ()		{ return &_tilesManager; }
 
 

@@ -31,11 +31,11 @@ namespace Compute
 		~GL4ComputeBuffer ();
 
 		bool Create (BytesU size, EMemoryAccess::type flags = EMemoryAccess::ReadWrite, EBufferTarget::type target = EBufferTarget::ShaderStorage);
-		bool Create (BinaryBuffer data, EMemoryAccess::type flags = EMemoryAccess::ReadWrite, EBufferTarget::type target = EBufferTarget::ShaderStorage);
+		bool Create (BinaryCBuffer data, EMemoryAccess::type flags = EMemoryAccess::ReadWrite, EBufferTarget::type target = EBufferTarget::ShaderStorage);
 		bool Create (const MemoryBufferPtr &shared, EMemoryAccess::type flags = EMemoryAccess::ReadWrite, EBufferTarget::type target = EBufferTarget::ShaderStorage);
 		
-		bool Read (OUT Buffer<ubyte> data, BytesU offset = Uninitialized) const;
-		bool Write (BinaryBuffer data, BytesU offset = Uninitialized);
+		bool Read (OUT BinaryBuffer data, BytesU offset = Uninitialized) const;
+		bool Write (BinaryCBuffer data, BytesU offset = Uninitialized);
 
 		bool Copy (const ComputeImagePtr &src, const uint4 &srcOffset, BytesU dstOffset, const uint4 &size);
 		bool Copy (const ComputeBufferPtr &src, BytesU srcOffset, BytesU dstOffset, BytesU size);

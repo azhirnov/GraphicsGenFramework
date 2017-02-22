@@ -1,0 +1,44 @@
+
+#include "Common.glcs"
+
+DECL_IMAGE( image2D, rgba16f, writeonly, outDisplacementImage );
+
+uniform float2	unPosition;
+uniform float2	unScale;
+uniform float2	unInvSize;
+
+
+float3 Map (const float2 coord, const float2 offset)
+{
+	const float2	scale = unScale * unInvSize * 0.5;
+
+	return float3(	offset * scale,
+					PerlinNoise2D( coord + offset * scale, 0.1, 2.0, 0.5, 12, 1 ) - 
+					PerlinNoise2D( coord + offset * scale, 0.1, 2.0, 0.5,  2, 1 ) );
+}
+
+
+float4 MapWithNormal (const float2 coord)
+{
+	const float3	offset	= float3( -1.0, 0.0, 1.0 );
+	const float3	center	= Map( coord, offset.yy );
+
+	float3	normal	= float3( 0.0 );
+
+	normal += Cross( Map( coord, offset.yz ) - center, Map( coord, offset.zz ) - center );
+	normal += Cross( Map( coord, offset.zy ) - center, Map( coord, offset.zx ) - center );
+	normal += Cross( Map( coord, offset.yx ) - center, Map( coord, offset.xx ) - center );
+	normal += Cross( Map( coord, offset.xy ) - center, Map( coord, offset.xz ) - center );
+
+	return float4( center.z, Normalize(normal) );
+}
+
+
+void main ()
+{
+	int2	img_coord	= GetGlobalCoord().xy;
+	float2	coord		= GetGlobalCoordUNorm().xy * unScale + unPosition;
+	float4	hn			= MapWithNormal( coord );
+
+	imageStore( outDisplacementImage, img_coord, hn );
+}

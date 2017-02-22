@@ -19,11 +19,6 @@ namespace ShaderEditor
 
 	class ParticleEmitter : public BaseObject
 	{
-	// types
-	private:
-		typedef StaticArray< VertexBufferPtr, 2 >		MemBuffer2_t;
-
-
 	// variables
 	private:
 		IGeneratorPtr		_particleProcessor;
@@ -31,9 +26,8 @@ namespace ShaderEditor
 
 		TimeD				_prevGlobalTime;
 
-		MemBuffer2_t		_particleBuffers;
+		VertexBufferPtr		_particleBuffer;
 		uint				_particlesCount;
-		uint				_currBuffer : 1;
 		bool				_initialize;
 
 
@@ -52,6 +46,9 @@ namespace ShaderEditor
 					 const real4x4 &viewMat, const real4x4 &projMat);
 
 		bool Update (TimeD globalTime);
+
+		IGeneratorPtr const&	GetParticleProcessor ()	const	{ return _particleProcessor; }
+		IShaderPtr const&		GetParticleRenderer ()	const	{ return _particleRenderer; }
 	};
 
 

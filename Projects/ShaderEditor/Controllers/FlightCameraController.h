@@ -54,6 +54,7 @@ namespace ShaderEditor
 		vec2_t			GetScale ()					const	{ return vec2_t( _camera.GetZoom() ); }
 		vec2_t const&	GetClipPlanes ()			const	{ return _camera.ClipPlanes(); }
 		
+
 		void Reset (const Transform_t &transform = Uninitialized)
 		{
 			_camera.Create( transform, _CameraFOV(), 1.0f, real2( 0.1f, 100.0f ) );
@@ -61,6 +62,7 @@ namespace ShaderEditor
 			_mvp = mat4_t::Identity();
 			_mv  = mat4_t::Identity();
 		}
+
 
 		void Update (TimeD dt) override
 		{
@@ -71,7 +73,7 @@ namespace ShaderEditor
 			const real		rot_step	= 0.3f;
 
 			Ptr< Input >	input		= SubSystems()->Get< Input >();
-			const uint		id			= input->GetLastTouchId();
+			const uint		id			= 0;
 			const real		move_step	= velocity * real(dt.Seconds());
 			
 			Platform::WindowDesc	wnd;

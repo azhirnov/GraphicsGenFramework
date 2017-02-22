@@ -52,7 +52,7 @@ namespace Graphics
 		Mesh	mesh( New<VertexBuffer>( ss ) );
 
 		CHECK( mesh.vertexBuffer->Create() );
-		CHECK( mesh.vertexBuffer->SetData( BinaryBuffer::From( quad_verts ), EBufferUsage::Static ) );
+		CHECK( mesh.vertexBuffer->SetData( BinaryCBuffer::From( quad_verts ), EBufferUsage::Static ) );
 
 		mesh.vertexBuffer->SetAttribs( desc, BytesU::SizeOf<float4>() );
 		mesh.vertexBuffer->SetPrimitive( EPrimitive::TriangleStrip );
@@ -107,13 +107,13 @@ namespace Graphics
 		Mesh	mesh( New<VertexBuffer>( ss ), New<IndexBuffer>( ss ) );
 
 		CHECK( mesh.vertexBuffer->Create() );
-		CHECK( mesh.vertexBuffer->SetData( BinaryBuffer::From( cube_verts ), EBufferUsage::Static ) );
+		CHECK( mesh.vertexBuffer->SetData( BinaryCBuffer::From( cube_verts ), EBufferUsage::Static ) );
 
 		mesh.vertexBuffer->SetAttribs( desc, BytesU::SizeOf<float3>() );
 		mesh.vertexBuffer->SetPrimitive( EPrimitive::Triangle );
 
 		CHECK( mesh.indexBuffer->Create() );
-		CHECK( mesh.indexBuffer->SetData( BinaryBuffer::From( indices ), EBufferUsage::Static ) );
+		CHECK( mesh.indexBuffer->SetData( BinaryCBuffer::From( indices ), EBufferUsage::Static ) );
 
 		mesh.indexBuffer->SetIndexType( EIndex::UShort );
 
@@ -208,13 +208,13 @@ namespace Graphics
 		Mesh	mesh( New<VertexBuffer>( ss ), New<IndexBuffer>( ss ) );
 
 		CHECK( mesh.vertexBuffer->Create() );
-		CHECK( mesh.vertexBuffer->SetData( BinaryBuffer::From( vertices ), EBufferUsage::Static ) );
+		CHECK( mesh.vertexBuffer->SetData( BinaryCBuffer::From( vertices ), EBufferUsage::Static ) );
 
 		mesh.vertexBuffer->SetAttribs( attr, BytesU::SizeOf<GridVertex>() );
 		mesh.vertexBuffer->SetPrimitive( EPrimitive::Triangle );
 
 		CHECK( mesh.indexBuffer->Create() );
-		CHECK( mesh.indexBuffer->SetData( BinaryBuffer::From( indices ), EBufferUsage::Static ) );
+		CHECK( mesh.indexBuffer->SetData( BinaryCBuffer::From( indices ), EBufferUsage::Static ) );
 
 		mesh.indexBuffer->SetIndexType( EIndex::UInt );
 
@@ -286,13 +286,13 @@ namespace Graphics
 		Mesh	mesh( New<VertexBuffer>( ss ), New<IndexBuffer>( ss ) );
 
 		CHECK( mesh.vertexBuffer->Create() );
-		CHECK( mesh.vertexBuffer->SetData( BinaryBuffer::From( vertices ), EBufferUsage::Static ) );
+		CHECK( mesh.vertexBuffer->SetData( BinaryCBuffer::From( vertices ), EBufferUsage::Static ) );
 
 		mesh.vertexBuffer->SetAttribs( attr, BytesU::SizeOf<GridVertex>() );
 		mesh.vertexBuffer->SetPrimitive( EPrimitive::Triangle );
 
 		CHECK( mesh.indexBuffer->Create() );
-		CHECK( mesh.indexBuffer->SetData( BinaryBuffer::From( indices ), EBufferUsage::Static ) );
+		CHECK( mesh.indexBuffer->SetData( BinaryCBuffer::From( indices ), EBufferUsage::Static ) );
 
 		mesh.indexBuffer->SetIndexType( EIndex::UInt );
 
@@ -361,13 +361,13 @@ namespace Graphics
 		Mesh	mesh( New<VertexBuffer>( ss ), New<IndexBuffer>( ss ) );
 
 		CHECK( mesh.vertexBuffer->Create() );
-		CHECK( mesh.vertexBuffer->SetData( BinaryBuffer::From( vertices ), EBufferUsage::Static ) );
+		CHECK( mesh.vertexBuffer->SetData( BinaryCBuffer::From( vertices ), EBufferUsage::Static ) );
 
 		mesh.vertexBuffer->SetAttribs( attr, BytesU::SizeOf<GridVertex>() );
 		mesh.vertexBuffer->SetPrimitive( EPrimitive::Triangle );
 
 		CHECK( mesh.indexBuffer->Create() );
-		CHECK( mesh.indexBuffer->SetData( BinaryBuffer::From( indices ), EBufferUsage::Static ) );
+		CHECK( mesh.indexBuffer->SetData( BinaryCBuffer::From( indices ), EBufferUsage::Static ) );
 
 		mesh.indexBuffer->SetIndexType( EIndex::UInt );
 

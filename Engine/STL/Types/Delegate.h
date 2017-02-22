@@ -43,8 +43,8 @@ namespace GXTypes
 			virtual bool		IsValid ()				const = 0;
 			virtual Ret			Call (Args...)			const = 0;
 			//virtual void		Swap (Interface_t *)	= 0;
-			virtual void		MoveTo (Buffer<char>)	= 0;
-			virtual void		CopyTo (Buffer<char>)	const = 0;
+			virtual void		MoveTo (BinaryBuffer)	= 0;
+			virtual void		CopyTo (BinaryBuffer)	const = 0;
 			virtual TypeId		TypeIdOf ()				const = 0;
 			virtual BytesU		Size ()					const = 0;
 		
@@ -114,12 +114,12 @@ namespace GXTypes
 			TypeId		TypeIdOf ()				const override	{ return GXTypes::TypeIdOf( *this ); }
 			BytesU		Size ()					const override	{ return SizeOf( *this ); }
 			
-			void MoveTo (Buffer<char> buf)
+			void MoveTo (BinaryBuffer buf) override
 			{
 				PlacementNew< Self >( buf, RVREF( *this ) );
 			}
 
-			void CopyTo (Buffer<char> buf) const override
+			void CopyTo (BinaryBuffer buf) const override
 			{
 				PlacementNew< Self >( buf, *this );
 			}
@@ -153,12 +153,12 @@ namespace GXTypes
 			TypeId		TypeIdOf ()			const override	{ return GXTypes::TypeIdOf( *this ); }
 			BytesU		Size ()				const override	{ return SizeOf( *this ); }
 			
-			void MoveTo (Buffer<char> buf)
+			void MoveTo (BinaryBuffer buf) override
 			{
 				PlacementNew< Self >( buf, RVREF( *this ) );
 			}
 
-			void CopyTo (Buffer<char> buf) const override
+			void CopyTo (BinaryBuffer buf) const override
 			{
 				PlacementNew< Self >( buf, *this );
 			}
@@ -192,12 +192,12 @@ namespace GXTypes
 			TypeId		TypeIdOf ()			const override	{ return GXTypes::TypeIdOf( *this ); }
 			BytesU		Size ()				const override	{ return SizeOf( *this ); }
 			
-			void MoveTo (Buffer<char> buf)
+			void MoveTo (BinaryBuffer buf) override
 			{
 				PlacementNew< Self >( buf, RVREF( *this ) );
 			}
 
-			void CopyTo (Buffer<char> buf) const override
+			void CopyTo (BinaryBuffer buf) const override
 			{
 				PlacementNew< Self >( buf, *this );
 			}
@@ -224,7 +224,7 @@ namespace GXTypes
 		
 		union _Storage_t {
 			ulong	maxAlign;
-			char	buf[ BufSize ];
+			ubyte	buf[ BufSize ];
 		};
 
 
@@ -300,7 +300,7 @@ namespace GXTypes
 	private:
 		forceinline _Interface_t const *	_Internal ()			const	{ return (_Interface_t const*) _storage.buf; }
 		forceinline _Interface_t *			_Internal ()					{ return (_Interface_t *) _storage.buf; }
-		forceinline Buffer<char>			_Data ()						{ return Buffer<char>( _storage.buf ); }
+		forceinline BinaryBuffer			_Data ()						{ return BinaryBuffer( _storage.buf ); }
 		forceinline bool					_IsCreated ()			const	{ return _storage.maxAlign != 0; }
 
 		forceinline void _Delete ()

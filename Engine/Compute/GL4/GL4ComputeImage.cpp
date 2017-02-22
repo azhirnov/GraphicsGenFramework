@@ -62,7 +62,7 @@ namespace Compute
 =================================================
 */
 	bool GL4ComputeImage::Create (const uint4 &dim, ETexture::type imageType, EPixelFormat::type format,
-								  EMemoryAccess::type flags, BinaryBuffer data,
+								  EMemoryAccess::type flags, BinaryCBuffer data,
 								  BytesU xAlign, BytesU xyAlign)
 	{
 		//_Destroy();
@@ -114,7 +114,7 @@ namespace Compute
 	SetImage
 =================================================
 */
-	bool GL4ComputeImage::SetImage (BinaryBuffer data, const uint3 &size, const uint4 &offset,
+	bool GL4ComputeImage::SetImage (BinaryCBuffer data, const uint3 &size, const uint4 &offset,
 									BytesU xAlign, BytesU xyAlign)
 	{
 		CHECK_ERR( _shared );
@@ -128,8 +128,7 @@ namespace Compute
 	GetImage
 =================================================
 */
-	bool GL4ComputeImage::GetImage (OUT Buffer<ubyte> data, const uint3 &size, const uint4 &offset,
-									BytesU xAlign, BytesU xyAlign)
+	bool GL4ComputeImage::GetImage (OUT BinaryBuffer data, const uint3 &size, const uint4 &offset, BytesU xAlign, BytesU xyAlign)
 	{
 		CHECK_ERR( _shared );
 		CHECK_ERR( All( size == Texture::Utils::ConvertSize( ImageType(), Dimension() ) ) );

@@ -23,7 +23,7 @@
 #define GRAPHICS_API_OPENGL		450		// 4.x
 //#define GRAPHICS_API_OPENGLES	200		// 2.x		// not supported
 //#define GRAPHICS_API_DIRECTX	110		// 11.x		// not supported
-//#define GRAPHICS_API_VULKAN	100		// 1.x		// not supported
+//#define GRAPHICS_API_VULKAN		100		// 1.x		// not supported
 
 // Compute
 //#define COMPUTE_API_OPENCL		120		// 1.x or 2.x

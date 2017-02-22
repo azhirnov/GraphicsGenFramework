@@ -41,11 +41,12 @@ namespace ShaderEditor
 	private:
 		TileInitializer		_tileInitializer;
 		RenderState			_renderState;
+		bool				_wireframe;
 
 
 	// methods
 	private:
-		static uint	_GetTileMeshVertices ()		{ return 257; }
+		static uint	_GetTileMeshVertices ()		{ return 4 + 2; }
 
 	public:
 		explicit

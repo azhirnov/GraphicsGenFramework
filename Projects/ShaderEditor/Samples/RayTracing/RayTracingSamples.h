@@ -17,7 +17,12 @@ namespace ShaderEditor
 	private:
 		IGeneratorPtr			_imageGen;
 		ComputeImagePtr			_image;
-		uint					_curShader;
+
+		uint					_currentGenerator;
+		uint					_currentShader;
+
+		TimeD					_prevGlobalTime;
+		bool					_regenerate;
 
 		ScaleBiasController		_controller;
 
@@ -25,7 +30,7 @@ namespace ShaderEditor
 	// methods
 	private:
 
-		IGeneratorPtr _ChooseShader (uint index) const;
+		IGeneratorPtr _ChooseShader (uint &genIndex, uint &shIndex) const;
 
 	public:
 		explicit

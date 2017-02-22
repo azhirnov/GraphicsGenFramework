@@ -4,6 +4,12 @@
 
 #if defined( GRAPHICS_API_OPENGL )
 
+# if 0
+#	define CHECK_GLSTATE( _condition_ )		_condition_
+# else
+#	define CHECK_GLSTATE( _condition_ )
+# endif
+
 #include "Engine/Graphics/Texture/Sampler.h"
 #include "Engine/Graphics/VertexAttribs/VertexAttribs.h"
 
@@ -337,13 +343,13 @@ namespace Graphics
 	{
 		const uint	unit = GetMaxTextureUnits()-1;
 		
-		if ( _activeUnit != unit )
+		CHECK_GLSTATE( if ( _activeUnit != unit ) )
 		{
 			_activeUnit = unit;
 			GL_CALL( glActiveTexture( GL_TEXTURE0 + _activeUnit ) );
 		}
 		
-		if ( _textureUnits[ _activeUnit ].binded != tex )
+		CHECK_GLSTATE( if ( _textureUnits[ _activeUnit ].binded != tex ) )
 		{
 			GL_CALL( glBindTexture( tex.Target(), tex.Id() ) );
 			_textureUnits[ _activeUnit ].binded = tex;
@@ -357,11 +363,11 @@ namespace Graphics
 */
 	void GL4StateManager::BindTexture (const TextureID &id, uint unit)
 	{
-		if ( _textureUnits[ unit ].binded == id )
-			return;
-		
-		GL_CALL( glBindMultiTexture( unit, id.Target(), id.Id() ) );
-		_textureUnits[ unit ].binded = id;
+		CHECK_GLSTATE( if ( _textureUnits[ unit ].binded != id ) )
+		{
+			GL_CALL( glBindMultiTexture( unit, id.Target(), id.Id() ) );
+			_textureUnits[ unit ].binded = id;
+		}
 	}
 	
 /*
@@ -392,8 +398,10 @@ namespace Graphics
 	{
 		_ImageUnit &	img = _imageUnits[ unit ];
 
+		CHECK_GLSTATE(
 		if ( img.binded == id )
 			return;
+		)
 
 		CHECK( EPixelFormat::IsSupportedForImage( format ) );
 		
@@ -437,8 +445,10 @@ namespace Graphics
 		SamplerID&	curr_samp	= _textureUnits[ unit ].sampler;
 		SamplerID	new_samp	= sampler;
 
+		CHECK_GLSTATE(
 		if ( curr_samp == new_samp )
 			return;
+		)
 
 		curr_samp = new_samp;
 		GL_CALL( glBindSampler( unit, new_samp._id ) );
@@ -476,11 +486,13 @@ namespace Graphics
 
 		GL4VertexAttribsID::_VertBuf &	buf = va._vb[ bind_idx ];
 
+		CHECK_GLSTATE(
 		if ( buf.id      == vb.Id() and
 			 buf.offset  == offset  and
 			 buf.stride  == stride  and
 			 buf.divisor == divisor )
 			return;
+		)
 
 		buf.id      = vb.Id();
 		buf.offset  = (uint) usize(offset);
@@ -502,8 +514,10 @@ namespace Graphics
 		
 		_BindVertexArray( va, attribs->GetAttribsState() );
 
+		CHECK_GLSTATE(
 		if ( va._indexBuf == ib._id )
 			return;
+		)
 
 		va._indexBuf = ib._id;
 		GL_CALL( glVertexArrayElementBuffer( va._id, va._indexBuf ) );
@@ -552,8 +566,10 @@ namespace Graphics
 */
 	void GL4StateManager::_BindVertexArray (const VertexAttribsID &va, const VertexAttribsState &state)
 	{
+		CHECK_GLSTATE(
 		if ( _currentVA == va._id )
 			return;
+		)
 
 		_attribsState	= state;
 		_currentVA		= va._id;
@@ -606,11 +622,12 @@ namespace Graphics
 	{
 		RenderState::ColorBufferState &	cb = _renderState.colors[ index ];
 
+		CHECK_GLSTATE(
 		if ( cb.blendFuncSrcRGB == srcRGB and cb.blendFuncSrcA == srcA and
 			 cb.blendFuncDstRGB == dstRGB and cb.blendFuncDstA )
 		{
 			return;
-		}
+		})
 
 		cb.blendFuncSrcRGB	= srcRGB;
 		cb.blendFuncSrcA	= srcA;
@@ -629,8 +646,10 @@ namespace Graphics
 	{
 		RenderState::ColorBufferState &	cb = _renderState.colors[ index ];
 
+		CHECK_GLSTATE(
 		if ( cb.blendModeRGB == modeRGB and cb.blendModeA == modeA )
 			return;
+		)
 
 		cb.blendModeRGB	= modeRGB;
 		cb.blendModeA	= modeA;
@@ -647,8 +666,10 @@ namespace Graphics
 	{
 		RenderState::ColorBufferState &	cb = _renderState.colors[ index ];
 
+		CHECK_GLSTATE(
 		if ( All( cb.colorMask == mask ) )
 			return;
+		)
 
 		cb.colorMask = mask;
 
@@ -662,8 +683,10 @@ namespace Graphics
 */
 	void GL4StateManager::BlendColor (const color4f &color)
 	{
+		CHECK_GLSTATE(
 		if ( All( _renderState.blendColor == color ) )
 			return;
+		)
 
 		_renderState.blendColor = color;
 
@@ -679,8 +702,10 @@ namespace Graphics
 	{
 		RenderState::ColorBufferState &	cb = _renderState.colors[ index ];
 
+		CHECK_GLSTATE(
 		if ( cb.blend == enabled )
 			return;
+		)
 
 		cb.blend = enabled;
 
@@ -715,8 +740,10 @@ namespace Graphics
 	{
 		RenderState::DepthBufferState &	db = _renderState.depth;
 
+		CHECK_GLSTATE(
 		if ( db.test == enabled )
 			return;
+		)
 
 		db.test = enabled;
 
@@ -737,8 +764,10 @@ namespace Graphics
 	{
 		RenderState::DepthBufferState &	db = _renderState.depth;
 
+		CHECK_GLSTATE(
 		if ( db.write == enabled )
 			return;
+		)
 
 		db.write = enabled;
 
@@ -754,8 +783,10 @@ namespace Graphics
 	{
 		RenderState::DepthBufferState &	db = _renderState.depth;
 
+		CHECK_GLSTATE(
 		if ( db.clamp == enabled )
 			return;
+		)
 
 		db.clamp = enabled;
 
@@ -776,8 +807,10 @@ namespace Graphics
 	{
 		RenderState::DepthBufferState &	db = _renderState.depth;
 
+		CHECK_GLSTATE(
 		if ( db.func == func )
 			return;
+		)
 
 		db.func = func;
 
@@ -793,8 +826,10 @@ namespace Graphics
 	{
 		RenderState::DepthBufferState &	db = _renderState.depth;
 
+		CHECK_GLSTATE(
 		if ( All( db.range == range ) )
 			return;
+		)
 
 		db.range = range;
 
@@ -823,8 +858,13 @@ namespace Graphics
 	{
 		RenderState::StencilBufferState &	sb = _renderState.stencil;
 
-		if ( sb.func == func and sb.funcRef == ref and sb.funcMask == mask )
+		CHECK_GLSTATE(
+		if ( sb.func	 == func and
+			 sb.funcRef	 == ref  and
+			 sb.funcMask == mask )
+		{
 			return;
+		})
 
 		sb.func		= func;
 		sb.funcRef	= ref;
@@ -842,8 +882,13 @@ namespace Graphics
 	{
 		RenderState::StencilBufferState &	sb = _renderState.stencil;
 
-		if ( sb.sfail == sfail and sb.dfail == dfail and sb.dppass == dppass )
+		CHECK_GLSTATE(
+		if ( sb.sfail  == sfail and
+			 sb.dfail  == dfail and
+			 sb.dppass == dppass )
+		{
 			return;
+		})
 
 		sb.sfail	= sfail;
 		sb.dfail	= dfail;
@@ -861,8 +906,10 @@ namespace Graphics
 	{
 		RenderState::StencilBufferState &	sb = _renderState.stencil;
 
+		CHECK_GLSTATE(
 		if ( sb.mask == mask )
 			return;
+		)
 
 		sb.mask = mask;
 
@@ -878,8 +925,10 @@ namespace Graphics
 	{
 		RenderState::StencilBufferState &	sb = _renderState.stencil;
 
+		CHECK_GLSTATE(
 		if ( sb.test == enabled )
 			return;
+		)
 
 		sb.test = enabled;
 
@@ -900,7 +949,7 @@ namespace Graphics
 	{
 		RenderState::CullMode &	cm = _renderState.cullMode;
 
-		if ( cm.enabled != mode.enabled )
+		CHECK_GLSTATE( if ( cm.enabled != mode.enabled ) )
 		{
 			cm.enabled = mode.enabled;
 
@@ -913,12 +962,12 @@ namespace Graphics
 			}
 		}
 
-		if ( cm.cullBackFace != mode.cullBackFace )
+		CHECK_GLSTATE( if ( cm.cullBackFace != mode.cullBackFace ) )
 		{
 			GL_CALL( glCullFace( mode.cullBackFace ? GL_BACK : GL_FRONT ) );
 		}
 
-		if ( cm.frontFaceCCW != mode.frontFaceCCW )
+		CHECK_GLSTATE( if ( cm.frontFaceCCW != mode.frontFaceCCW ) )
 		{
 			GL_CALL( glFrontFace( mode.frontFaceCCW ? GL_CCW : GL_CW ) );
 		}
@@ -944,8 +993,10 @@ namespace Graphics
 */
 	void GL4StateManager::PolygonMode (EPolygonMode::type mode)
 	{
+		CHECK_GLSTATE(
 		if ( _renderState.polygon.mode == mode )
 			return;
+		)
 		
 		_renderState.polygon.mode = mode;
 
@@ -961,7 +1012,7 @@ namespace Graphics
 	{
 		RenderState::PolygonStates &	ps = _renderState.polygon;
 
-		if ( ps.offsetEnabled != enabled )
+		CHECK_GLSTATE( if ( ps.offsetEnabled != enabled ) )
 		{
 			ps.offsetEnabled = enabled;
 
@@ -980,9 +1031,13 @@ namespace Graphics
 			}
 		}
 
-		if ( Equals( ps.offsetFactor, factor ) and Equals( ps.offsetUnits, units ) )
+		CHECK_GLSTATE(
+		if ( Equals( ps.offsetFactor, factor ) and
+			 Equals( ps.offsetUnits, units ) )
+		{
 			return;
-		
+		})
+
 		ps.offsetFactor	= factor;
 		ps.offsetUnits	= units;
 
@@ -1014,8 +1069,10 @@ namespace Graphics
 	{
 		RenderState::PointState &	ps = _renderState.point;
 
+		CHECK_GLSTATE(
 		if ( Equals( ps.pointSize, value ) )
 			return;
+		)
 
 		GL_CALL( glPointSize( value ) );
 		ps.pointSize = value;
@@ -1030,8 +1087,10 @@ namespace Graphics
 	{
 		RenderState::PointState &	ps = _renderState.point;
 
+		CHECK_GLSTATE(
 		if ( ps.programPointSize == enabled )
 			return;
+		)
 		
 		if ( enabled ) {
 			GL_CALL( glEnable( GL_PROGRAM_POINT_SIZE ) );
@@ -1051,8 +1110,10 @@ namespace Graphics
 	{
 		RenderState::PointState &	ps = _renderState.point;
 
+		CHECK_GLSTATE(
 		if ( Equals( ps.fadeThresholdSize, value ) )
 			return;
+		)
 
 		GL_CALL( glPointParameterf( GL_POINT_FADE_THRESHOLD_SIZE, value ) );
 		ps.fadeThresholdSize = value;
@@ -1067,8 +1128,10 @@ namespace Graphics
 	{
 		RenderState::PointState &	ps = _renderState.point;
 
+		CHECK_GLSTATE(
 		if ( ps.spriteCoordOrigin == value )
 			return;
+		)
 		
 		GL_CALL( glPointParameteri( GL_POINT_SPRITE_COORD_ORIGIN, GL4Enum( value ) ) );
 		ps.spriteCoordOrigin = value;
@@ -1081,8 +1144,10 @@ namespace Graphics
 */
 	void GL4StateManager::EnableFramebufferSRGB (bool enabled)
 	{
+		CHECK_GLSTATE(
 		if ( _framebufferSRGB == enabled )
 			return;
+		)
 
 		_framebufferSRGB = enabled;
 
@@ -1101,7 +1166,7 @@ namespace Graphics
 */
 	void GL4StateManager::_SetTessellationPatch (uint size)
 	{
-		if ( _tessellationPatch == size or size == 0 )
+		if ( CHECK_GLSTATE( _tessellationPatch == size or ) size == 0 )
 			return;
 
 		_tessellationPatch = size;
@@ -1115,7 +1180,7 @@ namespace Graphics
 */
 	void GL4StateManager::BindProgram (const ProgramID &id)
 	{
-		if ( id._id != _currentProgram._id )
+		CHECK_GLSTATE( if ( id._id != _currentProgram._id ) )
 		{
 			GL_CALL( glUseProgram( id._id ) );
 		}
@@ -1141,8 +1206,15 @@ namespace Graphics
 		const _Buffer		buf( id, (usize)offset, (usize)size );
 		const GLenum		targ = GL4Enum( target );
 
+		GLint	curr_index = 0;
+		GL_CALL( glGetIntegeri_v( GL4EnumBinding( target ), index, &curr_index ) );
+
+		CHECK_GLSTATE(
 		if ( buffers[ index ] == buf )
+		{
+			ASSERT( curr_index == id.Id() );
 			return true;
+		})
 		
 		if ( offset == 0 and size == BytesU(-1) ) {
 			GL_CALL( glBindBufferBase( targ, index, id.Id() ) );
@@ -1216,8 +1288,10 @@ namespace Graphics
 */
 	void GL4StateManager::BindRenderTarget (const RenderTargetID &rt)
 	{
+		CHECK_GLSTATE(
 		if ( rt._id == _currentRenderTarget )
 			return;
+		)
 
 		_currentRenderTarget = rt._id;
 		GL_CALL( glBindFramebuffer( GL_DRAW_FRAMEBUFFER, _currentRenderTarget ) );
@@ -1259,7 +1333,7 @@ namespace Graphics
 
 	void GL4StateManager::Viewport (const RectU &value)
 	{
-		if ( value != _viewportStack.Get() )
+		CHECK_GLSTATE( if ( value != _viewportStack.Get() ) )
 		{
 			_viewportStack.Set( value );
 
@@ -1479,6 +1553,70 @@ namespace Graphics
 
 		GL_CALL( glDispatchComputeGroupSizeARB( (GLuint)groupSize.x, (GLuint)groupSize.y, (GLuint)groupSize.z,
 												  (GLuint)localSize.x, (GLuint)localSize.y, (GLuint)localSize.z ) );
+	}
+	
+/*
+=================================================
+	Reset
+=================================================
+*/
+	void GL4StateManager::Reset ()
+	{
+		_ResetViewportStack();
+
+	
+		// reset states
+		_renderState		= RenderState();	// TODO: invalidate
+		_tessellationPatch	= 0;
+
+
+		// unbind textures and samples
+		FOR( i, _textureUnits )
+		{
+			GL_CALL( glBindMultiTexture( i, GL4Enum( ETexture::Tex2D ), 0 ) );
+			GL_CALL( glBindSampler( i, 0 ) );
+
+			_textureUnits[i] = _TextureUnit();
+		}
+
+
+		// unbind images
+		FOR( i, _imageUnits )
+		{
+			GL_CALL( glBindImageTexture( i, 0, 0, false, 0, GL4Enum( EMemoryAccess::Read ), GL4Enum( EPixelFormat::RGBA8_UNorm ) ) );
+
+			_imageUnits[i] = _ImageUnit();
+		}
+
+
+		// unbind vertex attribs
+		_currentVA		= 0;
+		_attribsState	= VertexAttribsState();
+
+
+		// unbind program
+		_currentProgram	= ProgramID();
+		
+
+		// unbind buffers
+		FOR( i, _buffers )
+		{
+			const GLenum	targ = GL4Enum( EBufferTarget::type(i) );
+
+			if ( i == EBufferTarget::TransformFeedback )
+				continue;
+
+			FOR( j, _buffers[i] )
+			{
+				_buffers[i][j] = _Buffer();
+
+				GL_CALL( glBindBufferBase( targ, GLuint(i), 0 ) );
+			}
+		}
+
+		
+		// unbind framebuffer
+		_currentRenderTarget = 0;
 	}
 
 

@@ -1,0 +1,144 @@
+
+#include "Common.glcs"
+
+DECL_IMAGE( image2D, rgba8, writeonly, outImage );
+
+uniform float	unGlobalTime;
+
+
+#define RADIUS 	2	// searching radius
+
+
+float Hash11i (int n)	{ n = ( n * (n * n * 15731 + 789221) + 1376312589 ); return 1.0 - abs( float(n) ) / 1073741824.0; }
+float2 Hash22 (float2 p)	{ return fract( sin( float2( dot( p, float2(127.1,311.7) ), dot( p, float2(269.5,183.3) ) ) ) * 43758.5453 ); }
+float Hash21 (float2 p)	{ return fract( sin( p.x + p.y * 64.0 ) * 104003.9); }
+float Hash31 (float3 p)	{ return fract( sin( p.x + p.y * 37.0 + p.z * 521.0 ) * 110003.9 ); }
+float2 Hash32 (float3 p)	{ return Hash22( float2( Hash21(p.xz), Hash21(p.zy) ) ); }
+
+
+int2 OffsetForVoronoiCell (int2 local, int2 global)
+{
+    int2 point = local + global;
+    
+    //const int step1 = 8;
+    const int step1 = 4;
+    
+   	//return int2( IsEven( int(point.y) ) ? point.x : point.x / step1 * step1,
+    //   	          IsEven( int(point.x) ) ? point.y : point.y / step1 * step1 ) - global;
+    
+    return local;
+}
+
+float2 CenterOfVoronoiCell (float2 point)
+{
+	//return point + float2( IsEven( int(point.y) ) ? 0.5 : 0.0, 0.0 ); // hex
+    
+    return point;	// quad
+}
+
+float2 AnimatedCenterOfVoronoiCell (float2 point, float time, float maxOffset)
+{
+    return CenterOfVoronoiCell( point ) +
+    		(0.5 + 0.5 * sin( time * Hash22( point ) * 6.28 * 0.1 )) * maxOffset;
+    		//Hash22( point ) * maxOffset;
+}
+
+float ValueOfVoronoiCell (float2 coord)
+{
+    return abs( Hash21( coord ) );
+}
+
+
+float2 VoronoiPass1 (in float2 coord, float freq, float time)
+{
+    const int radius = RADIUS;
+    const float maxScale = float(radius-1);
+    
+    float2 point = coord * freq;
+    float2 ipoint = floor( point );
+    float md = 2147483647.0;
+    float2 candidate = float2(0);
+    
+	for (int y = -radius; y <= radius; ++y)
+	for (int x = -radius; x <= radius; ++x)
+	{
+        float2 cur = float2( OffsetForVoronoiCell( int2(x, y), int2(ipoint) ) );
+		float2 c = AnimatedCenterOfVoronoiCell( cur + ipoint, time, maxScale );
+		float d = distance( c, point );
+        
+		if ( d < md )
+		{
+			md = d;
+			candidate = float2(cur);
+		}
+	}
+    
+	return float2( md, ValueOfVoronoiCell( candidate + ipoint ) );
+}
+
+
+float2 VoronoiPass2 (in float2 coord, float freq, float time)
+{
+    const int radius = RADIUS;
+    const float maxScale = float(radius-1);
+    
+    float2 point = coord * freq;
+    float2 ipoint = floor( point );
+    float md = 2147483647.0;
+    float2 center = float2(0.0);
+    float2 candidate = float2(0.0);
+    
+	for (int y = -radius; y <= radius; ++y)
+	for (int x = -radius; x <= radius; ++x)
+	{
+        float2 cur = float2( OffsetForVoronoiCell( int2(x, y), int2(ipoint) ) );
+		float2 c = AnimatedCenterOfVoronoiCell( cur + ipoint, time, maxScale );
+		float d = distance( c, point );
+        
+		if ( d < md )
+		{
+			md = d;
+            center = c;
+			candidate = float2(cur);
+		}
+	}
+    
+    const float freq2 = 0.2;
+    //const float time2 = 123.0;
+	const float time2 = time * 0.1 + 4.78923;
+    
+    float2 v1 = VoronoiPass1( candidate + ipoint + float2(0.5), freq2, time2 );
+    //float2 v1 = VoronoiPass1( center, freq2, time2 );
+    //float2 v2 = VoronoiPass1( point, freq2, time2 );
+    
+    const float ref = 0.7;
+    float color = 0.0;
+    
+    //if ( v1.y > ref && v2.y > ref )    color = 0.8;	else
+    if ( v1.y > ref )			        color = 0.5;    else
+    //if ( v2.y > ref )			        color = 0.2;	else
+        								color = 0.0;
+    
+	return float2( md, color );
+}
+
+
+float2 IrregularVoronoi (in float2 coord, float time)
+{
+# if 0
+    float2 v = VoronoiPass1( coord, 100.0, time );
+    return float2( v.x, v.y > 0.7 ? 0.5 : 0.0 );
+# else
+    return VoronoiPass2( coord, 100.0, time );
+# endif
+}
+
+
+void main ()
+{
+	int2	img_coord	= GetGlobalCoord().xy;
+	float2	coord		= GetGlobalCoordUNormCorrected();
+    float2	v			= IrregularVoronoi( coord, unGlobalTime );
+
+	imageStore( outImage, img_coord, HSVtoRGBA(float3( v.y, 1.0, v.x ), 1.0) );
+}

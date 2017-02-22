@@ -466,7 +466,7 @@ namespace Graphics
 	{
 		String	str;
 
-		str << "Program \"" << filename << "\"linking "
+		str << "Program \"" << filename << "\" linking "
 			<< (linked ? "message" : "error") << "\n---------------\n" << log;
 
 		// TODO: parse errors

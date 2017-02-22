@@ -72,7 +72,9 @@ namespace ShaderEditor
 
 
 			// particle mode
-			#if PARTICLE_DRAW_MODE == 0 or PARTICLE_DRAW_MODE == 1
+			#if PARTICLE_DRAW_MODE == 0 or \
+				PARTICLE_DRAW_MODE == 1
+				// none
 
 			#elif PARTICLE_DRAW_MODE == 2
 				_renderState.point.programPointSize		= true;

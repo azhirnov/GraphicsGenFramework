@@ -32,14 +32,16 @@ namespace GXMath
 	private:
 		quat_t		_orientation;
 		vec_t		_position;
-		vec_t		_scale;
+		//vec_t		_scale;
+		value_t		_scale;
 
 
 	// methods
 	public:
 		Transformation (GX_DEFCTOR) : _scale(T(1)) {}
 		Transformation (const Self &tr);
-		Transformation (const vec_t &pos, const quat_t &orient, const vec_t &scale = vec_t(T(1)));
+		Transformation (const vec_t &pos, const quat_t &orient, const T &scale = T(1));
+		//Transformation (const vec_t &pos, const quat_t &orient, const vec_t &scale = vec_t(T(1)));
 		explicit Transformation (const mat_t &mat);
 
 		vec_t		 &	Position ()									{ return _position; }
@@ -48,7 +50,8 @@ namespace GXMath
 
 		const vec_t	 &	Position ()		const						{ return _position; }
 		const quat_t &	Orientation ()	const						{ return _orientation; }
-		const vec_t  &	GetScale ()		const						{ return _scale; }
+		//const vec_t  &	GetScale ()		const						{ return _scale; }
+		value_t			GetScale ()		const						{ return _scale; }
 
 		Self &	operator += (const Self &right);
 		Self	operator +  (const Self &right)	const;
@@ -103,7 +106,7 @@ namespace GXMath
 	{}
 	
 	template <typename T>
-	inline Transformation<T>::Transformation (const Vec<T,3> &pos, const Quaternion<T> &orient, const vec_t &scale) :
+	inline Transformation<T>::Transformation (const Vec<T,3> &pos, const Quaternion<T> &orient, const T &scale) :
 		_position(pos), _orientation(orient), _scale(scale)
 	{}
 
@@ -198,9 +201,11 @@ namespace GXMath
 				_orientation.y	!= right._orientation.y	?	_orientation.y	> right._orientation.y	:
 				_orientation.z	!= right._orientation.z	?	_orientation.z	> right._orientation.z	:
 				_orientation.w	!= right._orientation.w	?	_orientation.w	> right._orientation.w	:
-				_scale.x		!= right._scale.x		?	_scale.x		> right._scale.x		:
-				_scale.y		!= right._scale.y		?	_scale.y		> right._scale.y		:
-															_scale.z		> right._scale.z;
+															_scale			> _scale;
+
+				//_scale.x		!= right._scale.x		?	_scale.x		> right._scale.x		:
+				//_scale.y		!= right._scale.y		?	_scale.y		> right._scale.y		:
+				//											_scale.z		> right._scale.z;
 	}
 	
 /*
@@ -218,9 +223,11 @@ namespace GXMath
 				_orientation.y	!= right._orientation.y	?	_orientation.y	< right._orientation.y	:
 				_orientation.z	!= right._orientation.z	?	_orientation.z	< right._orientation.z	:
 				_orientation.w	!= right._orientation.w	?	_orientation.w	< right._orientation.w	:
-				_scale.x		!= right._scale.x		?	_scale.x		< right._scale.x		:
-				_scale.y		!= right._scale.y		?	_scale.y		< right._scale.y		:
-															_scale.z		< right._scale.z;
+															_scale			< _scale;
+
+				//_scale.x		!= right._scale.x		?	_scale.x		< right._scale.x		:
+				//_scale.y		!= right._scale.y		?	_scale.y		< right._scale.y		:
+				//											_scale.z		< right._scale.z;
 	}
 	
 /*
@@ -244,7 +251,7 @@ namespace GXMath
 	{
 		matrix = Matrix<T,4,4>::FromQuat( Orientation() );
 		matrix.Translation() = _position - cameraPos;
-		matrix = matrix * mat_t::Scale( _scale );
+		matrix = matrix * mat_t::Scale( vec_t( _scale ) );
 	}
 	
 /*
@@ -311,7 +318,7 @@ namespace GXMath
 	template <typename T>
 	inline bool Transformation<T>::IsZero () const
 	{
-		return GXMath::IsZero( _position ) and GXMath::IsZero( _orientation ) and All( Equals( _scale, vec_t(T(1)) ) );
+		return GXMath::IsZero( _position ) and GXMath::IsZero( _orientation ) and Equals( _scale, T(1) );
 	}
 	
 /*
@@ -367,7 +374,7 @@ namespace GXMath
 	template <typename T2>
 	inline Transformation<T2> Transformation<T>::Convert () const
 	{
-		return Transformation<T2>( _position.Convert<T2>(), _orientation.Convert<T2>(), _scale.Convert<T2>() );
+		return Transformation<T2>( _position.Convert<T2>(), _orientation.Convert<T2>(), T2(_scale) );
 	}
 
 

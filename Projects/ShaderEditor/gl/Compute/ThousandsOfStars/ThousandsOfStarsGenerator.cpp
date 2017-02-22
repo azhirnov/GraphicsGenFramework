@@ -63,7 +63,10 @@ namespace ShaderEditor
 			_globalTime = arg.Get<TimeD>();
 			return true;
 		}
-			
+		
+		if ( name == "timeDelta" and arg.IsType<TimeD>() )
+			return false;
+
 		RETURN_ERR( "Unknown argument name or unsupported type!" );
 	}
 	

@@ -41,7 +41,7 @@ namespace Compute
 =================================================
 */
 	bool CL2ComputeImage::Create (const uint4 &dim, ETexture::type imageType, EPixelFormat::type format,
-								  EMemoryAccess::type flags, BinaryBuffer data,
+								  EMemoryAccess::type flags, BinaryCBuffer data,
 								  BytesU xAlign, BytesU xyAlign)
 	{
 		using namespace cl;
@@ -185,7 +185,7 @@ namespace Compute
 	SetImage
 =================================================
 */
-	bool CL2ComputeImage::SetImage (BinaryBuffer data, const uint3 &size, const uint4 &offset,
+	bool CL2ComputeImage::SetImage (BinaryCBuffer data, const uint3 &size, const uint4 &offset,
 									BytesU xAlign, BytesU xyAlign)
 	{
 		using namespace cl;
@@ -229,7 +229,7 @@ namespace Compute
 	GetImage
 =================================================
 */
-	bool CL2ComputeImage::GetImage (OUT Buffer<ubyte> data, const uint3 &size, const uint4 &offset,
+	bool CL2ComputeImage::GetImage (OUT BinaryBuffer data, const uint3 &size, const uint4 &offset,
 									BytesU xAlign, BytesU xyAlign)
 	{
 		using namespace cl;
@@ -385,7 +385,7 @@ namespace Compute
 	_FillImage
 =================================================
 */
-	bool CL2ComputeImage::_FillImage (BinaryBuffer pattern)
+	bool CL2ComputeImage::_FillImage (BinaryCBuffer pattern)
 	{
 		using namespace cl;
 		

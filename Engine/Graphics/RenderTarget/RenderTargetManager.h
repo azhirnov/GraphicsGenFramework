@@ -34,7 +34,7 @@ namespace Graphics
 		bool Initialize ();
 		void Deinitialize ();
 		
-		bool ScreenShot (StringCRef filename, ESaveImageFormat::type format = ESaveImageFormat::PNG, bool makeUnique = true);
+		bool MakeScreenShot (StringCRef filename, ESaveImageFormat::type format = ESaveImageFormat::PNG, bool makeUnique = true);
 
 		bool SaveRenderTargetImage (const RenderTargetPtr &rt, StringCRef filename, ESaveImageFormat::type format, bool makeUnique = true);
 

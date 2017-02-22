@@ -12,9 +12,25 @@ namespace ShaderEditor
 		struct ShaderData
 		{
 			real4x4		mvp;
+			real4x4		model;
+			//real3x4		normalMat;
+			real3		lightDir;
+			real		maxTessLevel;
+			real		heightScale;
+			real		detailLevel;
+			real		scrAspect;
 
 			ShaderData ()
-			{}
+			{
+				mvp				= real4x4::Identity();
+				model			= real4x4::Identity();
+				//normalMat		= real3x4::Identity();
+				lightDir		= real3( 0.0f, 0.0f, -1.0f ).Normalized();
+				maxTessLevel	= 20.0f;
+				heightScale		= 1.0f;
+				detailLevel		= 100.0f;
+				scrAspect		= 1.0f;
+			}
 		};
 
 		typedef UniformBlock< ShaderData >		ShaderUB;
@@ -24,8 +40,10 @@ namespace ShaderEditor
 	private:
 		ShaderProgramPtr	_program;
 		ShaderUB			_landscapeUB;
-		TextureUniform		_unDiffuseTex;
-		TexturePtr			_diffuseTex;
+		TextureUniform		_unDiffuseMap;
+		TextureUniform		_unDisplacementMap;
+		TexturePtr			_diffuseMap;
+		TexturePtr			_displacementMap;
 
 
 	// methods
@@ -35,16 +53,18 @@ namespace ShaderEditor
 
 		void Active () override
 		{
-			_unDiffuseTex.Update( _diffuseTex, 0 );
+			_unDiffuseMap.Update( _diffuseMap, 0 );
+			_unDisplacementMap.Update( _displacementMap, 1 );
 
 			_program->Bind();
 		}
 
 		bool SetTextures (Buffer<const TexturePtr> textures) override
 		{
-			CHECK_ERR( textures.Count() == 1 );
+			CHECK_ERR( textures.Count() == 2 );
 
-			_diffuseTex = textures[0];
+			_diffuseMap			= textures[0];
+			_displacementMap	= textures[1];
 			return true;
 		}
 
@@ -58,6 +78,27 @@ namespace ShaderEditor
 				return true;
 			}
 
+			if ( name == "mv" )
+			{
+				return true;
+			}
+
+			if ( name == "model" )
+			{
+				CHECK_ERR( data.IsType< real4x4 >() );
+
+				_landscapeUB.Get().model = data.Get< real4x4 >();
+				return true;
+			}
+
+			if ( name == "normal" )
+			{
+				/*CHECK_ERR( data.IsType< real3x3 >() );
+
+				_landscapeUB.Get().normalMat.Inject( data.Get< real3x3 >() );*/
+				return true;
+			}
+
 			RETURN_ERR( "unknown shader variable name!" );
 		}
 
@@ -67,7 +108,8 @@ namespace ShaderEditor
 
 			CHECK_ERR( _program->Load(
 				filename,
-				ShaderProgram::ShaderBits_t().SetAll(),
+				ShaderProgram::ShaderBits_t().Set( EShader::Vertex ).Set( EShader::Fragment )
+									.Set( EShader::TessControl ).Set( EShader::TessEvaluation ),
 				EShaderCompilationFlags::Default,
 				VertexAttribsState()
 					.Add( VertexAttribsState::AttribIndex(0), EAttribute::Float3 )	// position
@@ -78,7 +120,8 @@ namespace ShaderEditor
 			
 			CHECK_ERR( _program->CreateUniformBlock( OUT _landscapeUB, "LandscapeUB" ) );
 
-			CHECK_ERR( _unDiffuseTex.Create( _program, "unDiffuseTexture" ) );
+			CHECK_ERR( _unDiffuseMap.Create( _program, "unDiffuseMap" ) );
+			CHECK_ERR( _unDisplacementMap.Create( _program, "unDisplacementMap" ) );
 
 			return true;
 		}

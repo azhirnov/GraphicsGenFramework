@@ -46,16 +46,16 @@ namespace Compute
 
 		bool Create (const uint4 &dim, ETexture::type imageType, EPixelFormat::type format,
 					 EMemoryAccess::type flags = EMemoryAccess::ReadWrite,
-					 BinaryBuffer data = Uninitialized,
+					 BinaryCBuffer data = Uninitialized,
 					 BytesU xAlign = 4_b,
 					 BytesU xyAlign = 4_b);
 		
 		bool Create (const TexturePtr &texture, EMemoryAccess::type flags, MipmapLevel level = MipmapLevel(), TexArrLayer layer = Uninitialized);
 
-		bool SetImage (BinaryBuffer data, const uint3 &size, const uint4 &offset = Uninitialized,
+		bool SetImage (BinaryCBuffer data, const uint3 &size, const uint4 &offset = Uninitialized,
 						BytesU xAlign = 4_b, BytesU xyAlign = 4_b);
 
-		bool GetImage (OUT Buffer<ubyte> data, const uint3 &size, const uint4 &offset,
+		bool GetImage (OUT BinaryBuffer data, const uint3 &size, const uint4 &offset,
 						BytesU xAlign = 4_b, BytesU xyAlign = 4_b);
 		
 		bool Copy (const ComputeBufferPtr &src, BytesU srcOffset, const uint4 &dstOffset, const uint4 &size);

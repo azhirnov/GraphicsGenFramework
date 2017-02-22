@@ -96,20 +96,22 @@ namespace ShaderEditor
 	{
 		struct RecursiveDraw
 		{
-			const real4x4	viewProjMat;
+			const real4x4	viewMat;
+			const real4x4	projMat;
 			const real3		cameraPos;
 			const real		globalScale;
 
 			RecursiveDraw (CameraController_t &controller, real globalScale) :
 				cameraPos( controller.GetPosition() ),
-				viewProjMat( controller.GetViewProjMatrix() ),
+				viewMat( controller.GetViewMatrix() ),
+				projMat( controller.GetProjMatrix() ),
 				globalScale( globalScale )
 			{}
 
 			void DrawTile (const TilePtr &tile) const
 			{
 				if ( tile->_initialized )
-					tile->_Draw( cameraPos * globalScale, viewProjMat );
+					tile->_Draw( cameraPos * globalScale, viewMat, projMat );
 			}
 
 			void operator () (const TilePtr &tile) const
@@ -217,13 +219,14 @@ namespace ShaderEditor
 				int		zoom = 0;
 				{
 					// tile quad corner points
+					float		size = base_tile->GetTileSize();
 					float4x4	mat;
 					base_tile->_transform.GetMatrix( OUT mat );
 
-					real3	p0 = base_tile->_transform.Transform( real2( 0.0f, 0.0f ).xoy() );
-					real3	p1 = base_tile->_transform.Transform( real2( 0.0f, 1.0f ).xoy() );
-					real3	p2 = base_tile->_transform.Transform( real2( 1.0f, 0.0f ).xoy() );
-					real3	p3 = base_tile->_transform.Transform( real2( 1.0f, 1.0f ).xoy() );
+					real3	p0 = base_tile->_transform.Transform( real2( 0.0f, 0.0f ).xoy() * size );
+					real3	p1 = base_tile->_transform.Transform( real2( 0.0f, 1.0f ).xoy() * size );
+					real3	p2 = base_tile->_transform.Transform( real2( 1.0f, 0.0f ).xoy() * size );
+					real3	p3 = base_tile->_transform.Transform( real2( 1.0f, 1.0f ).xoy() * size );
 
 					real	md   = MaxValue<real>();
 					RectF	bbox = RectF( p0.xz(), p0.xz() ).Join( p1.xz() ).Join( p2.xz() ).Join( p3.xz() );
@@ -257,9 +260,9 @@ namespace ShaderEditor
 
 						tile->_Create(
 							Transformation<real>(
-								base_tr.Position() + base_tr.GetScale().x * 0.5f * real2(index).xoy(),
-								base_tr.Orientation(),
-								base_tr.GetScale() * real3( 0.5f, 1.0f, 0.5f ) ),
+								base_tr.Position() + base_tile->GetTileSize() * 0.5f * real2(index).xoy(),
+								base_tr.Orientation() ),
+							base_tile->GetTileSize() * 0.5f,
 							index,
 							base_tile->_zoom + 1
 						);
@@ -322,8 +325,8 @@ namespace ShaderEditor
 				
 				tile->_Create(
 					Transformation<real>( max_tile_size * real2(index).xoy(),
-										  quat(),
-										  real3( max_tile_size, 1.0f, max_tile_size ) ),
+										  quat() ),
+					max_tile_size,
 					index,
 					0
 				);
@@ -352,8 +355,8 @@ namespace ShaderEditor
 
 				tile->_Create(
 					Transformation<real>( max_tile_size * real2(index).xoy(),
-										  tr.Orientation(),
-										  tr.GetScale() ),
+										  tr.Orientation() ),
+					max_tile_size,
 					index,
 					0
 				);
@@ -508,13 +511,13 @@ namespace ShaderEditor
 		MeshGenerator::Mesh	mesh( New<VertexBuffer>( ss ), New<IndexBuffer>( ss ) );
 
 		CHECK( mesh.vertexBuffer->Create() );
-		CHECK( mesh.vertexBuffer->SetData( BinaryBuffer::From( vertices ), EBufferUsage::Static ) );
+		CHECK( mesh.vertexBuffer->SetData( BinaryCBuffer::From( vertices ), EBufferUsage::Static ) );
 
 		mesh.vertexBuffer->SetAttribs( attr, BytesU::SizeOf<MeshVertex>() );
 		mesh.vertexBuffer->SetPrimitive( EPrimitive::Triangle );
 
 		CHECK( mesh.indexBuffer->Create() );
-		CHECK( mesh.indexBuffer->SetData( BinaryBuffer::From( indices ), EBufferUsage::Static ) );
+		CHECK( mesh.indexBuffer->SetData( BinaryCBuffer::From( indices ), EBufferUsage::Static ) );
 
 		mesh.indexBuffer->SetIndexType( EIndex::UInt );
 

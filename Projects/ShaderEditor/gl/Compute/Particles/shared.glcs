@@ -5,13 +5,12 @@
 [HEADER]
 
 #include "Common.glcs"
-#import  "Compute/SimpleParticles/vertex.glcs"
+#import  "Compute/Particles/vertex.glcs"
 
 
 void InitParticle (out Particle particle, const float globalTime);
 
-void UpdateParticle (const Particle inParticle, out Particle outParticle,
-					 const float frameTime, const float globalTime, const float dt);
+void UpdateParticle (inout Particle outParticle, const float frameTime, const float globalTime, const float dt);
 
 
 //---------------------------------------------------------
@@ -64,11 +63,8 @@ void InitParticle (out Particle particle, const float globalTime)
 }
 
 
-void UpdateParticle (const Particle inParticle, out Particle outParticle,
-					 const float frameTime, const float globalTime, const float dt)
+void UpdateParticle (inout Particle outParticle, const float frameTime, const float globalTime, const float dt)
 {
-	outParticle = inParticle;
-
 	const float cnt = Clamp( Round( frameTime / dt ), 1.0, MAX_ITER );
 
 	for (float t = 0.0; t < cnt; ++t)

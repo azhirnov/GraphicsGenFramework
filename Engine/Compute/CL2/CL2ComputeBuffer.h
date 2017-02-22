@@ -32,11 +32,11 @@ namespace Compute
 		~CL2ComputeBuffer ();
 
 		bool Create (BytesU size, EMemoryAccess::type flags = EMemoryAccess::ReadWrite);
-		bool Create (BinaryBuffer data, EMemoryAccess::type flags = EMemoryAccess::ReadWrite);
+		bool Create (BinaryCBuffer data, EMemoryAccess::type flags = EMemoryAccess::ReadWrite);
 		bool Create (const MemoryBufferPtr &shared, EMemoryAccess::type flags = EMemoryAccess::ReadWrite);
 		
-		bool Read (OUT Buffer<ubyte> data, BytesU offset = Uninitialized) const;
-		bool Write (BinaryBuffer data, BytesU offset = Uninitialized);
+		bool Read (OUT BinaryBuffer data, BytesU offset = Uninitialized) const;
+		bool Write (BinaryCBuffer data, BytesU offset = Uninitialized);
 
 		bool Copy (const ComputeImagePtr &src, const uint4 &srcOffset, BytesU dstOffset, const uint4 &size);
 		bool Copy (const ComputeBufferPtr &src, BytesU srcOffset, BytesU dstOffset, BytesU size);
@@ -59,7 +59,7 @@ namespace Compute
 
 
 	private:
-		bool _FillBuffer (usize offset, usize size, BinaryBuffer pattern);
+		bool _FillBuffer (usize offset, usize size, BinaryCBuffer pattern);
 
 		void _Destroy ();
 	};
@@ -73,7 +73,7 @@ namespace Compute
 	template <typename T>
 	inline void CL2ComputeBuffer::Clear (const T &value)
 	{
-		_FillBuffer( 0, (usize)_size, BinaryBuffer::FromValue( value ) );
+		_FillBuffer( 0, (usize)_size, BinaryCBuffer::FromValue( value ) );
 	}
 	
 	inline void CL2ComputeBuffer::Clear ()

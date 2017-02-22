@@ -497,6 +497,8 @@ namespace Graphics
 	{
 		if ( buf._id != 0 )
 		{
+			_stateManager->UnbindBufferBase( buf );
+
 			GL_CALL( glDeleteBuffers( 1, &buf._id ) );
 		}
 		buf = BufferID();

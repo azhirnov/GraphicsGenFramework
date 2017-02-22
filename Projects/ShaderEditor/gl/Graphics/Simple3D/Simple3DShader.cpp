@@ -62,7 +62,8 @@ namespace ShaderEditor
 				return true;
 			}
 
-			RETURN_ERR( "unknown shader variable name!" );
+			return false;
+			//RETURN_ERR( "unknown shader variable name!" );
 		}
 
 		bool Load (StringCRef filename)
@@ -82,7 +83,7 @@ namespace ShaderEditor
 			
 			CHECK_ERR( _program->CreateUniformBlock( OUT _shaderUB, "ShaderUB" ) );
 
-			CHECK_ERR( _unDiffuseTex.Create( _program, "unDiffuseTexture" ) );
+			CHECK_ERR( _unDiffuseTex.Create( _program, "unDiffuseMap" ) );
 
 			return true;
 		}

@@ -97,7 +97,11 @@ namespace Graphics
 	{
 		Resource::_Destroy();
 
-		SubSystems()->Get< GraphicsEngine >()->GetContext()->DeleteTexture( _tex );
+		if ( SubSystems()->Get< GraphicsEngine >() )
+		{
+			// unbind and delete
+			SubSystems()->Get< GraphicsEngine >()->GetContext()->DeleteTexture( _tex );
+		}
 
 		_pendingBarrier.Reset();
 
@@ -226,7 +230,7 @@ namespace Graphics
 =================================================
 */
 	bool Texture::AddImage (const uint4 &offset, MipmapLevel level, const uint3 &size, EPixelFormat::type format,
-							BinaryBuffer data, BytesU xAlign, BytesU xyAlign)
+							BinaryCBuffer data, BytesU xAlign, BytesU xyAlign)
 	{
 		CHECK_ERR( IsValid() );
 		CHECK_ERR( not _IsResourceLocked() );
@@ -265,8 +269,7 @@ namespace Graphics
 	GetImage
 =================================================
 */
-	bool Texture::GetImage (OUT Buffer<ubyte> &data, MipmapLevel level, EPixelFormat::type format,
-							BytesU xAlign, BytesU xyAlign)
+	bool Texture::GetImage (OUT BinaryBuffer data, MipmapLevel level, EPixelFormat::type format, BytesU xAlign, BytesU xyAlign)
 	{
 		CHECK_ERR( IsValid() );
 		CHECK_ERR( not HasLevel( level ) );
@@ -281,7 +284,7 @@ namespace Graphics
 	GetImage
 =================================================
 */
-	bool Texture::GetImage (OUT Buffer<ubyte> &data, const uint4 &offset, MipmapLevel level,
+	bool Texture::GetImage (OUT BinaryBuffer data, const uint4 &offset, MipmapLevel level,
 							const uint3 &size, EPixelFormat::type format,
 							BytesU xAlign, BytesU xyAlign)
 	{

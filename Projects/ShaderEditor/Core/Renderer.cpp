@@ -102,8 +102,9 @@ namespace ShaderEditor
 */
 	void Renderer::DrawImage (const ScaleBiasController &controller, const ComputeImagePtr &image, EImageViewMode::type mode)
 	{
-		float2	size	= float2(SubSystems()->Get< GraphicsEngine >()->GetRenderTargetManager()->GetCurrent()->GetViewport().Size());
-		float2	aspect	= ImageUtils::ResCorrectionAspect( size );
+		float2	img_size	= float2(image->Dimension().xy());
+		float2	scr_size	= float2(SubSystems()->Get< GraphicsEngine >()->GetRenderTargetManager()->GetCurrent()->GetViewport().Size());
+		float2	aspect		= ImageUtils::ResCorrectionAspect( scr_size ) / ImageUtils::ResCorrectionAspect( img_size );
 
 		return _DrawImage( image, controller.Scale() * aspect, controller.Bias() * aspect, mode );
 	}

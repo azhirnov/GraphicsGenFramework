@@ -61,8 +61,8 @@ namespace cl
 	// macro
 #if !defined( __GX_COMPUTE_API_ERROR_CHECKS__ )
 	
-#	define CL_CALL( ... )		__VA_ARGS__
-#	define CL_CHECK( ... )		__VA_ARGS__
+#	define CL_CALL( ... )		{ __VA_ARGS__ }
+#	define CL_CHECK( ... )		{ __VA_ARGS__ }
 
 #else
 
@@ -78,7 +78,8 @@ namespace cl
 		if ( not ::cl::CL2_CheckErrors( __cl_err__, TOSTRING( _func_ ), GX_FUNCTION_NAME, __FILE__, __LINE__ ) ) \
 			return _ret_; \
 	}
-
+	
+	// Warning: different behavior on Debug and Release!
 #	define CL_CHECK( ... ) \
 		__CL_CALL_R( AUXDEF_GETARG_0( __VA_ARGS__ ), AUXDEF_GETARG_1( __VA_ARGS__, Uninitialized ) )
 

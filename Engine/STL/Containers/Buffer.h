@@ -158,7 +158,8 @@ namespace GXTypes
 	};
 	
 
-	typedef Buffer< const ubyte >	BinaryBuffer;
+	typedef Buffer< const ubyte >	BinaryCBuffer;
+	typedef Buffer< ubyte >			BinaryBuffer;
 
 
 	

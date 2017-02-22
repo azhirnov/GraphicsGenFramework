@@ -770,16 +770,16 @@ namespace GXTypes
 */
 	template <typename ...Types>
 	struct Hash< Union<Types...> > :
-		private Hash< BinaryBuffer >
+		private Hash< BinaryCBuffer >
 	{
 		typedef Union<Types...>				key_t;
-		typedef Hash< BinaryBuffer >		base_t;
+		typedef Hash< BinaryCBuffer >		base_t;
 		typedef typename base_t::result_t	result_t;
 
 		result_t operator () (const key_t &x) const
 		{
 			// TODO: it is not same as Hash( union.Get<T>() )
-			return base_t::operator ()( BinaryBuffer::FromVoid( x.GetPointer(), x.GetSizeOf() ) );
+			return base_t::operator ()( BinaryCBuffer::FromVoid( x.GetPointer(), x.GetSizeOf() ) );
 		}
 	};
 

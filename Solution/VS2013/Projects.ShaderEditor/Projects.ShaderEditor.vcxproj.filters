@@ -37,9 +37,6 @@
     <Filter Include="Samples\SimpleLandscape">
       <UniqueIdentifier>{6e54db22-c567-4664-88d4-bd0cd9e8b61a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Samples\RayTracing">
-      <UniqueIdentifier>{b5bf45d7-3e00-414d-8dd5-d323f9fccbc7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Samples\TessLandscape">
       <UniqueIdentifier>{24ae3eb0-0dd0-4d41-9dc3-c91229cd4a24}</UniqueIdentifier>
     </Filter>
@@ -67,17 +64,11 @@
     <Filter Include="gl\Compute\ThousandsOfStars">
       <UniqueIdentifier>{02dff67d-3be5-455d-b2f3-bebd28e5a117}</UniqueIdentifier>
     </Filter>
-    <Filter Include="gl\Compute\VoronoiRecursion">
-      <UniqueIdentifier>{428abea7-a818-4cc0-a50f-54cfa07498db}</UniqueIdentifier>
-    </Filter>
     <Filter Include="gl\Graphics\Simple3D">
       <UniqueIdentifier>{b74a0420-0f0e-49f4-adee-c31f79bdb9f7}</UniqueIdentifier>
     </Filter>
     <Filter Include="gl\Graphics\TessLandscape">
       <UniqueIdentifier>{71ae25f3-672c-4192-b920-c86245ed4bfc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="gl\Compute\SimpleParticles">
-      <UniqueIdentifier>{855969da-e99b-4f6e-ba4c-f686b5efce4f}</UniqueIdentifier>
     </Filter>
     <Filter Include="gl\Graphics\SimpleParticles">
       <UniqueIdentifier>{d540db7f-ceca-45c0-8962-5ab5e5d91e27}</UniqueIdentifier>
@@ -94,6 +85,27 @@
     <Filter Include="gl\Core\Physics">
       <UniqueIdentifier>{c9ada00b-775e-4b60-8431-e40845d7e44a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="gl\Core\SDF">
+      <UniqueIdentifier>{d99fe68f-f8da-415e-a4ea-01fd4021f06a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Samples\RayTraycing">
+      <UniqueIdentifier>{ec87f997-c40e-4b3d-ad51-c1a37eb7108a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gl\Compute\SinglePassRayTracing2D">
+      <UniqueIdentifier>{a4ce15af-4719-4ef7-9d41-7d1143e554c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gl\Compute\SinglePassRayTracing3D">
+      <UniqueIdentifier>{7e1d5fd1-f34e-40ce-9e8e-abf77c60cde4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Samples\InteractiveParticles">
+      <UniqueIdentifier>{8ccfbe52-daf3-410a-9b22-77520d46f2c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gl\Compute\InteractiveParticles">
+      <UniqueIdentifier>{0315e80d-7dbf-49cf-865f-fed764dad336}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gl\Compute\Particles">
+      <UniqueIdentifier>{855969da-e99b-4f6e-ba4c-f686b5efce4f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Projects\ShaderEditor\Core\ShaderEditor.h">
@@ -105,9 +117,6 @@
     <ClInclude Include="..\..\..\Projects\ShaderEditor\Core\Renderer.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Projects\ShaderEditor\Particles\ParticleRenderer.h">
-      <Filter>Particles</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Projects\ShaderEditor\Tiles\TilesManager.h">
       <Filter>Tiles</Filter>
     </ClInclude>
@@ -116,9 +125,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Projects\ShaderEditor\Core\ISample.h">
       <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Projects\ShaderEditor\Samples\RayTracing\RayTracingSamples.h">
-      <Filter>Samples\RayTracing</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Projects\ShaderEditor\Samples\SimpleLandscape\SimpleLandscapeSample.h">
       <Filter>Samples\SimpleLandscape</Filter>
@@ -150,6 +156,12 @@
     <ClInclude Include="..\..\..\Projects\ShaderEditor\Controllers\ScaleBiasController.h">
       <Filter>Controllers</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\Projects\ShaderEditor\Samples\RayTracing\RayTracingSamples.h">
+      <Filter>Samples\RayTraycing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Projects\ShaderEditor\Samples\InteractiveParticles\InteractiveParticlesSample.h">
+      <Filter>Samples\InteractiveParticles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\Projects\ShaderEditor\Core\ShaderEditor.cpp">
@@ -164,16 +176,10 @@
     <ClCompile Include="..\..\..\Projects\ShaderEditor\Tiles\Tile.cpp">
       <Filter>Tiles</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Projects\ShaderEditor\Particles\ParticleRenderer.cpp">
-      <Filter>Particles</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Projects\ShaderEditor\Core\ISample.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Projects\ShaderEditor\Main.cpp" />
-    <ClCompile Include="..\..\..\Projects\ShaderEditor\Samples\RayTracing\RayTracingSamples.cpp">
-      <Filter>Samples\RayTracing</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Projects\ShaderEditor\Samples\SimpleLandscape\SimpleLandscapeSample.cpp">
       <Filter>Samples\SimpleLandscape</Filter>
     </ClCompile>
@@ -201,17 +207,29 @@
     <ClCompile Include="..\..\..\Projects\ShaderEditor\Samples\Particles\ParticlesSample.cpp">
       <Filter>Samples\Particles</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Projects\ShaderEditor\gl\Compute\SimpleParticles\SimpleParticlesGenerator.cpp">
-      <Filter>gl\Compute\SimpleParticles</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Projects\ShaderEditor\gl\Compute\VoronoiRecursion\VoronoiRecursionGenerator.cpp">
-      <Filter>gl\Compute\VoronoiRecursion</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Projects\ShaderEditor\gl\Compute\ThousandsOfStars\ThousandsOfStarsGenerator.cpp">
       <Filter>gl\Compute\ThousandsOfStars</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Projects\ShaderEditor\gl\Graphics\SimpleParticles\SimpleParticlesShader.cpp">
       <Filter>gl\Graphics\SimpleParticles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Projects\ShaderEditor\Samples\RayTracing\RayTracingSamples.cpp">
+      <Filter>Samples\RayTraycing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Projects\ShaderEditor\gl\Compute\SinglePassRayTracing3D\SinglePass3DGenerator.cpp">
+      <Filter>gl\Compute\SinglePassRayTracing3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Projects\ShaderEditor\gl\Compute\SinglePassRayTracing2D\SinglePass2DGenerator.cpp">
+      <Filter>gl\Compute\SinglePassRayTracing2D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Projects\ShaderEditor\Samples\InteractiveParticles\InteractiveParticlesSample.cpp">
+      <Filter>Samples\InteractiveParticles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Projects\ShaderEditor\gl\Compute\InteractiveParticles\InteractiveParticlesGenerator.cpp">
+      <Filter>gl\Compute\InteractiveParticles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Projects\ShaderEditor\gl\Compute\Particles\SimpleParticlesGenerator.cpp">
+      <Filter>gl\Compute\Particles</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -245,6 +263,9 @@
     <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Math\Quaternion.glcs">
       <Filter>gl\Core\Math</Filter>
     </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Noise\Cellular.glcs">
+      <Filter>gl\Core\Noise</Filter>
+    </None>
     <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Noise\FBM.glcs">
       <Filter>gl\Core\Noise</Filter>
     </None>
@@ -252,6 +273,12 @@
       <Filter>gl\Core\Noise</Filter>
     </None>
     <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Noise\Perlin.glcs">
+      <Filter>gl\Core\Noise</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Noise\Simplex.glcs">
+      <Filter>gl\Core\Noise</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Noise\Voronoi.glcs">
       <Filter>gl\Core\Noise</Filter>
     </None>
     <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Noise\VoronoiNoise.glcs">
@@ -272,9 +299,6 @@
     <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\Microscheme\main.glcs">
       <Filter>gl\Compute\Microscheme</Filter>
     </None>
-    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\VoronoiRecursion\main.glcs">
-      <Filter>gl\Compute\VoronoiRecursion</Filter>
-    </None>
     <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\ThousandsOfStars\pass1.glcs">
       <Filter>gl\Compute\ThousandsOfStars</Filter>
     </None>
@@ -284,13 +308,7 @@
     <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\TessLandscape\gen_diffuse.glcs">
       <Filter>gl\Compute\TessLandscape</Filter>
     </None>
-    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\TessLandscape\gen_height.glcs">
-      <Filter>gl\Compute\TessLandscape</Filter>
-    </None>
     <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\TessLandscape\gen_landscape.glcs">
-      <Filter>gl\Compute\TessLandscape</Filter>
-    </None>
-    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\TessLandscape\gen_normals.glcs">
       <Filter>gl\Compute\TessLandscape</Filter>
     </None>
     <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\TessLandscape\vertex.glcs">
@@ -316,15 +334,6 @@
     </None>
     <None Include="..\..\..\Projects\ShaderEditor\gl\Graphics\Simple3D\shader.glsl">
       <Filter>gl\Graphics\Simple3D</Filter>
-    </None>
-    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\SimpleParticles\init.glcs">
-      <Filter>gl\Compute\SimpleParticles</Filter>
-    </None>
-    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\SimpleParticles\update.glcs">
-      <Filter>gl\Compute\SimpleParticles</Filter>
-    </None>
-    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\SimpleParticles\vertex.glcs">
-      <Filter>gl\Compute\SimpleParticles</Filter>
     </None>
     <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Particles\Emitters.glcs">
       <Filter>gl\Core\Particles</Filter>
@@ -353,9 +362,6 @@
     <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Particles\Colors.glcs">
       <Filter>gl\Core\Particles</Filter>
     </None>
-    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\SimpleParticles\shared.glcs">
-      <Filter>gl\Compute\SimpleParticles</Filter>
-    </None>
     <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Noise\Turbulence.glcs">
       <Filter>gl\Core\Noise</Filter>
     </None>
@@ -382,6 +388,66 @@
     </None>
     <None Include="..\..\..\Projects\ShaderEditor\gl\Core\Math\AABBox.glcs">
       <Filter>gl\Core\Math</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\TessLandscape\gen_displacement.glcs">
+      <Filter>gl\Compute\TessLandscape</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Core\SDF\DefaultSDF.glcs">
+      <Filter>gl\Core\SDF</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\SinglePassRayTracing2D\voronoi_recursion.glcs">
+      <Filter>gl\Compute\SinglePassRayTracing2D</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\SinglePassRayTracing2D\voronoi_pattern.glcs">
+      <Filter>gl\Compute\SinglePassRayTracing2D</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\SinglePassRayTracing2D\voronoi_pattern1.glcs">
+      <Filter>gl\Compute\SinglePassRayTracing2D</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\SinglePassRayTracing2D\voronoi_pattern2.glcs">
+      <Filter>gl\Compute\SinglePassRayTracing2D</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\SinglePassRayTracing2D\voronoi_lines.glcs">
+      <Filter>gl\Compute\SinglePassRayTracing2D</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\SinglePassRayTracing3D\spheres2d.glcs">
+      <Filter>gl\Compute\SinglePassRayTracing3D</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\InteractiveParticles\init.glcs">
+      <Filter>gl\Compute\InteractiveParticles</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\InteractiveParticles\shared.glcs">
+      <Filter>gl\Compute\InteractiveParticles</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\InteractiveParticles\update.glcs">
+      <Filter>gl\Compute\InteractiveParticles</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\Particles\init.glcs">
+      <Filter>gl\Compute\Particles</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\Particles\shared.glcs">
+      <Filter>gl\Compute\Particles</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\Particles\shared-1.glcs">
+      <Filter>gl\Compute\Particles</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\Particles\shared-2.glcs">
+      <Filter>gl\Compute\Particles</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\Particles\shared-3.glcs">
+      <Filter>gl\Compute\Particles</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\Particles\shared-4.glcs">
+      <Filter>gl\Compute\Particles</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\Particles\shared-5.glcs">
+      <Filter>gl\Compute\Particles</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\Particles\update.glcs">
+      <Filter>gl\Compute\Particles</Filter>
+    </None>
+    <None Include="..\..\..\Projects\ShaderEditor\gl\Compute\Particles\vertex.glcs">
+      <Filter>gl\Compute\Particles</Filter>
     </None>
   </ItemGroup>
 </Project>

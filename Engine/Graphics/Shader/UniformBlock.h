@@ -49,7 +49,7 @@ namespace Graphics
 		T &			Get ();
 		T const &	Get () const;
 
-		void Write (BinaryBuffer data, BytesU offset);
+		void Write (BinaryCBuffer data, BytesU offset);
 
 		bool _Create (const ShaderProgramPtr &program, StringCRef name, uint index);
 		void Destroy ();
@@ -110,7 +110,7 @@ namespace Graphics
 =================================================
 */
 	template <typename T>
-	inline void UniformBlock<T>::Write (BinaryBuffer data, BytesU offset)
+	inline void UniformBlock<T>::Write (BinaryCBuffer data, BytesU offset)
 	{
 		CHECK( data.Count() + offset <= _bufferData.Count() );
 
@@ -190,7 +190,7 @@ namespace Graphics
 
 		if ( _changed )
 		{
-			buf->SetData( BinaryBuffer( _bufferData ), EBufferUsage::Dynamic );
+			buf->SetData( BinaryCBuffer( _bufferData ), EBufferUsage::Dynamic );
 			_changed = false;
 		}
 

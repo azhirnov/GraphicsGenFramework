@@ -12,7 +12,8 @@ namespace ShaderEditor
 */
 	Tile::Tile (const SubSystemsRef ss) :
 		BaseObject( ss ),
-		_zoom( 0 ),	_initialized( false ),		_hasNodes( false )
+		_zoom( 0 ),				_tileSize( 1.0f ),
+		_initialized( false ),	_hasNodes( false )
 	{
 	}
 	
@@ -42,9 +43,10 @@ namespace ShaderEditor
 	_Create
 =================================================
 */
-	void Tile::_Create (const Transformation_t &tr, const int2 &index, int zoom)
+	void Tile::_Create (const Transformation_t &tr, float size, const int2 &index, int zoom)
 	{
 		_transform		= tr;
+		_tileSize		= size;
 		_index			= index;
 		_zoom			= zoom;
 		_initialized	= false;
@@ -56,14 +58,20 @@ namespace ShaderEditor
 	_Draw
 =================================================
 */
-	void Tile::_Draw (const real3 &cameraPos, const Matrix_t &viewProjMat)
+	void Tile::_Draw (const real3 &cameraPos, const Matrix4_t &viewMat, const Matrix4_t &projMat)
 	{
 		CHECK( _initialized );
 
-		Matrix_t	model_mat;	_transform.GetModelMatrix( cameraPos, OUT model_mat );
-		Matrix_t	mvp_mat = viewProjMat * model_mat;
+		Matrix4_t	model_mat;	_transform.GetModelMatrix( cameraPos, OUT model_mat );
 
-		_landscape.program->SetArg( "mvp", VariantRef::From( mvp_mat ) );
+		Matrix4_t	mv_mat		= viewMat * model_mat;
+		Matrix4_t	mvp_mat		= projMat * viewMat * model_mat;
+		Matrix3_t	norm_mat	= model_mat.To<Matrix3_t>().Inverse().Transpose();
+
+		_landscape.program->SetArg( "mvp",		mvp_mat );
+		_landscape.program->SetArg( "mv",		mv_mat );
+		_landscape.program->SetArg( "model",	model_mat );
+		_landscape.program->SetArg( "normal",	norm_mat );
 
 		_landscape.program->SetTextures( _landscape.textures );
 		_landscape.program->Active();

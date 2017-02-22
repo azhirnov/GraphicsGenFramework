@@ -13,10 +13,9 @@ namespace ShaderEditor
 	ShaderEditorCore::ShaderEditorCore (const IParallelThreadPtr &thread) :
 		GameApplication( thread ),
 		_graphicsEngine( SubSystems() ),	_computeEngine( SubSystems() ),
-		_renderer( SubSystems() ),			_particleRenderer( SubSystems() ),
-		_tilesManager( SubSystems() ),		_activeSample( -1 ),
-		_timePaused( false ),				_initialized( false ),
-		_makeScreenShot( false )
+		_renderer( SubSystems() ),			_tilesManager( SubSystems() ),
+		_activeSample( -1 ),				_timePaused( false ),
+		_initialized( false ),				_makeScreenShot( false )
 	{
 		SubSystems()->GetSetter< ShaderEditorCore >().Set( this );
 
@@ -67,9 +66,9 @@ namespace ShaderEditor
 			_samples[ _activeSample ]->Release();
 		}
 
-		uint	index = Wrap( _activeSample + 1, 0u, _samples.LastIndex() );
+		usize	index = Wrap( _activeSample + 1, 0u, _samples.LastIndex() );
 
-		_activeSample = -1;
+		_activeSample = usize(-1);
 
 		if ( index < _samples.Count() )
 		{
@@ -89,6 +88,8 @@ namespace ShaderEditor
 	{
 		RenderTargetPtr const&	rt = _graphicsEngine.GetRenderTargetManager()->GetCurrent();
 		
+		rt->Bind();
+
 		if ( _activeSample < _samples.Count() )
 		{
 			_samples[ _activeSample ]->Draw( rt, _time );
@@ -104,7 +105,7 @@ namespace ShaderEditor
 			_makeScreenShot = false;
 
 			CHECK( SubSystems()->Get< GraphicsEngine >()->GetRenderTargetManager()->
-				ScreenShot( "images/screenshot.png", ESaveImageFormat::PNG_Flipped, true ) );
+				MakeScreenShot( "images/screenshot.png", ESaveImageFormat::PNG_Flipped, true ) );
 		}
 
 		SubSystems()->Get< GraphicsEngine >()->FlushFrame();
@@ -119,8 +120,6 @@ namespace ShaderEditor
 	{
 		if ( not _initialized )
 			return;
-
-		_Draw();
 
 		Ptr< Input >	input = SubSystems()->Get< Input >();
 
@@ -148,11 +147,13 @@ namespace ShaderEditor
 		if ( input->IsKeyClicked( EKey::PRINTSCREEN ) )
 			_makeScreenShot = true;
 
-		if ( input->IsKeyClicked( EKey::BACKSPACE ) )
+		if ( input->IsKeyClicked( EKey::RETURN ) )
 			_ActiveNextSample();
 		
 		if ( _activeSample < _samples.Count() )
 			_samples[ _activeSample ]->Update( dt );
+
+		_Draw();
 	}
 	
 /*
@@ -193,7 +194,6 @@ namespace ShaderEditor
 
 		CHECK( _renderer.Initialize() );
 		CHECK( _tilesManager.Initialize() );
-		CHECK( _particleRenderer.Initialize() );
 		
 		InitializeShaderSamples( this );
 		_time.SetSeconds( 0.0 );
@@ -217,7 +217,6 @@ namespace ShaderEditor
 		_activeSample = -1;
 		_samples.Clear();
 
-		_particleRenderer.Deinitialize();
 		_tilesManager.Deinitialize();
 		_renderer.Deinitialize();
 
@@ -241,11 +240,11 @@ namespace ShaderEditor
 */
 	void ShaderEditorCore::_Reload ()
 	{
+		//SubSystems()->Get< GraphicsEngine >()->GetStateManager()->Reset();
 		SubSystems()->Get< GraphicsEngine >()->GetShaderManager()->ClearShaderCache();
 
 		CHECK( _renderer.Reload() );
 		CHECK( _tilesManager.Reload() );
-		CHECK( _particleRenderer.Reload() );
 
 		if ( _activeSample < _samples.Count() )
 			_samples[ _activeSample ]->Reload();

@@ -56,7 +56,7 @@ namespace Graphics
 	_ClearSubData
 =================================================
 */
-	bool MemoryBuffer::_ClearSubData (const BufferID &buf, usize offset, usize size, EPixelFormat::type format, BinaryBuffer pattern)
+	bool MemoryBuffer::_ClearSubData (const BufferID &buf, usize offset, usize size, EPixelFormat::type format, BinaryCBuffer pattern)
 	{
 		using namespace gl;
 

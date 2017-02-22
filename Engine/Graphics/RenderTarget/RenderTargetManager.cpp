@@ -121,10 +121,10 @@ namespace Graphics
 	
 /*
 =================================================
-	ScreenShot
+	MakeScreenShot
 =================================================
 */
-	bool RenderTargetManager::ScreenShot (StringCRef filename, ESaveImageFormat::type format, bool makeUnique)
+	bool RenderTargetManager::MakeScreenShot (StringCRef filename, ESaveImageFormat::type format, bool makeUnique)
 	{
 		return SaveRenderTargetImage( GetSystemRenderTarget(), filename, format, makeUnique );
 	}
@@ -194,12 +194,11 @@ namespace Graphics
 		const RectU		vp = rt->GetViewport();
 		const BytesU	align( 4 );
 
-		BinaryArray		data;
-		data.Resize( (usize)ImageUtils::AlignedDataSize( uint3( vp.Size(), 1 ), 4_b, align, 1_b ), false );
+		BinaryArray		arr;
+		arr.Resize( (usize)ImageUtils::AlignedDataSize( uint3( vp.Size(), 1 ), 4_b, align, 1_b ), false );
 
-		Buffer<ubyte>	udata( data );
-
-		CHECK_ERR( rt->GetImage( udata, EPixelFormat::RGBA8_UNorm, vp, ERenderTarget::Color0, align ) );
+		BinaryBuffer	data( arr );
+		CHECK_ERR( rt->GetImage( OUT data, EPixelFormat::RGBA8_UNorm, vp, ERenderTarget::Color0, align ) );
 
 		if ( flipY )
 		{
@@ -212,13 +211,13 @@ namespace Graphics
 			{
 				uint y1 = vp.Height() - 1 - y;
 
-				UnsafeMem::MemCopy( line.ptr(),						data.ptr() + line_size * y,	 BytesU(line_size) );
-				UnsafeMem::MemCopy( data.ptr() + line_size * y,		data.ptr() + line_size * y1, BytesU(line_size) );
-				UnsafeMem::MemCopy( data.ptr() + line_size * y1,	line.ptr(),					 BytesU(line_size) );
+				UnsafeMem::MemCopy( line.ptr(),						arr.ptr() + line_size * y,	 BytesU(line_size) );
+				UnsafeMem::MemCopy( arr.ptr() + line_size * y,		arr.ptr() + line_size * y1, BytesU(line_size) );
+				UnsafeMem::MemCopy( arr.ptr() + line_size * y1,		line.ptr(),					 BytesU(line_size) );
 			}
 		}
 
-		uint error = lodepng::encode( filename.cstr(), data.ptr(), vp.Width(), vp.Height(), LCT_RGBA, 8 );
+		uint error = lodepng::encode( filename.cstr(), arr.ptr(), vp.Width(), vp.Height(), LCT_RGBA, 8 );
 		CHECK_ERR( error == 0 );
 
 		//const char * errorText = lodepng_error_text(error);
@@ -241,16 +240,15 @@ namespace Graphics
 		const RectU		vp		= rt->GetViewport();
 		const BytesU	align	= 4_b;
 
-		BinaryArray		data;
-		data.Resize( (usize)ImageUtils::AlignedDataSize( uint3( vp.Size(), 1 ), 4_b, align, 1_b ), false );
+		BinaryArray		arr;
+		arr.Resize( (usize)ImageUtils::AlignedDataSize( uint3( vp.Size(), 1 ), 4_b, align, 1_b ), false );
 
-		Buffer<ubyte>	udata( data );
-
-		CHECK_ERR( rt->GetImage( udata, rt->GetFormat( ERenderTarget::Color0 ), vp, ERenderTarget::Color0, align ) );
+		BinaryBuffer	data( arr );
+		CHECK_ERR( rt->GetImage( OUT data, rt->GetFormat( ERenderTarget::Color0 ), vp, ERenderTarget::Color0, align ) );
 
 		WFilePtr		file;
 		CHECK_ERR( SubSystems()->Get< FileManager >()->OpenForWrite( filename, file ) );
-		CHECK_ERR( file->Write( udata ) );
+		CHECK_ERR( file->Write( data ) );
 
 		return true;
 	}
