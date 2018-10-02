@@ -126,7 +126,7 @@ namespace Base
 		struct Item
 		{
 			void *		ptr = null;
-			TypeId		id;
+			//TypeId		id;
 
 			template <typename T>
 			void Set (T *p)
@@ -134,16 +134,16 @@ namespace Base
 				CompileTime::MustBeSameSize< decltype(ptr), decltype(p) >();
 
 				ASSERT( (ptr == null) == (p != null) );
-				ASSERT( TypeIdOf<T>() == id or id == TypeId() );
+				//ASSERT( TypeIdOf<T>() == id or id == TypeId() );
 
 				ptr = reinterpret_cast< void *>( p );
-				id	= TypeIdOf<T>();
+				//id	= TypeIdOf<T>();
 			}
 
 			template <typename T>
 			Ptr<T> Get ()
 			{
-				ASSERT( TypeIdOf<T>() == id );
+				//ASSERT( TypeIdOf<T>() == id );
 				return reinterpret_cast< T *>( ptr );
 			}
 		};

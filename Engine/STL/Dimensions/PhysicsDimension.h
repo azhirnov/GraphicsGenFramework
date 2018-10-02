@@ -207,6 +207,11 @@ namespace GXMath
 		};
 
 		template <typename Dims>
+		struct Equal {
+			static const bool	value = DimensionsTypeList::Equal< Dims::DimensionsTypeList_t >;
+		};
+
+		template <typename Dims>
 		struct Add2 {
 			STATIC_ASSERT( typename Dims::_is_physics_dimensions_list(true) );
 			STATIC_ASSERT( Self::template Equal< Dims >::value );
@@ -244,11 +249,6 @@ namespace GXMath
 		template <EPhysicsDimension::type Index>
 		struct Get2 {
 			typedef typename DimensionsTypeList::template Get< Index >	type;
-		};
-
-		template <typename Dims>
-		struct Equal {
-			static const bool	value = DimensionsTypeList::Equal< Dims::DimensionsTypeList_t >;
 		};
 
 		struct IsNonDimensional {

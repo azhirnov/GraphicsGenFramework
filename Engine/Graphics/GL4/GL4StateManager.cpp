@@ -94,7 +94,7 @@ namespace Graphics
 			for (usize i = 0; i < CountOf(storageBlockNames); ++i)
 			{
 				GLint value = 0;
-				glGetIntegerv( storageBlockNames[i], &value );
+				GL_CALL( glGetIntegerv( storageBlockNames[i], &value ) );
 
 				max_ssb = Max( max_ssb, value );
 			}
@@ -105,7 +105,7 @@ namespace Graphics
 		// atomic counter buffer
 		{
 			GLint	max_atomic_buffers = 0;
-			glGetIntegerv( GL_MAX_COMPUTE_ATOMIC_COUNTER_BUFFERS, &max_atomic_buffers );
+			GL_CALL( glGetIntegerv( GL_MAX_COMPUTE_ATOMIC_COUNTER_BUFFERS, &max_atomic_buffers ) );
 
 			_buffers[ EBufferTarget::AtomicCounter ].Resize( max_atomic_buffers, false );
 		}

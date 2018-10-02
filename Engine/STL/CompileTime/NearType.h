@@ -27,7 +27,7 @@ namespace CompileTime
 	}	// _ctime_hidden_
 
 	template <typename T>
-	static constexpr T IntegerMinLimit = _ctime_hidden_::Int_IsSigned<T>::value ? T( T(1) << (SizeOf<T>::bits-1) ) : T(0);
+	static constexpr T IntegerMinLimit = _ctime_hidden_::Int_IsSigned<T>::value ? T( T(1) << (CompileTime::SizeOf<T>::bits-1) ) : T(0);
 	
 	template <typename T>
 	static constexpr T IntegerMaxLimit = _ctime_hidden_::Int_IsSigned<T>::value ? T( T(-1) & T(~IntegerMinLimit<T>) ) : T(-1);
@@ -38,9 +38,10 @@ namespace CompileTime
 	// Near Integer Type
 	//
 	
-	struct NearInt : Noninstancable
+	struct NearInt : GXTypes::Noninstancable
 	{
-	private:
+	//private:	// becouse of bug in VS 15.2
+	public:
 		template <usize SizeValue>
 		struct _FromSize {
 			typedef typename CompileTime::SwitchType< (SizeValue <= sizeof(byte)), byte,
@@ -60,7 +61,7 @@ namespace CompileTime
 		template <typename T>
 		struct _FromScalar {
 			STATIC_ASSERT( IsScalarOrEnum<T> );
-			typedef typename _FromSize< SizeOf<T>::bytes >::type	type;
+			typedef typename _FromSize< CompileTime::SizeOf<T>::bytes >::type	type;
 		};
 
 		template <typename T>
@@ -72,6 +73,7 @@ namespace CompileTime
 
 		template <typename T>
 		struct _FromType {
+			//typedef typename _FromScalar<T>::type	type;
 			typedef typename SwitchType< IsVector<T>, _FromVector<T>, _FromScalar<T> >::type	type;
 		};
 
@@ -86,9 +88,10 @@ namespace CompileTime
 		using FromType = typename _FromType<T>::type;
 	};
 
-	struct NearUInt : Noninstancable
+	struct NearUInt : GXTypes::Noninstancable
 	{
-	private:
+	//private:	// becouse of bug in VS 15.2
+	public:
 		template <usize SizeValue>
 		struct _FromSize {
 			typedef typename CompileTime::SwitchType< (SizeValue <= sizeof(ubyte)), ubyte,
@@ -108,7 +111,7 @@ namespace CompileTime
 		template <typename T>
 		struct _FromScalar {
 			STATIC_ASSERT( IsScalarOrEnum<T> );
-			typedef typename _FromSize< SizeOf<T>::bytes >::type	type;
+			typedef typename _FromSize< CompileTime::SizeOf<T>::bytes >::type	type;
 		};
 
 		template <typename T>
@@ -140,9 +143,10 @@ namespace CompileTime
 	// Larger Integer Type
 	//
 	
-	struct LargerInt : Noninstancable
+	struct LargerInt : GXTypes::Noninstancable
 	{
-	private:
+	//private:	// becouse of bug in VS 15.2
+	public:
 		template <usize Size>
 		struct _FromSize {
 			typedef typename NearInt::FromSize< Clamp< uint, (Size << 1), sizeof(byte), sizeof(ilong) > >	type;
@@ -151,7 +155,7 @@ namespace CompileTime
 		template <typename T>
 		struct _FromScalar {
 			STATIC_ASSERT( IsScalarOrEnum<T> );
-			typedef typename _FromSize< SizeOf<T>::bytes >::type	type;
+			typedef typename _FromSize< CompileTime::SizeOf<T>::bytes >::type	type;
 		};
 
 		template <typename T>
@@ -175,9 +179,10 @@ namespace CompileTime
 	};
 
 	
-	struct LargerUInt : Noninstancable
+	struct LargerUInt : GXTypes::Noninstancable
 	{
-	private:
+	//private:	// becouse of bug in VS 15.2
+	public:
 		template <usize Size>
 		struct _FromSize {
 			typedef typename NearUInt::FromSize< Clamp< uint, (Size << 1), sizeof(ubyte), sizeof(ulong) > >	type;
@@ -186,7 +191,7 @@ namespace CompileTime
 		template <typename T>
 		struct _FromScalar {
 			STATIC_ASSERT( IsScalarOrEnum<T> );
-			typedef typename _FromSize< SizeOf<T>::bytes >::type	type;
+			typedef typename _FromSize< CompileTime::SizeOf<T>::bytes >::type	type;
 		};
 
 		template <typename T>
@@ -215,9 +220,10 @@ namespace CompileTime
 	// Lesser Integer Type
 	//
 	
-	struct LesserInt : Noninstancable
+	struct LesserInt : GXTypes::Noninstancable
 	{
-	private:
+	//private:	// becouse of bug in VS 15.2
+	public:
 		template <usize Size>
 		struct _FromSize {
 			typedef typename NearInt::FromSize< Clamp< uint, (Size >> 1), sizeof(byte), sizeof(ilong) > >	type;
@@ -226,7 +232,7 @@ namespace CompileTime
 		template <typename T>
 		struct _FromScalar {
 			STATIC_ASSERT( IsScalarOrEnum<T> );
-			typedef typename _FromSize< SizeOf<T>::bytes >::type	type;
+			typedef typename _FromSize< CompileTime::SizeOf<T>::bytes >::type	type;
 		};
 
 		template <typename T>
@@ -250,9 +256,10 @@ namespace CompileTime
 	};
 
 	
-	struct LesserUInt : Noninstancable
+	struct LesserUInt : GXTypes::Noninstancable
 	{
-	private:
+	//private:	// becouse of bug in VS 15.2
+	public:
 		template <usize Size>
 		struct _FromSize {
 			typedef typename NearUInt::FromSize< Clamp< uint, (Size >> 1), sizeof(ubyte), sizeof(ulong) > >	type;
@@ -261,7 +268,7 @@ namespace CompileTime
 		template <typename T>
 		struct _FromScalar {
 			STATIC_ASSERT( IsScalarOrEnum<T> );
-			typedef typename _FromSize< SizeOf<T>::bytes >::type	type;
+			typedef typename _FromSize< CompileTime::SizeOf<T>::bytes >::type	type;
 		};
 
 		template <typename T>
@@ -290,9 +297,10 @@ namespace CompileTime
 	// Near Float Type
 	//
 
-	struct NearFloat : Noninstancable
+	struct NearFloat : GXTypes::Noninstancable
 	{
-	private:
+	//private:	// becouse of bug in VS 15.2
+	public:
 		template <usize Size>
 		struct _FromSize {
 			typedef typename CompileTime::SwitchType< (Size <= sizeof(float)), float,
@@ -303,7 +311,7 @@ namespace CompileTime
 		template <typename T>
 		struct _FromScalar {
 			STATIC_ASSERT( IsScalarOrEnum<T> );
-			typedef typename _FromSize< SizeOf<T>::bytes >::type	type;
+			typedef typename _FromSize< CompileTime::SizeOf<T>::bytes >::type	type;
 		};
 
 		template <typename T>

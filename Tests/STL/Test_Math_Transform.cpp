@@ -13,7 +13,7 @@ static void Transform_Inverse ()
 {
 	const transform_t	a(	real3( 1.0f, 2.0f, 3.0f ), 
 							quat().Rotation( real3( 45.0f, 0.0f, 10.0f ).To< DegreesVec<real,3> >().To< RadiansVec<real,3> >() ),
-							real3( 2.0f ) );
+							2.0f );
 
 	const transform_t	b = a.Inversed().Inversed();
 
@@ -25,7 +25,7 @@ static void Transform_AddInverse ()
 {
 	const transform_t	a(	real3( 1.0f, 2.0f, 3.0f ),
 							quat().Rotation( real3( 45.0f, 0.0f, 10.0f ).To< DegreesVec<real,3> >().To< RadiansVec<real,3> >() ),
-							real3( 2.0f ) );
+							2.0f );
 
 	const transform_t	b = a + a.Inversed();
 
@@ -37,7 +37,7 @@ static void Transform_MulVec ()
 {
 	const transform_t	tr(	real3( 1.0f, 2.0f, 3.0f ),
 							quat().Rotation( real3( 45.0f, 0.0f, 10.0f ).To< DegreesVec<real,3> >().To< RadiansVec<real,3> >() ),
-							real3( 2.0f ) );
+							2.0f );
 
 	transform_t::mat_t	mat;	tr.GetMatrix( OUT mat );
 
@@ -59,7 +59,7 @@ static void Transform_MulVec2 ()
 {
 	const quat			rotation = quat().RotationX( -90.0_deg.ToRadians() );
 	
-	const transform_t	tr( real3(-32.0f, -32.0f, 0.0f), rotation, real3(32.0f, 32.0f, 1.0f) );
+	const transform_t	tr( real3(-32.0f, -32.0f, 0.0f), rotation, 32.0f );
 	
 	transform_t::mat_t	mat;	tr.GetMatrix( OUT mat );
 	

@@ -78,11 +78,19 @@ namespace GXTypes
 
 	namespace _types_hidden_
 	{
-		inline static HashResult HashForMemoryBlock (const ubyte *ptr, usize count)
+		inline static HashResult HashForMemoryBlock (const ubyte *ptr, usize count) noexcept
 		{
 			// MS Visual C++ std implementation
-			#if defined(COMPILER_MSVC) and defined(_HASH_SEQ_DEFINED)
-				return (HashResult) std::_Hash_seq( ptr, count );
+			#if defined(COMPILER_MSVC)
+			# if defined(_HASH_SEQ_DEFINED)
+				return HashResult{std::_Hash_seq( ptr, count )};
+			# elif COMPILER_VERSION >= 1911
+				return HashResult{std::_Hash_bytes( ptr, count )};
+			# endif
+			#elif defined(COMPILER_GCC) //or defined(PLATFORM_ANDROID)
+				return HashResult{std::_Hash_bytes( ptr, count, 0 )};
+			#elif defined(COMPILER_CLANG)
+				return HashResult{std::__murmur2_or_cityhash<size_t>()( ptr, count )};
 			#else
 				#error "hash function not defined!"
 			#endif
